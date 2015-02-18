@@ -1,0 +1,11 @@
+client
+server
+server.database
+server.facade
+server.httphandler
+server.importer
+servertester
+servertester.controllers
+servertester.views
+shared.communication
+shared.model
