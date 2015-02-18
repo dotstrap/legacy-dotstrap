@@ -1,0 +1,69 @@
+package shared.communication;
+
+// TODO: Auto-generated Javadoc
+/**
+ * The Class GetProjectsParameters.
+ */
+public class GetProjectsParameters {
+    
+    /** The name. */
+    private String name;
+    
+    /** The password. */
+    private String password;
+
+    /**
+     * Instantiates a new gets the projects parameters.
+     */
+    public GetProjectsParameters() {
+
+    }
+
+    /**
+     * Instantiates a new gets the projects parameters.
+     *
+     * @param name the name
+     * @param password the password
+     */
+    public GetProjectsParameters(String name, String password) {
+        this.name = name;
+        this.password = password;
+    }
+
+    /**
+     * Gets the name.
+     *
+     * @return the name
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Sets the name.
+     *
+     * @param name the new name
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
+     * Gets the password.
+     *
+     * @return the password
+     */
+    public String getPassword() {
+        return password;
+    }
+
+    /**
+     * Sets the password.
+     *
+     * @param password the new password
+     */
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+}

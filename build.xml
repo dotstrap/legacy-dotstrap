@@ -1,0 +1,200 @@
+
+<project name="Record Indexer" default="compile" basedir=".">
+
+	<!-- PROPERTIES -->
+	<!-- ********** -->	
+	
+	<!-- Directory containing application source code -->
+	<property name="src" location="src"/>
+	
+	<!-- Directory containing testing source code -->
+	<property name="test" location="test"/>
+	
+	<!-- Directory containing Java libraries -->
+	<property name="lib" location="lib"/>
+	
+	<!-- Directory where the Java compiler puts .class files -->
+	<property name="build" location="build"/>
+	
+	<!-- Directory containing database files -->
+	<property name="database" location="database"/>
+
+	<!-- Directory containing demo files -->
+	<property name="demo" location="demo"/>
+	
+	<!-- Directory containing passoff files -->
+	<property name="passoff" location="passoff"/>
+	
+	<!-- Database file used by the server -->
+	<property name="db-file" location="${database}/indexer_server.sqlite"/>
+	
+	<!-- Database file containing empty tables. -->
+	<property name="empty-db-file" location="${database}/indexer_server_empty.sqlite"/>
+	
+	<!-- File containing the report output by Checkstyle -->
+	<property name="checkstyle-report-file" location="checkstyle-report.txt"/>
+	
+	<!-- Default values for command-line properties.  Values specified on the command-line will override these. -->
+	<property name="file" value=""/>
+	<property name="host" value="localhost"/>
+	<property name="port" value="39640"/>
+
+	<!-- CLASS PATHS -->
+	<!-- *********** -->
+	<path id="lib-classpath">
+		<fileset dir="${lib}">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+	
+	<path id="all-classpath">
+		<path refid="lib-classpath"/>
+		<pathelement location="${build}"/>
+	</path>
+	
+	<path id="passoff-classpath">
+		<path refid="all-classpath"/>
+		<pathelement location="${passoff}/server-passoff.jar"/>
+	</path>
+	
+	<!-- TASK DEFINITIONS -->
+	<!-- **************** -->
+	<taskdef classpathref="lib-classpath" resource="checkstyletask.properties"/>
+
+
+	<!-- TARGETS -->
+	<!-- ******* -->
+	<target name="init" description="create build directories">
+		<tstamp/>
+		<mkdir dir="${build}"/>
+		<mkdir dir="${passoff}"/>
+	</target>
+
+	<target name="clean" description="delete build files and directories">
+		<delete dir="${build}"/>
+		<delete dir="${passoff}"/>
+	</target>
+
+	<target name="compile" depends="init" description="compile the source code">
+		<javac srcdir="${src}" classpathref="lib-classpath" destdir="${build}" debug="true" includeantruntime="true" />
+		<javac srcdir="${test}" classpathref="lib-classpath" destdir="${build}" debug="true" includeantruntime="true" />
+	</target>
+	
+	<!-- ant import -Dfile=<INDEXER_DATA_XML_FILE> -->
+	<!-- EXAMPLE: ant import -Dfile=dir1/dir2/indexer_data.xml -->
+	<target name="import" depends="compile" description="import indexer data">
+		<copy file="${empty-db-file}" tofile="${db-file}" overwrite="true"/>
+		<java classname="THE NAME OF YOUR DATA IMPORTER CLASS GOES HERE" fork="yes">
+			<classpath>
+				<path refid="all-classpath"/>
+			</classpath>
+			<arg value="${file}"/>
+			<assertions>
+				<enable/>
+			</assertions>
+		</java>
+	</target>
+		
+	<!-- ant server {-Dport=<SERVER_PORT_NUMBER>} -->
+	<!-- EXAMPLE: ant server -Dport=39640 -->
+	<!-- If port number is omitted, run on default port. -->
+	<!-- EXAMPLE: ant server -->
+	<target name="server" depends="compile" description="run server on specified port">
+		<java classname="THE NAME OF YOUR SERVER CLASS GOES HERE" fork="yes">
+			<classpath>
+				<path refid="all-classpath"/>
+			</classpath>
+			<arg value="${port}"/>
+			<assertions>
+				<enable/>
+			</assertions>
+		</java>
+	</target>
+
+	<target name="server-gui" depends="compile" description="run the server test gui">
+		<java classname="servertester.GuiTester" fork="yes">
+			<classpath>
+				<path refid="all-classpath"/>
+			</classpath>
+			<assertions>
+				<enable/>
+			</assertions>
+		</java>
+	</target>
+	
+	<target name="server-tests" depends="compile" description="run automated server tests">
+		<java classname="server.ServerUnitTests" fork="yes">
+			<classpath>
+				<path refid="all-classpath"/>
+			</classpath>
+			<assertions>
+				<enable/>
+			</assertions>
+		</java>
+	</target>
+	
+	
+	<!-- ant server-passoff {-Dhost=<SERVER_HOST>} {-Dport=<SERVER_PORT_NUMBER>} -->
+	<!-- EXAMPLE: ant server-passoff -Dhost=testserver.cs.byu.edu -Dport=39640 -->
+	<!-- If host and/or port number are omitted, default values are used. -->
+	<!-- EXAMPLE: ant server-passoff -->
+	<target name="server-passoff" depends="compile" description="run server passoff using server on specified host and port">
+		<java classname="passoff.ServerPassoff" fork="yes">
+			<classpath>
+				<path refid="passoff-classpath"/>
+			</classpath>
+			<arg value="${host}"/>
+			<arg value="${port}"/>
+			<assertions>
+				<enable/>
+			</assertions>
+		</java>
+	</target>
+	
+	<!-- ant client {-Dhost=<SERVER_HOST>} {-Dport=<SERVER_PORT_NUMBER>} -->
+	<!-- EXAMPLE: ant client -Dhost=testserver.cs.byu.edu -Dport=39640 -->
+	<!-- If host and/or port number are omitted, default values are used. -->
+	<!-- EXAMPLE: ant client -->
+	<target name="client" depends="compile" description="run client using server on specified host and port">
+				<java classname="THE NAME OF YOUR CLIENT CLASS GOES HERE" fork="yes">
+			<classpath>
+				<path refid="all-classpath"/>
+			</classpath>
+			<arg value="${host}"/>
+			<arg value="${port}"/>
+			<assertions>
+				<enable/>
+			</assertions>
+		</java>
+	</target>
+	
+	<target name="client-tests" depends="compile" description="run automated client tests">
+		<java classname="client.ClientUnitTests" fork="yes">
+			<classpath>
+				<path refid="all-classpath"/>
+			</classpath>
+			<assertions>
+				<enable/>
+			</assertions>
+		</java>
+	</target>
+	
+	<target name="checkstyle" depends="compile" description="run checkstyle on all source code">
+		<checkstyle config="checkstyle.xml">
+			<fileset dir="${src}" includes="**/*.java">
+			</fileset>
+			<formatter type="plain" toFile="${checkstyle-report-file}"/>
+			<classpath>
+				<pathelement location="${build}"/>
+			</classpath>
+		</checkstyle>
+	</target>
+	
+	<target name="demo" description="run the demo">
+		<java jar="${demo}/record-indexer-demo.jar" fork="yes" dir="${demo}">
+		</java>
+	</target>
+
+	
+</project>
+
