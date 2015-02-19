@@ -2,7 +2,7 @@ package shared.communication;
 
 import java.util.ArrayList;
 
-import shared.model.*;
+import shared.model.Project;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -59,8 +59,11 @@ public class GetProjectsResult {
         this.validUser = validUser;
     }
 
-    /** 
-     * (non-Javadoc)
+    /**
+     * 
+     * (non-Javadoc).
+     *
+     * @return the string
      * @see java.lang.Object#toString()
      */
     public String toString() {

@@ -78,8 +78,11 @@ public class GetSampleImageResult {
         this.validUser = validUser;
     }
 
-    /** 
-     * (non-Javadoc)
+    /**
+     * 
+     * (non-Javadoc).
+     *
+     * @return the string
      * @see java.lang.Object#toString()
      */
     public String toString() {
