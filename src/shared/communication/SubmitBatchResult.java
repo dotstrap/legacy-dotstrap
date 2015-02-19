@@ -34,8 +34,11 @@ public class SubmitBatchResult {
         this.success = success;
     }
 
-    /** 
-     * (non-Javadoc)
+    /**
+     *  
+     * (non-Javadoc).
+     *
+     * @return the string
      * @see java.lang.Object#toString()
      */
     public String toString() {

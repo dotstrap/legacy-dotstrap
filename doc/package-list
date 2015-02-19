@@ -1,4 +1,5 @@
 client
+client.communication
 server
 server.database
 server.facade

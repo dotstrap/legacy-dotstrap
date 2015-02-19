@@ -11,7 +11,12 @@ import com.sun.net.httpserver.HttpHandler;
 public class DownloadBatchHandler implements HttpHandler {
 
     /**
-     * (non-Javadoc)
+     * (non-Javadoc).
+     *
+     * @param arg0
+     *            the arg0
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
      * @see com.sun.net.httpserver.HttpHandler#handle(com.sun.net.httpserver.HttpExchange)
      */
     @Override

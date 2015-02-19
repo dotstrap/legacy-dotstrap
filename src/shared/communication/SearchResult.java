@@ -102,8 +102,11 @@ public class SearchResult {
         this.links = links;
     }
 
-    /** 
-     * (non-Javadoc)
+    /**
+     *  
+     * (non-Javadoc).
+     *
+     * @return the string
      * @see java.lang.Object#toString()
      */
     public String toString() {
