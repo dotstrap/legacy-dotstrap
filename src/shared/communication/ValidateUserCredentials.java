@@ -7,18 +7,20 @@ import shared.model.*;
  * The Class ValidateUserCredentials.
  */
 public class ValidateUserCredentials {
-    
+
     /** The username. */
     private String username;
-    
+
     /** The password. */
     private String password;
 
     /**
      * Instantiates a new validate user credentials.
      *
-     * @param u the u
-     * @param p the p
+     * @param u
+     *            the u
+     * @param p
+     *            the p
      */
     public ValidateUserCredentials(String u, String p) {
         username = u;
@@ -37,7 +39,8 @@ public class ValidateUserCredentials {
     /**
      * sets username.
      *
-     * @param s            -> new username
+     * @param s
+     *            -> new username
      */
     public void setUsername(String s) {
         username = s;
@@ -55,7 +58,8 @@ public class ValidateUserCredentials {
     /**
      * sets password.
      *
-     * @param s            -> new password
+     * @param s
+     *            -> new password
      */
     public void setPassword(String s) {
         password = s;

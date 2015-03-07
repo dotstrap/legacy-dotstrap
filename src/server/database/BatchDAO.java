@@ -36,16 +36,16 @@ public class BatchDAO {
      */
     public Batch getBatch(int id) {
         Connection connection = null;
-        PreparedStatement pstmt = null;
+        PreparedStatement SQLstmt = null;
         ResultSet resultset = null;
         Batch returnBatch = new Batch();
         try {
             connection = db.getConnection();
             String selectsql = "SELECT * from Batch WHERE ID = ?";
-            pstmt = connection.prepareStatement(selectsql);
-            pstmt.setInt(1, id);
+            SQLstmt = connection.prepareStatement(selectsql);
+            SQLstmt.setInt(1, id);
 
-            resultset = pstmt.executeQuery();
+            resultset = SQLstmt.executeQuery();
 
             resultset.next();
             returnBatch.setID(resultset.getInt(1));
@@ -57,7 +57,7 @@ public class BatchDAO {
         }
 
         connection = null;
-        pstmt = null;
+        SQLstmt = null;
         resultset = null;
         if (returnBatch.getFilePath() == "") {
             return null;
@@ -74,21 +74,21 @@ public class BatchDAO {
 
     public void update(Batch batch) {
         Connection connection = null;
-        PreparedStatement pstmt = null;
+        PreparedStatement SQLstmt = null;
         try {
             connection = db.getConnection();
             String selectsql = "UPDATE Batch SET State = ?" + "WHERE ID = ?";
-            pstmt = connection.prepareStatement(selectsql);
-            pstmt.setInt(1, batch.getState());
-            pstmt.setInt(2, batch.getID());
+            SQLstmt = connection.prepareStatement(selectsql);
+            SQLstmt.setInt(1, batch.getState());
+            SQLstmt.setInt(2, batch.getID());
 
-            pstmt.executeUpdate();
+            SQLstmt.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         connection = null;
-        pstmt = null;
+        SQLstmt = null;
     }
 
     /**
@@ -100,15 +100,15 @@ public class BatchDAO {
     {
         ArrayList<Batch> batches = new ArrayList<Batch>();
         Connection connection = null;
-        PreparedStatement pstmt = null;
+        PreparedStatement SQLstmt = null;
         ResultSet resultset = null;
 
         try {
             connection = db.getConnection();
             String selectsql = "SELECT * from Batch";
-            pstmt = connection.prepareStatement(selectsql);
+            SQLstmt = connection.prepareStatement(selectsql);
 
-            resultset = pstmt.executeQuery();
+            resultset = SQLstmt.executeQuery();
 
             while (resultset.next()) {
                 Batch returnBatch = new Batch();
@@ -123,7 +123,7 @@ public class BatchDAO {
         }
 
         connection = null;
-        pstmt = null;
+        SQLstmt = null;
         resultset = null;
 
         return batches;
@@ -138,7 +138,7 @@ public class BatchDAO {
      */
     public int add(Batch batch) {
         Connection connection = null;
-        PreparedStatement pstmt = null;
+        PreparedStatement SQLstmt = null;
         Statement stmt = null;
         ResultSet resultset = null;
         int id = -1;
@@ -146,12 +146,12 @@ public class BatchDAO {
             connection = db.getConnection();
             String insertsql = "INSERT INTO batch (FilePath, ProjectID, State)"
                                + "VALUES(?, ?, ?)";
-            pstmt = connection.prepareStatement(insertsql);
-            pstmt.setString(1, batch.getFilePath());
-            pstmt.setInt(2, batch.getProjectID());
-            pstmt.setInt(3, batch.getState());
+            SQLstmt = connection.prepareStatement(insertsql);
+            SQLstmt.setString(1, batch.getFilePath());
+            SQLstmt.setInt(2, batch.getProjectID());
+            SQLstmt.setInt(3, batch.getState());
 
-            if (pstmt.executeUpdate() == 1) {
+            if (SQLstmt.executeUpdate() == 1) {
                 stmt = connection.createStatement();
                 resultset = stmt.executeQuery("SELECT last_insert_rowid()");
                 resultset.next();
@@ -162,7 +162,7 @@ public class BatchDAO {
             e.printStackTrace();
         }
         connection = null;
-        pstmt = null;
+        SQLstmt = null;
         stmt = null;
         resultset = null;
 
@@ -177,19 +177,19 @@ public class BatchDAO {
      */
     public void delete(Batch batch) {
         Connection connection = null;
-        PreparedStatement pstmt = null;
+        PreparedStatement SQLstmt = null;
         try {
             connection = db.getConnection();
             String selectsql = "DELETE from Batch WHERE ID = ?";
-            pstmt = connection.prepareStatement(selectsql);
-            pstmt.setInt(1, batch.getID());
+            SQLstmt = connection.prepareStatement(selectsql);
+            SQLstmt.setInt(1, batch.getID());
 
-            pstmt.executeUpdate();
+            SQLstmt.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         connection = null;
-        pstmt = null;
+        SQLstmt = null;
     }
 }

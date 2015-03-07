@@ -9,10 +9,10 @@ import shared.model.Field;
  * The Class GetFieldsResult.
  */
 public class GetFieldsResult {
-    
+
     /** The fields. */
     private ArrayList<Field> fields;
-    
+
     /** The valid user. */
     private boolean          validUser;
 
@@ -35,7 +35,8 @@ public class GetFieldsResult {
     /**
      * Sets the fields.
      *
-     * @param fields the new fields
+     * @param fields
+     *            the new fields
      */
     public void setFields(ArrayList<Field> fields) {
         this.fields = fields;
@@ -53,14 +54,15 @@ public class GetFieldsResult {
     /**
      * Sets the valid user.
      *
-     * @param validUser the new valid user
+     * @param validUser
+     *            the new valid user
      */
     public void setValidUser(boolean validUser) {
         this.validUser = validUser;
     }
 
     /**
-     *  
+     * 
      * (non-Javadoc).
      *
      * @return the string

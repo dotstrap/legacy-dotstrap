@@ -53,7 +53,7 @@ public class Database {
      * Initialize user.
      */
     private static void initializeUser() {
-        PreparedStatement pstmt = null;
+        PreparedStatement SQLstmt = null;
         String dbName = "Apache.sqlite";
         String connectionURL = "jdbc:sqlite:" + dbName;
 
@@ -67,17 +67,17 @@ public class Database {
                           + "username TEXT NOT NULL  UNIQUE , password TEXT NOT NULL , "
                           + "FirstName TEXT NOT NULL , LastName TEXT NOT NULL , Email TEXT NOT NULL  UNIQUE , "
                           + "RecordCount INTEGER NOT NULL , CurrentBatch INTEGER NOT NULL )";
-            pstmt = connection.prepareStatement(sql);
-            pstmt.executeUpdate();
+            SQLstmt = connection.prepareStatement(sql);
+            SQLstmt.executeUpdate();
 
-            pstmt = connection.prepareStatement(sql2);
-            pstmt.executeUpdate();
+            SQLstmt = connection.prepareStatement(sql2);
+            SQLstmt.executeUpdate();
 
             connection.commit();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        pstmt = null;
+        SQLstmt = null;
         connection = null;
     }
 
@@ -85,7 +85,7 @@ public class Database {
      * Initialize project.
      */
     private static void initializeProject() {
-        PreparedStatement pstmt = null;
+        PreparedStatement SQLstmt = null;
         String dbName = "Apache.sqlite";
         String connectionURL = "jdbc:sqlite:" + dbName;
 
@@ -97,17 +97,17 @@ public class Database {
             String sql = "DROP TABLE IF EXISTS Project";
             String sql2 = "CREATE TABLE Project (ID INTEGER PRIMARY KEY  NOT NULL , Name TEXT NOT NULL ,"
                           + "RecordsPerBatch INTEGER NOT NULL , FirstYCoord INTEGER, RecordHeight INTEGER)";
-            pstmt = connection.prepareStatement(sql);
-            pstmt.executeUpdate();
+            SQLstmt = connection.prepareStatement(sql);
+            SQLstmt.executeUpdate();
 
-            pstmt = connection.prepareStatement(sql2);
-            pstmt.executeUpdate();
+            SQLstmt = connection.prepareStatement(sql2);
+            SQLstmt.executeUpdate();
 
             connection.commit();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        pstmt = null;
+        SQLstmt = null;
         connection = null;
     }
 
@@ -115,7 +115,7 @@ public class Database {
      * Initialize field.
      */
     private static void initializeField() {
-        PreparedStatement pstmt = null;
+        PreparedStatement SQLstmt = null;
         String dbName = "Apache.sqlite";
         String connectionURL = "jdbc:sqlite:" + dbName;
 
@@ -129,17 +129,17 @@ public class Database {
                           + "ProjectID INTEGER NOT NULL , FieldPath TEXT NOT NULL , KnownPath TEXT NOT NULL ,"
                           + "Width INTEGER NOT NULL , XCoordinate INTEGER NOT NULL , Title TEXT NOT NULL   )";
 
-            pstmt = connection.prepareStatement(sql);
-            pstmt.executeUpdate();
+            SQLstmt = connection.prepareStatement(sql);
+            SQLstmt.executeUpdate();
 
-            pstmt = connection.prepareStatement(sql2);
-            pstmt.executeUpdate();
+            SQLstmt = connection.prepareStatement(sql2);
+            SQLstmt.executeUpdate();
 
             connection.commit();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        pstmt = null;
+        SQLstmt = null;
         connection = null;
     }
 
@@ -147,7 +147,7 @@ public class Database {
      * Initialize record.
      */
     private static void initializeRecord() {
-        PreparedStatement pstmt = null;
+        PreparedStatement SQLstmt = null;
         String dbName = "Apache.sqlite";
         String connectionURL = "jdbc:sqlite:" + dbName;
 
@@ -159,17 +159,17 @@ public class Database {
             String sql = "DROP TABLE IF EXISTS Record";
             String sql2 = "CREATE TABLE Record (ID INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE , "
                           + "RowOnImage INTEGER NOT NULL , BatchID INTEGER NOT NULL , Data TEXT NOT NULL , FieldID INTEGER NOT NULL )";
-            pstmt = connection.prepareStatement(sql);
-            pstmt.executeUpdate();
+            SQLstmt = connection.prepareStatement(sql);
+            SQLstmt.executeUpdate();
 
-            pstmt = connection.prepareStatement(sql2);
-            pstmt.executeUpdate();
+            SQLstmt = connection.prepareStatement(sql2);
+            SQLstmt.executeUpdate();
 
             connection.commit();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        pstmt = null;
+        SQLstmt = null;
         connection = null;
     }
 
@@ -177,7 +177,7 @@ public class Database {
      * Initialize batch.
      */
     private static void initializeBatch() {
-        PreparedStatement pstmt = null;
+        PreparedStatement SQLstmt = null;
         String dbName = "Apache.sqlite";
         String connectionURL = "jdbc:sqlite:" + dbName;
 
@@ -189,17 +189,17 @@ public class Database {
             String sql = "DROP TABLE IF EXISTS Batch";
             String sql2 = "CREATE TABLE Batch (ID INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE ,"
                           + "FilePath TEXT NOT NULL , ProjectID INTEGER NOT NULL ,State INTEGER NOT NULL)";
-            pstmt = connection.prepareStatement(sql);
-            pstmt.executeUpdate();
+            SQLstmt = connection.prepareStatement(sql);
+            SQLstmt.executeUpdate();
 
-            pstmt = connection.prepareStatement(sql2);
-            pstmt.executeUpdate();
+            SQLstmt = connection.prepareStatement(sql2);
+            SQLstmt.executeUpdate();
 
             connection.commit();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        pstmt = null;
+        SQLstmt = null;
         connection = null;
     }
 

@@ -7,10 +7,10 @@ import java.net.URL;
  * The Class GetSampleImageResult.
  */
 public class GetSampleImageResult {
-    
+
     /** The url. */
     private URL    url;
-    
+
     /** The link. */
     private String link;
 
@@ -26,7 +26,8 @@ public class GetSampleImageResult {
     /**
      * Sets the link.
      *
-     * @param link the new link
+     * @param link
+     *            the new link
      */
     public void setLink(String link) {
         this.link = link;
@@ -45,7 +46,8 @@ public class GetSampleImageResult {
     /**
      * Sets the url.
      *
-     * @param url the new url
+     * @param url
+     *            the new url
      */
     public void setURL(URL url) {
         this.url = url;
@@ -72,7 +74,8 @@ public class GetSampleImageResult {
     /**
      * Sets the valid user.
      *
-     * @param validUser the new valid user
+     * @param validUser
+     *            the new valid user
      */
     public void setValidUser(boolean validUser) {
         this.validUser = validUser;

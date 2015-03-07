@@ -5,7 +5,7 @@ package shared.communication;
  * The Class SubmitBatchResult.
  */
 public class SubmitBatchResult {
-    
+
     /** The success. */
     private boolean success;
 
@@ -28,14 +28,15 @@ public class SubmitBatchResult {
     /**
      * Sets the success.
      *
-     * @param success the new success
+     * @param success
+     *            the new success
      */
     public void setSuccess(boolean success) {
         this.success = success;
     }
 
     /**
-     *  
+     * 
      * (non-Javadoc).
      *
      * @return the string

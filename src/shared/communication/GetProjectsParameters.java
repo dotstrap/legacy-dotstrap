@@ -5,10 +5,10 @@ package shared.communication;
  * The Class GetProjectsParameters.
  */
 public class GetProjectsParameters {
-    
+
     /** The name. */
     private String name;
-    
+
     /** The password. */
     private String password;
 
@@ -22,8 +22,10 @@ public class GetProjectsParameters {
     /**
      * Instantiates a new gets the projects parameters.
      *
-     * @param name the name
-     * @param password the password
+     * @param name
+     *            the name
+     * @param password
+     *            the password
      */
     public GetProjectsParameters(String name, String password) {
         this.name = name;
@@ -42,7 +44,8 @@ public class GetProjectsParameters {
     /**
      * Sets the name.
      *
-     * @param name the new name
+     * @param name
+     *            the new name
      */
     public void setName(String name) {
         this.name = name;
@@ -60,7 +63,8 @@ public class GetProjectsParameters {
     /**
      * Sets the password.
      *
-     * @param password the new password
+     * @param password
+     *            the new password
      */
     public void setPassword(String password) {
         this.password = password;

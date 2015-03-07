@@ -36,7 +36,7 @@ public class RecordDAO {
      */
     public int add(Record record) {
         Connection connection = null;
-        PreparedStatement pstmt = null;
+        PreparedStatement SQLstmt = null;
         Statement stmt = null;
         ResultSet resultset = null;
         int id = -1;
@@ -44,13 +44,13 @@ public class RecordDAO {
             connection = db.getConnection();
             String insertsql = "INSERT INTO Record (RowOnImage, BatchID, Data, FieldID)"
                                + "VALUES (?, ?, ?, ?)";
-            pstmt = connection.prepareStatement(insertsql);
-            pstmt.setInt(1, record.getRecordNumber());
-            pstmt.setInt(2, record.getBatchID());
-            pstmt.setString(3, record.getData());
-            pstmt.setInt(4, record.getFieldID());
+            SQLstmt = connection.prepareStatement(insertsql);
+            SQLstmt.setInt(1, record.getRecordNumber());
+            SQLstmt.setInt(2, record.getBatchID());
+            SQLstmt.setString(3, record.getData());
+            SQLstmt.setInt(4, record.getFieldID());
 
-            if (pstmt.executeUpdate() == 1) {
+            if (SQLstmt.executeUpdate() == 1) {
                 stmt = connection.createStatement();
                 resultset = stmt.executeQuery("SELECT last_insert_rowid()");
                 resultset.next();
@@ -61,7 +61,7 @@ public class RecordDAO {
             e.printStackTrace();
         }
         connection = null;
-        pstmt = null;
+        SQLstmt = null;
         stmt = null;
         resultset = null;
         return id;
@@ -78,17 +78,17 @@ public class RecordDAO {
      */
     public ArrayList<Record> search(int id, String value) {
         Connection connection = null;
-        PreparedStatement pstmt = null;
+        PreparedStatement SQLstmt = null;
         ResultSet resultset = null;
         ArrayList<Record> records = new ArrayList<Record>();
         try {
             connection = db.getConnection();
-            String selectsql = "SELECT * from Record WHERE FieldID = ? AND Data = ?";
-            pstmt = connection.prepareStatement(selectsql);
-            pstmt.setInt(1, id);
-            pstmt.setString(2, value);
+            String selectSQL = "SELECT * from Record WHERE FieldID = ? AND Data = ?";
+            SQLstmt = connection.prepareStatement(selectSQL);
+            SQLstmt.setInt(1, id);
+            SQLstmt.setString(2, value);
 
-            resultset = pstmt.executeQuery();
+            resultset = SQLstmt.executeQuery();
 
             while (resultset.next()) {
                 Record returnRecord = new Record();
@@ -114,16 +114,16 @@ public class RecordDAO {
      */
     public Record getRecord(int id) {
         Connection connection = null;
-        PreparedStatement pstmt = null;
+        PreparedStatement SQLstmt = null;
         ResultSet resultset = null;
         Record returnRecord = new Record();
         try {
             connection = db.getConnection();
-            String selectsql = "SELECT * from Record WHERE ID = ?";
-            pstmt = connection.prepareStatement(selectsql);
-            pstmt.setInt(1, id);
+            String selectSQL = "SELECT * from Record WHERE ID = ?";
+            SQLstmt = connection.prepareStatement(selectSQL);
+            SQLstmt.setInt(1, id);
 
-            resultset = pstmt.executeQuery();
+            resultset = SQLstmt.executeQuery();
 
             resultset.next();
             returnRecord.setID(resultset.getInt(1));
@@ -135,7 +135,7 @@ public class RecordDAO {
             e.printStackTrace();
         }
         connection = null;
-        pstmt = null;
+        SQLstmt = null;
         resultset = null;
         return returnRecord;
     }
@@ -148,15 +148,15 @@ public class RecordDAO {
     public ArrayList<Record> getAll() {
         ArrayList<Record> records = new ArrayList<Record>();
         Connection connection = null;
-        PreparedStatement pstmt = null;
+        PreparedStatement SQLstmt = null;
         ResultSet resultset = null;
 
         try {
             connection = db.getConnection();
-            String selectsql = "SELECT * from Record";
-            pstmt = connection.prepareStatement(selectsql);
+            String selectSQL = "SELECT * from Record";
+            SQLstmt = connection.prepareStatement(selectSQL);
 
-            resultset = pstmt.executeQuery();
+            resultset = SQLstmt.executeQuery();
 
             while (resultset.next()) {
                 Record returnRecord = new Record();
@@ -171,7 +171,7 @@ public class RecordDAO {
             e.printStackTrace();
         }
         connection = null;
-        pstmt = null;
+        SQLstmt = null;
         resultset = null;
 
         return records;
@@ -185,18 +185,18 @@ public class RecordDAO {
      */
     public void delete(Record record) {
         Connection connection = null;
-        PreparedStatement pstmt = null;
+        PreparedStatement SQLstmt = null;
         try {
             connection = db.getConnection();
-            String selectsql = "DELETE from Record WHERE ID = ?";
-            pstmt = connection.prepareStatement(selectsql);
-            pstmt.setInt(1, record.getID());
+            String selectSQL = "DELETE from Record WHERE ID = ?";
+            SQLstmt = connection.prepareStatement(selectSQL);
+            SQLstmt.setInt(1, record.getID());
 
-            pstmt.executeUpdate();
+            SQLstmt.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
         }
         connection = null;
-        pstmt = null;
+        SQLstmt = null;
     }
 }
