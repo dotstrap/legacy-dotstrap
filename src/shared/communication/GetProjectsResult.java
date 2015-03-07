@@ -9,10 +9,10 @@ import shared.model.Project;
  * The Class GetProjectsResult.
  */
 public class GetProjectsResult {
-    
+
     /** The projects. */
     private ArrayList<Project> projects;
-    
+
     /** The valid user. */
     private boolean            validUser;
 
@@ -35,7 +35,8 @@ public class GetProjectsResult {
     /**
      * replaces projects with new projects.
      *
-     * @param projects            -> array of new projects with which to replace
+     * @param projects
+     *            -> array of new projects with which to replace
      */
     public void setProjects(ArrayList<Project> projects) {
         this.projects = projects;
@@ -53,7 +54,8 @@ public class GetProjectsResult {
     /**
      * Sets the valid user.
      *
-     * @param validUser the new valid user
+     * @param validUser
+     *            the new valid user
      */
     public void setValidUser(boolean validUser) {
         this.validUser = validUser;

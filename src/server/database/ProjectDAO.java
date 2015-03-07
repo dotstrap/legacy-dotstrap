@@ -36,15 +36,15 @@ public class ProjectDAO {
     public ArrayList<Project> getAll() {
         ArrayList<Project> projects = new ArrayList<Project>();
         Connection connection = null;
-        PreparedStatement pstmt = null;
+        PreparedStatement SQLstmt = null;
         ResultSet resultset = null;
 
         try {
             connection = db.getConnection();
             String selectsql = "SELECT * from Project";
-            pstmt = connection.prepareStatement(selectsql);
+            SQLstmt = connection.prepareStatement(selectsql);
 
-            resultset = pstmt.executeQuery();
+            resultset = SQLstmt.executeQuery();
 
             while (resultset.next()) {
                 Project returnProject = new Project();
@@ -63,7 +63,7 @@ public class ProjectDAO {
         }
 
         connection = null;
-        pstmt = null;
+        SQLstmt = null;
         resultset = null;
 
         return projects;
@@ -78,16 +78,16 @@ public class ProjectDAO {
      */
     public Project getProject(int id) {
         Connection connection = null;
-        PreparedStatement pstmt = null;
+        PreparedStatement SQLstmt = null;
         ResultSet resultset = null;
         Project returnProject = new Project();
         try {
             connection = db.getConnection();
             String selectsql = "SELECT * from Project WHERE ID = ?";
-            pstmt = connection.prepareStatement(selectsql);
-            pstmt.setInt(1, id);
+            SQLstmt = connection.prepareStatement(selectsql);
+            SQLstmt.setInt(1, id);
 
-            resultset = pstmt.executeQuery();
+            resultset = SQLstmt.executeQuery();
 
             resultset.next();
             ProjectInfo pi = new ProjectInfo();
@@ -102,7 +102,7 @@ public class ProjectDAO {
         }
 
         connection = null;
-        pstmt = null;
+        SQLstmt = null;
         resultset = null;
         if (returnProject.getProjInfo().getName() == "") {
             return null;
@@ -119,7 +119,7 @@ public class ProjectDAO {
      */
     public int add(Project project) {
         Connection connection = null;
-        PreparedStatement pstmt = null;
+        PreparedStatement SQLstmt = null;
         Statement stmt = null;
         ResultSet resultset = null;
         int id = -1;
@@ -127,13 +127,13 @@ public class ProjectDAO {
             connection = db.getConnection();
             String insertsql = "INSERT INTO Project (Name, RecordsPerBatch, FirstYCoord, RecordHeight)"
                                + "VALUES (?, ?, ?, ?)";
-            pstmt = connection.prepareStatement(insertsql);
-            pstmt.setString(1, project.getProjInfo().getName());
-            pstmt.setInt(2, project.getRecordsPerBatch());
-            pstmt.setInt(3, project.getFirstY());
-            pstmt.setInt(4, project.getRecordHeight());
+            SQLstmt = connection.prepareStatement(insertsql);
+            SQLstmt.setString(1, project.getProjInfo().getName());
+            SQLstmt.setInt(2, project.getRecordsPerBatch());
+            SQLstmt.setInt(3, project.getFirstY());
+            SQLstmt.setInt(4, project.getRecordHeight());
 
-            if (pstmt.executeUpdate() == 1) {
+            if (SQLstmt.executeUpdate() == 1) {
                 stmt = connection.createStatement();
                 resultset = stmt.executeQuery("SELECT last_insert_rowid()");
                 resultset.next();
@@ -144,7 +144,7 @@ public class ProjectDAO {
             e.printStackTrace();
         }
         connection = null;
-        pstmt = null;
+        SQLstmt = null;
         stmt = null;
         resultset = null;
         return id;
@@ -158,19 +158,19 @@ public class ProjectDAO {
      */
     public void delete(Project project) {
         Connection connection = null;
-        PreparedStatement pstmt = null;
+        PreparedStatement SQLstmt = null;
         try {
             connection = db.getConnection();
             String selectsql = "DELETE from Project WHERE ID = ?";
-            pstmt = connection.prepareStatement(selectsql);
-            pstmt.setInt(1, project.getProjInfo().getID());
+            SQLstmt = connection.prepareStatement(selectsql);
+            SQLstmt.setInt(1, project.getProjInfo().getID());
 
-            pstmt.executeUpdate();
+            SQLstmt.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         connection = null;
-        pstmt = null;
+        SQLstmt = null;
     }
 }

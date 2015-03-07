@@ -46,15 +46,15 @@ public class FieldDAO {
     public ArrayList<Field> getAll() {
         ArrayList<Field> fields = new ArrayList<Field>();
         Connection connection = null;
-        PreparedStatement pstmt = null;
+        PreparedStatement SQLstmt = null;
         ResultSet resultset = null;
 
         try {
             connection = db.getConnection();
             String selectsql = "SELECT * from Field";
-            pstmt = connection.prepareStatement(selectsql);
+            SQLstmt = connection.prepareStatement(selectsql);
 
-            resultset = pstmt.executeQuery();
+            resultset = SQLstmt.executeQuery();
 
             while (resultset.next()) {
                 Field returnField = new Field();
@@ -71,7 +71,7 @@ public class FieldDAO {
             e.printStackTrace();
         }
         connection = null;
-        pstmt = null;
+        SQLstmt = null;
         resultset = null;
 
         return fields;
@@ -86,7 +86,7 @@ public class FieldDAO {
      */
     public int add(Field field) {
         Connection connection = null;
-        PreparedStatement pstmt = null;
+        PreparedStatement SQLstmt = null;
         Statement stmt = null;
         ResultSet resultset = null;
         int id = -1;
@@ -94,15 +94,15 @@ public class FieldDAO {
             connection = db.getConnection();
             String insertsql = "INSERT INTO field (ProjectID, FieldPath, KnownPath, Width, XCoordinate, Title)"
                                + "VALUES (?, ?, ?, ?, ?, ?)";
-            pstmt = connection.prepareStatement(insertsql);
-            pstmt.setInt(1, field.getProjectID());
-            pstmt.setString(2, field.getHelp());
-            pstmt.setString(3, field.getKnownPath());
-            pstmt.setInt(4, field.getWidth());
-            pstmt.setInt(5, field.getX());
-            pstmt.setString(6, field.getTitle());
+            SQLstmt = connection.prepareStatement(insertsql);
+            SQLstmt.setInt(1, field.getProjectID());
+            SQLstmt.setString(2, field.getHelp());
+            SQLstmt.setString(3, field.getKnownPath());
+            SQLstmt.setInt(4, field.getWidth());
+            SQLstmt.setInt(5, field.getX());
+            SQLstmt.setString(6, field.getTitle());
 
-            if (pstmt.executeUpdate() == 1) {
+            if (SQLstmt.executeUpdate() == 1) {
                 stmt = connection.createStatement();
                 resultset = stmt.executeQuery("SELECT last_insert_rowid()");
                 resultset.next();
@@ -113,7 +113,7 @@ public class FieldDAO {
             e.printStackTrace();
         }
         connection = null;
-        pstmt = null;
+        SQLstmt = null;
         stmt = null;
         resultset = null;
         return id;
@@ -127,18 +127,18 @@ public class FieldDAO {
      */
     public void delete(Field field) {
         Connection connection = null;
-        PreparedStatement pstmt = null;
+        PreparedStatement SQLstmt = null;
         try {
             connection = db.getConnection();
             String selectsql = "DELETE from Field WHERE ID = ?";
-            pstmt = connection.prepareStatement(selectsql);
-            pstmt.setInt(1, field.getID());
+            SQLstmt = connection.prepareStatement(selectsql);
+            SQLstmt.setInt(1, field.getID());
 
-            pstmt.executeUpdate();
+            SQLstmt.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
         }
         connection = null;
-        pstmt = null;
+        SQLstmt = null;
     }
 }

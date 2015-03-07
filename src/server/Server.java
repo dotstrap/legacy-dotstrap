@@ -95,13 +95,12 @@ public class Server {
      *            the arguments
      */
     public static void main(String[] args) {
-        // check for given port number
         if (args == null) {
             SERVER_PORT_NUMBER = 50080;
         } else if (args.length > 0) {
             SERVER_PORT_NUMBER = Integer.parseInt(args[0]);
         } else {
-            SERVER_PORT_NUMBER = 50080;
+            SERVER_PORT_NUMBER = 8080;
         }
         new Server().run();
     }

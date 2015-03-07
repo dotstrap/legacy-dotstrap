@@ -5,19 +5,19 @@ package shared.communication;
  * The Class ValidateUserResult.
  */
 public class ValidateUserResult {
-    
+
     /** The fn. */
     private String  fn;
-    
+
     /** The ln. */
     private String  ln;
-    
+
     /** The validate. */
     private boolean validate;
-    
+
     /** The batch. */
     private boolean batch;
-    
+
     /** The records. */
     private int     records;
 
@@ -32,10 +32,14 @@ public class ValidateUserResult {
     /**
      * Instantiates a new validate user result.
      *
-     * @param val the val
-     * @param first the first
-     * @param last the last
-     * @param number the number
+     * @param val
+     *            the val
+     * @param first
+     *            the first
+     * @param last
+     *            the last
+     * @param number
+     *            the number
      */
     public ValidateUserResult(boolean val, String first, String last, int number) {
         validate = val;
@@ -56,7 +60,8 @@ public class ValidateUserResult {
     /**
      * sets output.
      *
-     * @param o            -> new output
+     * @param o
+     *            -> new output
      */
     public void setOutput(boolean o) {
         validate = o;
@@ -83,7 +88,8 @@ public class ValidateUserResult {
     /**
      * sets the firstname.
      *
-     * @param s            -> new firstname
+     * @param s
+     *            -> new firstname
      */
     public void setFirstName(String s) {
         fn = s;
@@ -92,7 +98,8 @@ public class ValidateUserResult {
     /**
      * sets the lastname.
      *
-     * @param s            -> new lastname
+     * @param s
+     *            -> new lastname
      */
     public void setLastName(String s) {
         ln = s;
@@ -110,7 +117,8 @@ public class ValidateUserResult {
     /**
      * sets the record number.
      *
-     * @param i            -> new record number
+     * @param i
+     *            -> new record number
      */
     public void setRecordNum(int i) {
         records = i;
@@ -128,14 +136,15 @@ public class ValidateUserResult {
     /**
      * Sets the batch.
      *
-     * @param batch the new batch
+     * @param batch
+     *            the new batch
      */
     public void setBatch(boolean batch) {
         this.batch = batch;
     }
 
     /**
-     *  
+     * 
      * (non-Javadoc).
      *
      * @return the string

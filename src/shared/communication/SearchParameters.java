@@ -7,16 +7,16 @@ import java.util.ArrayList;
  * The Class SearchParameters.
  */
 public class SearchParameters {
-    
+
     /** The name. */
     private String             name;
-    
+
     /** The password. */
     private String             password;
-    
+
     /** The field id. */
     private ArrayList<Integer> fieldID;
-    
+
     /** The search. */
     private ArrayList<String>  search;
 
@@ -30,10 +30,14 @@ public class SearchParameters {
     /**
      * Instantiates a new search parameters.
      *
-     * @param name the name
-     * @param password the password
-     * @param fieldID the field id
-     * @param search the search
+     * @param name
+     *            the name
+     * @param password
+     *            the password
+     * @param fieldID
+     *            the field id
+     * @param search
+     *            the search
      */
     public SearchParameters(String name, String password,
             ArrayList<Integer> fieldID, ArrayList<String> search) {
@@ -55,7 +59,8 @@ public class SearchParameters {
     /**
      * Sets the name.
      *
-     * @param name the new name
+     * @param name
+     *            the new name
      */
     public void setName(String name) {
         this.name = name;
@@ -73,7 +78,8 @@ public class SearchParameters {
     /**
      * Sets the password.
      *
-     * @param password the new password
+     * @param password
+     *            the new password
      */
     public void setPassword(String password) {
         this.password = password;
@@ -91,7 +97,8 @@ public class SearchParameters {
     /**
      * Sets the field id.
      *
-     * @param fieldID the new field id
+     * @param fieldID
+     *            the new field id
      */
     public void setFieldID(ArrayList<Integer> fieldID) {
         this.fieldID = fieldID;
@@ -109,7 +116,8 @@ public class SearchParameters {
     /**
      * Sets the search.
      *
-     * @param search the new search
+     * @param search
+     *            the new search
      */
     public void setSearch(ArrayList<String> search) {
         this.search = search;
