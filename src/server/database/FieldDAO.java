@@ -1,9 +1,13 @@
+/**
+ * FieldDAO.java
+ * JRE v1.7.0_76
+ * 
+ * Created by William Myers on Mar 8, 2015.
+ * Copyright (c) 2015 William Myers. All Rights reserved.
+ */
 package server.database;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 
 import shared.model.Field;
@@ -13,49 +17,95 @@ import shared.model.Field;
  * The Class FieldDAO.
  */
 public class FieldDAO {
-
+    
     /** The db. */
     private Database db;
-
+    
     /**
      * Instantiates a new field dao.
      *
-     * @param db
-     *            the db
+     * @param db the db
      */
     public FieldDAO(Database db) {
         this.db = db;
     }
-
+    
     /**
-     * Gets the field.
+     * Adds the.
      *
-     * @param title
-     *            the title
-     * @return the field
+     * @param field the field
+     * @return the int
      */
-    public Field getField(String title) {
-        return null;
+    public int add(Field field) {
+        Connection connection = null;
+        PreparedStatement SQLstmt = null;
+        Statement stmt = null;
+        ResultSet resultset = null;
+        int id = -1;
+        try {
+            connection = db.getConnection();
+            String insertsql = "INSERT INTO field (ProjectID, FieldPath, KnownPath, Width, XCoordinate, Title)"
+                    + "VALUES (?, ?, ?, ?, ?, ?)";
+            SQLstmt = connection.prepareStatement(insertsql);
+            SQLstmt.setInt(1, field.getProjectID());
+            SQLstmt.setString(2, field.getHelp());
+            SQLstmt.setString(3, field.getKnownPath());
+            SQLstmt.setInt(4, field.getWidth());
+            SQLstmt.setInt(5, field.getX());
+            SQLstmt.setString(6, field.getTitle());
+            
+            if (SQLstmt.executeUpdate() == 1) {
+                stmt = connection.createStatement();
+                resultset = stmt.executeQuery("SELECT last_insert_rowid()");
+                resultset.next();
+                id = resultset.getInt(1);
+                field.setID(id);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        connection = null;
+        SQLstmt = null;
+        stmt = null;
+        resultset = null;
+        return id;
     }
-
+    
     /**
-     * Gets the all.
+     * Delete.
      *
-     * @return the all
+     * @param field the field
      */
+    public void delete(Field field) {
+        Connection connection = null;
+        PreparedStatement SQLstmt = null;
+        try {
+            connection = db.getConnection();
+            String selectsql = "DELETE from Field WHERE ID = ?";
+            SQLstmt = connection.prepareStatement(selectsql);
+            SQLstmt.setInt(1, field.getID());
+            
+            SQLstmt.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        connection = null;
+        SQLstmt = null;
+    }
+    
     public ArrayList<Field> getAll() {
         ArrayList<Field> fields = new ArrayList<Field>();
         Connection connection = null;
         PreparedStatement SQLstmt = null;
         ResultSet resultset = null;
-
+        
         try {
             connection = db.getConnection();
             String selectsql = "SELECT * from Field";
             SQLstmt = connection.prepareStatement(selectsql);
-
+            
             resultset = SQLstmt.executeQuery();
-
+            
             while (resultset.next()) {
                 Field returnField = new Field();
                 returnField.setID(resultset.getInt(1));
@@ -73,72 +123,17 @@ public class FieldDAO {
         connection = null;
         SQLstmt = null;
         resultset = null;
-
+        
         return fields;
     }
-
+    
     /**
-     * Adds the.
+     * Gets the field.
      *
-     * @param field
-     *            the field
-     * @return the int
+     * @param title the title
+     * @return the field
      */
-    public int add(Field field) {
-        Connection connection = null;
-        PreparedStatement SQLstmt = null;
-        Statement stmt = null;
-        ResultSet resultset = null;
-        int id = -1;
-        try {
-            connection = db.getConnection();
-            String insertsql = "INSERT INTO field (ProjectID, FieldPath, KnownPath, Width, XCoordinate, Title)"
-                               + "VALUES (?, ?, ?, ?, ?, ?)";
-            SQLstmt = connection.prepareStatement(insertsql);
-            SQLstmt.setInt(1, field.getProjectID());
-            SQLstmt.setString(2, field.getHelp());
-            SQLstmt.setString(3, field.getKnownPath());
-            SQLstmt.setInt(4, field.getWidth());
-            SQLstmt.setInt(5, field.getX());
-            SQLstmt.setString(6, field.getTitle());
-
-            if (SQLstmt.executeUpdate() == 1) {
-                stmt = connection.createStatement();
-                resultset = stmt.executeQuery("SELECT last_insert_rowid()");
-                resultset.next();
-                id = resultset.getInt(1);
-                field.setID(id);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        connection = null;
-        SQLstmt = null;
-        stmt = null;
-        resultset = null;
-        return id;
-    }
-
-    /**
-     * Delete.
-     *
-     * @param field
-     *            the field
-     */
-    public void delete(Field field) {
-        Connection connection = null;
-        PreparedStatement SQLstmt = null;
-        try {
-            connection = db.getConnection();
-            String selectsql = "DELETE from Field WHERE ID = ?";
-            SQLstmt = connection.prepareStatement(selectsql);
-            SQLstmt.setInt(1, field.getID());
-
-            SQLstmt.executeUpdate();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        connection = null;
-        SQLstmt = null;
+    public Field getField(String title) {
+        return null;
     }
 }

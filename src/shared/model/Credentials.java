@@ -1,3 +1,10 @@
+/**
+ * Credentials.java
+ * JRE v1.7.0_76
+ * 
+ * Created by William Myers on Mar 8, 2015.
+ * Copyright (c) 2015 William Myers. All Rights reserved.
+ */
 package shared.model;
 
 // TODO: Auto-generated Javadoc
@@ -5,61 +12,37 @@ package shared.model;
  * The Class Credentials.
  */
 public class Credentials {
-
-    /** The username. */
-    private String username;
-
+    
     /** The password. */
     private String password;
-
+    
+    /** The username. */
+    private String username;
+    
     /**
      * Instantiates a new credentials.
      *
-     * @param u
-     *            the u
-     * @param p
-     *            the p
+     * @param u the u
+     * @param p the p
      */
     public Credentials(String u, String p) {
         username = u;
         password = p;
     }
-
-    /**
-     * Gets the username.
-     *
-     * @return the username
-     */
-    public String getUsername() {
-        return username;
-    }
-
-    /**
-     * Sets the username.
-     *
-     * @param s
-     *            the new username
-     */
-    public void setUsername(String s) {
-        username = s;
-    }
-
-    /**
-     * Gets the password.
-     *
-     * @return the password
-     */
+    
     public String getPassword() {
         return password;
     }
-
-    /**
-     * Sets the password.
-     *
-     * @param s
-     *            the new password
-     */
+    
+    public String getUsername() {
+        return username;
+    }
+    
     public void setPassword(String s) {
         password = s;
+    }
+    
+    public void setUsername(String s) {
+        username = s;
     }
 }

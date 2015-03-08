@@ -1,39 +1,39 @@
+/**
+ * UserDAO.java
+ * JRE v1.7.0_76
+ * 
+ * Created by William Myers on Mar 8, 2015.
+ * Copyright (c) 2015 William Myers. All Rights reserved.
+ */
 package server.database;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 
-import shared.model.Credentials;
-import shared.model.User;
-import shared.model.UserInfo;
+import shared.model.*;
 
 // TODO: Auto-generated Javadoc
 /**
  * The Class UserDAO.
  */
 public class UserDAO {
-
+    
     /** The db. */
     private Database db;
-
+    
     /**
      * Instantiates a new user dao.
      *
-     * @param db
-     *            the db
+     * @param db the db
      */
     public UserDAO(Database db) {
         this.db = db;
     }
-
+    
     /**
      * Adds the.
      *
-     * @param user
-     *            the user
+     * @param user the user
      * @return the int
      */
     public int add(User user) {
@@ -45,7 +45,7 @@ public class UserDAO {
         try {
             connection = db.getConnection();
             String insertsql = "INSERT INTO User (username, password, FirstName, LastName, Email, RecordCount, CurrentBatch)"
-                               + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+                    + "VALUES (?, ?, ?, ?, ?, ?, ?)";
             SQLstmt = connection.prepareStatement(insertsql);
             SQLstmt.setString(1, user.getCreds().getUsername());
             SQLstmt.setString(2, user.getCreds().getPassword());
@@ -54,7 +54,7 @@ public class UserDAO {
             SQLstmt.setString(5, user.getUserInfo().getEmail());
             SQLstmt.setInt(6, user.getRecordCount());
             SQLstmt.setInt(7, user.getCurrentBatch());
-
+            
             if (SQLstmt.executeUpdate() == 1) {
                 stmt = connection.createStatement();
                 resultset = stmt.executeQuery("SELECT last_insert_rowid()");
@@ -71,43 +71,72 @@ public class UserDAO {
         resultset = null;
         return id;
     }
-
+    
     /**
-     * Validate user.
+     * Delete.
      *
-     * @param creds
-     *            the creds
-     * @return true, if successful
+     * @param user the user
      */
-    public boolean validateUser(Credentials creds) {
+    public void delete(User user) {
         Connection connection = null;
         PreparedStatement SQLstmt = null;
-        boolean validate = false;
         try {
             connection = db.getConnection();
-            String insertsql = "SELECT * from User"
-                               + "WHERE username = ? AND password = ?";
-            SQLstmt = connection.prepareStatement(insertsql);
-            SQLstmt.setString(1, creds.getUsername());
-            SQLstmt.setString(2, creds.getPassword());
-
-            if (SQLstmt.executeUpdate() == 1) {
-                validate = true;
+            String selectsql = "DELETE from User WHERE username = ? AND password = ?";
+            SQLstmt = connection.prepareStatement(selectsql);
+            SQLstmt.setString(1, user.getCreds().getUsername());
+            SQLstmt.setString(2, user.getCreds().getPassword());
+            
+            SQLstmt.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        connection = null;
+        SQLstmt = null;
+    }
+    
+    public ArrayList<User> getAll() {
+        ArrayList<User> users = new ArrayList<User>();
+        Connection connection = null;
+        PreparedStatement SQLstmt = null;
+        ResultSet resultset = null;
+        
+        try {
+            connection = db.getConnection();
+            String selectsql = "SELECT * from User";
+            SQLstmt = connection.prepareStatement(selectsql);
+            
+            resultset = SQLstmt.executeQuery();
+            
+            while (resultset.next()) {
+                User returnUser = new User();
+                UserInfo userInfo = new UserInfo();
+                returnUser.setID(resultset.getInt(1));
+                Credentials creds = new Credentials(
+                        resultset.getString(2), resultset.getString(3));
+                returnUser.setCreds(creds);
+                userInfo.setFirstName(resultset.getString(4));
+                userInfo.setLastName(resultset.getString(5));
+                userInfo.setEmail(resultset.getString(6));
+                returnUser.setUserInfo(userInfo);
+                returnUser.setRecordCount(resultset.getInt(7));
+                returnUser.setCurrentBatch(resultset.getInt(8));
+                users.add(returnUser);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
         connection = null;
         SQLstmt = null;
-
-        return validate;
+        resultset = null;
+        
+        return users;
     }
-
+    
     /**
      * Gets the user.
      *
-     * @param creds
-     *            the creds
+     * @param creds the creds
      * @return the user
      */
     public User getUser(Credentials creds) {
@@ -121,9 +150,9 @@ public class UserDAO {
             SQLstmt = connection.prepareStatement(selectsql);
             SQLstmt.setString(1, creds.getUsername());
             SQLstmt.setString(2, creds.getPassword());
-
+            
             resultset = SQLstmt.executeQuery();
-
+            
             resultset.next();
             returnUser.setCreds(creds);
             UserInfo userInfo = new UserInfo();
@@ -143,12 +172,11 @@ public class UserDAO {
         resultset = null;
         return returnUser;
     }
-
+    
     /**
      * Update.
      *
-     * @param user
-     *            the user
+     * @param user the user
      */
     public void update(User user) {
         Connection connection = null;
@@ -156,8 +184,8 @@ public class UserDAO {
         try {
             connection = db.getConnection();
             String selectsql = "UPDATE user SET FirstName = ?, LastName = ?,"
-                               + "Email = ?, RecordCount = ?, CurrentBatch = ?"
-                               + "WHERE username = ? AND password = ?";
+                    + "Email = ?, RecordCount = ?, CurrentBatch = ?"
+                    + "WHERE username = ? AND password = ?";
             SQLstmt = connection.prepareStatement(selectsql);
             SQLstmt.setString(1, user.getUserInfo().getFirstName());
             SQLstmt.setString(2, user.getUserInfo().getLastName());
@@ -166,7 +194,7 @@ public class UserDAO {
             SQLstmt.setInt(5, user.getCurrentBatch());
             SQLstmt.setString(6, user.getCreds().getUsername());
             SQLstmt.setString(7, user.getCreds().getPassword());
-
+            
             SQLstmt.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
@@ -174,71 +202,34 @@ public class UserDAO {
         connection = null;
         SQLstmt = null;
     }
-
+    
     /**
-     * Gets the all.
+     * Validate user.
      *
-     * @return the all
+     * @param creds the creds
+     * @return true, if successful
      */
-    public ArrayList<User> getAll() {
-        ArrayList<User> users = new ArrayList<User>();
+    public boolean validateUser(Credentials creds) {
         Connection connection = null;
         PreparedStatement SQLstmt = null;
-        ResultSet resultset = null;
-
+        boolean validate = false;
         try {
             connection = db.getConnection();
-            String selectsql = "SELECT * from User";
-            SQLstmt = connection.prepareStatement(selectsql);
-
-            resultset = SQLstmt.executeQuery();
-
-            while (resultset.next()) {
-                User returnUser = new User();
-                UserInfo userInfo = new UserInfo();
-                returnUser.setID(resultset.getInt(1));
-                Credentials creds = new Credentials(resultset.getString(2),
-                        resultset.getString(3));
-                returnUser.setCreds(creds);
-                userInfo.setFirstName(resultset.getString(4));
-                userInfo.setLastName(resultset.getString(5));
-                userInfo.setEmail(resultset.getString(6));
-                returnUser.setUserInfo(userInfo);
-                returnUser.setRecordCount(resultset.getInt(7));
-                returnUser.setCurrentBatch(resultset.getInt(8));
-                users.add(returnUser);
+            String insertsql = "SELECT * from User"
+                    + "WHERE username = ? AND password = ?";
+            SQLstmt = connection.prepareStatement(insertsql);
+            SQLstmt.setString(1, creds.getUsername());
+            SQLstmt.setString(2, creds.getPassword());
+            
+            if (SQLstmt.executeUpdate() == 1) {
+                validate = true;
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
         connection = null;
         SQLstmt = null;
-        resultset = null;
-
-        return users;
-    }
-
-    /**
-     * Delete.
-     *
-     * @param user
-     *            the user
-     */
-    public void delete(User user) {
-        Connection connection = null;
-        PreparedStatement SQLstmt = null;
-        try {
-            connection = db.getConnection();
-            String selectsql = "DELETE from User WHERE username = ? AND password = ?";
-            SQLstmt = connection.prepareStatement(selectsql);
-            SQLstmt.setString(1, user.getCreds().getUsername());
-            SQLstmt.setString(2, user.getCreds().getPassword());
-
-            SQLstmt.executeUpdate();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        connection = null;
-        SQLstmt = null;
+        
+        return validate;
     }
 }

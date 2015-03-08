@@ -1,3 +1,10 @@
+/**
+ * UserInfo.java
+ * JRE v1.7.0_76
+ * 
+ * Created by William Myers on Mar 8, 2015.
+ * Copyright (c) 2015 William Myers. All Rights reserved.
+ */
 package shared.model;
 
 // TODO: Auto-generated Javadoc
@@ -6,22 +13,22 @@ package shared.model;
  */
 public class UserInfo {
     
+    /** The email. */
+    private String email;
+    
     /** The first. */
     private String first;
     
     /** The last. */
     private String last;
     
-    /** The email. */
-    private String email;
-
     /**
      * Instantiates a new user info.
      */
     public UserInfo() {
-
+        
     }
-
+    
     /**
      * Instantiates a new user info.
      *
@@ -34,58 +41,28 @@ public class UserInfo {
         last = l;
         email = e;
     }
-
-    /**
-     * Gets the first name.
-     *
-     * @return the first name
-     */
-    public String getFirstName() {
-        return first;
-    }
-
-    /**
-     * Sets the first name.
-     *
-     * @param s the new first name
-     */
-    public void setFirstName(String s) {
-        first = s;
-    }
-
-    /**
-     * Gets the last name.
-     *
-     * @return the last name
-     */
-    public String getLastName() {
-        return last;
-    }
-
-    /**
-     * Sets the last name.
-     *
-     * @param s the new last name
-     */
-    public void setLastName(String s) {
-        last = s;
-    }
-
-    /**
-     * Gets the email.
-     *
-     * @return the email
-     */
+    
     public String getEmail() {
         return email;
     }
-
-    /**
-     * Sets the email.
-     *
-     * @param s the new email
-     */
+    
+    public String getFirstName() {
+        return first;
+    }
+    
+    public String getLastName() {
+        return last;
+    }
+    
     public void setEmail(String s) {
         email = s;
+    }
+    
+    public void setFirstName(String s) {
+        first = s;
+    }
+    
+    public void setLastName(String s) {
+        last = s;
     }
 }
