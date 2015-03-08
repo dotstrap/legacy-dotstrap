@@ -1,3 +1,10 @@
+/**
+ * User.java
+ * JRE v1.7.0_76
+ * 
+ * Created by William Myers on Mar 8, 2015.
+ * Copyright (c) 2015 William Myers. All Rights reserved.
+ */
 package shared.model;
 
 // TODO: Auto-generated Javadoc
@@ -6,11 +13,14 @@ package shared.model;
  */
 public class User {
     
-    /** The id. */
-    private int         ID;
+    /** The batch. */
+    private int         batch;
     
     /** The creds. */
     private Credentials creds;
+    
+    /** The id. */
+    private int         ID;
     
     /** The info. */
     private UserInfo    info;
@@ -18,16 +28,13 @@ public class User {
     /** The record count. */
     private int         recordCount;
     
-    /** The batch. */
-    private int         batch;
-
     /**
      * Instantiates a new user.
      */
     public User() {
-
+        
     }
-
+    
     /**
      * Instantiates a new user.
      *
@@ -41,94 +48,44 @@ public class User {
         batch = 0;
         ID = -1;
     }
-
-    /**
-     * Gets the id.
-     *
-     * @return the id
-     */
-    public int getID() {
-        return ID;
-    }
-
-    /**
-     * Sets the id.
-     *
-     * @param i the new id
-     */
-    public void setID(int i) {
-        ID = i;
-    }
-
-    /**
-     * Gets the creds.
-     *
-     * @return the creds
-     */
+    
     public Credentials getCreds() {
         return creds;
     }
-
-    /**
-     * Sets the creds.
-     *
-     * @param c the new creds
-     */
-    public void setCreds(Credentials c) {
-        creds = c;
-    }
-
-    /**
-     * Gets the user info.
-     *
-     * @return the user info
-     */
-    public UserInfo getUserInfo() {
-        return info;
-    }
-
-    /**
-     * Sets the user info.
-     *
-     * @param u the new user info
-     */
-    public void setUserInfo(UserInfo u) {
-        info = u;
-    }
-
-    /**
-     * Gets the record count.
-     *
-     * @return the record count
-     */
-    public int getRecordCount() {
-        return recordCount;
-    }
-
-    /**
-     * Sets the record count.
-     *
-     * @param i the new record count
-     */
-    public void setRecordCount(int i) {
-        recordCount = i;
-    }
-
-    /**
-     * Gets the current batch.
-     *
-     * @return the current batch
-     */
+    
     public int getCurrentBatch() {
         return batch;
     }
-
-    /**
-     * Sets the current batch.
-     *
-     * @param i the new current batch
-     */
+    
+    public int getID() {
+        return ID;
+    }
+    
+    public int getRecordCount() {
+        return recordCount;
+    }
+    
+    public UserInfo getUserInfo() {
+        return info;
+    }
+    
+    public void setCreds(Credentials c) {
+        creds = c;
+    }
+    
     public void setCurrentBatch(int i) {
         batch = i;
+    }
+    
+    public void setID(int i) {
+        ID = i;
+    }
+    
+    public void setRecordCount(int i) {
+        recordCount = i;
+    }
+    
+    public void setUserInfo(UserInfo u) {
+        info = u;
     }
 }

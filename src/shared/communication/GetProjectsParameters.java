@@ -1,3 +1,10 @@
+/**
+ * GetProjectsParameters.java
+ * JRE v1.7.0_76
+ * 
+ * Created by William Myers on Mar 8, 2015.
+ * Copyright (c) 2015 William Myers. All Rights reserved.
+ */
 package shared.communication;
 
 // TODO: Auto-generated Javadoc
@@ -5,69 +12,45 @@ package shared.communication;
  * The Class GetProjectsParameters.
  */
 public class GetProjectsParameters {
-
+    
     /** The name. */
     private String name;
-
+    
     /** The password. */
     private String password;
-
+    
     /**
      * Instantiates a new gets the projects parameters.
      */
     public GetProjectsParameters() {
-
+        
     }
-
+    
     /**
      * Instantiates a new gets the projects parameters.
      *
-     * @param name
-     *            the name
-     * @param password
-     *            the password
+     * @param name the name
+     * @param password the password
      */
     public GetProjectsParameters(String name, String password) {
         this.name = name;
         this.password = password;
     }
-
-    /**
-     * Gets the name.
-     *
-     * @return the name
-     */
+    
     public String getName() {
         return name;
     }
-
-    /**
-     * Sets the name.
-     *
-     * @param name
-     *            the new name
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    /**
-     * Gets the password.
-     *
-     * @return the password
-     */
+    
     public String getPassword() {
         return password;
     }
-
-    /**
-     * Sets the password.
-     *
-     * @param password
-     *            the new password
-     */
+    
+    public void setName(String name) {
+        this.name = name;
+    }
+    
     public void setPassword(String password) {
         this.password = password;
     }
-
+    
 }

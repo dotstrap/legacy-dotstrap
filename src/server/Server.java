@@ -1,15 +1,19 @@
+/**
+ * Server.java
+ * JRE v1.7.0_76
+ * 
+ * Created by William Myers on Mar 8, 2015.
+ * Copyright (c) 2015 William Myers. All Rights reserved.
+ */
 package server;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.util.logging.*;
 
-import server.httphandler.DownloadBatchHandler;
-import server.httphandler.DownloadFileHandler;
-import server.httphandler.GetFieldsHandler;
-import server.httphandler.GetProjectsHandler;
-import server.httphandler.GetSampleImageHandler;
-import server.httphandler.SearchHandler;
-import server.httphandler.SubmitBatchHandler;
-import server.httphandler.ValidateUserHandler;
+import server.facade.ServerFacade;
+import server.httphandler.*;
 
 import com.sun.net.httpserver.HttpServer;
 
@@ -18,81 +22,59 @@ import com.sun.net.httpserver.HttpServer;
  * The Class Server.
  */
 public class Server {
-
-    /** The server port number. */
-    private static int       SERVER_PORT_NUMBER;
-
+    
+    /** The logger. */
+    private static Logger    logger;
+    
     /** The Constant MAX_WAITING_CONNECTIONS. */
     private static final int MAX_WAITING_CONNECTIONS = 10;
-
+    
+    /** The server port number. */
+    private static int       SERVER_PORT_NUMBER      = 8080;
+    
+    static {
+        try {
+            initLog();
+        } catch (IOException e) {
+            System.out.println("Could not initialize log: " + e.getMessage());
+        }
+    }
+    
     /**
      * Inits the log.
      *
-     * @throws IOException
-     *             Signals that an I/O exception has occurred.
+     * @throws IOException Signals that an I/O exception has occurred.
      */
     private static void initLog() throws IOException {
-
+        
+        final String logDir = "logs";
+        final String logName = "indexer-server.log";
+        Level logLevel = Level.FINE;
+        
+        File newDir = new File(logDir);
+        if (!newDir.exists()) {
+            newDir.mkdir();
+        }
+        
+        logger = Logger.getLogger(logName);
+        logger.setLevel(logLevel);
+        logger.setUseParentHandlers(false);
+        
+        Handler consoleHandler = new ConsoleHandler();
+        consoleHandler.setLevel(logLevel);
+        consoleHandler.setFormatter(new SimpleFormatter());
+        logger.addHandler(consoleHandler);
+        
+        FileHandler fileHandler = new FileHandler(logDir + "/" + logName, true);
+        fileHandler.setLevel(logLevel);
+        fileHandler.setFormatter(new SimpleFormatter());
+        logger.addHandler(fileHandler);
     }
-
-    /** The server. */
-    private HttpServer server;
-
-    /**
-     * Instantiates a new server.
-     */
-    public Server() {
-        return;
-    }
-
-    /**
-     * Run.
-     */
-    private void run() {
-
-        // contexts
-        server.createContext("/ValidateUser", validateUserHandler);
-        server.createContext("/GetProjects", getProjectsHandler);
-        server.createContext("/GetFields", getFieldsHandler);
-        server.createContext("/GetSampleImage", getSampleImageHandler);
-        server.createContext("/Search", searchHandler);
-        server.createContext("/DownloadBatch", downloadBatchHandler);
-        server.createContext("/SubmitBatch", submitBatchHandler);
-        server.createContext("/Records", downloadFileHandler);
-
-        server.start();
-    }
-
-    // Handler objects
-    /** The validate user handler. */
-    private ValidateUserHandler   validateUserHandler   = new ValidateUserHandler();
-
-    /** The get projects handler. */
-    private GetProjectsHandler    getProjectsHandler    = new GetProjectsHandler();
-
-    /** The get fields handler. */
-    private GetFieldsHandler      getFieldsHandler      = new GetFieldsHandler();
-
-    /** The get sample image handler. */
-    private GetSampleImageHandler getSampleImageHandler = new GetSampleImageHandler();
-
-    /** The search handler. */
-    private SearchHandler         searchHandler         = new SearchHandler();
-
-    /** The download batch handler. */
-    private DownloadBatchHandler  downloadBatchHandler  = new DownloadBatchHandler();
-
-    /** The submit batch handler. */
-    private SubmitBatchHandler    submitBatchHandler    = new SubmitBatchHandler();
-
-    /** The download file handler. */
-    private DownloadFileHandler   downloadFileHandler   = new DownloadFileHandler();
-
+    
     /**
      * The main method.
      *
-     * @param args
-     *            the arguments
+     * @param args the arguments
      */
     public static void main(String[] args) {
         if (args == null) {
@@ -104,5 +86,89 @@ public class Server {
         }
         new Server().run();
     }
-
+    
+    // Handler objects
+    /** The download batch handler. */
+    private DownloadBatchHandler  downloadBatchHandler;
+    
+    /** The download file handler. */
+    private DownloadFileHandler   downloadFileHandler;
+    
+    /** The get fields handler. */
+    private GetFieldsHandler      getFieldsHandler;
+    
+    /** The get projects handler. */
+    private GetProjectsHandler    getProjectsHandler;
+    
+    /** The get sample image handler. */
+    private GetSampleImageHandler getSampleImageHandler;
+    
+    /** The search handler. */
+    private SearchHandler         searchHandler;
+    
+    /** The server. */
+    private HttpServer            server;
+    
+    /** The submit batch handler. */
+    private SubmitBatchHandler    submitBatchHandler;
+    
+    /** The validate user handler. */
+    private ValidateUserHandler   validateUserHandler;
+    
+    /**
+     * Instantiates a new server.
+     */
+    public Server() {
+        downloadBatchHandler = new DownloadBatchHandler();
+        downloadFileHandler = new DownloadFileHandler();
+        getFieldsHandler = new GetFieldsHandler();
+        getProjectsHandler = new GetProjectsHandler();
+        getSampleImageHandler = new GetSampleImageHandler();
+        searchHandler = new SearchHandler();
+        submitBatchHandler = new SubmitBatchHandler();
+        validateUserHandler = new ValidateUserHandler();
+        return;
+    }
+    
+    /**
+     * Run.
+     */
+    private void run() {
+        
+        logger.info("Initializing Model...");
+        
+        try {
+            ServerFacade.initialize();
+        } catch (ServerException e) {
+            logger.log(Level.SEVERE, e.getMessage(), e);
+            return;
+        }
+        
+        logger.info("Initializing HTTP Server...");
+        
+        try {
+            server = HttpServer.create(
+                    new InetSocketAddress(SERVER_PORT_NUMBER),
+                    MAX_WAITING_CONNECTIONS);
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, e.getMessage(), e);
+            return;
+        }
+        
+        server.setExecutor(null); // use the default executor
+        
+        // contexts
+        server.createContext("/ValidateUser", validateUserHandler);
+        server.createContext("/GetProjects", getProjectsHandler);
+        server.createContext("/GetFields", getFieldsHandler);
+        server.createContext("/GetSampleImage", getSampleImageHandler);
+        server.createContext("/Search", searchHandler);
+        server.createContext("/DownloadBatch", downloadBatchHandler);
+        server.createContext("/SubmitBatch", submitBatchHandler);
+        server.createContext("/Records", downloadFileHandler);
+        
+        logger.info("Starting HTTP Server...");
+        
+        server.start();
+    }
 }

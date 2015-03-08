@@ -1,3 +1,10 @@
+/**
+ * Project.java
+ * JRE v1.7.0_76
+ * 
+ * Created by William Myers on Mar 8, 2015.
+ * Copyright (c) 2015 William Myers. All Rights reserved.
+ */
 package shared.model;
 
 // TODO: Auto-generated Javadoc
@@ -5,37 +12,33 @@ package shared.model;
  * The Class Project.
  */
 public class Project {
-
-    /** The proj info. */
-    private ProjectInfo projInfo;
-
-    /** The records per batch. */
-    private int         recordsPerBatch;
-
+    
     /** The first y. */
     private int         firstY;
-
+    
+    /** The proj info. */
+    private ProjectInfo projInfo;
+    
     /** The record height. */
     private int         recordHeight;
-
+    
+    /** The records per batch. */
+    private int         recordsPerBatch;
+    
     /**
      * Instantiates a new project.
      */
     public Project() {
-
+        
     }
-
+    
     /**
      * Instantiates a new project.
      *
-     * @param pi
-     *            the pi
-     * @param rpb
-     *            the rpb
-     * @param fY
-     *            the f y
-     * @param rH
-     *            the r h
+     * @param pi the pi
+     * @param rpb the rpb
+     * @param fY the f y
+     * @param rH the r h
      */
     public Project(ProjectInfo pi, int rpb, int fY, int rH) {
         projInfo = pi;
@@ -43,81 +46,37 @@ public class Project {
         firstY = fY;
         recordHeight = rH;
     }
-
-    /**
-     * Gets the proj info.
-     *
-     * @return the proj info
-     */
-    public ProjectInfo getProjInfo() {
-        return projInfo;
-    }
-
-    /**
-     * Sets the proj info.
-     *
-     * @param projInfo
-     *            the new proj info
-     */
-    public void setProjInfo(ProjectInfo projInfo) {
-        this.projInfo = projInfo;
-    }
-
-    /**
-     * Gets the records per batch.
-     *
-     * @return the records per batch
-     */
-    public int getRecordsPerBatch() {
-        return recordsPerBatch;
-    }
-
-    /**
-     * Sets the records per batch.
-     *
-     * @param recordsPerBatch
-     *            the new records per batch
-     */
-    public void setRecordsPerBatch(int recordsPerBatch) {
-        this.recordsPerBatch = recordsPerBatch;
-    }
-
-    /**
-     * Gets the first y.
-     *
-     * @return the first y
-     */
+    
     public int getFirstY() {
         return firstY;
     }
-
-    /**
-     * Sets the first y.
-     *
-     * @param firstY
-     *            the new first y
-     */
-    public void setFirstY(int firstY) {
-        this.firstY = firstY;
+    
+    public ProjectInfo getProjInfo() {
+        return projInfo;
     }
-
-    /**
-     * Gets the record height.
-     *
-     * @return the record height
-     */
+    
     public int getRecordHeight() {
         return recordHeight;
     }
-
-    /**
-     * Sets the record height.
-     *
-     * @param recordHeight
-     *            the new record height
-     */
+    
+    public int getRecordsPerBatch() {
+        return recordsPerBatch;
+    }
+    
+    public void setFirstY(int firstY) {
+        this.firstY = firstY;
+    }
+    
+    public void setProjInfo(ProjectInfo projInfo) {
+        this.projInfo = projInfo;
+    }
+    
     public void setRecordHeight(int recordHeight) {
         this.recordHeight = recordHeight;
     }
-
+    
+    public void setRecordsPerBatch(int recordsPerBatch) {
+        this.recordsPerBatch = recordsPerBatch;
+    }
+    
 }

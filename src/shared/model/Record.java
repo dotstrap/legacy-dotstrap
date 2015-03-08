@@ -1,3 +1,10 @@
+/**
+ * Record.java
+ * JRE v1.7.0_76
+ * 
+ * Created by William Myers on Mar 8, 2015.
+ * Copyright (c) 2015 William Myers. All Rights reserved.
+ */
 package shared.model;
 
 // TODO: Auto-generated Javadoc
@@ -5,12 +12,6 @@ package shared.model;
  * The Class Record.
  */
 public class Record {
-    
-    /** The id. */
-    private int    ID;
-    
-    /** The Rec num. */
-    private int    RecNum;
     
     /** The batch id. */
     private int    batchID;
@@ -20,14 +21,20 @@ public class Record {
     
     /** The field id. */
     private int    fieldID;
-
+    
+    /** The id. */
+    private int    ID;
+    
+    /** The Rec num. */
+    private int    RecNum;
+    
     /**
      * Instantiates a new record.
      */
     public Record() {
-
+        
     }
-
+    
     /**
      * Instantiates a new record.
      *
@@ -42,94 +49,44 @@ public class Record {
         data = d;
         fieldID = fID;
     }
-
-    /**
-     * Gets the id.
-     *
-     * @return the id
-     */
-    public int getID() {
-        return ID;
-    }
-
-    /**
-     * Sets the id.
-     *
-     * @param i the new id
-     */
-    public void setID(int i) {
-        ID = i;
-    }
-
-    /**
-     * Gets the record number.
-     *
-     * @return the record number
-     */
-    public int getRecordNumber() {
-        return RecNum;
-    }
-
-    /**
-     * Sets the record number.
-     *
-     * @param i the new record number
-     */
-    public void setRecordNumber(int i) {
-        RecNum = i;
-    }
-
-    /**
-     * Gets the batch id.
-     *
-     * @return the batch id
-     */
+    
     public int getBatchID() {
         return batchID;
     }
-
-    /**
-     * Sets the batch id.
-     *
-     * @param i the new batch id
-     */
-    public void setBatchID(int i) {
-        batchID = i;
-    }
-
-    /**
-     * Gets the data.
-     *
-     * @return the data
-     */
+    
     public String getData() {
         return data;
     }
-
-    /**
-     * Sets the data.
-     *
-     * @param data the new data
-     */
-    public void setData(String data) {
-        this.data = data;
-    }
-
-    /**
-     * Gets the field id.
-     *
-     * @return the field id
-     */
+    
     public int getFieldID() {
         return fieldID;
     }
-
-    /**
-     * Sets the field id.
-     *
-     * @param fieldID the new field id
-     */
+    
+    public int getID() {
+        return ID;
+    }
+    
+    public int getRecordNumber() {
+        return RecNum;
+    }
+    
+    public void setBatchID(int i) {
+        batchID = i;
+    }
+    
+    public void setData(String data) {
+        this.data = data;
+    }
+    
     public void setFieldID(int fieldID) {
         this.fieldID = fieldID;
+    }
+    
+    public void setID(int i) {
+        ID = i;
+    }
+    
+    public void setRecordNumber(int i) {
+        RecNum = i;
     }
 }
