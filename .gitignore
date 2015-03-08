@@ -12,3 +12,11 @@
 hs_err_pid*
 build
 passoff
+workbench.xmi
+.DS_Store
+logs/
+.ant_targets
+Records.zip
+build/
+.project
+.classpath
