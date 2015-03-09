@@ -1,79 +1,68 @@
 /**
  * Batch.java
  * JRE v1.7.0_76
- * 
+ *
  * Created by William Myers on Mar 8, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package shared.model;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class Batch.
+ * The Class Batch
+ * A batch is considered an image.
  */
 public class Batch {
-    
-    /** The file path. */
+
     private String filePath;
-    
-    /** The id. */
     private int    ID;
-    
-    /** The project id. */
     private int    projectID;
-    
-    /** The state. */
     private int    state;
-    
+
     /**
-     * Instantiates a new batch.
+     * Instantiates a new Batch.
+    =*
+     * @param filePath
+     * @param id
+     * @param projectID
+     * @param state
      */
-    public Batch() {
-        
+    public Batch(String filePath, int id, int projectID, int state) {
+        this.filePath = filePath;
+        this.ID = id;
+        this.projectID = projectID;
+        this.state = state;
     }
-    
-    /**
-     * Instantiates a new batch.
-     *
-     * @param fp the fp
-     * @param pID the id
-     * @param s the s
-     */
-    public Batch(String fp, int pID, int s) {
-        filePath = fp;
-        projectID = pID;
-        state = s;
-    }
-    
+
     public String getFilePath() {
-        return filePath;
+        return this.filePath;
     }
-    
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
+    }
+
     public int getID() {
-        return ID;
+        return this.ID;
     }
-    
+
+    public void setID(int id) {
+        this.ID = id;
+    }
+
     public int getProjectID() {
-        return projectID;
+        return this.projectID;
     }
-    
+
+    public void setProjectID(int projectID) {
+        this.projectID = projectID;
+    }
+
     public int getState() {
-        return state;
+        return this.state;
     }
-    
-    public void setFilePath(String s) {
-        filePath = s;
+
+    public void setState(int state) {
+        this.state = state;
     }
-    
-    public void setID(int i) {
-        ID = i;
-    }
-    
-    public void setProjectID(int i) {
-        projectID = i;
-    }
-    
-    public void setState(int i) {
-        state = i;
-    }
+
 }

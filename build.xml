@@ -9,7 +9,7 @@
     
     <property name="server-class" value="server/Server"/>
 
-    <property name="import-class" value="server/importer/DataImporter"/>
+    <property name="import-class" value="shared/DataImporter"/>
     
     <!-- Directory containing testing source code -->
     <property name="test" location="test"/>
@@ -19,7 +19,10 @@
     
     <!-- Directory where the Java compiler puts .class files -->
     <property name="build" location="build"/>
-    
+
+    <!-- Directory where the application puts logs-->
+    <property name="logs" location="logs"/>
+   
     <!-- Directory containing database files -->
     <property name="database" location="database"/>
 
@@ -39,7 +42,7 @@
     <property name="checkstyle-report-file" location="checkstyle-report.txt"/>
     
     <!-- Default values for command-line properties.  Values specified on the command-line will override these. -->
-    <property name="file" value="Records.xml"/>
+    <property name="file" value="import/Records.xml"/>
     <property name="host" value="localhost"/>
     <property name="port" value="39640"/>
 
@@ -72,6 +75,7 @@
         <tstamp/>
         <mkdir dir="${build}"/>
         <mkdir dir="${passoff}"/>
+        <mkdir dir="${logs}"/>
     </target>
 
     <target name="clean" description="delete build files and directories">
@@ -115,7 +119,7 @@
         </java>
     </target>
 
-    <target name="server-gui" depends="compile" description="run the server test gui">
+    <target name="server-gui" depends="compile,server" description="run the server test gui">
         <java classname="servertester.GuiTester" fork="yes">
             <classpath>
                 <path refid="all-classpath"/>

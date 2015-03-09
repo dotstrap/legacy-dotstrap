@@ -20,3 +20,4 @@ Records.zip
 build/
 .project
 .classpath
+log4j2-test.json

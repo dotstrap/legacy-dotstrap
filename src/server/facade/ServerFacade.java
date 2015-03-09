@@ -1,7 +1,7 @@
 /**
  * ServerFacade.java
  * JRE v1.7.0_76
- * 
+ *
  * Created by William Myers on Mar 8, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
@@ -11,7 +11,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.*;
 
-import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.*;
 
 import server.ServerException;
 import server.database.Database;
@@ -24,7 +24,7 @@ import shared.model.*;
  * The Class ServerFacade.
  */
 public class ServerFacade {
-    
+
     /**
      * Adds the records.
      *
@@ -40,7 +40,7 @@ public class ServerFacade {
         int row = 1;
         for (String s : rows) {
             int i = 0;
-            List<String> values = Arrays.asList(s.split(",", -1));
+            List<String> values = Arrays.asList(s.split(",", 0));
             for (String str : values) {
                 str = str.toUpperCase();
                 Record record = new Record(row, batch.getID(), str, fields.get(i));
@@ -52,7 +52,7 @@ public class ServerFacade {
         batch.setState(1);
         db.getBatchDAO().update(batch);
     }
-    
+
     /**
      * Download batch.
      *
@@ -62,15 +62,16 @@ public class ServerFacade {
     public static DownloadBatchResult downloadBatch(DownloadBatchParameters params) {
         DownloadBatchResult result = new DownloadBatchResult();
         ArrayList<Field> fields = new ArrayList<Field>();
-        Batch batch = null;
-        Project project = null;
+        Batch currBatch = null;
+        Project currProject = null;
+
         Database db = new Database();
         try {
             db.startTransaction();
             ArrayList<Batch> batches = db.getBatchDAO().getAll();
-            batch = grabBatch(batches, params, batch, db);
-            if (batch != null) {
-                project = db.getProjectDAO().getProject(params.getProjectID());
+            currBatch = grabBatch(batches, params, currBatch, db);
+            if (currBatch != null) {
+                currProject = db.getProjectDAO().getProject(params.getProjectID());
                 ArrayList<Field> holder = db.getFieldDAO().getAll();
                 for (Field f : holder) {
                     if (f.getProjectID() == params.getProjectID()) {
@@ -78,7 +79,7 @@ public class ServerFacade {
                     }
                 }
                 result = new DownloadBatchResult(
-                        batch, project, fields, fields.size());
+                        currBatch, currProject, fields, fields.size());
             } else {
                 db.endTransaction(false);
                 return result;
@@ -89,7 +90,7 @@ public class ServerFacade {
         db.endTransaction(true);
         return result;
     }
-    
+
     /**
      * Download file.
      *
@@ -108,7 +109,7 @@ public class ServerFacade {
         }
         return new DownloadFileResult(data);
     }
-    
+
     /**
      * Gets the field i ds.
      *
@@ -121,12 +122,11 @@ public class ServerFacade {
         ArrayList<Field> holder = db.getFieldDAO().getAll();
         for (Field f : holder) {
             if (f.getProjectID() == batch.getProjectID()) {
-                fields.add(f.getID());
-            }
+                fields.add(f.getID()); }
         }
         return fields;
     }
-    
+
     /**
      * Gets the fields.
      *
@@ -146,7 +146,7 @@ public class ServerFacade {
         db.endTransaction(true);
         return result;
     }
-    
+
     /**
      * Gets the projects.
      *
@@ -165,7 +165,7 @@ public class ServerFacade {
         db.endTransaction(true);
         return result;
     }
-    
+
     /**
      * Gets the sample image.
      *
@@ -201,7 +201,7 @@ public class ServerFacade {
         }
         return result;
     }
-    
+
     /**
      * Grab batch.
      *
@@ -228,7 +228,7 @@ public class ServerFacade {
         }
         return batch;
     }
-    
+
     /**
      * Initialize.
      *
@@ -241,7 +241,7 @@ public class ServerFacade {
             throw new ServerException(e.getMessage(), e);
         }
     }
-    
+
     /**
      * Search.
      *
@@ -271,7 +271,7 @@ public class ServerFacade {
         db.endTransaction(true);
         return result;
     }
-    
+
     /**
      * Submit batch.
      *
@@ -286,7 +286,7 @@ public class ServerFacade {
             Credentials creds = new Credentials(
                     params.getName(), params.getPassword());
             User user = db.getUserDAO().getUser(creds);
-            
+
             if (user.getCurrentBatch() == params.getBatchID()) {
                 String input = params.getFieldValues();
                 Batch batch = db.getBatchDAO().getBatch(params.getBatchID());
@@ -296,7 +296,7 @@ public class ServerFacade {
                 int size = fields.size();
                 if (size > 0) {
                     addRecords(input, project, batch, db, fields);
-                    
+
                     user.setCurrentBatch(0);
                     int count = (user.getRecordCount() + project
                             .getRecordsPerBatch());
@@ -320,7 +320,7 @@ public class ServerFacade {
         db.endTransaction(true);
         return result;
     }
-    
+
     /**
      * Validate user.
      *

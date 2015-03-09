@@ -1,13 +1,12 @@
 /**
  * Server.java
  * JRE v1.7.0_76
- * 
+ *
  * Created by William Myers on Mar 8, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package server;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.logging.*;
@@ -40,23 +39,11 @@ public class Server {
         }
     }
     
-    /**
-     * Inits the log.
-     *
-     * @throws IOException Signals that an I/O exception has occurred.
-     */
     private static void initLog() throws IOException {
         
-        final String logDir = "logs";
-        final String logName = "indexer-server.log";
         Level logLevel = Level.FINE;
         
-        File newDir = new File(logDir);
-        if (!newDir.exists()) {
-            newDir.mkdir();
-        }
-        
-        logger = Logger.getLogger(logName);
+        logger = Logger.getLogger("server");
         logger.setLevel(logLevel);
         logger.setUseParentHandlers(false);
         
@@ -65,7 +52,7 @@ public class Server {
         consoleHandler.setFormatter(new SimpleFormatter());
         logger.addHandler(consoleHandler);
         
-        FileHandler fileHandler = new FileHandler(logDir + "/" + logName, true);
+        FileHandler fileHandler = new FileHandler("logs/server.log", false);
         fileHandler.setLevel(logLevel);
         fileHandler.setFormatter(new SimpleFormatter());
         logger.addHandler(fileHandler);
