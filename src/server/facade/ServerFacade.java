@@ -1,8 +1,8 @@
 /**
  * ServerFacade.java
  * JRE v1.7.0_76
- *
- * Created by William Myers on Mar 8, 2015.
+ * 
+ * Created by William Myers on Mar 10, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package server.facade;
@@ -261,7 +261,7 @@ public class ServerFacade {
                 }
             }
             for (Record r : records) {
-                links.add(db.getBatchDAO().getBatch(r.getBatchID()).getFilePath());
+                links.add(db.getBatchDAO().read(r.getBatchID()).getFilePath());
             }
             result.setLinks(links);
             result.setRecords(records);
@@ -289,7 +289,7 @@ public class ServerFacade {
 
             if (user.getCurrentBatch() == params.getBatchID()) {
                 String input = params.getFieldValues();
-                Batch batch = db.getBatchDAO().getBatch(params.getBatchID());
+                Batch batch = db.getBatchDAO().read(params.getBatchID());
                 Project project = db.getProjectDAO()
                         .getProject(batch.getProjectID());
                 ArrayList<Integer> fields = getFieldIDs(batch, db);

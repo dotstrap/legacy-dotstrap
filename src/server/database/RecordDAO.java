@@ -1,8 +1,8 @@
 /**
  * RecordDAO.java
  * JRE v1.7.0_76
- * 
- * Created by William Myers on Mar 8, 2015.
+ *
+ * Created by William Myers on Mar 10, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package server.database;
@@ -17,10 +17,10 @@ import shared.model.Record;
  * The Class RecordDAO.
  */
 public class RecordDAO {
-    
+
     /** The db. */
     private Database db;
-    
+
     /**
      * Instantiates a new record dao.
      *
@@ -29,7 +29,7 @@ public class RecordDAO {
     public RecordDAO(Database db) {
         this.db = db;
     }
-    
+
     /**
      * Adds the.
      *
@@ -51,7 +51,7 @@ public class RecordDAO {
             SQLstmt.setInt(2, record.getBatchID());
             SQLstmt.setString(3, record.getData());
             SQLstmt.setInt(4, record.getFieldID());
-            
+
             if (SQLstmt.executeUpdate() == 1) {
                 stmt = connection.createStatement();
                 resultset = stmt.executeQuery("SELECT last_insert_rowid()");
@@ -68,7 +68,7 @@ public class RecordDAO {
         resultset = null;
         return id;
     }
-    
+
     /**
      * Delete.
      *
@@ -82,7 +82,7 @@ public class RecordDAO {
             String selectSQL = "DELETE from Record WHERE ID = ?";
             SQLstmt = connection.prepareStatement(selectSQL);
             SQLstmt.setInt(1, record.getID());
-            
+
             SQLstmt.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
@@ -90,20 +90,20 @@ public class RecordDAO {
         connection = null;
         SQLstmt = null;
     }
-    
+
     public ArrayList<Record> getAll() {
         ArrayList<Record> records = new ArrayList<Record>();
         Connection connection = null;
         PreparedStatement SQLstmt = null;
         ResultSet resultset = null;
-        
+
         try {
             connection = db.getConnection();
             String selectSQL = "SELECT * from Record";
             SQLstmt = connection.prepareStatement(selectSQL);
-            
+
             resultset = SQLstmt.executeQuery();
-            
+
             while (resultset.next()) {
                 Record returnRecord = new Record();
                 returnRecord.setID(resultset.getInt(1));
@@ -117,12 +117,12 @@ public class RecordDAO {
             e.printStackTrace();
         }
         connection = null;
-        SQLstmt = null;
-        resultset = null;
-        
+        SQLstmt    = null;
+        resultset  = null;
+
         return records;
     }
-    
+
     /**
      * Gets the record.
      *
@@ -139,9 +139,9 @@ public class RecordDAO {
             String selectSQL = "SELECT * from Record WHERE ID = ?";
             SQLstmt = connection.prepareStatement(selectSQL);
             SQLstmt.setInt(1, id);
-            
+
             resultset = SQLstmt.executeQuery();
-            
+
             resultset.next();
             returnRecord.setID(resultset.getInt(1));
             returnRecord.setRecordNumber(resultset.getInt(2));
@@ -152,11 +152,11 @@ public class RecordDAO {
             e.printStackTrace();
         }
         connection = null;
-        SQLstmt = null;
-        resultset = null;
+        SQLstmt    = null;
+        resultset  = null;
         return returnRecord;
     }
-    
+
     /**
      * Search.
      *
@@ -175,9 +175,9 @@ public class RecordDAO {
             SQLstmt = connection.prepareStatement(selectSQL);
             SQLstmt.setInt(1, id);
             SQLstmt.setString(2, value);
-            
+
             resultset = SQLstmt.executeQuery();
-            
+
             while (resultset.next()) {
                 Record returnRecord = new Record();
                 returnRecord.setID(resultset.getInt(1));

@@ -1,34 +1,51 @@
 /**
  * Batch.java
  * JRE v1.7.0_76
- *
- * Created by William Myers on Mar 8, 2015.
+ * 
+ * Created by William Myers on Mar 10, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package shared.model;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class Batch
  * A batch is considered an image.
  */
 public class Batch {
 
+    /** The file path. */
     private String filePath;
+    
+    /** The id. */
     private int    ID;
+    
+    /** The project id. */
     private int    projectID;
+    
+    /** The state. */
     private int    state;
 
     /**
-     * Instantiates a new Batch.
-    =*
-     * @param filePath
-     * @param id
-     * @param projectID
-     * @param state
+     * Instantiates a new Batch without params.
      */
-    public Batch(String filePath, int id, int projectID, int state) {
+    public Batch() {
+        this.filePath = null;
+//        this.ID = 0;
+        this.projectID = 0;
+        this.state = 0;
+    }
+
+    /**
+     * Overload constructor to instantiate a new Batch with params.
+     *
+     * @param filePath the file path
+     * @param projectID the project id
+     * @param state the state
+     */
+    public Batch(String filePath, int projectID, int state) {
         this.filePath = filePath;
-        this.ID = id;
+//        this.ID = id;
         this.projectID = projectID;
         this.state = state;
     }

@@ -1,8 +1,8 @@
 /**
  * BatchDAOUnitTests.java
  * JRE v1.7.0_76
- * 
- * Created by William Myers on Mar 8, 2015.
+ *
+ * Created by William Myers on Mar 10, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package server.database;
@@ -21,7 +21,7 @@ import shared.model.Batch;
  * The Class BatchDAOUnitTests.
  */
 public class BatchDAOUnitTests {
-    
+
     /**
      * Sets the up before class.
      *
@@ -29,10 +29,10 @@ public class BatchDAOUnitTests {
      */
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-        // Load database driver
-        Database.initialize();
+        // Load database drivers
+        Database.initDriver();
     }
-    
+
     /**
      * Tear down after class.
      *
@@ -42,13 +42,54 @@ public class BatchDAOUnitTests {
     public static void tearDownAfterClass() throws Exception {
         return;
     }
-    
-    /** The db. */
+
+    /** The database. */
     private Database db;
-    
-    /** The db batch. */
+
+    /** The database batch. */
     private BatchDAO dbBatch;
-    
+
+    /**
+     * Sets the database up.
+     *
+     * @throws Exception the exception
+     */
+    @Before
+    public void setUp() throws Exception {
+
+        // Delete all users from the database
+        db = new Database();
+        db.initDBTables();
+        db.startTransaction();
+
+        ArrayList<Batch> batches = db.getBatchDAO().getAll();
+
+        for (Batch b : batches) {
+            db.getBatchDAO().delete(b);
+        }
+        db.endTransaction(true);
+
+        // Prepare database for test case
+        db = new Database();
+        db.startTransaction();
+        dbBatch = db.getBatchDAO();
+    }
+
+    /**
+     * Tear down.
+     *
+     * @throws Exception the exception
+     */
+    @After
+    public void tearDown() throws Exception {
+
+        // Roll back this transaction so changes are undone
+         db.endTransaction(true);
+
+        db = null;
+        dbBatch = null;
+    }
+
     /**
      * Are equal.
      *
@@ -65,9 +106,9 @@ public class BatchDAOUnitTests {
         }
         return (safeEquals(a.getFilePath(), b.getFilePath())
                 && safeEquals(a.getProjectID(), b.getProjectID()) && safeEquals(
-                        a.getState(), b.getState()));
+                    a.getState(), b.getState()));
     }
-    
+
     /**
      * Safe equals.
      *
@@ -82,111 +123,7 @@ public class BatchDAOUnitTests {
             return a.equals(b);
         }
     }
-    
-    /**
-     * Sets the up.
-     *
-     * @throws Exception the exception
-     */
-    @Before
-    public void setUp() throws Exception {
-        
-        // Delete all users from the database
-        db = new Database();
-        db.startTransaction();
-        
-        ArrayList<Batch> batches = db.getBatchDAO().getAll();
-        
-        for (Batch b : batches) {
-            db.getBatchDAO().delete(b);
-        }
-        
-        db.endTransaction(true);
-        
-        // Prepare database for test case
-        db = new Database();
-        db.startTransaction();
-        dbBatch = db.getBatchDAO();
-    }
-    
-    /**
-     * Tear down.
-     *
-     * @throws Exception the exception
-     */
-    @After
-    public void tearDown() throws Exception {
-        
-        // Roll back transaction so changes to database are undone
-        db.endTransaction(true);
-        
-        db = null;
-        dbBatch = null;
-    }
-    
-    /**
-     * Test add.
-     *
-     * @throws DatabaseException the database exception
-     */
-    @Test
-    public void testAdd() throws DatabaseException {
-        
-        Batch one = new Batch("temporary.file.path", 10, 10);
-        Batch two = new Batch("temporary.file.path.two", 10, 10);
-        
-        dbBatch.add(one);
-        dbBatch.add(two);
-        
-        List<Batch> all = dbBatch.getAll();
-        assertEquals(2, all.size());
-        
-        boolean hasFoundOne = false;
-        boolean hasFoundTwo = false;
-        
-        for (Batch b : all) {
-            
-            assertFalse(b.getID() == -1);
-            
-            if (!hasFoundOne) {
-                hasFoundOne = areEqual(b, one, false);
-            }
-            if (!hasFoundTwo) {
-                hasFoundTwo = areEqual(b, two, false);
-            }
-        }
-        
-        assertTrue(hasFoundOne && hasFoundTwo);
-    }
-    
-    /**
-     * Test delete.
-     *
-     * @throws DatabaseException the database exception
-     */
-    @Test
-    public void testDelete() throws DatabaseException {
-        
-        Batch one = new Batch("deleteMe1", 10, 10);
-        Batch two = new Batch("deleteMe2", 5, 5);
-        Batch three = new Batch("deleteMe3", 1, 0);
-        
-        dbBatch.add(one);
-        dbBatch.add(two);
-        dbBatch.add(three);
-        
-        List<Batch> all = dbBatch.getAll();
-        assertEquals(3, all.size());
-        
-        dbBatch.delete(one);
-        dbBatch.delete(two);
-        
-        all = dbBatch.getAll();
-        assertEquals(1, all.size());
-        
-        dbBatch.delete(three);
-    }
-    
+
     /**
      * Test get all.
      *
@@ -194,11 +131,50 @@ public class BatchDAOUnitTests {
      */
     @Test
     public void testGetAll() throws DatabaseException {
-        
         List<Batch> all = dbBatch.getAll();
         assertEquals(0, all.size());
     }
-    
+
+    /**
+     * Test create.
+     *
+     * @throws DatabaseException the database exception
+     */
+    @Test
+    public void testCreate() throws DatabaseException {
+
+        Batch one = new Batch("batchtestcreate1", 10, 10);
+        Batch two = new Batch("batchtestcreate2", 10, 10);
+        Batch three = new Batch("batchTestCreate3", 10, 10);
+
+        dbBatch.create(one);
+        dbBatch.create(two);
+        dbBatch.create(three);
+
+        List<Batch> all = dbBatch.getAll();
+        assertEquals(2, all.size());
+
+        boolean hasFoundOne = false;
+        boolean hasFoundTwo = false;
+        boolean hasFoundThree = false;
+
+        for (Batch b : all) {
+
+            assertFalse(b.getID() == -1);
+
+            if (!hasFoundOne) {
+                hasFoundOne = areEqual(b, one, false);
+            }
+            if (!hasFoundTwo) {
+                hasFoundTwo = areEqual(b, two, false);
+            }
+            if (!hasFoundThree) {
+                hasFoundThree = areEqual(b, three, false);
+            }
+        }
+        assertTrue(hasFoundOne && hasFoundTwo && hasFoundThree);
+    }
+
     /**
      * Test update.
      *
@@ -206,42 +182,73 @@ public class BatchDAOUnitTests {
      */
     @Test
     public void testUpdate() throws DatabaseException {
-        
-        Batch one = new Batch("one", 10, 10);
-        Batch two = new Batch("two", 1, 1);
-        Batch three = new Batch("three", 15, 15);
-        
-        dbBatch.add(one);
-        dbBatch.add(two);
-        dbBatch.add(three);
-        
+
+        Batch one = new Batch("batchUdateTest1", 10, 10);
+        Batch two = new Batch("batchUdateTest2", 1, 1);
+        Batch three = new Batch("batchUdateTest3", 15, 15);
+
+        dbBatch.create(one);
+        dbBatch.create(two);
+        dbBatch.create(three);
+
         one.setState(0);
         two.setState(1);
-        
+        three.setState(2);
+
         dbBatch.update(one);
         dbBatch.update(two);
-        
+        dbBatch.update(three);
+
         List<Batch> all = dbBatch.getAll();
         assertEquals(3, all.size());
-        
-        boolean foundOne = false;
-        boolean foundTwo = false;
-        boolean foundThree = false;
-        
+
+        boolean hasFoundOne = false;
+        boolean hasFoundTwo = false;
+        boolean hasFoundThree = false;
+
         for (Batch b : all) {
-            
             assertFalse(b.getID() == -1);
-            
-            if (!foundOne) {
-                foundOne = areEqual(b, one, false);
+
+            if (!hasFoundOne) {
+                hasFoundOne = areEqual(b, one, false);
             }
-            if (!foundTwo) {
-                foundTwo = areEqual(b, two, false);
+            if (!hasFoundTwo) {
+                hasFoundTwo = areEqual(b, two, false);
             }
-            if (!foundThree) {
-                foundThree = areEqual(b, three, false);
+            if (!hasFoundThree) {
+                hasFoundThree = areEqual(b, three, false);
             }
         }
-        assertTrue(foundOne && foundTwo && foundThree);
+        assertTrue(hasFoundOne && hasFoundTwo && hasFoundThree);
+    }
+
+    /**
+     * Test delete.
+     *
+     * @throws DatabaseException the database exception
+     */
+    @Test
+    public void testDelete() throws DatabaseException {
+        Batch one = new Batch("batchDeleteTest1", 10, 10);
+        Batch two = new Batch("batchDeleteTest2", 5, 5);
+        Batch three = new Batch("batchDeleteTest3", 1, 0);
+
+        dbBatch.create(one);
+        dbBatch.create(two);
+        dbBatch.create(three);
+
+        List<Batch> allBatches = dbBatch.getAll();
+        assertEquals(3, allBatches.size());
+
+        dbBatch.delete(one);
+        dbBatch.delete(two);
+
+        allBatches = dbBatch.getAll();
+        assertEquals(2, allBatches.size());
+
+        dbBatch.delete(three);
+
+        allBatches = dbBatch.getAll();
+        assertEquals(0, allBatches.size());
     }
 }

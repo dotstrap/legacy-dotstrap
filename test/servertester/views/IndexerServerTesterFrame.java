@@ -1,3 +1,10 @@
+/**
+ * IndexerServerTesterFrame.java
+ * JRE v1.7.0_76
+ * 
+ * Created by William Myers on Mar 10, 2015.
+ * Copyright (c) 2015 William Myers. All Rights reserved.
+ */
 package servertester.views;
 
 import java.awt.*;
@@ -7,15 +14,31 @@ import javax.swing.*;
 import servertester.controllers.*;
 import static servertester.views.Constants.*;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class IndexerServerTesterFrame.
+ */
 @SuppressWarnings("serial")
 public class IndexerServerTesterFrame extends JFrame implements IView {
 	
+	/** The _controller. */
 	private IController _controller;
+	
+	/** The _settings panel. */
 	private SettingsPanel _settingsPanel;
+	
+	/** The _param panel. */
 	private ParamPanel _paramPanel;
+	
+	/** The _request panel. */
 	private TextPanel _requestPanel;
+	
+	/** The _response panel. */
 	private TextPanel _responsePanel;
 	
+	/**
+     * Instantiates a new indexer server tester frame.
+     */
 	public IndexerServerTesterFrame() {
 		super();
 

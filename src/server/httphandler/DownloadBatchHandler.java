@@ -2,7 +2,7 @@
  * DownloadBatchHandler.java
  * JRE v1.7.0_76
  * 
- * Created by William Myers on Mar 8, 2015.
+ * Created by William Myers on Mar 10, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package server.httphandler;
@@ -21,6 +21,7 @@ public class DownloadBatchHandler implements HttpHandler {
     /**
      * (non-Javadoc).
      *
+     * @param arg0 the arg0
      * @throws IOException Signals that an I/O exception has occurred.
      * @see com.sun.net.httpserver.HttpHandler#handle(com.sun.net.httpserver.HttpExchange)
      */

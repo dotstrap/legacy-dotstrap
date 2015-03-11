@@ -1,8 +1,8 @@
 /**
  * ProjectDAOUnitTest.java
  * JRE v1.7.0_76
- * 
- * Created by William Myers on Mar 8, 2015.
+ *
+ * Created by William Myers on Mar 10, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 
@@ -23,7 +23,7 @@ import shared.model.ProjectInfo;
  * The Class ProjectDAOUnitTest.
  */
 public class ProjectDAOUnitTest {
-    
+
     /**
      * Sets the up before class.
      *
@@ -31,10 +31,10 @@ public class ProjectDAOUnitTest {
      */
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-        // Load database driver
-        Database.initialize();
+        // Load database drivers
+        Database.initDriver();
     }
-    
+
     /**
      * Tear down after class.
      *
@@ -44,13 +44,13 @@ public class ProjectDAOUnitTest {
     public static void tearDownAfterClass() throws Exception {
         return;
     }
-    
+
     /** The db. */
     private Database   db;
-    
+
     /** The db project. */
     private ProjectDAO dbProject;
-    
+
     /**
      * Are equal.
      *
@@ -70,7 +70,7 @@ public class ProjectDAOUnitTest {
                 && safeEquals(a.getRecordHeight(), b.getRecordHeight()) && safeEquals(
                         a.getRecordsPerBatch(), b.getRecordsPerBatch()));
     }
-    
+
     /**
      * Safe equals.
      *
@@ -85,7 +85,7 @@ public class ProjectDAOUnitTest {
             return a.equals(b);
         }
     }
-    
+
     /**
      * Sets the up.
      *
@@ -96,21 +96,21 @@ public class ProjectDAOUnitTest {
         // Delete all users from the database
         db = new Database();
         db.startTransaction();
-        
+
         ArrayList<Project> projects = db.getProjectDAO().getAll();
-        
+
         for (Project p : projects) {
             db.getProjectDAO().delete(p);
         }
-        
+
         db.endTransaction(true);
-        
+
         // Prepare database for test case
         db = new Database();
         db.startTransaction();
         dbProject = db.getProjectDAO();
     }
-    
+
     /**
      * Tear down.
      *
@@ -118,14 +118,14 @@ public class ProjectDAOUnitTest {
      */
     @After
     public void tearDown() throws Exception {
-        
+
         // Roll back transaction so changes to database are undone
         db.endTransaction(true);
-        
+
         db = null;
         dbProject = null;
     }
-    
+
     /*
      * @Test public void testUpdate() throws DatabaseException { User bob = new
      * User(new Credentials("BobWhite", "bobwhite"), new UserInfo("Bob",
@@ -144,7 +144,7 @@ public class ProjectDAOUnitTest {
      * areEqual(u, davis, false); } } assertTrue(foundBob && foundAmy &&
      * foundDavis); }
      */
-    
+
     /**
      * Test add.
      *
@@ -154,20 +154,20 @@ public class ProjectDAOUnitTest {
     public void testAdd() throws DatabaseException {
         Project one = new Project(new ProjectInfo("one"), 10, 10, 10);
         Project two = new Project(new ProjectInfo("two"), 20, 20, 20);
-        
+
         dbProject.add(one);
         dbProject.add(two);
-        
+
         List<Project> all = dbProject.getAll();
         assertEquals(2, all.size());
-        
+
         boolean foundOne = false;
         boolean foundTwo = false;
-        
+
         for (Project p : all) {
-            
+
             assertFalse(p.getProjInfo().getID() == -1);
-            
+
             if (!foundOne) {
                 foundOne = areEqual(p, one, false);
             }
@@ -177,7 +177,7 @@ public class ProjectDAOUnitTest {
         }
         assertTrue(foundOne && foundTwo);
     }
-    
+
     /**
      * Test delete.
      *
@@ -187,20 +187,20 @@ public class ProjectDAOUnitTest {
     public void testDelete() throws DatabaseException {
         Project one = new Project(new ProjectInfo("one"), 10, 10, 10);
         Project two = new Project(new ProjectInfo("two"), 20, 20, 20);
-        
+
         dbProject.add(one);
         dbProject.add(two);
-        
+
         List<Project> all = dbProject.getAll();
         assertEquals(2, all.size());
-        
+
         dbProject.delete(one);
         dbProject.delete(two);
-        
+
         all = dbProject.getAll();
         assertEquals(0, all.size());
     }
-    
+
     /**
      * Test get all.
      *

@@ -2,7 +2,7 @@
  * Field.java
  * JRE v1.7.0_76
  *
- * Created by William Myers on Mar 8, 2015.
+ * Created by William Myers on Mar 10, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package shared.model;
@@ -14,39 +14,43 @@ package shared.model;
 public class Field {
 
     private String knownPath;
+
     private String helpPath;
 
     private int    ID;
+
     private int    number;
 
     private int    projectID;
+
     private String title;
+
     private int    width;
+
     private int    xCoord;
 
     /**
      * Instantiates a new Field.
      *
-     *
-     * @param knownPath
-     * @param helpPath
-     * @param iD
-     * @param number
-     * @param projectID
-     * @param title
-     * @param width
-     * @param xCoord
+     * @param knownPath the known path
+     * @param helpPath the help path
+     * @param id the id
+     * @param number the number
+     * @param projectID the project id
+     * @param title the title
+     * @param width the width
+     * @param xCoord the x coord
      */
-    public Field(String knownPath, String helpPath, int iD, int number,
+    public Field(String helpPath, String knownPath, int id, int number,
             int projectID, String title, int width, int xCoord) {
+        this.ID        = id;
         this.knownPath = knownPath;
-        this.helpPath = helpPath;
-        this.ID = iD;
-        this.number = number;
+        this.helpPath  = helpPath;
+        this.number    = number;
         this.projectID = projectID;
-        this.title = title;
-        this.width = width;
-        this.xCoord = xCoord;
+        this.title     = title;
+        this.width     = width;
+        this.xCoord    = xCoord;
     }
 
     public String getKnownPath() {
@@ -105,10 +109,20 @@ public class Field {
         this.width = width;
     }
 
+    /**
+     * Gets the x coord.
+     *
+     * @return the x coord
+     */
     public int getxCoord() {
         return this.xCoord;
     }
 
+    /**
+     * Sets the x coord.
+     *
+     * @param xCoord the new x coord
+     */
     public void setxCoord(int xCoord) {
         this.xCoord = xCoord;
     }

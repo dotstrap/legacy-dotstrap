@@ -1,8 +1,8 @@
 /**
  * Project.java
  * JRE v1.7.0_76
- *
- * Created by William Myers on Mar 8, 2015.
+ * 
+ * Created by William Myers on Mar 10, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package shared.model;
@@ -15,20 +15,28 @@ public class Project {
 
     /** The project info. */
     private String name;
+    
+    /** The id. */
     private int    ID;
 
+    /** The record height. */
     private int    recordHeight;
+    
+    /** The records per batch. */
     private int    recordsPerBatch;
+    
+    /** The first y. */
     private int    firstY;
 
     /**
      * Instantiates a new Project.
-    =*
-     * @param name
-     * @param id
-     * @param recordHeight
-     * @param recordsPerBatch
-     * @param firstY
+     * =*
+     *
+     * @param name the name
+     * @param id the id
+     * @param recordHeight the record height
+     * @param recordsPerBatch the records per batch
+     * @param firstY the first y
      */
     public Project(String name, int id, int recordHeight, int recordsPerBatch,
             int firstY) {

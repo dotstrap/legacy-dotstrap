@@ -1,8 +1,8 @@
 /**
  * FieldDAOUnitTest.java
  * JRE v1.7.0_76
- * 
- * Created by William Myers on Mar 8, 2015.
+ *
+ * Created by William Myers on Mar 10, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package server.database;
@@ -21,7 +21,7 @@ import shared.model.Field;
  * The Class FieldDAOUnitTest.
  */
 public class FieldDAOUnitTest {
-    
+
     /**
      * Sets the up before class.
      *
@@ -29,11 +29,10 @@ public class FieldDAOUnitTest {
      */
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-        // Load database driver
-        Database.initialize();
-        Database.initializeTables();
+        // Load database drivers
+        Database.initDriver();
     }
-    
+
     /**
      * Tear down after class.
      *
@@ -43,13 +42,13 @@ public class FieldDAOUnitTest {
     public static void tearDownAfterClass() throws Exception {
         return;
     }
-    
+
     /** The db. */
     private Database db;
-    
+
     /** The db field. */
     private FieldDAO dbField;
-    
+
     /**
      * Sets the up.
      *
@@ -60,21 +59,21 @@ public class FieldDAOUnitTest {
         // Delete all users from the database
         db = new Database();
         db.startTransaction();
-        
+
         ArrayList<Field> fields = db.getFieldDAO().getAll();
-        
+
         for (Field f : fields) {
             db.getFieldDAO().delete(f);
         }
-        
+
         db.endTransaction(true);
-        
+
         // Prepare database for test case
         db = new Database();
         db.startTransaction();
         dbField = db.getFieldDAO();
     }
-    
+
     /**
      * Tear down.
      *
@@ -82,14 +81,14 @@ public class FieldDAOUnitTest {
      */
     @After
     public void tearDown() throws Exception {
-        
+
         // Roll back transaction so changes to database are undone
         db.endTransaction(true);
-        
+
         db = null;
         dbField = null;
     }
-    
+
     /**
      * Test add.
      *
@@ -99,14 +98,14 @@ public class FieldDAOUnitTest {
     public void testAdd() throws DatabaseException {
         Field one = new Field("Title", "help", "known", 1, 1, 1, 1);
         Field two = new Field("Title2", "help2", "known2", 2, 2, 2, 2);
-        
+
         dbField.add(one);
         dbField.add(two);
-        
+
         List<Field> all = dbField.getAll();
         assertEquals(2, all.size());
     }
-    
+
     /**
      * Test delete.
      *
@@ -114,23 +113,23 @@ public class FieldDAOUnitTest {
      */
     @Test
     public void testDelete() throws DatabaseException {
-        
+
         Field one = new Field("Title", "help", "known", 1, 1, 1, 1);
         Field two = new Field("Title2", "help2", "known2", 2, 2, 2, 2);
-        
+
         dbField.add(one);
         dbField.add(two);
-        
+
         List<Field> all = dbField.getAll();
         assertEquals(2, all.size());
-        
+
         dbField.delete(one);
         dbField.delete(two);
-        
+
         all = dbField.getAll();
         assertEquals(0, all.size());
     }
-    
+
     /**
      * Test get all.
      *

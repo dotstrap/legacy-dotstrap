@@ -2,7 +2,7 @@
  * ValidateUserResult.java
  * JRE v1.7.0_76
  * 
- * Created by William Myers on Mar 8, 2015.
+ * Created by William Myers on Mar 10, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package shared.communication;
@@ -100,6 +100,7 @@ public class ValidateUserResult {
     /**
      * (non-Javadoc).
      *
+     * @return the string
      * @see java.lang.Object#toString()
      */
     @Override

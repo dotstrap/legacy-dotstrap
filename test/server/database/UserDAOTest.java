@@ -1,8 +1,8 @@
 /**
  * UserDAOTest.java
  * JRE v1.7.0_76
- * 
- * Created by William Myers on Mar 8, 2015.
+ *
+ * Created by William Myers on Mar 10, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package server.database;
@@ -21,7 +21,7 @@ import shared.model.*;
  * The Class UserDAOTest.
  */
 public class UserDAOTest {
-    
+
     /**
      * Sets the up before class.
      *
@@ -30,9 +30,9 @@ public class UserDAOTest {
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
         // Load database driver
-        Database.initialize();
+        Database.initDriver();
     }
-    
+
     /**
      * Tear down after class.
      *
@@ -42,13 +42,53 @@ public class UserDAOTest {
     public static void tearDownAfterClass() throws Exception {
         return;
     }
-    
+
+    /**
+     * Sets the database up.
+     *
+     * @throws Exception the exception
+     */
+    @Before
+    public void setUp() throws Exception {
+
+        // Delete all users from the database
+        db = new Database();
+        db.initDBTables();
+        db.startTransaction();
+
+        ArrayList<User> users = db.getUserDAO().getAll();
+
+        for (User u : users) {
+            db.getUserDAO().delete(u);
+        }
+        db.endTransaction(true);
+
+        // Prepare database for test case
+        db = new Database();
+        db.startTransaction();
+        dbBatch = db.getUserDAO();
+    }
+
+    /**
+     * Tear down.
+     *
+     * @throws Exception the exception
+     */
+    @After
+    public void tearDown() throws Exception {
+        // Roll back this transaction so changes are undone
+        db.endTransaction(true);
+
+        db = null;
+        dbUser = null;
+    }
+
     /** The db. */
     private Database db;
-    
+
     /** The db user. */
     private UserDAO  dbUser;
-    
+
     /**
      * Are equal.
      *
@@ -71,7 +111,7 @@ public class UserDAOTest {
                         && safeEquals(a.getRecordCount(), b.getRecordCount()) && safeEquals(
                                 a.getCurrentBatch(), b.getCurrentBatch()));
     }
-    
+
     /**
      * Safe equals.
      *
@@ -86,47 +126,8 @@ public class UserDAOTest {
             return a.equals(b);
         }
     }
-    
-    /**
-     * Sets the up.
-     *
-     * @throws Exception the exception
-     */
-    @Before
-    public void setUp() throws Exception {
-        // Delete all users from the database
-        db = new Database();
-        db.startTransaction();
-        
-        ArrayList<User> users = db.getUserDAO().getAll();
-        
-        for (User u : users) {
-            db.getUserDAO().delete(u);
-        }
-        
-        db.endTransaction(true);
-        
-        // Prepare database for test case
-        db = new Database();
-        db.startTransaction();
-        dbUser = db.getUserDAO();
-    }
-    
-    /**
-     * Tear down.
-     *
-     * @throws Exception the exception
-     */
-    @After
-    public void tearDown() throws Exception {
-        
-        // Roll back transaction so changes to database are undone
-        db.endTransaction(true);
-        
-        db = null;
-        dbUser = null;
-    }
-    
+
+
     /**
      * Test add.
      *
@@ -134,34 +135,34 @@ public class UserDAOTest {
      */
     @Test
     public void testAdd() throws DatabaseException {
-        User bob = new User(new Credentials("BobWhite", "bobwhite"), new UserInfo(
-                "Bob", "White", "bobwhite@gmail.com"));
+        User vader = new User(new Credentials("vaderWhite", "vaderwhite"), new UserInfo(
+                "vader", "White", "vaderwhite@gmail.com"));
         User amy = new User(new Credentials("AmyBlack", "amyblack"), new UserInfo(
                 "Amy", "Black", "amyblack@gmail.com"));
         User davis = new User(
                 new Credentials("davisHyer", "davishyer"), new UserInfo(
                         "Davis", "Hyer", "davishyer@gmail.com"));
-        
-        dbUser.add(bob);
+
+        dbUser.add(vader);
         dbUser.add(amy);
         dbUser.add(davis);
-        
+
         Credentials c = new Credentials("davisHyer", "davishyer");
         assertEquals("davisHyer", dbUser.getUser(c).getCreds().getUsername());
-        
+
         List<User> all = dbUser.getAll();
         assertEquals(3, all.size());
-        
-        boolean foundBob = false;
+
+        boolean foundVader = false;
         boolean foundAmy = false;
         boolean foundDavis = false;
-        
+
         for (User u : all) {
-            
+
             assertFalse(u.getID() == -1);
-            
-            if (!foundBob) {
-                foundBob = areEqual(u, bob, false);
+
+            if (!foundVader) {
+                foundVader = areEqual(u, vader, false);
             }
             if (!foundAmy) {
                 foundAmy = areEqual(u, amy, false);
@@ -170,9 +171,9 @@ public class UserDAOTest {
                 foundDavis = areEqual(u, davis, false);
             }
         }
-        assertTrue(foundBob && foundAmy && foundDavis);
+        assertTrue(foundVader && foundAmy && foundDavis);
     }
-    
+
     /**
      * Test delete.
      *
@@ -180,30 +181,30 @@ public class UserDAOTest {
      */
     @Test
     public void testDelete() throws DatabaseException {
-        
-        User bob = new User(new Credentials("BobWhite", "bobwhite"), new UserInfo(
-                "Bob", "White", "bobwhite@gmail.com"));
+
+        User vader = new User(new Credentials("vaderWhite", "vaderwhite"), new UserInfo(
+                "vader", "White", "vaderwhite@gmail.com"));
         User amy = new User(new Credentials("AmyBlack", "amyblack"), new UserInfo(
                 "Amy", "Black", "amyblack@gmail.com"));
         User davis = new User(
                 new Credentials("davisHyer", "davishyer"), new UserInfo(
                         "Davis", "Hyer", "davishyer@gmail.com"));
-        
-        dbUser.add(bob);
+
+        dbUser.add(vader);
         dbUser.add(amy);
         dbUser.add(davis);
-        
+
         List<User> all = dbUser.getAll();
         assertEquals(3, all.size());
-        
-        dbUser.delete(bob);
+
+        dbUser.delete(vader);
         dbUser.delete(amy);
-        
+
         all = dbUser.getAll();
         assertEquals(1, all.size());
         dbUser.delete(davis);
     }
-    
+
     /**
      * Test get all.
      *
@@ -214,7 +215,7 @@ public class UserDAOTest {
         List<User> all = dbUser.getAll();
         assertEquals(0, all.size());
     }
-    
+
     /**
      * Test update.
      *
@@ -222,38 +223,38 @@ public class UserDAOTest {
      */
     @Test
     public void testUpdate() throws DatabaseException {
-        
-        User bob = new User(new Credentials("BobWhite", "bobwhite"), new UserInfo(
-                "Bob", "White", "bobwhite@gmail.com"));
+
+        User vader = new User(new Credentials("vaderWhite", "vaderwhite"), new UserInfo(
+                "vader", "White", "vaderwhite@gmail.com"));
         User amy = new User(new Credentials("AmyBlack", "amyblack"), new UserInfo(
                 "Amy", "Black", "amyblack@gmail.com"));
         User davis = new User(
                 new Credentials("davisHyer", "davishyer"), new UserInfo(
                         "Davis", "Hyer", "davishyer@gmail.com"));
-        
-        dbUser.add(bob);
+
+        dbUser.add(vader);
         dbUser.add(amy);
         dbUser.add(davis);
-        
-        bob.getUserInfo().setFirstName("Robert");
+
+        vader.getUserInfo().setFirstName("Robert");
         amy.getUserInfo().setLastName("White");
-        
-        dbUser.update(bob);
+
+        dbUser.update(vader);
         dbUser.update(amy);
-        
+
         List<User> all = dbUser.getAll();
         assertEquals(3, all.size());
-        
-        boolean foundBob = false;
+
+        boolean foundVader = false;
         boolean foundAmy = false;
         boolean foundDavis = false;
-        
+
         for (User u : all) {
-            
+
             assertFalse(u.getID() == -1);
-            
-            if (!foundBob) {
-                foundBob = areEqual(u, bob, false);
+
+            if (!foundVader) {
+                foundVader = areEqual(u, vader, false);
             }
             if (!foundAmy) {
                 foundAmy = areEqual(u, amy, false);
@@ -262,8 +263,8 @@ public class UserDAOTest {
                 foundDavis = areEqual(u, davis, false);
             }
         }
-        assertTrue(foundBob && foundAmy && foundDavis);
-        dbUser.delete(bob);
+        assertTrue(foundVader && foundAmy && foundDavis);
+        dbUser.delete(vader);
         dbUser.delete(amy);
         dbUser.delete(davis);
     }

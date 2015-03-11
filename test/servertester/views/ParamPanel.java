@@ -1,3 +1,10 @@
+/**
+ * ParamPanel.java
+ * JRE v1.7.0_76
+ * 
+ * Created by William Myers on Mar 10, 2015.
+ * Copyright (c) 2015 William Myers. All Rights reserved.
+ */
 package servertester.views;
 
 import java.awt.*;
@@ -5,12 +12,22 @@ import javax.swing.*;
 import java.util.*;
 import java.util.List;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ParamPanel.
+ */
 @SuppressWarnings("serial")
 public class ParamPanel extends BasePanel {
 
+	/** The _param names. */
 	private String[] _paramNames;
+	
+	/** The _text fields. */
 	private ArrayList<JTextField> _textFields;
 	
+	/**
+     * Instantiates a new param panel.
+     */
 	public ParamPanel() {
 		super();
 		

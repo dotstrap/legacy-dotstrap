@@ -2,7 +2,7 @@
  * User.java
  * JRE v1.7.0_76
  *
- * Created by William Myers on Mar 8, 2015.
+ * Created by William Myers on Mar 10, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 
@@ -15,45 +15,47 @@ package shared.model;
 public class User {
 
     // Credentials
-    private String password;
+    private int    ID;
     private String username;
-    // User information
-    private String email;
+    private String password;
+    // User info
     private String first;
     private String last;
-    // Current project information
-    private int    batch;
-    private int    ID;
+    private String email;
+    // Current project info
     private int    recordCount;
+    private int    currBatch;
 
     /**
-     * @param password
+     * Instantiates a new User.
+     *
+     * @param id
      * @param username
-     * @param email
+     * @param password
      * @param first
      * @param last
-     * @param batch
-     * @param iD
+     * @param email
      * @param recordCount
+     * @param currBatch
      */
-    public User(String password, String username, String email, String first,
-            String last, int batch, int iD, int recordCount) {
-        this.password = password;
+    public User(int id, String username, String password, String first, String last,
+            String email, int recordCount, int currBatch) {
+        this.ID = id;
         this.username = username;
-        this.email = email;
+        this.password = password;
         this.first = first;
         this.last = last;
-        this.batch = batch;
-        this.ID = iD;
+        this.email = email;
         this.recordCount = recordCount;
+        this.currBatch = currBatch;
     }
 
-    public String getPassword() {
-        return this.password;
+    public int getID() {
+        return this.ID;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setID(int id) {
+        this.ID = id;
     }
 
     public String getUsername() {
@@ -64,12 +66,12 @@ public class User {
         this.username = username;
     }
 
-    public String getEmail() {
-        return this.email;
+    public String getPassword() {
+        return this.password;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getFirst() {
@@ -88,20 +90,12 @@ public class User {
         this.last = last;
     }
 
-    public int getBatch() {
-        return this.batch;
+    public String getEmail() {
+        return this.email;
     }
 
-    public void setBatch(int batch) {
-        this.batch = batch;
-    }
-
-    public int getID() {
-        return this.ID;
-    }
-
-    public void setID(int iD) {
-        this.ID = iD;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public int getRecordCount() {
@@ -112,4 +106,11 @@ public class User {
         this.recordCount = recordCount;
     }
 
+    public int getCurrBatch() {
+        return this.currBatch;
+    }
+
+    public void setCurrBatch(int currBatch) {
+        this.currBatch = currBatch;
+    }
 }
