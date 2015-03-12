@@ -16,7 +16,6 @@ import org.junit.*;
 
 import shared.model.*;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class UserDAOTest.
  */
@@ -66,7 +65,7 @@ public class UserDAOTest {
         // Prepare database for test case
         db = new Database();
         db.startTransaction();
-        dbBatch = db.getUserDAO();
+        dbUser = db.getUserDAO();
     }
 
     /**
@@ -90,29 +89,6 @@ public class UserDAOTest {
     private UserDAO  dbUser;
 
     /**
-     * Are equal.
-     *
-     * @param a the a
-     * @param b the b
-     * @param compareIDs the compare i ds
-     * @return true, if successful
-     */
-    private boolean areEqual(User a, User b, boolean compareIDs) {
-        if (compareIDs) {
-            if (a.getID() != b.getID()) {
-                return false;
-            }
-        }
-        return (safeEquals(a.getUserInfo().getFirstName(), b.getUserInfo()
-                .getFirstName())
-                && safeEquals(a.getUserInfo().getLastName(), b.getUserInfo()
-                        .getLastName())
-                        && safeEquals(a.getUserInfo().getEmail(), b.getUserInfo().getEmail())
-                        && safeEquals(a.getRecordCount(), b.getRecordCount()) && safeEquals(
-                                a.getCurrentBatch(), b.getCurrentBatch()));
-    }
-
-    /**
      * Safe equals.
      *
      * @param a the a
@@ -127,82 +103,19 @@ public class UserDAOTest {
         }
     }
 
-
-    /**
-     * Test add.
-     *
-     * @throws DatabaseException the database exception
-     */
-    @Test
-    public void testAdd() throws DatabaseException {
-        User vader = new User(new Credentials("vaderWhite", "vaderwhite"), new UserInfo(
-                "vader", "White", "vaderwhite@gmail.com"));
-        User amy = new User(new Credentials("AmyBlack", "amyblack"), new UserInfo(
-                "Amy", "Black", "amyblack@gmail.com"));
-        User davis = new User(
-                new Credentials("davisHyer", "davishyer"), new UserInfo(
-                        "Davis", "Hyer", "davishyer@gmail.com"));
-
-        dbUser.add(vader);
-        dbUser.add(amy);
-        dbUser.add(davis);
-
-        Credentials c = new Credentials("davisHyer", "davishyer");
-        assertEquals("davisHyer", dbUser.getUser(c).getCreds().getUsername());
-
-        List<User> all = dbUser.getAll();
-        assertEquals(3, all.size());
-
-        boolean foundVader = false;
-        boolean foundAmy = false;
-        boolean foundDavis = false;
-
-        for (User u : all) {
-
-            assertFalse(u.getID() == -1);
-
-            if (!foundVader) {
-                foundVader = areEqual(u, vader, false);
-            }
-            if (!foundAmy) {
-                foundAmy = areEqual(u, amy, false);
-            }
-            if (!foundDavis) {
-                foundDavis = areEqual(u, davis, false);
+    private boolean areEqual(User a, User b, boolean compareIDs) {
+        if (compareIDs) {
+            if (a.getID() != b.getID()) {
+                return false;
             }
         }
-        assertTrue(foundVader && foundAmy && foundDavis);
-    }
-
-    /**
-     * Test delete.
-     *
-     * @throws DatabaseException the database exception
-     */
-    @Test
-    public void testDelete() throws DatabaseException {
-
-        User vader = new User(new Credentials("vaderWhite", "vaderwhite"), new UserInfo(
-                "vader", "White", "vaderwhite@gmail.com"));
-        User amy = new User(new Credentials("AmyBlack", "amyblack"), new UserInfo(
-                "Amy", "Black", "amyblack@gmail.com"));
-        User davis = new User(
-                new Credentials("davisHyer", "davishyer"), new UserInfo(
-                        "Davis", "Hyer", "davishyer@gmail.com"));
-
-        dbUser.add(vader);
-        dbUser.add(amy);
-        dbUser.add(davis);
-
-        List<User> all = dbUser.getAll();
-        assertEquals(3, all.size());
-
-        dbUser.delete(vader);
-        dbUser.delete(amy);
-
-        all = dbUser.getAll();
-        assertEquals(1, all.size());
-        dbUser.delete(davis);
+        return (safeEquals(a.getFirst(), b.
+                .getFirst())
+                && safeEquals(a.getLast(), b.
+                        .getLast())
+                && safeEquals(a.getEmail(), b.getEmail())
+                && safeEquals(a.getRecordCount(), b.getRecordCount()) && safeEquals(
+                    a.getCurrentBatch(), b.getCurrentBatch()));
     }
 
     /**
@@ -217,6 +130,49 @@ public class UserDAOTest {
     }
 
     /**
+     * Test create.
+     *
+     * @throws DatabaseException the database exception
+     */
+    @Test
+    public void testCreate() throws DatabaseException {
+
+        User firstTest = new User(
+                "UserTestCreate1", "pass1", "first1", "last1", "email1", 1, 1);
+        User secondTest = new User(
+                "UserTestCreate2", "pass2", "first2", "last2", "email2", 2, 2);
+        User thirdTest = new User(
+                "UserTestCreate3", "pass3", "first3", "last3", "email3", 3, 3);
+
+        dbUser.create(firstTest);
+        dbUser.create(secondTest);
+        dbUser.create(thirdTest);
+
+        List<User> all = dbUser.getAll();
+        assertEquals(2, all.size());
+
+        boolean hasFoundOne = false;
+        boolean hasFoundTwo = false;
+        boolean hasFoundThree = false;
+
+        for (User b : all) {
+
+            assertFalse(b.getID() == -1);
+
+            if (!hasFoundOne) {
+                hasFoundOne = areEqual(b, firstTest, false);
+            }
+            if (!hasFoundTwo) {
+                hasFoundTwo = areEqual(b, secondTest, false);
+            }
+            if (!hasFoundThree) {
+                hasFoundThree = areEqual(b, thirdTest, false);
+            }
+        }
+        assertTrue(hasFoundOne && hasFoundTwo && hasFoundThree);
+    }
+
+    /**
      * Test update.
      *
      * @throws DatabaseException the database exception
@@ -224,48 +180,87 @@ public class UserDAOTest {
     @Test
     public void testUpdate() throws DatabaseException {
 
-        User vader = new User(new Credentials("vaderWhite", "vaderwhite"), new UserInfo(
-                "vader", "White", "vaderwhite@gmail.com"));
-        User amy = new User(new Credentials("AmyBlack", "amyblack"), new UserInfo(
-                "Amy", "Black", "amyblack@gmail.com"));
-        User davis = new User(
-                new Credentials("davisHyer", "davishyer"), new UserInfo(
-                        "Davis", "Hyer", "davishyer@gmail.com"));
+        User firstTest = new User(
+                "UserTestCreate1", "pass1", "first1", "last1", "email1", 1, 1);
+        User secondTest = new User(
+                "UserTestCreate2", "pass2", "first2", "last2", "email2", 2, 2);
+        User thirdTest = new User(
+                "UserTestCreate3", "pass3", "first3", "last3", "email3", 3, 3);
 
-        dbUser.add(vader);
-        dbUser.add(amy);
-        dbUser.add(davis);
+        dbUser.create(firstTest);
+        dbUser.create(secondTest);
+        dbUser.create(thirdTest);
 
-        vader.getUserInfo().setFirstName("Robert");
-        amy.getUserInfo().setLastName("White");
+        firstTest.setFirst("first-001");
+        secondTest.setFirst("first-002");
+        thirdTest.setFirst("first-003");
 
-        dbUser.update(vader);
-        dbUser.update(amy);
+        firstTest.setLast("last-001");
+        secondTest.setLast("last-002");
+        thirdTest.setLast("last-003");
+
+        firstTest.setEmail("email-001");
+        secondTest.setEmail("email-002");
+        thirdTest.setEmail("email-003");
+
+        dbUser.update(firstTest);
+        dbUser.update(secondTest);
+        dbUser.update(thirdTest);
 
         List<User> all = dbUser.getAll();
         assertEquals(3, all.size());
 
-        boolean foundVader = false;
-        boolean foundAmy = false;
-        boolean foundDavis = false;
+        boolean hasFoundOne = false;
+        boolean hasFoundTwo = false;
+        boolean hasFoundThree = false;
 
-        for (User u : all) {
+        for (User b : all) {
+            assertFalse(b.getID() == -1);
 
-            assertFalse(u.getID() == -1);
-
-            if (!foundVader) {
-                foundVader = areEqual(u, vader, false);
+            if (!hasFoundOne) {
+                hasFoundOne = areEqual(b, firstTest, false);
             }
-            if (!foundAmy) {
-                foundAmy = areEqual(u, amy, false);
+            if (!hasFoundTwo) {
+                hasFoundTwo = areEqual(b, secondTest, false);
             }
-            if (!foundDavis) {
-                foundDavis = areEqual(u, davis, false);
+            if (!hasFoundThree) {
+                hasFoundThree = areEqual(b, thirdTest, false);
             }
         }
-        assertTrue(foundVader && foundAmy && foundDavis);
-        dbUser.delete(vader);
-        dbUser.delete(amy);
-        dbUser.delete(davis);
+        assertTrue(hasFoundOne && hasFoundTwo && hasFoundThree);
+    }
+
+    /**
+     * Test delete.
+     *
+     * @throws DatabaseException the database exception
+     */
+    @Test
+    public void testDelete() throws DatabaseException {
+
+        User firstTest = new User(
+                "UserTestCreate1", "pass1", "first1", "last1", "email1", 1, 1);
+        User secondTest = new User(
+                "UserTestCreate2", "pass2", "first2", "last2", "email2", 2, 2);
+        User thirdTest = new User(
+                "UserTestCreate3", "pass3", "first3", "last3", "email3", 3, 3);
+
+        dbUser.create(firstTest);
+        dbUser.create(secondTest);
+        dbUser.create(thirdTest);
+
+        List<User> allUseres = dbUser.getAll();
+        assertEquals(3, allUseres.size());
+
+        dbUser.delete(firstTest);
+        dbUser.delete(secondTest);
+
+        allUseres = dbUser.getAll();
+        assertEquals(2, allUseres.size());
+
+        dbUser.delete(thirdTest);
+
+        allUseres = dbUser.getAll();
+        assertEquals(0, allUseres.size());
     }
 }

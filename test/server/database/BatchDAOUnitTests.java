@@ -143,13 +143,13 @@ public class BatchDAOUnitTests {
     @Test
     public void testCreate() throws DatabaseException {
 
-        Batch one = new Batch("batchtestcreate1", 10, 10);
-        Batch two = new Batch("batchtestcreate2", 10, 10);
-        Batch three = new Batch("batchTestCreate3", 10, 10);
+        Batch firstTest = new Batch("batchtestCreate1", 10, 10);
+        Batch secondTest = new Batch("batchtestCreate2", 10, 10);
+        Batch thirdTest = new Batch("batchTestCreate3", 10, 10);
 
-        dbBatch.create(one);
-        dbBatch.create(two);
-        dbBatch.create(three);
+        dbBatch.create(firstTest);
+        dbBatch.create(secondTest);
+        dbBatch.create(thirdTest);
 
         List<Batch> all = dbBatch.getAll();
         assertEquals(2, all.size());
@@ -163,13 +163,13 @@ public class BatchDAOUnitTests {
             assertFalse(b.getID() == -1);
 
             if (!hasFoundOne) {
-                hasFoundOne = areEqual(b, one, false);
+                hasFoundOne = areEqual(b, firstTest, false);
             }
             if (!hasFoundTwo) {
-                hasFoundTwo = areEqual(b, two, false);
+                hasFoundTwo = areEqual(b, secondTest, false);
             }
             if (!hasFoundThree) {
-                hasFoundThree = areEqual(b, three, false);
+                hasFoundThree = areEqual(b, thirdTest, false);
             }
         }
         assertTrue(hasFoundOne && hasFoundTwo && hasFoundThree);
@@ -183,21 +183,21 @@ public class BatchDAOUnitTests {
     @Test
     public void testUpdate() throws DatabaseException {
 
-        Batch one = new Batch("batchUdateTest1", 10, 10);
-        Batch two = new Batch("batchUdateTest2", 1, 1);
-        Batch three = new Batch("batchUdateTest3", 15, 15);
+        Batch firstTest = new Batch("batchUdateTest1", 10, 10);
+        Batch secondTest = new Batch("batchUdateTest2", 1, 1);
+        Batch thirdTest = new Batch("batchUdateTest3", 15, 15);
 
-        dbBatch.create(one);
-        dbBatch.create(two);
-        dbBatch.create(three);
+        dbBatch.create(firstTest);
+        dbBatch.create(secondTest);
+        dbBatch.create(thirdTest);
 
-        one.setState(0);
-        two.setState(1);
-        three.setState(2);
+        firstTest.setState(0);
+        secondTest.setState(1);
+        thirdTest.setState(2);
 
-        dbBatch.update(one);
-        dbBatch.update(two);
-        dbBatch.update(three);
+        dbBatch.update(firstTest);
+        dbBatch.update(secondTest);
+        dbBatch.update(thirdTest);
 
         List<Batch> all = dbBatch.getAll();
         assertEquals(3, all.size());
@@ -210,13 +210,13 @@ public class BatchDAOUnitTests {
             assertFalse(b.getID() == -1);
 
             if (!hasFoundOne) {
-                hasFoundOne = areEqual(b, one, false);
+                hasFoundOne = areEqual(b, firstTest, false);
             }
             if (!hasFoundTwo) {
-                hasFoundTwo = areEqual(b, two, false);
+                hasFoundTwo = areEqual(b, secondTest, false);
             }
             if (!hasFoundThree) {
-                hasFoundThree = areEqual(b, three, false);
+                hasFoundThree = areEqual(b, thirdTest, false);
             }
         }
         assertTrue(hasFoundOne && hasFoundTwo && hasFoundThree);
@@ -229,24 +229,24 @@ public class BatchDAOUnitTests {
      */
     @Test
     public void testDelete() throws DatabaseException {
-        Batch one = new Batch("batchDeleteTest1", 10, 10);
-        Batch two = new Batch("batchDeleteTest2", 5, 5);
-        Batch three = new Batch("batchDeleteTest3", 1, 0);
+        Batch firstTest = new Batch("batchDeleteTest1", 10, 10);
+        Batch secondTest = new Batch("batchDeleteTest2", 5, 5);
+        Batch thirdTest = new Batch("batchDeleteTest3", 1, 0);
 
-        dbBatch.create(one);
-        dbBatch.create(two);
-        dbBatch.create(three);
+        dbBatch.create(firstTest);
+        dbBatch.create(secondTest);
+        dbBatch.create(thirdTest);
 
         List<Batch> allBatches = dbBatch.getAll();
         assertEquals(3, allBatches.size());
 
-        dbBatch.delete(one);
-        dbBatch.delete(two);
+        dbBatch.delete(firstTest);
+        dbBatch.delete(secondTest);
 
         allBatches = dbBatch.getAll();
         assertEquals(2, allBatches.size());
 
-        dbBatch.delete(three);
+        dbBatch.delete(thirdTest);
 
         allBatches = dbBatch.getAll();
         assertEquals(0, allBatches.size());

@@ -28,6 +28,42 @@ public class User {
 
     /**
      * Instantiates a new User.
+     */
+    public User() {
+        this.ID = -1;
+        this.username = "username";
+        this.password = "password";
+        this.first = "first";
+        this.last = "last";
+        this.email = "email";
+        this.recordCount = -1;
+        this.currBatch = -1;
+    }
+
+    /**
+     * Instantiates a new User.
+     *
+     * @param username
+     * @param password
+     * @param first
+     * @param last
+     * @param email
+     * @param recordCount
+     * @param currBatch
+     */
+    public User(String username, String password, String first, String last,
+            String email, int recordCount, int currBatch) {
+        this.username = username;
+        this.password = password;
+        this.first = first;
+        this.last = last;
+        this.email = email;
+        this.recordCount = recordCount;
+        this.currBatch = currBatch;
+    }
+
+    /**
+     * Instantiates a new User.
      *
      * @param id
      * @param username
