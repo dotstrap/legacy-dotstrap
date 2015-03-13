@@ -1,16 +1,24 @@
+/**
+ * Batch.java
+ * JRE v1.7.0_76
+ *
+ * Created by William Myers on Mar 10, 2015.
+ * Copyright (c) 2015 William Myers. All Rights reserved.
+ */
 package shared.model;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Class Batch.
+ * The Class Batch
+ * A batch is considered an image.
  */
 public class Batch {
 
-    /** The id. */
-    private int    ID;
-
     /** The file path. */
     private String filePath;
+
+    /** The id. */
+    private int    ID;
 
     /** The project id. */
     private int    projectID;
@@ -19,101 +27,59 @@ public class Batch {
     private int    state;
 
     /**
-     * Instantiates a new batch.
+     * Instantiates a new Batch without params.
      */
     public Batch() {
-
+        this.filePath = null;
+        this.ID = 0;
+        this.projectID = 0;
+        this.state = 0;
     }
 
     /**
-     * Instantiates a new batch.
+     * Overload constructor to instantiate a new Batch with params.
      *
-     * @param fp
-     *            the fp
-     * @param pID
-     *            the id
-     * @param s
-     *            the s
+     * @param filePath the file path
+     * @param projectID the project id
+     * @param state the state
      */
-    public Batch(String fp, int pID, int s) {
-        filePath = fp;
-        projectID = pID;
-        state = s;
+    public Batch(int id, String filePath, int projectID, int state) {
+        this.filePath = filePath;
+        this.ID = id;
+        this.projectID = projectID;
+        this.state = state;
     }
 
-    /**
-     * Gets the id.
-     *
-     * @return the id
-     */
-    public int getID() {
-        return ID;
-    }
-
-    /**
-     * Sets the id.
-     *
-     * @param i
-     *            the new id
-     */
-    public void setID(int i) {
-        ID = i;
-    }
-
-    /**
-     * Gets the file path.
-     *
-     * @return the file path
-     */
     public String getFilePath() {
-        return filePath;
+        return this.filePath;
     }
 
-    /**
-     * Sets the file path.
-     *
-     * @param s
-     *            the new file path
-     */
-    public void setFilePath(String s) {
-        filePath = s;
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
     }
 
-    /**
-     * Gets the project id.
-     *
-     * @return the project id
-     */
+    public int getID() {
+        return this.ID;
+    }
+
+    public void setID(int id) {
+        this.ID = id;
+    }
+
     public int getProjectID() {
-        return projectID;
+        return this.projectID;
     }
 
-    /**
-     * Sets the project id.
-     *
-     * @param i
-     *            the new project id
-     */
-    public void setProjectID(int i) {
-        projectID = i;
+    public void setProjectID(int projectID) {
+        this.projectID = projectID;
     }
 
-    /**
-     * Gets the state.
-     *
-     * @return the state
-     */
     public int getState() {
-        return state;
+        return this.state;
     }
 
-    /**
-     * Sets the state.
-     *
-     * @param i
-     *            the new state
-     */
-    public void setState(int i) {
-        state = i;
+    public void setState(int state) {
+        this.state = state;
     }
+
 }

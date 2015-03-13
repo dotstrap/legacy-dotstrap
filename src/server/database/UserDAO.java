@@ -35,7 +35,7 @@ public class UserDAO {
     }
 
     public ArrayList<User> getAll() {
-        ArrayList<User> users = new ArrayList<User>();
+        ArrayList<User> allUsers = new ArrayList<User>();
         Connection connection = null;
         PreparedStatement SQLstmt = null;
         ResultSet resultset = null;
@@ -62,7 +62,8 @@ public class UserDAO {
                 resultUser.setRecordCount(resultset.getInt(7));
                 resultUser.setCurrBatch(resultset.getInt(8));
 
-                users.add(resultUser);
+                allUsers.add(resultUser);
+                SQLstmt = connection.prepareStatement(selectsql);
             }
         } catch (Exception e) {
             logger.log(Level.SEVERE, e.getMessage(), e.getCause());
@@ -70,10 +71,17 @@ public class UserDAO {
         }
         connection = null;
         SQLstmt = null;
-        resultset = null;
-        return users;
-    }
 
+        try {
+            resultset.close();
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, e.getMessage(), e.getCause());
+            logger.info(e.getStackTrace().toString());
+        } finally {
+            resultset = null;
+        }
+        return allUsers;
+    }
     /**
      * Validate user.
      *
