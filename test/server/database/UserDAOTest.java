@@ -5,20 +5,23 @@
  * Created by William Myers on Mar 10, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
+package server.database;
 
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.junit.*;
 
-import shared.model.*;
-
+import shared.model.User;
 /**
  * The Class UserDAOTest.
  */
 public class UserDAOTest {
+
+    private static Logger logger;
 
     /**
      * Sets the up before class.
@@ -27,6 +30,8 @@ public class UserDAOTest {
      */
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
+        logger = Logger.getLogger("server-test");
+        logger.entering("test.server.UserDAOTest", "setUpBeforeClass");
         // Load database driver
         Database.initDriver();
     }
@@ -49,9 +54,11 @@ public class UserDAOTest {
     @Before
     public void setUp() throws Exception {
 
+        logger.entering("test.server.UserDAOTest", "setUp");
+
         // Delete all users from the database
         db = new Database();
-        db.initDBTables();
+        //db.initDBTables();
         db.startTransaction();
 
         ArrayList<User> users = db.getUserDAO().getAll();
@@ -235,6 +242,9 @@ public class UserDAOTest {
     @Test
     public void testDelete() throws DatabaseException {
 
+        logger.entering(this.getClass().toString(), this.getClass()
+                .getEnclosingMethod().getName());
+
         User firstTest = new User(
                 "UserTestCreate1", "pass1", "first1", "last1", "email1", 1, 1);
         User secondTest = new User(
@@ -259,5 +269,8 @@ public class UserDAOTest {
 
         allUseres = dbUser.getAll();
         assertEquals(0, allUseres.size());
+
+        logger.exiting(this.getClass().toString(), this.getClass()
+                .getEnclosingMethod().getName());
     }
 }

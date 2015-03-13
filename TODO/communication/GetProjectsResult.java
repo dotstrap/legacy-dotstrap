@@ -9,10 +9,10 @@ import shared.model.Project;
  * The Class GetProjectsResult.
  */
 public class GetProjectsResult {
-    
+
     /** The projects. */
     private ArrayList<Project> projects;
-    
+
     /** The valid user. */
     private boolean            validUser;
 
@@ -60,22 +60,22 @@ public class GetProjectsResult {
     }
 
     /**
-     * 
+     *
      * (non-Javadoc).
      *
      * @return the string
      * @see java.lang.Object#toString()
      */
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        if (validUser) {
-            for (Project p : projects) {
-                sb.append(p.getProjInfo().getID() + "\n");
-                sb.append(p.getProjInfo().getName() + "\n");
-            }
-        } else {
-            sb.append("FAILED\n");
-        }
-        return sb.toString();
-    }
+    //public String toString() {
+        //StringBuilder sb = new StringBuilder();
+        //if (validUser) {
+            //for (Project p : projects) {
+                //sb.append(p.getProjInfo().getID() + "\n");
+                //sb.append(p.getProjInfo().getName() + "\n");
+            //}
+        //} else {
+            //sb.append("FAILED\n");
+        //}
+        //return sb.toString();
+    //}
 }

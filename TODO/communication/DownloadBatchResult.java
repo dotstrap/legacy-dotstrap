@@ -177,32 +177,32 @@ public class DownloadBatchResult {
      * @return the string
      * @see java.lang.Object#toString()
      */
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        if (validUser) {
-            sb.append(this.batch.getID() + "\n");
-            sb.append(this.project.getProjInfo().getID() + "\n");
-            sb.append(this.url + "/" + this.batch.getFilePath() + "\n");
-            sb.append(this.project.getFirstY() + "\n");
-            sb.append(this.project.getRecordHeight() + "\n");
-            sb.append(this.project.getRecordsPerBatch() + "\n");
-            sb.append(this.numberOfFields + "\n");
-            int i = 1;
-            for (Field f : fields) {
-                sb.append(f.getID() + "\n");
-                sb.append(i + "\n");
-                sb.append(f.getTitle() + "\n");
-                sb.append(this.url + "/" + f.getHelp() + "\n");
-                sb.append(f.getX() + "\n");
-                sb.append(f.getWidth() + "\n");
-                if (f.getKnownPath().length() > 0) {
-                    sb.append(this.url + "/" + f.getKnownPath() + "\n");
-                }
-                i++;
-            }
-        } else {
-            sb.append("FAILED\n");
-        }
-        return sb.toString();
-    }
+    //public String toString() {
+        //StringBuilder sb = new StringBuilder();
+        //if (validUser) {
+            //sb.append(this.batch.getID() + "\n");
+            //sb.append(this.project.getProjInfo().getID() + "\n");
+            //sb.append(this.url + "/" + this.batch.getFilePath() + "\n");
+            //sb.append(this.project.getFirstY() + "\n");
+            //sb.append(this.project.getRecordHeight() + "\n");
+            //sb.append(this.project.getRecordsPerBatch() + "\n");
+            //sb.append(this.numberOfFields + "\n");
+            //int i = 1;
+            //for (Field f : fields) {
+                //sb.append(f.getID() + "\n");
+                //sb.append(i + "\n");
+                //sb.append(f.getTitle() + "\n");
+                //sb.append(this.url + "/" + f.getHelp() + "\n");
+                //sb.append(f.getX() + "\n");
+                //sb.append(f.getWidth() + "\n");
+                //if (f.getKnownPath().length() > 0) {
+                    //sb.append(this.url + "/" + f.getKnownPath() + "\n");
+                //}
+                //i++;
+            //}
+        //} else {
+            //sb.append("FAILED\n");
+        //}
+        //return sb.toString();
+    //}
 }

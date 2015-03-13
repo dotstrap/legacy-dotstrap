@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project default="javadoc">
-    <target name="javadoc">
-        <javadoc access="public" author="true" classpath="lib/sqlite-jdbc-3.7.2.jar:lib/junit-4.8.2.jar:lib/xstream-1.4.2.jar:lib/commons-io-2.4.jar:demo/record-indexer-demo.jar:lib/checkstyle-5.3-all.jar" destdir="doc" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false" packagenames="server.importer,servertester,shared.model,client.communication,server,server.database,servertester.controllers,shared.communication,server.facade,servertester.views,client,server.httphandler" source="1.7" sourcepath="src:test" splitindex="true" use="true" version="true"/>
-    </target>
-</project>

@@ -95,6 +95,8 @@ public class Database {
      * @throws DatabaseException the database exception
      */
     public static void initDriver() throws DatabaseException {
+        logger.entering("server.database.Database", "initDriver");
+
         try {
             final String driver = "org.sqlite.JDBC";
             Class.forName(driver);

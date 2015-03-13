@@ -1,7 +1,7 @@
 /**
  * Server.java
  * JRE v1.7.0_76
- * 
+ *
  * Created by William Myers on Mar 10, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.logging.*;
 
-import server.facade.ServerFacade;
+//import server.facade.ServerFacade;
 import server.httphandler.*;
 
 import com.sun.net.httpserver.HttpServer;
@@ -128,12 +128,12 @@ public class Server {
     private void bootstrap() {
 
         logger.info("Initializing Model...");
-        try {
-            ServerFacade.initialize();
-        } catch (ServerException e) {
-            logger.log(Level.SEVERE, e.getMessage(), e);
-            return;
-        }
+        //try {
+            //ServerFacade.initialize();
+        //} catch (ServerException e) {
+            //logger.log(Level.SEVERE, e.getMessage(), e);
+            //return;
+        //}
 
         logger.info("Initializing HTTP Server...");
         try {
