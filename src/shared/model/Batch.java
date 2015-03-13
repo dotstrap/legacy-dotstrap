@@ -1,7 +1,7 @@
 /**
  * Batch.java
  * JRE v1.7.0_76
- * 
+ *
  * Created by William Myers on Mar 10, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
@@ -16,13 +16,13 @@ public class Batch {
 
     /** The file path. */
     private String filePath;
-    
+
     /** The id. */
     private int    ID;
-    
+
     /** The project id. */
     private int    projectID;
-    
+
     /** The state. */
     private int    state;
 
@@ -31,7 +31,7 @@ public class Batch {
      */
     public Batch() {
         this.filePath = null;
-//        this.ID = 0;
+        this.ID = 0;
         this.projectID = 0;
         this.state = 0;
     }
@@ -43,9 +43,9 @@ public class Batch {
      * @param projectID the project id
      * @param state the state
      */
-    public Batch(String filePath, int projectID, int state) {
+    public Batch(int id, String filePath, int projectID, int state) {
         this.filePath = filePath;
-//        this.ID = id;
+        this.ID = id;
         this.projectID = projectID;
         this.state = state;
     }

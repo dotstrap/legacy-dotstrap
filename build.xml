@@ -18,7 +18,7 @@
     <property name="lib" location="lib"/>
     
     <!-- Directory where the Java compiler puts .class files -->
-    <property name="bin" location="build"/>
+    <property name="build" location="bin"/>
 
     <!-- Directory where the application puts logs-->
     <property name="logs" location="logs"/>

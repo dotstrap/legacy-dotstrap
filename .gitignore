@@ -22,3 +22,4 @@ build/
 .classpath
 log4j2-test.json
 bin
+.settings
