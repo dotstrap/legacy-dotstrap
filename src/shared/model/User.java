@@ -1,11 +1,3 @@
-/**
- * User.java
- * JRE v1.7.0_76
- *
- * Created by William Myers on Mar 10, 2015.
- * Copyright (c) 2015 William Myers. All Rights reserved.
- */
-
 package shared.model;
 
 // TODO: Auto-generated Javadoc
@@ -13,140 +5,130 @@ package shared.model;
  * The Class User.
  */
 public class User {
-
-    // Credentials
-    private int    ID;
-    private String username;
-    private String password;
-    // User info
-    private String first;
-    private String last;
-    private String email;
-    // Current project info
-    private int    recordCount;
-    private int    currBatch;
+    
+    /** The id. */
+    private int         ID;
+    
+    /** The creds. */
+    private Credentials creds;
+    
+    /** The info. */
+    private UserInfo    info;
+    
+    /** The record count. */
+    private int         recordCount;
+    
+    /** The batch. */
+    private int         batch;
 
     /**
-     * Instantiates a new User.
+     * Instantiates a new user.
      */
     public User() {
-        this.ID = -1;
-        this.username = "username";
-        this.password = "password";
-        this.first = "first";
-        this.last = "last";
-        this.email = "email";
-        this.recordCount = -1;
-        this.currBatch = -1;
+
     }
 
     /**
-     * Instantiates a new User.
+     * Instantiates a new user.
      *
-     * @param username
-     * @param password
-     * @param first
-     * @param last
-     * @param email
-     * @param recordCount
-     * @param currBatch
+     * @param c the c
+     * @param ui the ui
      */
-    public User(String username, String password, String first, String last,
-            String email, int recordCount, int currBatch) {
-        this.username = username;
-        this.password = password;
-        this.first = first;
-        this.last = last;
-        this.email = email;
-        this.recordCount = recordCount;
-        this.currBatch = currBatch;
+    public User(Credentials c, UserInfo ui) {
+        creds = c;
+        info = ui;
+        recordCount = 0;
+        batch = 0;
+        ID = -1;
     }
 
     /**
-     * Instantiates a new User.
+     * Gets the id.
      *
-     * @param id
-     * @param username
-     * @param password
-     * @param first
-     * @param last
-     * @param email
-     * @param recordCount
-     * @param currBatch
+     * @return the id
      */
-    public User(int id, String username, String password, String first, String last,
-            String email, int recordCount, int currBatch) {
-        this.ID = id;
-        this.username = username;
-        this.password = password;
-        this.first = first;
-        this.last = last;
-        this.email = email;
-        this.recordCount = recordCount;
-        this.currBatch = currBatch;
-    }
-
     public int getID() {
-        return this.ID;
+        return ID;
     }
 
-    public void setID(int id) {
-        this.ID = id;
+    /**
+     * Sets the id.
+     *
+     * @param i the new id
+     */
+    public void setID(int i) {
+        ID = i;
     }
 
-    public String getUsername() {
-        return this.username;
+    /**
+     * Gets the creds.
+     *
+     * @return the creds
+     */
+    public Credentials getCreds() {
+        return creds;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    /**
+     * Sets the creds.
+     *
+     * @param c the new creds
+     */
+    public void setCreds(Credentials c) {
+        creds = c;
     }
 
-    public String getPassword() {
-        return this.password;
+    /**
+     * Gets the user info.
+     *
+     * @return the user info
+     */
+    public UserInfo getUserInfo() {
+        return info;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    /**
+     * Sets the user info.
+     *
+     * @param u the new user info
+     */
+    public void setUserInfo(UserInfo u) {
+        info = u;
     }
 
-    public String getFirst() {
-        return this.first;
-    }
-
-    public void setFirst(String first) {
-        this.first = first;
-    }
-
-    public String getLast() {
-        return this.last;
-    }
-
-    public void setLast(String last) {
-        this.last = last;
-    }
-
-    public String getEmail() {
-        return this.email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
+    /**
+     * Gets the record count.
+     *
+     * @return the record count
+     */
     public int getRecordCount() {
-        return this.recordCount;
+        return recordCount;
     }
 
-    public void setRecordCount(int recordCount) {
-        this.recordCount = recordCount;
+    /**
+     * Sets the record count.
+     *
+     * @param i the new record count
+     */
+    public void setRecordCount(int i) {
+        recordCount = i;
     }
 
-    public int getCurrBatch() {
-        return this.currBatch;
+    /**
+     * Gets the current batch.
+     *
+     * @return the current batch
+     */
+    public int getCurrentBatch() {
+        return batch;
     }
 
-    public void setCurrBatch(int currBatch) {
-        this.currBatch = currBatch;
+    /**
+     * Sets the current batch.
+     *
+     * @param i the new current batch
+     */
+    public void setCurrentBatch(int i) {
+        batch = i;
     }
 }

@@ -1,13 +1,6 @@
-/**
- * ValidateUserCredentials.java
- * JRE v1.7.0_76
- * 
- * Created by William Myers on Mar 10, 2015.
- * Copyright (c) 2015 William Myers. All Rights reserved.
- */
 package shared.communication;
 
-import shared.model.User;
+import shared.model.*;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -15,12 +8,12 @@ import shared.model.User;
  */
 public class ValidateUserCredentials {
     
-    /** The password. */
-    private String password;
-    
     /** The username. */
     private String username;
     
+    /** The password. */
+    private String password;
+
     /**
      * Instantiates a new validate user credentials.
      *
@@ -31,25 +24,50 @@ public class ValidateUserCredentials {
         username = u;
         password = p;
     }
-    
-    public String getPassword() {
-        return password;
-    }
-    
-    public User getUser() {
-        User user = new User();
-        return user;
-    }
-    
+
+    /**
+     * gets username.
+     *
+     * @return -> returns the username
+     */
     public String getUsername() {
         return username;
     }
-    
+
+    /**
+     * sets username.
+     *
+     * @param s            -> new username
+     */
+    public void setUsername(String s) {
+        username = s;
+    }
+
+    /**
+     * gets password.
+     *
+     * @return -> returns the password
+     */
+    public String getPassword() {
+        return password;
+    }
+
+    /**
+     * sets password.
+     *
+     * @param s            -> new password
+     */
     public void setPassword(String s) {
         password = s;
     }
-    
-    public void setUsername(String s) {
-        username = s;
+
+    /**
+     * Gets the user.
+     *
+     * @return the user
+     */
+    public User getUser() {
+        User user = new User();
+        return user;
     }
 }

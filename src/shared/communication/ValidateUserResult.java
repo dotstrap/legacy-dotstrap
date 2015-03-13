@@ -1,10 +1,3 @@
-/**
- * ValidateUserResult.java
- * JRE v1.7.0_76
- * 
- * Created by William Myers on Mar 10, 2015.
- * Copyright (c) 2015 William Myers. All Rights reserved.
- */
 package shared.communication;
 
 // TODO: Auto-generated Javadoc
@@ -13,21 +6,21 @@ package shared.communication;
  */
 public class ValidateUserResult {
     
-    /** The batch. */
-    private boolean batch;
-    
     /** The fn. */
     private String  fn;
     
     /** The ln. */
     private String  ln;
     
-    /** The records. */
-    private int     records;
-    
     /** The validate. */
     private boolean validate;
     
+    /** The batch. */
+    private boolean batch;
+    
+    /** The records. */
+    private int     records;
+
     /**
      * Instantiates a new validate user result.
      */
@@ -35,7 +28,7 @@ public class ValidateUserResult {
         validate = false;
         batch = false;
     }
-    
+
     /**
      * Instantiates a new validate user result.
      *
@@ -50,67 +43,111 @@ public class ValidateUserResult {
         ln = last;
         records = number;
     }
-    
-    public String getFirstName() {
-        return fn;
-    }
-    
-    public String getLastName() {
-        return ln;
-    }
-    
-    public int getRecordNum() {
-        return records;
-    }
-    
+
     /**
-     * Checks if is batch.
-     */
-    public boolean isBatch() {
-        return batch;
-    }
-    
-    /**
-     * Checks if is output.
+     * gets output.
+     *
+     * @return -> bool validate
      */
     public boolean isOutput() {
         return validate;
     }
-    
-    public void setBatch(boolean batch) {
-        this.batch = batch;
-    }
-    
-    public void setFirstName(String s) {
-        fn = s;
-    }
-    
-    public void setLastName(String s) {
-        ln = s;
-    }
-    
+
+    /**
+     * sets output.
+     *
+     * @param o            -> new output
+     */
     public void setOutput(boolean o) {
         validate = o;
     }
-    
+
+    /**
+     * gets the firstname.
+     *
+     * @return -> firstname
+     */
+    public String getFirstName() {
+        return fn;
+    }
+
+    /**
+     * gets the lastname.
+     *
+     * @return -> lastname
+     */
+    public String getLastName() {
+        return ln;
+    }
+
+    /**
+     * sets the firstname.
+     *
+     * @param s            -> new firstname
+     */
+    public void setFirstName(String s) {
+        fn = s;
+    }
+
+    /**
+     * sets the lastname.
+     *
+     * @param s            -> new lastname
+     */
+    public void setLastName(String s) {
+        ln = s;
+    }
+
+    /**
+     * gets the record number.
+     *
+     * @return -> record number
+     */
+    public int getRecordNum() {
+        return records;
+    }
+
+    /**
+     * sets the record number.
+     *
+     * @param i            -> new record number
+     */
     public void setRecordNum(int i) {
         records = i;
     }
-    
+
     /**
+     * Checks if is batch.
+     *
+     * @return true, if is batch
+     */
+    public boolean isBatch() {
+        return batch;
+    }
+
+    /**
+     * Sets the batch.
+     *
+     * @param batch the new batch
+     */
+    public void setBatch(boolean batch) {
+        this.batch = batch;
+    }
+
+    /**
+     *  
      * (non-Javadoc).
      *
      * @return the string
      * @see java.lang.Object#toString()
      */
-    @Override
     public String toString() {
         StringBuilder output = new StringBuilder();
-        if (validate) {
+        if (this.validate) {
             output.append("TRUE\n");
-            output.append(fn + "\n");
-            output.append(ln + "\n");
-            output.append(records + "\n");
+            output.append(this.fn + "\n");
+            output.append(this.ln + "\n");
+            output.append(this.records + "\n");
         } else {
             output.append("FALSE\n");
         }

@@ -1,15 +1,10 @@
-/**
- * DownloadBatchResult.java
- * JRE v1.7.0_76
- *
- * Created by William Myers on Mar 10, 2015.
- * Copyright (c) 2015 William Myers. All Rights reserved.
- */
 package shared.communication;
 
 import java.util.ArrayList;
 
-import shared.model.*;
+import shared.model.Batch;
+import shared.model.Field;
+import shared.model.Project;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -20,14 +15,14 @@ public class DownloadBatchResult {
     /** The batch. */
     private Batch            batch;
 
+    /** The project. */
+    private Project          project;
+
     /** The fields. */
     private ArrayList<Field> fields;
 
     /** The number of fields. */
     private int              numberOfFields;
-
-    /** The project. */
-    private Project          project;
 
     /** The url. */
     private String           url;
@@ -45,10 +40,14 @@ public class DownloadBatchResult {
     /**
      * Instantiates a new download batch result.
      *
-     * @param batch the batch
-     * @param project the project
-     * @param fields the fields
-     * @param numberOfFields the number of fields
+     * @param batch
+     *            the batch
+     * @param project
+     *            the project
+     * @param fields
+     *            the fields
+     * @param numberOfFields
+     *            the number of fields
      */
     public DownloadBatchResult(Batch batch, Project project,
             ArrayList<Field> fields, int numberOfFields) {
@@ -58,55 +57,118 @@ public class DownloadBatchResult {
         this.numberOfFields = numberOfFields;
     }
 
+    /**
+     * Gets the batch.
+     *
+     * @return the batch
+     */
     public Batch getBatch() {
         return batch;
     }
 
-    public ArrayList<Field> getFields() {
-        return fields;
+    /**
+     * Sets the batch.
+     *
+     * @param batch
+     *            the new batch
+     */
+    public void setBatch(Batch batch) {
+        this.batch = batch;
     }
 
-    public int getNumberOfFields() {
-        return numberOfFields;
-    }
-
+    /**
+     * Gets the project.
+     *
+     * @return the project
+     */
     public Project getProject() {
         return project;
     }
 
-    public String getUrl() {
-        return url;
+    /**
+     * Sets the project.
+     *
+     * @param project
+     *            the new project
+     */
+    public void setProject(Project project) {
+        this.project = project;
+    }
+
+    /**
+     * Gets the fields.
+     *
+     * @return the fields
+     */
+    public ArrayList<Field> getFields() {
+        return fields;
+    }
+
+    /**
+     * Sets the fields.
+     *
+     * @param fields
+     *            the new fields
+     */
+    public void setFields(ArrayList<Field> fields) {
+        this.fields = fields;
+    }
+
+    /**
+     * Gets the number of fields.
+     *
+     * @return the number of fields
+     */
+    public int getNumberOfFields() {
+        return numberOfFields;
+    }
+
+    /**
+     * Sets the number of fields.
+     *
+     * @param numberOfFields
+     *            the new number of fields
+     */
+    public void setNumberOfFields(int numberOfFields) {
+        this.numberOfFields = numberOfFields;
     }
 
     /**
      * Checks if is valid user.
+     *
+     * @return true, if is valid user
      */
     public boolean isValidUser() {
         return validUser;
     }
 
-    public void setBatch(Batch batch) {
-        this.batch = batch;
-    }
-
-    public void setFields(ArrayList<Field> fields) {
-        this.fields = fields;
-    }
-
-    public void setNumberOfFields(int numberOfFields) {
-        this.numberOfFields = numberOfFields;
-    }
-
-    public void setProject(Project project) {
-        this.project = project;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
+    /**
+     * Sets the valid user.
+     *
+     * @param validUser
+     *            the new valid user
+     */
     public void setValidUser(boolean validUser) {
         this.validUser = validUser;
+    }
+
+    /**
+     * Gets the url.
+     *
+     * @return the url
+     */
+    public String getUrl() {
+        return url;
+    }
+
+    /**
+     * Sets the url.
+     *
+     * @param url
+     *            the new url
+     */
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     /**
@@ -115,33 +177,32 @@ public class DownloadBatchResult {
      * @return the string
      * @see java.lang.Object#toString()
      */
-    //@Override
-    //public String toString() {
-        //StringBuilder sb = new StringBuilder();
-        //if (validUser) {
-            //sb.append(batch.getID() + "\n");
-            //sb.append(project.getProjInfo().getID() + "\n");
-            //sb.append(url + "/" + batch.getFilePath() + "\n");
-            //sb.append(project.getFirstY() + "\n");
-            //sb.append(project.getRecordHeight() + "\n");
-            //sb.append(project.getRecordsPerBatch() + "\n");
-            //sb.append(numberOfFields + "\n");
-            //int i = 1;
-            //for (Field f : fields) {
-                //sb.append(f.getID() + "\n");
-                //sb.append(i + "\n");
-                //sb.append(f.getTitle() + "\n");
-                //sb.append(url + "/" + f.getHelp() + "\n");
-                //sb.append(f.getX() + "\n");
-                //sb.append(f.getWidth() + "\n");
-                //if (f.getKnownPath().length() > 0) {
-                    //sb.append(url + "/" + f.getKnownPath() + "\n");
-                //}
-                //i++;
-            //}
-        //} else {
-            //sb.append("FAILED\n");
-        //}
-        //return sb.toString();
-    //}
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        if (validUser) {
+            sb.append(this.batch.getID() + "\n");
+            sb.append(this.project.getProjInfo().getID() + "\n");
+            sb.append(this.url + "/" + this.batch.getFilePath() + "\n");
+            sb.append(this.project.getFirstY() + "\n");
+            sb.append(this.project.getRecordHeight() + "\n");
+            sb.append(this.project.getRecordsPerBatch() + "\n");
+            sb.append(this.numberOfFields + "\n");
+            int i = 1;
+            for (Field f : fields) {
+                sb.append(f.getID() + "\n");
+                sb.append(i + "\n");
+                sb.append(f.getTitle() + "\n");
+                sb.append(this.url + "/" + f.getHelp() + "\n");
+                sb.append(f.getX() + "\n");
+                sb.append(f.getWidth() + "\n");
+                if (f.getKnownPath().length() > 0) {
+                    sb.append(this.url + "/" + f.getKnownPath() + "\n");
+                }
+                i++;
+            }
+        } else {
+            sb.append("FAILED\n");
+        }
+        return sb.toString();
+    }
 }

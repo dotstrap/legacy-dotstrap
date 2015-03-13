@@ -1,10 +1,3 @@
-/**
- * GetSampleImageResult.java
- * JRE v1.7.0_76
- * 
- * Created by William Myers on Mar 10, 2015.
- * Copyright (c) 2015 William Myers. All Rights reserved.
- */
 package shared.communication;
 
 import java.net.URL;
@@ -15,56 +8,83 @@ import java.net.URL;
  */
 public class GetSampleImageResult {
     
-    /** The link. */
-    private String  link;
-    
     /** The url. */
-    private URL     url;
+    private URL    url;
     
+    /** The link. */
+    private String link;
+
+    /**
+     * Gets the link.
+     *
+     * @return the link
+     */
+    public String getLink() {
+        return link;
+    }
+
+    /**
+     * Sets the link.
+     *
+     * @param link the new link
+     */
+    public void setLink(String link) {
+        this.link = link;
+    }
+
     /** The valid user. */
     private boolean validUser;
-    
+
     /**
      * Instantiates a new gets the sample image result.
      */
     public GetSampleImageResult() {
         validUser = false;
     }
-    
-    public String getLink() {
-        return link;
+
+    /**
+     * Sets the url.
+     *
+     * @param url the new url
+     */
+    public void setURL(URL url) {
+        this.url = url;
     }
-    
+
+    /**
+     * Gets the url.
+     *
+     * @return the url
+     */
     public URL getURL() {
         return url;
     }
-    
+
     /**
      * Checks if is valid user.
+     *
+     * @return true, if is valid user
      */
     public boolean isValidUser() {
         return validUser;
     }
-    
-    public void setLink(String link) {
-        this.link = link;
-    }
-    
-    public void setURL(URL url) {
-        this.url = url;
-    }
-    
+
+    /**
+     * Sets the valid user.
+     *
+     * @param validUser the new valid user
+     */
     public void setValidUser(boolean validUser) {
         this.validUser = validUser;
     }
-    
+
     /**
+     * 
      * (non-Javadoc).
      *
      * @return the string
      * @see java.lang.Object#toString()
      */
-    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         if (validUser) {

@@ -1,10 +1,3 @@
-/**
- * GetFieldsResult.java
- * JRE v1.7.0_76
- * 
- * Created by William Myers on Mar 10, 2015.
- * Copyright (c) 2015 William Myers. All Rights reserved.
- */
 package shared.communication;
 
 import java.util.ArrayList;
@@ -22,40 +15,57 @@ public class GetFieldsResult {
     
     /** The valid user. */
     private boolean          validUser;
-    
+
     /**
      * Instantiates a new gets the fields result.
      */
     public GetFieldsResult() {
         validUser = false;
     }
-    
+
+    /**
+     * Gets the fields.
+     *
+     * @return the fields
+     */
     public ArrayList<Field> getFields() {
         return fields;
     }
-    
+
+    /**
+     * Sets the fields.
+     *
+     * @param fields the new fields
+     */
+    public void setFields(ArrayList<Field> fields) {
+        this.fields = fields;
+    }
+
     /**
      * Checks if is valid user.
+     *
+     * @return true, if is valid user
      */
     public boolean isValidUser() {
         return validUser;
     }
-    
-    public void setFields(ArrayList<Field> fields) {
-        this.fields = fields;
-    }
-    
+
+    /**
+     * Sets the valid user.
+     *
+     * @param validUser the new valid user
+     */
     public void setValidUser(boolean validUser) {
         this.validUser = validUser;
     }
-    
+
     /**
+     *  
      * (non-Javadoc).
      *
      * @return the string
      * @see java.lang.Object#toString()
      */
-    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         if (validUser) {

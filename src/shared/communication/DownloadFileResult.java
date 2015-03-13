@@ -1,10 +1,3 @@
-/**
- * DownloadFileResult.java
- * JRE v1.7.0_76
- * 
- * Created by William Myers on Mar 10, 2015.
- * Copyright (c) 2015 William Myers. All Rights reserved.
- */
 package shared.communication;
 
 // TODO: Auto-generated Javadoc
@@ -12,23 +5,35 @@ package shared.communication;
  * The Class DownloadFileResult.
  */
 public class DownloadFileResult {
-    
+
     /** The file bytes. */
     private byte[] fileBytes;
-    
+
     /**
-     * Instantiates a new download file result.
+     * Bytes returned by file referenced by URL.
      *
-     * @param fileBytes the file bytes
+     * @param fileBytes
+     *            the file bytes
      */
     public DownloadFileResult(byte[] fileBytes) {
         this.fileBytes = fileBytes;
     }
-    
+
+    /**
+     * Gets the file bytes.
+     *
+     * @return the fileBytes
+     */
     public byte[] getFileBytes() {
         return fileBytes;
     }
-    
+
+    /**
+     * Sets the file bytes.
+     *
+     * @param fileBytes
+     *            the fileBytes to set
+     */
     public void setFileBytes(byte[] fileBytes) {
         this.fileBytes = fileBytes;
     }

@@ -1,10 +1,3 @@
-/**
- * Project.java
- * JRE v1.7.0_76
- * 
- * Created by William Myers on Mar 10, 2015.
- * Copyright (c) 2015 William Myers. All Rights reserved.
- */
 package shared.model;
 
 // TODO: Auto-generated Javadoc
@@ -13,77 +6,118 @@ package shared.model;
  */
 public class Project {
 
-    /** The project info. */
-    private String name;
-    
-    /** The id. */
-    private int    ID;
+    /** The proj info. */
+    private ProjectInfo projInfo;
+
+    /** The records per batch. */
+    private int         recordsPerBatch;
+
+    /** The first y. */
+    private int         firstY;
 
     /** The record height. */
-    private int    recordHeight;
-    
-    /** The records per batch. */
-    private int    recordsPerBatch;
-    
-    /** The first y. */
-    private int    firstY;
+    private int         recordHeight;
 
     /**
-     * Instantiates a new Project.
-     * =*
-     *
-     * @param name the name
-     * @param id the id
-     * @param recordHeight the record height
-     * @param recordsPerBatch the records per batch
-     * @param firstY the first y
+     * Instantiates a new project.
      */
-    public Project(String name, int id, int recordHeight, int recordsPerBatch,
-            int firstY) {
-        this.name = name;
-        this.ID = id;
-        this.recordHeight = recordHeight;
-        this.recordsPerBatch = recordsPerBatch;
-        this.firstY = firstY;
+    public Project() {
+
     }
 
-    public String getName() {
-        return this.name;
+    /**
+     * Instantiates a new project.
+     *
+     * @param pi
+     *            the pi
+     * @param rpb
+     *            the rpb
+     * @param fY
+     *            the f y
+     * @param rH
+     *            the r h
+     */
+    public Project(ProjectInfo pi, int rpb, int fY, int rH) {
+        projInfo = pi;
+        recordsPerBatch = rpb;
+        firstY = fY;
+        recordHeight = rH;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    /**
+     * Gets the proj info.
+     *
+     * @return the proj info
+     */
+    public ProjectInfo getProjInfo() {
+        return projInfo;
     }
 
-    public int getID() {
-        return this.ID;
+    /**
+     * Sets the proj info.
+     *
+     * @param projInfo
+     *            the new proj info
+     */
+    public void setProjInfo(ProjectInfo projInfo) {
+        this.projInfo = projInfo;
     }
 
-    public void setID(int id) {
-        this.ID = id;
-    }
-
-    public int getRecordHeight() {
-        return this.recordHeight;
-    }
-
-    public void setRecordHeight(int recordHeight) {
-        this.recordHeight = recordHeight;
-    }
-
+    /**
+     * Gets the records per batch.
+     *
+     * @return the records per batch
+     */
     public int getRecordsPerBatch() {
-        return this.recordsPerBatch;
+        return recordsPerBatch;
     }
 
+    /**
+     * Sets the records per batch.
+     *
+     * @param recordsPerBatch
+     *            the new records per batch
+     */
     public void setRecordsPerBatch(int recordsPerBatch) {
         this.recordsPerBatch = recordsPerBatch;
     }
 
+    /**
+     * Gets the first y.
+     *
+     * @return the first y
+     */
     public int getFirstY() {
-        return this.firstY;
+        return firstY;
     }
 
+    /**
+     * Sets the first y.
+     *
+     * @param firstY
+     *            the new first y
+     */
     public void setFirstY(int firstY) {
         this.firstY = firstY;
     }
+
+    /**
+     * Gets the record height.
+     *
+     * @return the record height
+     */
+    public int getRecordHeight() {
+        return recordHeight;
+    }
+
+    /**
+     * Sets the record height.
+     *
+     * @param recordHeight
+     *            the new record height
+     */
+    public void setRecordHeight(int recordHeight) {
+        this.recordHeight = recordHeight;
+    }
+
 }

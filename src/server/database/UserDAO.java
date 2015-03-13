@@ -62,6 +62,18 @@ public class UserDAO {
                 resultUser.setRecordCount(resultset.getInt(7));
                 resultUser.setCurrBatch(resultset.getInt(8));
 
+                users.add(resultUser);
+            }
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, e.getMessage(), e.getCause());
+            logger.info(e.getStackTrace().toString());
+        }
+        connection = null;
+        SQLstmt = null;
+        resultset = null;
+        return users;
+    }
+
     /**
      * Validate user.
      *
