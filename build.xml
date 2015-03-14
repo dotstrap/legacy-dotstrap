@@ -40,7 +40,13 @@
     
     <!-- File containing the report output by Checkstyle -->
     <property name="checkstyle-report-file" location="checkstyle-report.txt"/>
-    
+   
+    <!-- Deployment mechanism: rysnc -->
+    <property name="rsync" value="/usr/local/bin/rsync"/>
+    <property name="user" value="wmyers7"/>
+    <property name="host" value="schizo.cs.byu.edu"/>
+    <property name="remote-path" value="/users/guest/w/${user}/Documents/Developer/CS240/${ant.project.name}/"/>
+
     <!-- Default values for command-line properties.  Values specified on the command-line will override these. -->
     <property name="file" value="import/Records.xml"/>
     <property name="host" value="localhost"/>
@@ -203,6 +209,11 @@
         </java>
     </target>
 
+    <target name="deploy" description="copies source code to remote host">
+      <exec executable="${rsync}">
+         <arg line="rsync -e ssh -ahuv --exclude '/**/*.DS_Store' --exclude '${build}' --exclude '*git*' --exclude '${logs}' --exclude '${demo}' --exclude 'specs' . ${user}@${host}:${remote-path}"/>
+      </exec>
+    </target>
     
 </project>
 

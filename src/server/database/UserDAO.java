@@ -24,7 +24,7 @@ public class UserDAO {
     private Database      db;
 
     /** The logger used throughout the project. */
-    private static Logger     logger;
+    private static Logger logger;
     static {
         logger = Logger.getLogger("server");
     }
@@ -41,7 +41,7 @@ public class UserDAO {
     public ArrayList<User> getAll() {
         ArrayList<User> allUsers = new ArrayList<User>();
         Connection connection = null;
-        PreparedStatement SQLstmt = null;
+        PreparedStatement pstmt = null;
         ResultSet resultset = null;
 
         try {
@@ -49,8 +49,8 @@ public class UserDAO {
 
             String selectsql = "SELECT * from User";
 
-            SQLstmt = connection.prepareStatement(selectsql);
-            resultset = SQLstmt.executeQuery();
+            pstmt = connection.prepareStatement(selectsql);
+            resultset = pstmt.executeQuery();
 
             while (resultset.next()) {
                 User resultUser = new User();
@@ -67,14 +67,14 @@ public class UserDAO {
                 resultUser.setCurrBatch(resultset.getInt(8));
 
                 allUsers.add(resultUser);
-                SQLstmt = connection.prepareStatement(selectsql);
+                pstmt = connection.prepareStatement(selectsql);
             }
         } catch (Exception e) {
             logger.log(Level.SEVERE, e.getMessage(), e.getCause());
             logger.info(e.getStackTrace().toString());
         }
         connection = null;
-        SQLstmt = null;
+        pstmt = null;
 
         try {
             resultset.close();
@@ -82,20 +82,21 @@ public class UserDAO {
             logger.log(Level.SEVERE, e.getMessage(), e.getCause());
             logger.info(e.getStackTrace().toString());
         } finally {
-            resultset = null;
+            Database.closeSafely(resultset);
         }
         return allUsers;
     }
+
     /**
      * Validate user.
      *
-     * @param creds the creds
+     * @param user - the user to validate
      * @return true, if successful
      */
     public boolean validateUser(User user) {
         Connection connection = null;
-        PreparedStatement SQLstmt = null;
-        boolean validate = false;
+        PreparedStatement pstmt = null;
+        boolean isValid = false;
         try {
             String username = user.getUsername();
             String password = user.getPassword();
@@ -105,21 +106,21 @@ public class UserDAO {
             String insertsql = "SELECT * from User"
                     + "WHERE username = ? AND password = ?";
 
-            SQLstmt = connection.prepareStatement(insertsql);
-            SQLstmt.setString(1, username);
-            SQLstmt.setString(2, password);
+            pstmt = connection.prepareStatement(insertsql);
+            pstmt.setString(1, username);
+            pstmt.setString(2, password);
 
-            if (SQLstmt.executeUpdate() == 1) {
-                validate = true;
+            if (pstmt.executeUpdate() == 1) {
+                isValid = true;
             }
         } catch (Exception e) {
             logger.log(Level.SEVERE, e.getMessage(), e.getCause());
             logger.info(e.getStackTrace().toString());
+        } finally {
+            Database.closeSafely(pstmt);
+            Database.closeSafely(connection);
         }
-        connection = null;
-        SQLstmt = null;
-
-        return validate;
+        return isValid;
     }
 
     /**
@@ -130,7 +131,7 @@ public class UserDAO {
      */
     public int create(User user) {
         Connection connection = null;
-        PreparedStatement SQLstmt = null;
+        PreparedStatement pstmt = null;
         Statement stmt = null;
         ResultSet resultset = null;
         int id = -1;
@@ -140,16 +141,16 @@ public class UserDAO {
             String insertsql = "INSERT INTO User (username, password, FirstName, LastName, Email, RecordCount, CurrentBatch)"
                     + "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-            SQLstmt = connection.prepareStatement(insertsql);
-            SQLstmt.setString(1, user.getUsername());
-            SQLstmt.setString(2, user.getPassword());
-            SQLstmt.setString(3, user.getFirst());
-            SQLstmt.setString(4, user.getLast());
-            SQLstmt.setString(5, user.getEmail());
-            SQLstmt.setInt(6, user.getRecordCount());
-            SQLstmt.setInt(7, user.getCurrBatch());
+            pstmt = connection.prepareStatement(insertsql);
+            pstmt.setString(1, user.getUsername());
+            pstmt.setString(2, user.getPassword());
+            pstmt.setString(3, user.getFirst());
+            pstmt.setString(4, user.getLast());
+            pstmt.setString(5, user.getEmail());
+            pstmt.setInt(6, user.getRecordCount());
+            pstmt.setInt(7, user.getCurrBatch());
 
-            if (SQLstmt.executeUpdate() == 1) {
+            if (pstmt.executeUpdate() == 1) {
                 stmt = connection.createStatement();
                 resultset = stmt.executeQuery("SELECT last_insert_rowid()");
                 resultset.next();
@@ -159,11 +160,12 @@ public class UserDAO {
         } catch (Exception e) {
             logger.log(Level.SEVERE, e.getMessage(), e.getCause());
             logger.info(e.getStackTrace().toString());
+        } finally {
+            Database.closeSafely(pstmt);
+            Database.closeSafely(connection);
+            Database.closeSafely(stmt);
+            Database.closeSafely(resultset);
         }
-        connection = null;
-        SQLstmt = null;
-        stmt = null;
-        resultset = null;
         return id;
     }
 
@@ -176,7 +178,7 @@ public class UserDAO {
      */
     public User read(String username, String password) {
         Connection connection = null;
-        PreparedStatement SQLstmt = null;
+        PreparedStatement pstmt = null;
         ResultSet resultset = null;
         User returnUser = new User();
         try {
@@ -184,11 +186,11 @@ public class UserDAO {
 
             String selectsql = "SELECT * from User WHERE username = ? AND password = ?";
 
-            SQLstmt = connection.prepareStatement(selectsql);
-            SQLstmt.setString(1, username);
-            SQLstmt.setString(2, password);
+            pstmt = connection.prepareStatement(selectsql);
+            pstmt.setString(1, username);
+            pstmt.setString(2, password);
 
-            resultset = SQLstmt.executeQuery();
+            resultset = pstmt.executeQuery();
 
             resultset.next();
 
@@ -204,10 +206,11 @@ public class UserDAO {
             logger.log(Level.SEVERE, e.getMessage(), e.getCause());
             logger.info(e.getStackTrace().toString());
             return null;
+        } finally {
+            Database.closeSafely(pstmt);
+            Database.closeSafely(connection);
+            Database.closeSafely(resultset);
         }
-        connection = null;
-        SQLstmt = null;
-        resultset = null;
         return returnUser;
     }
 
@@ -218,7 +221,7 @@ public class UserDAO {
      */
     public void update(User user) {
         Connection connection = null;
-        PreparedStatement SQLstmt = null;
+        PreparedStatement pstmt = null;
         try {
             connection = db.getConnection();
 
@@ -226,24 +229,25 @@ public class UserDAO {
                     + "Email = ?, RecordCount = ?, CurrentBatch = ?"
                     + "WHERE username = ? AND password = ?";
 
-            SQLstmt = connection.prepareStatement(selectsql);
+            pstmt = connection.prepareStatement(selectsql);
 
-            SQLstmt.setString(1, user.getFirst());
-            SQLstmt.setString(2, user.getLast());
-            SQLstmt.setString(3, user.getEmail());
-            SQLstmt.setInt(4, user.getRecordCount());
-            SQLstmt.setInt(5, user.getCurrBatch());
+            pstmt.setString(1, user.getFirst());
+            pstmt.setString(2, user.getLast());
+            pstmt.setString(3, user.getEmail());
+            pstmt.setInt(4, user.getRecordCount());
+            pstmt.setInt(5, user.getCurrBatch());
 
-            SQLstmt.setString(6, user.getUsername());
-            SQLstmt.setString(7, user.getPassword());
+            pstmt.setString(6, user.getUsername());
+            pstmt.setString(7, user.getPassword());
 
-            SQLstmt.executeUpdate();
+            pstmt.executeUpdate();
         } catch (Exception e) {
             logger.log(Level.SEVERE, e.getMessage(), e.getCause());
             logger.info(e.getStackTrace().toString());
+        } finally {
+            Database.closeSafely(pstmt);
+            Database.closeSafely(connection);
         }
-        connection = null;
-        SQLstmt = null;
     }
 
     /**
@@ -253,22 +257,23 @@ public class UserDAO {
      */
     public void delete(User user) {
         Connection connection = null;
-        PreparedStatement SQLstmt = null;
+        PreparedStatement pstmt = null;
         try {
             connection = db.getConnection();
 
             String selectsql = "DELETE from User WHERE username = ? AND password = ?";
 
-            SQLstmt = connection.prepareStatement(selectsql);
-            SQLstmt.setString(1, user.getUsername());
-            SQLstmt.setString(2, user.getPassword());
+            pstmt = connection.prepareStatement(selectsql);
+            pstmt.setString(1, user.getUsername());
+            pstmt.setString(2, user.getPassword());
 
-            SQLstmt.executeUpdate();
+            pstmt.executeUpdate();
         } catch (Exception e) {
             logger.log(Level.SEVERE, e.getMessage(), e.getCause());
             logger.info(e.getStackTrace().toString());
+        } finally {
+            Database.closeSafely(pstmt);
+            Database.closeSafely(connection);
         }
-        connection = null;
-        SQLstmt = null;
     }
 }

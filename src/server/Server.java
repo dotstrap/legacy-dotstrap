@@ -19,11 +19,54 @@ import com.sun.net.httpserver.HttpServer;
 
 /**
  * The Class Server.
- * Initializes the server's logs (used in all classes
+ * Initializes the server's logs (used in all non-testing classes)
  * Creates HTTPHandler Objects
  * Bootstraps the HTTP Server
  */
 public class Server {
+
+    /** The Constant MAX_WAITING_CONNECTIONS to the server. */
+    private static final int      MAX_WAITING_CONNECTIONS = 10;
+
+    /** Default port number the server runs on (can be overridden via CLI args. */
+    private static int            SERVER_PORT_NUMBER      = 8080;
+
+    /** The logger. */
+    private static Logger         logger;
+    static {
+        try {
+            initLog();
+        } catch (IOException e) {
+            System.out.println("Could not initialize log: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Initializes the log.
+     *
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
+    private static void initLog() throws IOException {
+        // FINER enables entering and exiting method statements
+        // INFO enables informational status logs
+        // SEVERE only enables error messages set to SEVERE (used herein in catch blocks)
+        Level logLevel = Level.FINE;
+
+        logger = Logger.getLogger("server");
+        logger.setLevel(logLevel);
+        logger.setUseParentHandlers(false);
+
+        Handler consoleHandler = new ConsoleHandler();
+        consoleHandler.setLevel(logLevel);
+        consoleHandler.setFormatter(new SimpleFormatter());
+        logger.addHandler(consoleHandler);
+
+        // Set up 1 rolling log with a max file size of 3MB
+        FileHandler fileHandler = new FileHandler("logs/server.log", 3000000, 1, true);
+        fileHandler.setLevel(logLevel);
+        fileHandler.setFormatter(new SimpleFormatter());
+        logger.addHandler(fileHandler);
+    }
 
     /**
      * The main method.
@@ -38,49 +81,8 @@ public class Server {
         } else {
             SERVER_PORT_NUMBER = 8080;
         }
+        logger.info("Bootstrapping server on port:" + SERVER_PORT_NUMBER + "...");
         new Server().bootstrap();
-    }
-
-    /**
-     * Initializes the log.
-     *
-     * @throws IOException Signals that an I/O exception has occurred.
-     */
-    private static void initLog() throws IOException {
-        // FINER enables entering and exiting statements
-        // SEVERE only enables error messages set to SEVERE
-        Level logLevel = Level.FINER;
-
-        logger = Logger.getLogger("server");
-        logger.setLevel(logLevel);
-        logger.setUseParentHandlers(false);
-
-        Handler consoleHandler = new ConsoleHandler();
-        consoleHandler.setLevel(logLevel);
-        consoleHandler.setFormatter(new SimpleFormatter());
-        logger.addHandler(consoleHandler);
-
-        FileHandler fileHandler = new FileHandler("logs/server.log", false);
-        fileHandler.setLevel(logLevel);
-        fileHandler.setFormatter(new SimpleFormatter());
-        logger.addHandler(fileHandler);
-    }
-
-    /** The Constant MAX_WAITING_CONNECTIONS to the server. */
-    private static final int      MAX_WAITING_CONNECTIONS = 10;
-
-    /** Default port number the server runs on (can be overridden via CLI args. */
-    private static int            SERVER_PORT_NUMBER      = 8080;
-
-    /** The logger. */
-    private static Logger         logger;
-
-    static {
-        try {
-            initLog();
-        } catch (IOException e) {
-            System.out.println("Could not initialize log: " + e.getMessage());
-        }
     }
 
     // The server
@@ -108,6 +110,7 @@ public class Server {
      * @param downloadFileHandler
      */
     public Server() {
+        logger.info("Initializing HTTP handlers...");
         searchHandler = new SearchHandler();
         validateUserHandler = new ValidateUserHandler();
         getFieldsHandler = new GetFieldsHandler();
@@ -120,10 +123,10 @@ public class Server {
 
     /**
      * Bootstraps the server:
-     * Initializes the models
-     * Starts the HTTP server
-     * Creates contexts
-     * Starts the server
+     *   Initializes the models
+     *   Starts the HTTP server
+     *   Creates contexts
+     *   Starts the server
      */
     private void bootstrap() {
 

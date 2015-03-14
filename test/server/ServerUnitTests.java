@@ -29,23 +29,24 @@ public class ServerUnitTests {
      * @throws IOException Signals that an I/O exception has occurred.
      */
     private static void initLog() throws IOException {
-        // FINER enables entering and exiting statements
-        // SEVERE only enables error messages set to SEVERE
-        Level logLevel = Level.FINER;
+        // FINER enables entering and exiting method statements
+        // INFO enables informational status logs
+        // SEVERE only enables error messages set to SEVERE (used herein in catch blocks)
+        Level logLevel = Level.FINE;
 
         logger = Logger.getLogger("server");
         logger.setLevel(logLevel);
         logger.setUseParentHandlers(false);
 
-        //Handler consoleHandler = new ConsoleHandler();
-        //consoleHandler.setLevel(logLevel);
-        //consoleHandler.setFormatter(new SimpleFormatter());
-        //logger.addHandler(consoleHandler);
+        Handler consoleHandler = new ConsoleHandler();
+        consoleHandler.setLevel(logLevel);
+        consoleHandler.setFormatter(new SimpleFormatter());
+        logger.addHandler(consoleHandler);
 
-        FileHandler fileHandler = new FileHandler("logs/server.log", false);
+        // Set up 1 rolling log with a max file size of 3MB
+        FileHandler fileHandler = new FileHandler("logs/server.log", 3000000, 1, true);
         fileHandler.setLevel(logLevel);
         fileHandler.setFormatter(new SimpleFormatter());
-        logger.addHandler(fileHandler);
     }
 
     /**

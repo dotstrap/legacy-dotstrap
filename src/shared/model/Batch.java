@@ -13,12 +13,11 @@ package shared.model;
  * A batch is considered an image.
  */
 public class Batch {
+    /** The id. */
+    private int    ID;
 
     /** The file path. */
     private String filePath;
-
-    /** The id. */
-    private int    ID;
 
     /** The project id. */
     private int    projectID;
@@ -34,6 +33,19 @@ public class Batch {
         this.ID = 0;
         this.projectID = 0;
         this.state = 0;
+    }
+
+    /**
+     * Overload constructor instantiates a new Batch.
+     *
+     * @param filePath
+     * @param projectID
+     * @param state
+     */
+    public Batch(String filePath, int projectID, int state) {
+        this.filePath = filePath;
+        this.projectID = projectID;
+        this.state = state;
     }
 
     /**

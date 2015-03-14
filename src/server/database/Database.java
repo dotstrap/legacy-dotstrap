@@ -7,6 +7,7 @@
  */
 package server.database;
 
+import java.io.*;
 import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,7 +25,7 @@ public class Database {
     private static Logger     logger;
     static {
         logger = Logger.getLogger("server");
-   }
+    }
 
     // DataBase Access /////////////
     /**
@@ -75,7 +76,7 @@ public class Database {
 
     public FieldDAO getFieldDAO() {
         return fieldDAO;
-   }
+    }
 
     public ProjectDAO getProjectDAO() {
         return projectDAO;
@@ -83,20 +84,64 @@ public class Database {
 
     public RecordDAO getRecordDAO() {
         return recordDAO;
-   }
+    }
 
     public UserDAO getUserDAO() {
         return userDAO;
     }
 
-    // TODO when to call this?
+    // TODO: how to make these into one generic method?
+    public static void closeSafely(Connection c) {
+        if (c != null) {
+            try {
+                c.close();
+            } catch (SQLException e) {
+                logger.log(Level.SEVERE, e.getMessage(), e.getCause());
+                logger.info(e.getStackTrace().toString());
+            }
+        }
+    }
+
+    public static void closeSafely(Statement stmt) {
+        if (stmt != null) {
+            try {
+                stmt.close();
+            } catch (SQLException e) {
+                logger.log(Level.SEVERE, e.getMessage(), e.getCause());
+                logger.info(e.getStackTrace().toString());
+            }
+        }
+    }
+
+    public static void closeSafely(PreparedStatement pstmt) {
+        if (pstmt != null) {
+            try {
+                pstmt.close();
+            } catch (SQLException e) {
+                logger.log(Level.SEVERE, e.getMessage(), e.getCause());
+                logger.info(e.getStackTrace().toString());
+            }
+        }
+    }
+
+    public static void closeSafely(ResultSet rs) {
+        if (rs != null) {
+            try {
+                rs.close();
+            } catch (SQLException e) {
+                logger.log(Level.SEVERE, e.getMessage(), e.getCause());
+                logger.info(e.getStackTrace().toString());
+            }
+        }
+    }
+
     /**
      * Initializes the Java SQL driver.
      *
      * @throws DatabaseException the database exception
      */
     public static void initDriver() throws DatabaseException {
-         logger.entering("server.database.Database", "initDriver");
+        logger.entering("server.database.Database", "initDriver");
 
         try {
             final String driver = "org.sqlite.JDBC";
@@ -105,7 +150,8 @@ public class Database {
             logger.log(Level.SEVERE, e.getMessage(), e.getCause());
             logger.info(e.getStackTrace().toString());
         }
-         logger.exiting("server.database.Database", "initDriver");
+
+        logger.exiting("server.database.Database", "initDriver");
     }
 
     /**
@@ -114,7 +160,6 @@ public class Database {
      * @throws DatabaseException the database exception
      */
     public void startTransaction() throws DatabaseException {
-
         logger.entering("server.database.Database", "startTransaction");
 
         String dbName = "database/indexer_server.sqlite";
@@ -126,8 +171,12 @@ public class Database {
             connection.setAutoCommit(false);
         } catch (SQLException e) {
             logger.log(Level.SEVERE, e.getMessage(), e.getCause());
-            logger.info(e.getStackTrace().toString());
-       }
+            final Writer writer = new StringWriter();
+            final PrintWriter printWriter = new PrintWriter(writer);
+            e.printStackTrace(printWriter);
+            logger.info(writer.toString());
+        }
+
         logger.exiting("server.database.Database", "startTransaction");
     }
 
@@ -157,7 +206,7 @@ public class Database {
             }
         }
         connection = null;
-   }
+    }
 
     /**
      * Initializes the database
@@ -185,7 +234,7 @@ public class Database {
         String dropUserTable = "DROP TABLE IF EXISTS User";
         String createUserTable = "CREATE TABLE User (ID INTEGER PRIMARY KEY NOT NULL UNIQUE,"
                 + "username TEXT NOT NULL UNIQUE, password TEXT NOT NULL,"
-                + "FirstName TEXT NOT NULL LastName TEXT NOT NULL, Email TEXT NOT NULL UNIQUE,"
+                + "FirstName TEXT NOT NULL, LastName TEXT NOT NULL, Email TEXT NOT NULL UNIQUE,"
                 + "RecordCount INTEGER NOT NULL, CurrentBatch INTEGER NOT NULL)";
 
         initTable(dropBatchTable, createBatchTable);
@@ -202,12 +251,9 @@ public class Database {
      * @param createStmt the the SQL statement to create the given table
      */
     private void initTable(String dropStmt, String createStmt) {
-        logger.entering(this.getClass().toString(), Database.class
-                .getEnclosingMethod().getName());
-
+        logger.entering("test.server.database.Database", "initTable");
         PreparedStatement pstmt = null;
         try {
-
             try {
                 startTransaction();
             } catch (DatabaseException e) {
@@ -227,15 +273,11 @@ public class Database {
                 logger.log(Level.SEVERE, e.getMessage(), e.getCause());
                 logger.info(e.getStackTrace().toString());
             }
-
-        } catch (SQLException e){
+        } catch (SQLException e) {
             logger.log(Level.SEVERE, e.getMessage(), e.getCause());
-            logger.info(e.getStackTrace().toString());
         }
-        pstmt = null;
-
-        logger.exiting(this.getClass().toString(), this.getClass()
-                .getEnclosingMethod().getName());
+        closeSafely(pstmt);
+        logger.exiting("test.server.database.Database", "initTable");
     }
 
 }

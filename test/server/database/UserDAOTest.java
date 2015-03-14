@@ -44,6 +44,8 @@ public class UserDAOTest {
      */
     @AfterClass
     public static void tearDownAfterClass() throws Exception {
+        logger.entering("test.server.UserDAOTest", "tearDownAfterClass");
+        logger.exiting("test.server.UserDAOTest", "tearDownAfterClass");
         return;
     }
 
@@ -60,12 +62,11 @@ public class UserDAOTest {
      */
     @Before
     public void setUp() throws Exception {
-
         logger.entering("test.server.UserDAOTest", "setUp");
 
         // Delete all users from the database
         db = new Database();
-        //db.initDBTables();
+        db.initDBTables();
         db.startTransaction();
 
         ArrayList<User> users = db.getUserDAO().getAll();
@@ -90,11 +91,14 @@ public class UserDAOTest {
      */
     @After
     public void tearDown() throws Exception {
+        logger.entering("test.server.UserDAOTest", "tearDown");
+
         // Roll back this transaction so changes are undone
         db.endTransaction(true);
-
         db = null;
         dbUser = null;
+
+        logger.exiting("test.server.UserDAOTest", "tearDown");
     }
 
     /**
@@ -132,8 +136,12 @@ public class UserDAOTest {
      */
     @Test
     public void testGetAll() throws DatabaseException {
+        logger.entering("test.server.UserDAOTest", "testGetAll");
+
         List<User> all = dbUser.getAll();
         assertEquals(0, all.size());
+
+        logger.exiting("test.server.UserDAOTest", "testGetAll");
     }
 
     /**
@@ -143,8 +151,8 @@ public class UserDAOTest {
      */
     @Test
     public void testCreate() throws DatabaseException {
-
         logger.entering("test.server.UserDAOTest", "testCreate");
+
         User firstTest = new User(
                 "UserTestCreate1", "pass1", "first1", "last1", "email1", 1, 1);
         User secondTest = new User(
@@ -178,6 +186,7 @@ public class UserDAOTest {
             }
         }
         assertTrue(hasFoundOne && hasFoundTwo && hasFoundThree);
+
         logger.exiting("test.server.UserDAOTest", "testCreate");
     }
 
