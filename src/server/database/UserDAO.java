@@ -22,7 +22,12 @@ public class UserDAO {
 
     /** The db. */
     private Database      db;
-    private static Logger logger;
+
+    /** The logger used throughout the project. */
+    private static Logger     logger;
+    static {
+        logger = Logger.getLogger("server");
+    }
 
     /**
      * Instantiates a new user dao.
@@ -30,7 +35,6 @@ public class UserDAO {
      * @param db the db
      */
     public UserDAO(Database db) {
-        logger = Logger.getLogger("server");
         this.db = db;
     }
 

@@ -33,16 +33,16 @@ public class ServerUnitTests {
         // SEVERE only enables error messages set to SEVERE
         Level logLevel = Level.FINER;
 
-        logger = Logger.getLogger("server-test");
+        logger = Logger.getLogger("server");
         logger.setLevel(logLevel);
         logger.setUseParentHandlers(false);
 
-        Handler consoleHandler = new ConsoleHandler();
-        consoleHandler.setLevel(logLevel);
-        consoleHandler.setFormatter(new SimpleFormatter());
-        logger.addHandler(consoleHandler);
+        //Handler consoleHandler = new ConsoleHandler();
+        //consoleHandler.setLevel(logLevel);
+        //consoleHandler.setFormatter(new SimpleFormatter());
+        //logger.addHandler(consoleHandler);
 
-        FileHandler fileHandler = new FileHandler("logs/server-test.log", false);
+        FileHandler fileHandler = new FileHandler("logs/server.log", false);
         fileHandler.setLevel(logLevel);
         fileHandler.setFormatter(new SimpleFormatter());
         logger.addHandler(fileHandler);

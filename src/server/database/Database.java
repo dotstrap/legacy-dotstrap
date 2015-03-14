@@ -19,8 +19,12 @@ public class Database {
 
     /** The database driver connection. */
     private static Connection connection;
+
     /** The logger used throughout the project. */
     private static Logger     logger;
+    static {
+        logger = Logger.getLogger("server");
+   }
 
     // DataBase Access /////////////
     /**
@@ -53,15 +57,12 @@ public class Database {
      * Instantiates a new database.
      */
     public Database() {
-        connection = null;
-
-        logger = Logger.getLogger("server");
-
         batchDAO = new BatchDAO(this);
         fieldDAO = new FieldDAO(this);
         projectDAO = new ProjectDAO(this);
         recordDAO = new RecordDAO(this);
         userDAO = new UserDAO(this);
+        connection = null;
     }
 
     public Connection getConnection() {
@@ -74,7 +75,7 @@ public class Database {
 
     public FieldDAO getFieldDAO() {
         return fieldDAO;
-    }
+   }
 
     public ProjectDAO getProjectDAO() {
         return projectDAO;
@@ -82,7 +83,7 @@ public class Database {
 
     public RecordDAO getRecordDAO() {
         return recordDAO;
-    }
+   }
 
     public UserDAO getUserDAO() {
         return userDAO;
@@ -95,7 +96,7 @@ public class Database {
      * @throws DatabaseException the database exception
      */
     public static void initDriver() throws DatabaseException {
-        logger.entering("server.database.Database", "initDriver");
+         logger.entering("server.database.Database", "initDriver");
 
         try {
             final String driver = "org.sqlite.JDBC";
@@ -104,6 +105,7 @@ public class Database {
             logger.log(Level.SEVERE, e.getMessage(), e.getCause());
             logger.info(e.getStackTrace().toString());
         }
+         logger.exiting("server.database.Database", "initDriver");
     }
 
     /**
@@ -113,8 +115,7 @@ public class Database {
      */
     public void startTransaction() throws DatabaseException {
 
-        logger.entering(this.getClass().toString(), this.getClass()
-                .getEnclosingMethod().getName());
+        logger.entering("server.database.Database", "startTransaction");
 
         String dbName = "database/indexer_server.sqlite";
         String connectionURL = "jdbc:sqlite:" + dbName;
@@ -126,9 +127,8 @@ public class Database {
         } catch (SQLException e) {
             logger.log(Level.SEVERE, e.getMessage(), e.getCause());
             logger.info(e.getStackTrace().toString());
-        }
-        logger.exiting(this.getClass().toString(), this.getClass()
-                .getEnclosingMethod().getName());
+       }
+        logger.exiting("server.database.Database", "startTransaction");
     }
 
     /**
@@ -157,7 +157,7 @@ public class Database {
             }
         }
         connection = null;
-    }
+   }
 
     /**
      * Initializes the database
@@ -228,7 +228,7 @@ public class Database {
                 logger.info(e.getStackTrace().toString());
             }
 
-        } catch (SQLException e) {
+        } catch (SQLException e){
             logger.log(Level.SEVERE, e.getMessage(), e.getCause());
             logger.info(e.getStackTrace().toString());
         }

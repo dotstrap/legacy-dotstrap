@@ -30,10 +30,11 @@ public class UserDAOTest {
      */
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-        logger = Logger.getLogger("server-test");
+        logger = Logger.getLogger("server");
         logger.entering("test.server.UserDAOTest", "setUpBeforeClass");
         // Load database driver
         Database.initDriver();
+        logger.exiting("test.server.UserDAOTest", "setUpBeforeClass");
     }
 
     /**
@@ -45,6 +46,12 @@ public class UserDAOTest {
     public static void tearDownAfterClass() throws Exception {
         return;
     }
+
+    /** The db. */
+    private Database db;
+
+    /** The db user. */
+    private UserDAO  dbUser;
 
     /**
      * Sets the database up.
@@ -72,6 +79,8 @@ public class UserDAOTest {
         db = new Database();
         db.startTransaction();
         dbUser = db.getUserDAO();
+
+        logger.exiting("test.server.UserDAOTest", "setUp");
     }
 
     /**
@@ -87,12 +96,6 @@ public class UserDAOTest {
         db = null;
         dbUser = null;
     }
-
-    /** The db. */
-    private Database db;
-
-    /** The db user. */
-    private UserDAO  dbUser;
 
     /**
      * Safe equals.
@@ -141,6 +144,7 @@ public class UserDAOTest {
     @Test
     public void testCreate() throws DatabaseException {
 
+        logger.entering("test.server.UserDAOTest", "testCreate");
         User firstTest = new User(
                 "UserTestCreate1", "pass1", "first1", "last1", "email1", 1, 1);
         User secondTest = new User(
@@ -153,7 +157,7 @@ public class UserDAOTest {
         dbUser.create(thirdTest);
 
         List<User> all = dbUser.getAll();
-        assertEquals(2, all.size());
+        assertEquals(3, all.size());
 
         boolean hasFoundOne = false;
         boolean hasFoundTwo = false;
@@ -174,6 +178,7 @@ public class UserDAOTest {
             }
         }
         assertTrue(hasFoundOne && hasFoundTwo && hasFoundThree);
+        logger.exiting("test.server.UserDAOTest", "testCreate");
     }
 
     /**
@@ -183,6 +188,7 @@ public class UserDAOTest {
      */
     @Test
     public void testUpdate() throws DatabaseException {
+        logger.entering("test.server.UserDAOTest", "testUpdate");
 
         User firstTest = new User(
                 "UserTestCreate1", "pass1", "first1", "last1", "email1", 1, 1);
@@ -232,6 +238,8 @@ public class UserDAOTest {
             }
         }
         assertTrue(hasFoundOne && hasFoundTwo && hasFoundThree);
+
+        logger.exiting("test.server.UserDAOTest", "testUpdate");
     }
 
     /**
@@ -241,9 +249,7 @@ public class UserDAOTest {
      */
     @Test
     public void testDelete() throws DatabaseException {
-
-        logger.entering(this.getClass().toString(), this.getClass()
-                .getEnclosingMethod().getName());
+        logger.entering("test.server.UserDAOTest", "testDelete");
 
         User firstTest = new User(
                 "UserTestCreate1", "pass1", "first1", "last1", "email1", 1, 1);
@@ -260,17 +266,17 @@ public class UserDAOTest {
         assertEquals(3, allUseres.size());
 
         dbUser.delete(firstTest);
-        dbUser.delete(secondTest);
-
         allUseres = dbUser.getAll();
         assertEquals(2, allUseres.size());
 
         dbUser.delete(thirdTest);
+        allUseres = dbUser.getAll();
+        assertEquals(1, allUseres.size());
 
+        dbUser.delete(secondTest);
         allUseres = dbUser.getAll();
         assertEquals(0, allUseres.size());
 
-        logger.exiting(this.getClass().toString(), this.getClass()
-                .getEnclosingMethod().getName());
+        logger.exiting("test.server.UserDAOTest", "testDelete");
     }
 }
