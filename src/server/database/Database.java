@@ -193,7 +193,7 @@ public class Database {
         // Commit or rollback the transaction and finally close the connection
         logger.entering("server.database.Database", "endTransaction");
 
-        if (connection != null) {
+        //if (connection != null) {
             try {
                 if (shouldCommit) {
                     connection.commit();
@@ -205,15 +205,9 @@ public class Database {
                 logger.log(Level.FINE, "STACKTRACE: ", e);
                 throw new DatabaseException(e.toString());
             } finally {
-                try {
-                    closeSafely(connection);
-                } catch (Exception e) {
-                    logger.log(Level.SEVERE, e.toString());
-                    logger.log(Level.FINE, "STACKTRACE: ", e);
-                    throw new DatabaseException(e.toString());
-                }
+                closeSafely(connection);
             }
-        }
+       //}
 
         logger.exiting("server.database.Database", "endTransaction");
     }
@@ -224,7 +218,7 @@ public class Database {
      *
      * @throws DatabaseException
      */
-    public void initDBTables() throws DatabaseException {
+    public void initTables() throws DatabaseException {
         logger.entering("server.database.Database", "initDBTables");
 
         String dropBatchTable = "DROP TABLE IF EXISTS Batch";
@@ -246,7 +240,7 @@ public class Database {
 
         String dropProjectTable = "DROP TABLE IF EXISTS Project";
         String createProjectTable = "CREATE TABLE Project ("
-                + "ID INTEGER PRIMARY KEY NOT NULL, "
+                + "ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE, "
                 + "Name TEXT NOT NULL, "
                 + "RecordsPerBatch INTEGER NOT NULL, "
                 + "FirstYCoord INTEGER, "
@@ -262,7 +256,7 @@ public class Database {
 
         String dropUserTable = "DROP TABLE IF EXISTS User";
         String createUserTable = "CREATE TABLE User ("
-                + "ID INTEGER PRIMARY KEY NOT NULL UNIQUE,"
+                + "ID INTEGER PRIMARY KEY NOT NULL UNIQUE, "
                 + "Username TEXT NOT NULL UNIQUE, "
                 + "Password TEXT NOT NULL, "
                 + "FirstName TEXT NOT NULL, "
@@ -271,7 +265,7 @@ public class Database {
                 + "RecordCount INTEGER NOT NULL, "
                 + "CurrentBatchID INTEGER NOT NULL)";
         try {
-            initTable(dropBatchTable, createBatchTable);
+            initCurrTable(dropBatchTable, createBatchTable);
         } catch (Exception e) {
             logger.log(Level.SEVERE, e.toString());
             logger.log(Level.FINE, "STACKTRACE: ", e);
@@ -279,7 +273,7 @@ public class Database {
         }
 
         try {
-            initTable(dropFieldTable, createFieldTable);
+            initCurrTable(dropFieldTable, createFieldTable);
         } catch (Exception e) {
             logger.log(Level.SEVERE, e.toString());
             logger.log(Level.FINE, "STACKTRACE: ", e);
@@ -287,7 +281,7 @@ public class Database {
         }
 
         try {
-            initTable(dropBatchTable, createBatchTable);
+            initCurrTable(dropBatchTable, createBatchTable);
         } catch (Exception e) {
             logger.log(Level.SEVERE, e.toString());
             logger.log(Level.FINE, "STACKTRACE: ", e);
@@ -295,7 +289,7 @@ public class Database {
         }
 
         try {
-            initTable(dropProjectTable, createProjectTable);
+            initCurrTable(dropProjectTable, createProjectTable);
         } catch (Exception e) {
             logger.log(Level.SEVERE, e.toString());
             logger.log(Level.FINE, "STACKTRACE: ", e);
@@ -303,7 +297,7 @@ public class Database {
         }
 
         try {
-            initTable(dropRecordTable, createRecordTable);
+            initCurrTable(dropRecordTable, createRecordTable);
         } catch (Exception e) {
             logger.log(Level.SEVERE, e.toString());
             logger.log(Level.FINE, "STACKTRACE: ", e);
@@ -311,7 +305,7 @@ public class Database {
         }
 
         try {
-            initTable(dropUserTable, createUserTable);
+            initCurrTable(dropUserTable, createUserTable);
         } catch (Exception e) {
             logger.log(Level.SEVERE, e.toString());
             logger.log(Level.FINE, "STACKTRACE: ", e);
@@ -329,19 +323,19 @@ public class Database {
      * @param createStmt
      *            the the SQL statement to create the given table
      */
-    private void initTable(String dropStmt, String createStmt)
+    private void initCurrTable(String dropStmt, String createStmt)
             throws DatabaseException {
         logger.entering("test.server.database.Database", "initTable");
 
         PreparedStatement pstmt = null;
         try {
-            try {
-                startTransaction();
-            } catch (DatabaseException e) {
-                logger.log(Level.SEVERE, e.toString());
-                logger.log(Level.FINE, "STACKTRACE: ", e);
-                throw new DatabaseException(e.toString());
-            }
+            //try {
+                //startTransaction();
+            //} catch (DatabaseException e) {
+                //logger.log(Level.SEVERE, e.toString());
+                //logger.log(Level.FINE, "STACKTRACE: ", e);
+                //throw new DatabaseException(e.toString());
+            //}
 
             pstmt = connection.prepareStatement(dropStmt);
             pstmt.executeUpdate();
@@ -349,19 +343,20 @@ public class Database {
             pstmt = connection.prepareStatement(createStmt);
             pstmt.executeUpdate();
 
-            try {
-                endTransaction(true);
-            } catch (DatabaseException e) {
-                logger.log(Level.SEVERE, e.toString());
-                logger.log(Level.FINE, "STACKTRACE: ", e);
-                throw new DatabaseException(e.toString());
-            }
+            //try {
+                //endTransaction(true);
+            //} catch (DatabaseException e) {
+                //logger.log(Level.SEVERE, e.toString());
+                //logger.log(Level.FINE, "STACKTRACE: ", e);
+                //throw new DatabaseException(e.toString());
+            //}
         } catch (SQLException e) {
             logger.log(Level.SEVERE, e.toString());
             logger.log(Level.FINE, "STACKTRACE: ", e);
             throw new DatabaseException(e.toString());
+        } finally {
+            closeSafely(pstmt);
         }
-        closeSafely(pstmt);
 
         logger.exiting("test.server.database.Database", "initTable");
     }
