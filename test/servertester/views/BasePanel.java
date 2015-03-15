@@ -2,7 +2,7 @@
  * BasePanel.java
  * JRE v1.7.0_76
  * 
- * Created by William Myers on Mar 10, 2015.
+ * Created by William Myers on Mar 14, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package servertester.views;
@@ -18,53 +18,58 @@ import servertester.controllers.*;
 @SuppressWarnings("serial")
 public class BasePanel extends JPanel {
 
-	/** The _controller. */
-	private IController _controller;
-	
-	/**
+    /** The _controller. */
+    private IController _controller;
+
+    /**
      * Instantiates a new base panel.
      */
-	public BasePanel() {
-		super();
-	}
+    public BasePanel() {
+        super();
+    }
 
-	/**
+    /**
      * Instantiates a new base panel.
      *
-     * @param layout the layout
+     * @param layout
+     *            the layout
      */
-	public BasePanel(LayoutManager layout) {
-		super(layout);
-	}
+    public BasePanel(LayoutManager layout) {
+        super(layout);
+    }
 
-	/**
+    /**
      * Instantiates a new base panel.
      *
-     * @param isDoubleBuffered the is double buffered
+     * @param isDoubleBuffered
+     *            the is double buffered
      */
-	public BasePanel(boolean isDoubleBuffered) {
-		super(isDoubleBuffered);
-	}
+    public BasePanel(boolean isDoubleBuffered) {
+        super(isDoubleBuffered);
+    }
 
-	/**
+    /**
      * Instantiates a new base panel.
      *
-     * @param layout the layout
-     * @param isDoubleBuffered the is double buffered
-     * @param controller the controller
+     * @param layout
+     *            the layout
+     * @param isDoubleBuffered
+     *            the is double buffered
+     * @param controller
+     *            the controller
      */
-	public BasePanel(LayoutManager layout, boolean isDoubleBuffered, IController controller) {
-		super(layout, isDoubleBuffered);
-		setController(controller);
-	}
-	
-	public IController getController() {
-		return _controller;
-	}
-	
-	public void setController(IController value) {
-		_controller = value;
-	}
+    public BasePanel(LayoutManager layout, boolean isDoubleBuffered,
+            IController controller) {
+        super(layout, isDoubleBuffered);
+        setController(controller);
+    }
+
+    public IController getController() {
+        return _controller;
+    }
+
+    public void setController(IController value) {
+        _controller = value;
+    }
 
 }
-

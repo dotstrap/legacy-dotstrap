@@ -1,8 +1,8 @@
 /**
  * Server.java
  * JRE v1.7.0_76
- *
- * Created by William Myers on Mar 10, 2015.
+ * 
+ * Created by William Myers on Mar 14, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 
@@ -18,21 +18,19 @@ import server.httphandler.*;
 import com.sun.net.httpserver.HttpServer;
 
 /**
- * The Class Server.
- * Initializes the server's logs (used in all non-testing classes)
- * Creates HTTPHandler Objects
- * Bootstraps the HTTP Server
+ * The Class Server. Initializes the server's logs (used in all non-testing
+ * classes) Creates HTTPHandler Objects Bootstraps the HTTP Server
  */
 public class Server {
 
     /** The Constant MAX_WAITING_CONNECTIONS to the server. */
-    private static final int      MAX_WAITING_CONNECTIONS = 10;
+    private static final int MAX_WAITING_CONNECTIONS = 10;
 
     /** Default port number the server runs on (can be overridden via CLI args. */
-    private static int            SERVER_PORT_NUMBER      = 8080;
+    private static int       SERVER_PORT_NUMBER      = 8080;
 
     /** The logger. */
-    private static Logger         logger;
+    private static Logger    logger;
     static {
         try {
             initLog();
@@ -44,25 +42,24 @@ public class Server {
     /**
      * Initializes the log.
      *
-     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
      */
     private static void initLog() throws IOException {
-        // FINER enables entering and exiting method statements
-        // INFO enables informational status logs
-        // SEVERE only enables error messages set to SEVERE (used herein in catch blocks)
-        Level logLevel = Level.FINE;
+        Level logLevel = Level.SEVERE;
+        String logFile = "logs/server.log";
 
         logger = Logger.getLogger("server");
         logger.setLevel(logLevel);
         logger.setUseParentHandlers(false);
 
-        Handler consoleHandler = new ConsoleHandler();
-        consoleHandler.setLevel(logLevel);
-        consoleHandler.setFormatter(new SimpleFormatter());
-        logger.addHandler(consoleHandler);
+        // Handler consoleHandler = new ConsoleHandler();
+        // consoleHandler.setLevel(logLevel);
+        // consoleHandler.setFormatter(new SimpleFormatter());
+        // logger.addHandler(consoleHandler);
 
-        // Set up 1 rolling log with a max file size of 3MB
-        FileHandler fileHandler = new FileHandler("logs/server.log", 3000000, 1, true);
+        // Set up 5 rolling logs each with a max file size of 3MB
+        FileHandler fileHandler = new FileHandler(logFile, 3000000, 5, false);
         fileHandler.setLevel(logLevel);
         fileHandler.setFormatter(new SimpleFormatter());
         logger.addHandler(fileHandler);
@@ -71,7 +68,8 @@ public class Server {
     /**
      * The main method.
      *
-     * @param args the arguments
+     * @param args
+     *            the arguments
      */
     public static void main(String[] args) {
         if (args == null) {
@@ -122,29 +120,27 @@ public class Server {
     }
 
     /**
-     * Bootstraps the server:
-     *   Initializes the models
-     *   Starts the HTTP server
-     *   Creates contexts
-     *   Starts the server
+     * Bootstraps the server: Initializes the models Starts the HTTP server
+     * Creates contexts Starts the server
      */
     private void bootstrap() {
 
         logger.info("Initializing Model...");
-        //try {
-            //ServerFacade.initialize();
-        //} catch (ServerException e) {
-            //logger.log(Level.SEVERE, e.getMessage(), e);
-            //return;
-        //}
+        // try {
+        // ServerFacade.initialize();
+        // } catch (ServerException e) {
+        // logger.log(Level.SEVERE, e.getMessage(), e);
+        // return;
+        // }
 
         logger.info("Initializing HTTP Server...");
         try {
-            server = HttpServer.create(
-                    new InetSocketAddress(SERVER_PORT_NUMBER),
+            server = HttpServer.create(new InetSocketAddress(SERVER_PORT_NUMBER),
                     MAX_WAITING_CONNECTIONS);
         } catch (IOException e) {
-            logger.log(Level.SEVERE, e.getMessage(), e);
+            String logMsg = " CAUSE: " + e.getCause() + "\n";
+            logger.log(Level.SEVERE, e.toString() + logMsg);
+            logger.log(Level.FINE, "STACKTRACE: ", e);
             return;
         }
 

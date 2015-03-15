@@ -2,7 +2,7 @@
  * UserDAOTest.java
  * JRE v1.7.0_76
  *
- * Created by William Myers on Mar 10, 2015.
+ * Created by William Myers on Mar 14, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package server.database;
@@ -11,62 +11,54 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 import org.junit.*;
 
 import shared.model.User;
+
 /**
  * The Class UserDAOTest.
  */
 public class UserDAOTest {
 
-    private static Logger logger;
-
     /**
-     * Sets the up before class.
+     * Sets up before class.
      *
-     * @throws Exception the exception
+     * @throws Exception
+     *             the exception
      */
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-        logger = Logger.getLogger("server");
-        logger.entering("test.server.UserDAOTest", "setUpBeforeClass");
         // Load database driver
         Database.initDriver();
-        logger.exiting("test.server.UserDAOTest", "setUpBeforeClass");
     }
 
     /**
      * Tear down after class.
      *
-     * @throws Exception the exception
+     * @throws Exception
+     *             the exception
      */
     @AfterClass
     public static void tearDownAfterClass() throws Exception {
-        logger.entering("test.server.UserDAOTest", "tearDownAfterClass");
-        logger.exiting("test.server.UserDAOTest", "tearDownAfterClass");
         return;
     }
 
-    /** The db. */
     private Database db;
-
-    /** The db user. */
     private UserDAO  dbUser;
 
     /**
      * Sets the database up.
      *
-     * @throws Exception the exception
+     * @throws Exception
+     *             the exception
      */
     @Before
     public void setUp() throws Exception {
-        logger.entering("test.server.UserDAOTest", "setUp");
 
         // Delete all users from the database
         db = new Database();
-        db.initDBTables();
+        // db.initDBTables();
         db.startTransaction();
 
         ArrayList<User> users = db.getUserDAO().getAll();
@@ -81,31 +73,29 @@ public class UserDAOTest {
         db.startTransaction();
         dbUser = db.getUserDAO();
 
-        logger.exiting("test.server.UserDAOTest", "setUp");
     }
 
     /**
      * Tear down.
      *
-     * @throws Exception the exception
+     * @throws Exception
+     *             the exception
      */
     @After
     public void tearDown() throws Exception {
-        logger.entering("test.server.UserDAOTest", "tearDown");
-
         // Roll back this transaction so changes are undone
-        db.endTransaction(true);
+        db.endTransaction(false);
         db = null;
         dbUser = null;
-
-        logger.exiting("test.server.UserDAOTest", "tearDown");
     }
 
     /**
      * Safe equals.
      *
-     * @param a the a
-     * @param b the b
+     * @param a
+     *            the a
+     * @param b
+     *            the b
      * @return true, if successful
      */
     private boolean safeEquals(Object a, Object b) {
@@ -125,167 +115,172 @@ public class UserDAOTest {
         return (safeEquals(a.getFirst(), b.getFirst())
                 && safeEquals(a.getLast(), b.getLast())
                 && safeEquals(a.getEmail(), b.getEmail())
-                && safeEquals(a.getRecordCount(), b.getRecordCount())
-				&& safeEquals(a.getCurrBatch(), b.getCurrBatch()));
+                && safeEquals(a.getRecordCount(), b.getRecordCount()) && safeEquals(
+                    a.getCurrBatch(), b.getCurrBatch()));
     }
 
     /**
-     * Test get all.
+     * Test get allUsers.
      *
-     * @throws DatabaseException the database exception
+     * @throws DatabaseException
+     *             the database exception
      */
     @Test
     public void testGetAll() throws DatabaseException {
-        logger.entering("test.server.UserDAOTest", "testGetAll");
-
-        List<User> all = dbUser.getAll();
-        assertEquals(0, all.size());
-
-        logger.exiting("test.server.UserDAOTest", "testGetAll");
+        List<User> allUsers = dbUser.getAll();
+        assertEquals(0, allUsers.size());
     }
 
     /**
      * Test create.
      *
-     * @throws DatabaseException the database exception
+     * @throws DatabaseException
+     *             the database exception
      */
     @Test
     public void testCreate() throws DatabaseException {
-        logger.entering("test.server.UserDAOTest", "testCreate");
+        User testUser1 = new User("UserTestCreate1", "pass1", "first1", "last1",
+                "email1", 1, 1);
+        User testUser2 = new User("UserTestCreate2", "pass2", "first2", "last2",
+                "email2", 2, 2);
+        User testUser3 = new User("UserTestCreate3", "pass3", "first3", "last3",
+                "email3", 3, 3);
 
-        User firstTest = new User(
-                "UserTestCreate1", "pass1", "first1", "last1", "email1", 1, 1);
-        User secondTest = new User(
-                "UserTestCreate2", "pass2", "first2", "last2", "email2", 2, 2);
-        User thirdTest = new User(
-                "UserTestCreate3", "pass3", "first3", "last3", "email3", 3, 3);
+        dbUser.create(testUser1);
+        dbUser.create(testUser2);
+        dbUser.create(testUser3);
 
-        dbUser.create(firstTest);
-        dbUser.create(secondTest);
-        dbUser.create(thirdTest);
+        List<User> allUsers = dbUser.getAll();
+        assertEquals(3, allUsers.size());
 
-        List<User> all = dbUser.getAll();
-        assertEquals(3, all.size());
-
-        boolean hasFoundOne = false;
-        boolean hasFoundTwo = false;
-        boolean hasFoundThree = false;
-
-        for (User b : all) {
-
-            assertFalse(b.getID() == -1);
-
-            if (!hasFoundOne) {
-                hasFoundOne = areEqual(b, firstTest, false);
+        boolean hasFoundUser1 = false;
+        boolean hasFoundUser2 = false;
+        boolean hasFoundUser3 = false;
+        for (User curr : allUsers) {
+            assertFalse(curr.getID() == -1);
+            if (!hasFoundUser1) {
+                hasFoundUser1 = areEqual(curr, testUser1, false);
             }
-            if (!hasFoundTwo) {
-                hasFoundTwo = areEqual(b, secondTest, false);
+            if (!hasFoundUser2) {
+                hasFoundUser2 = areEqual(curr, testUser2, false);
             }
-            if (!hasFoundThree) {
-                hasFoundThree = areEqual(b, thirdTest, false);
+            if (!hasFoundUser3) {
+                hasFoundUser3 = areEqual(curr, testUser3, false);
             }
         }
-        assertTrue(hasFoundOne && hasFoundTwo && hasFoundThree);
-
-        logger.exiting("test.server.UserDAOTest", "testCreate");
+        assertTrue(hasFoundUser1 && hasFoundUser2 && hasFoundUser3);
     }
 
     /**
      * Test update.
      *
-     * @throws DatabaseException the database exception
+     * @throws DatabaseException
+     *             the database exception
      */
     @Test
     public void testUpdate() throws DatabaseException {
-        logger.entering("test.server.UserDAOTest", "testUpdate");
+        User testUser1 = new User("UserTestUpdate1", "pass1", "first1", "last1",
+                "email1", 1, 1);
+        User testUser2 = new User("UserTestUpdate2", "pass2", "first2", "last2",
+                "email2", 2, 2);
+        User testUser3 = new User("UserTestUpdate3", "pass3", "first3", "last3",
+                "email3", 3, 3);
 
-        User firstTest = new User(
-                "UserTestCreate1", "pass1", "first1", "last1", "email1", 1, 1);
-        User secondTest = new User(
-                "UserTestCreate2", "pass2", "first2", "last2", "email2", 2, 2);
-        User thirdTest = new User(
-                "UserTestCreate3", "pass3", "first3", "last3", "email3", 3, 3);
+        dbUser.create(testUser1);
+        dbUser.create(testUser2);
+        dbUser.create(testUser3);
 
-        dbUser.create(firstTest);
-        dbUser.create(secondTest);
-        dbUser.create(thirdTest);
+        testUser1.setFirst("first-001");
+        testUser2.setFirst("first-002");
+        testUser3.setFirst("first-003");
 
-        firstTest.setFirst("first-001");
-        secondTest.setFirst("first-002");
-        thirdTest.setFirst("first-003");
+        testUser1.setLast("last-001");
+        testUser2.setLast("last-002");
+        testUser3.setLast("last-003");
 
-        firstTest.setLast("last-001");
-        secondTest.setLast("last-002");
-        thirdTest.setLast("last-003");
+        testUser1.setEmail("email-001");
+        testUser2.setEmail("email-002");
+        testUser3.setEmail("email-003");
 
-        firstTest.setEmail("email-001");
-        secondTest.setEmail("email-002");
-        thirdTest.setEmail("email-003");
+        dbUser.update(testUser1);
+        dbUser.update(testUser2);
+        dbUser.update(testUser3);
 
-        dbUser.update(firstTest);
-        dbUser.update(secondTest);
-        dbUser.update(thirdTest);
+        List<User> allUsers = dbUser.getAll();
+        assertEquals(3, allUsers.size());
 
-        List<User> all = dbUser.getAll();
-        assertEquals(3, all.size());
-
-        boolean hasFoundOne = false;
-        boolean hasFoundTwo = false;
-        boolean hasFoundThree = false;
-
-        for (User b : all) {
-            assertFalse(b.getID() == -1);
-
-            if (!hasFoundOne) {
-                hasFoundOne = areEqual(b, firstTest, false);
+        boolean hasFoundUser1 = false;
+        boolean hasFoundUser2 = false;
+        boolean hasFoundUser3 = false;
+        for (User curr : allUsers) {
+            assertFalse(curr.getID() == -1);
+            if (!hasFoundUser1) {
+                hasFoundUser1 = areEqual(curr, testUser1, false);
             }
-            if (!hasFoundTwo) {
-                hasFoundTwo = areEqual(b, secondTest, false);
+            if (!hasFoundUser2) {
+                hasFoundUser2 = areEqual(curr, testUser2, false);
             }
-            if (!hasFoundThree) {
-                hasFoundThree = areEqual(b, thirdTest, false);
+            if (!hasFoundUser3) {
+                hasFoundUser3 = areEqual(curr, testUser3, false);
             }
         }
-        assertTrue(hasFoundOne && hasFoundTwo && hasFoundThree);
-
-        logger.exiting("test.server.UserDAOTest", "testUpdate");
+        assertTrue(hasFoundUser1 && hasFoundUser2 && hasFoundUser3);
     }
 
     /**
      * Test delete.
      *
-     * @throws DatabaseException the database exception
+     * @throws DatabaseException
+     *             the database exception
      */
     @Test
     public void testDelete() throws DatabaseException {
-        logger.entering("test.server.UserDAOTest", "testDelete");
+        User testUser1 = new User("UserTestDelete1", "pass1", "first1", "last1",
+                "email1", 1, 1);
+        User testUser2 = new User("UserTestDelete2", "pass2", "first2", "last2",
+                "email2", 2, 2);
+        User testUser3 = new User("UserTestDelete3", "pass3", "first3", "last3",
+                "email3", 3, 3);
 
-        User firstTest = new User(
-                "UserTestCreate1", "pass1", "first1", "last1", "email1", 1, 1);
-        User secondTest = new User(
-                "UserTestCreate2", "pass2", "first2", "last2", "email2", 2, 2);
-        User thirdTest = new User(
-                "UserTestCreate3", "pass3", "first3", "last3", "email3", 3, 3);
-
-        dbUser.create(firstTest);
-        dbUser.create(secondTest);
-        dbUser.create(thirdTest);
+        dbUser.create(testUser1);
+        dbUser.create(testUser2);
+        dbUser.create(testUser3);
 
         List<User> allUseres = dbUser.getAll();
         assertEquals(3, allUseres.size());
 
-        dbUser.delete(firstTest);
+        dbUser.delete(testUser1);
         allUseres = dbUser.getAll();
         assertEquals(2, allUseres.size());
 
-        dbUser.delete(thirdTest);
+        dbUser.delete(testUser3);
         allUseres = dbUser.getAll();
         assertEquals(1, allUseres.size());
 
-        dbUser.delete(secondTest);
+        dbUser.delete(testUser2);
         allUseres = dbUser.getAll();
         assertEquals(0, allUseres.size());
-
-        logger.exiting("test.server.UserDAOTest", "testDelete");
     }
+
+    //TODO: should I just use read method instead of validateUser?
+    //@Test
+    //public void testValidateUser() throws DatabaseException {
+        //User testUser1 = new User("UserTestValidate1", "pass1", "first1",
+                //"last1", "email1", 1, 1);
+        //User testUser2 = new User("UserTestValidate2", "pass2", "first2",
+                //"last2", "email2", 2, 2);
+        //User testUser3 = new User("UserTestValidate3", "pass3", "first3",
+                //"last3", "email3", 3, 3);
+
+        //dbUser.create(testUser1);
+        //dbUser.create(testUser2);
+        //dbUser.create(testUser3);
+
+        //List<User> allUsers = dbUser.getAll();
+        //assertEquals(3, allUsers.size());
+
+        //assertFalse(dbUser.validateUser("UserTestValidate1", "INVALID"));
+        ////assertTrue(true && dbUser.validateUser("UserTestValidate2", "pass2"));
+        ////ussertFalse(dbUser.validateUser("UserTestValidate3", "INVALID"));
+    //}
 }

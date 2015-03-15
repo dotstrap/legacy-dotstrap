@@ -1,8 +1,8 @@
 /**
  * User.java
  * JRE v1.7.0_76
- *
- * Created by William Myers on Mar 10, 2015.
+ * 
+ * Created by William Myers on Mar 14, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 
@@ -74,8 +74,8 @@ public class User {
      * @param recordCount
      * @param currBatch
      */
-    public User(int id, String username, String password, String first, String last,
-            String email, int recordCount, int currBatch) {
+    public User(int id, String username, String password, String first,
+            String last, String email, int recordCount, int currBatch) {
         this.ID = id;
         this.username = username;
         this.password = password;

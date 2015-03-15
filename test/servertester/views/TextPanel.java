@@ -2,7 +2,7 @@
  * TextPanel.java
  * JRE v1.7.0_76
  * 
- * Created by William Myers on Mar 10, 2015.
+ * Created by William Myers on Mar 14, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package servertester.views;
@@ -17,32 +17,32 @@ import javax.swing.*;
 @SuppressWarnings("serial")
 public class TextPanel extends BasePanel {
 
-	/** The _text area. */
-	private JTextArea _textArea;
-	
-	/**
+    /** The _text area. */
+    private JTextArea _textArea;
+
+    /**
      * Instantiates a new text panel.
      *
-     * @param label the label
+     * @param label
+     *            the label
      */
-	public TextPanel(String label) {
-		super();
-		
-		setBorder(BorderFactory.createTitledBorder(label));
-		
-		setLayout(new BorderLayout());
-		
-		_textArea = new JTextArea(10, 60);
-		add(new JScrollPane(_textArea), BorderLayout.CENTER);
-	}
-	
-	public void setText(String value) {
-		_textArea.setText(value);
-	}
-	
-	public String getText() {
-		return _textArea.getText();
-	}
+    public TextPanel(String label) {
+        super();
+
+        setBorder(BorderFactory.createTitledBorder(label));
+
+        setLayout(new BorderLayout());
+
+        _textArea = new JTextArea(10, 60);
+        add(new JScrollPane(_textArea), BorderLayout.CENTER);
+    }
+
+    public void setText(String value) {
+        _textArea.setText(value);
+    }
+
+    public String getText() {
+        return _textArea.getText();
+    }
 
 }
-

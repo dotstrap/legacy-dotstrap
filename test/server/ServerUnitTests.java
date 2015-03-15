@@ -2,7 +2,7 @@
  * ServerUnitTests.java
  * JRE v1.7.0_76
  *
- * Created by William Myers on Mar 10, 2015.
+ * Created by William Myers on Mar 14, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package server;
@@ -26,27 +26,27 @@ public class ServerUnitTests {
     /**
      * Initializes the log.
      *
-     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
      */
     private static void initLog() throws IOException {
-        // FINER enables entering and exiting method statements
-        // INFO enables informational status logs
-        // SEVERE only enables error messages set to SEVERE (used herein in catch blocks)
-        Level logLevel = Level.FINE;
+        Level logLevel = Level.FINER;
+        String logFile = "logs/server.log";
 
         logger = Logger.getLogger("server");
         logger.setLevel(logLevel);
         logger.setUseParentHandlers(false);
 
-        Handler consoleHandler = new ConsoleHandler();
-        consoleHandler.setLevel(logLevel);
-        consoleHandler.setFormatter(new SimpleFormatter());
-        logger.addHandler(consoleHandler);
+        // Handler consoleHandler = new ConsoleHandler();
+        // consoleHandler.setLevel(logLevel);
+        // consoleHandler.setFormatter(new SimpleFormatter());
+        // logger.addHandler(consoleHandler);
 
-        // Set up 1 rolling log with a max file size of 3MB
-        FileHandler fileHandler = new FileHandler("logs/server.log", 3000000, 1, true);
+        // Set up 5 rolling logs each with a max file size of 3MB
+        FileHandler fileHandler = new FileHandler(logFile, 0, 5, false);
         fileHandler.setLevel(logLevel);
         fileHandler.setFormatter(new SimpleFormatter());
+        logger.addHandler(fileHandler);
     }
 
     /**
@@ -82,7 +82,8 @@ public class ServerUnitTests {
     /**
      * The main method.
      *
-     * @param args the arguments
+     * @param args
+     *            the arguments
      */
     public static void main(String[] args) {
         String[] testClasses = new String[] { "server.ServerUnitTests",

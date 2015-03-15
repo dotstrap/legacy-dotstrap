@@ -1,12 +1,11 @@
+/**
+ * FieldDAO.java
+ * JRE v1.7.0_76
+ * 
+ * Created by William Myers on Mar 14, 2015.
+ * Copyright (c) 2015 William Myers. All Rights reserved.
+ */
 package server.database;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.util.ArrayList;
-
-import shared.model.Field;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -23,7 +22,7 @@ public class FieldDAO {
      * @param db
      *            the db
      */
-    public FieldDAO(Database db) {
-        this.db = db;
+   public FieldDAO(Database db) {
+       this.db = db;
     }
 }

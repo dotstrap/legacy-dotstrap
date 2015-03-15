@@ -1,8 +1,8 @@
 /**
  * Field.java
  * JRE v1.7.0_76
- *
- * Created by William Myers on Mar 10, 2015.
+ * 
+ * Created by William Myers on Mar 14, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package shared.model;
@@ -32,25 +32,33 @@ public class Field {
     /**
      * Instantiates a new Field.
      *
-     * @param knownPath the known path
-     * @param helpPath the help path
-     * @param id the id
-     * @param number the number
-     * @param projectID the project id
-     * @param title the title
-     * @param width the width
-     * @param xCoord the x coord
+     * @param knownPath
+     *            the known path
+     * @param helpPath
+     *            the help path
+     * @param id
+     *            the id
+     * @param number
+     *            the number
+     * @param projectID
+     *            the project id
+     * @param title
+     *            the title
+     * @param width
+     *            the width
+     * @param xCoord
+     *            the x coord
      */
     public Field(String helpPath, String knownPath, int id, int number,
             int projectID, String title, int width, int xCoord) {
-        this.ID        = id;
+        this.ID = id;
         this.knownPath = knownPath;
-        this.helpPath  = helpPath;
-        this.number    = number;
+        this.helpPath = helpPath;
+        this.number = number;
         this.projectID = projectID;
-        this.title     = title;
-        this.width     = width;
-        this.xCoord    = xCoord;
+        this.title = title;
+        this.width = width;
+        this.xCoord = xCoord;
     }
 
     public String getKnownPath() {
@@ -121,7 +129,8 @@ public class Field {
     /**
      * Sets the x coord.
      *
-     * @param xCoord the new x coord
+     * @param xCoord
+     *            the new x coord
      */
     public void setxCoord(int xCoord) {
         this.xCoord = xCoord;

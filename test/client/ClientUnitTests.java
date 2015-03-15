@@ -2,7 +2,7 @@
  * ClientUnitTests.java
  * JRE v1.7.0_76
  * 
- * Created by William Myers on Mar 10, 2015.
+ * Created by William Myers on Mar 14, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package client;
@@ -16,33 +16,34 @@ import org.junit.*;
  * The Class ClientUnitTests.
  */
 public class ClientUnitTests {
-    
+
     /**
      * The main method.
      *
-     * @param args the arguments
+     * @param args
+     *            the arguments
      */
     public static void main(String[] args) {
-        
+
         String[] testClasses = new String[] { "client.ClientUnitTests" };
-        
+
         org.junit.runner.JUnitCore.main(testClasses);
     }
-    
+
     /**
      * Setup.
      */
     @Before
     public void setup() {
     }
-    
+
     /**
      * Teardown.
      */
     @After
     public void teardown() {
     }
-    
+
     /**
      * Test_1.
      */

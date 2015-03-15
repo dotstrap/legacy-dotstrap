@@ -1,3 +1,10 @@
+/**
+ * BatchDAO.java
+ * JRE v1.7.0_76
+ * 
+ * Created by William Myers on Mar 14, 2015.
+ * Copyright (c) 2015 William Myers. All Rights reserved.
+ */
 package server.database;
 
 import java.sql.*;
@@ -36,9 +43,10 @@ public class BatchDAO {
      * returns all batches in an array.
      *
      * @return -> batch array if found, else return null
+     * @throws DatabaseException
      */
-    public ArrayList<Batch> getAll() // REMOVED INT INDEX FROM ARGS
-    {
+    public ArrayList<Batch> getAll() throws DatabaseException {
+
         ArrayList<Batch> batches = new ArrayList<Batch>();
         Connection connection = null;
         PreparedStatement pstmt = null;
@@ -60,8 +68,10 @@ public class BatchDAO {
                 batches.add(returnBatch);
             }
         } catch (Exception e) {
-            logger.log(Level.SEVERE, e.getMessage(), e.getCause());
-            logger.info(e.getStackTrace().toString());
+            String logMsg = " CAUSE: " + e.getCause() + "\n";
+            logger.log(Level.SEVERE, e.toString() + logMsg);
+            logger.log(Level.FINE, "STACKTRACE: ", e);
+            throw new DatabaseException(e.toString() + logMsg);
         } finally {
             Database.closeSafely(pstmt);
             Database.closeSafely(connection);
@@ -71,79 +81,14 @@ public class BatchDAO {
     }
 
     /**
-     * returns batch with matching ID.
-     *
-     * @param id
-     *            -> ID of the batch to search for
-     * @return -> batch if found, else return null
-     */
-    public Batch getBatch(int id) {
-        Connection connection = null;
-        PreparedStatement pstmt = null;
-        ResultSet resultset = null;
-        Batch returnBatch = new Batch();
-        try {
-            connection = db.getConnection();
-            String selectsql = "SELECT * from Batch WHERE ID = ?";
-            pstmt = connection.prepareStatement(selectsql);
-            pstmt.setInt(1, id);
-
-            resultset = pstmt.executeQuery();
-
-            resultset.next();
-            returnBatch.setID(resultset.getInt(1));
-            returnBatch.setFilePath(resultset.getString(2));
-            returnBatch.setProjectID(resultset.getInt(3));
-            returnBatch.setState(resultset.getInt(4));
-        } catch (Exception e) {
-            logger.log(Level.SEVERE, e.getMessage(), e.getCause());
-            logger.info(e.getStackTrace().toString());
-        } finally {
-            Database.closeSafely(pstmt);
-            Database.closeSafely(connection);
-            Database.closeSafely(resultset);
-        }
-        if (returnBatch.getFilePath() == "") {
-            return null;
-        }
-        return returnBatch;
-    }
-
-    /**
-     * updates the batch.
-     *
-     * @param batch
-     *            -> batch to update with
-     */
-
-    public void update(Batch batch) {
-        Connection connection = null;
-        PreparedStatement pstmt = null;
-        try {
-            connection = db.getConnection();
-            String selectsql = "UPDATE Batch SET State = ?" + "WHERE ID = ?";
-            pstmt = connection.prepareStatement(selectsql);
-            pstmt.setInt(1, batch.getState());
-            pstmt.setInt(2, batch.getID());
-
-            pstmt.executeUpdate();
-        } catch (Exception e) {
-            logger.log(Level.SEVERE, e.getMessage(), e.getCause());
-            logger.info(e.getStackTrace().toString());
-        } finally {
-            Database.closeSafely(pstmt);
-            Database.closeSafely(connection);
-        }
-    }
-
-    /**
      * Adds the given batch to the database.
      *
      * @param batch
      *            the batch
      * @return the int
+     * @throws DatabaseException
      */
-    public int create(Batch batch) {
+    public int create(Batch batch) throws DatabaseException {
         Connection connection = null;
         PreparedStatement pstmt = null;
         Statement stmt = null;
@@ -166,8 +111,10 @@ public class BatchDAO {
                 batch.setID(id);
             }
         } catch (Exception e) {
-            logger.log(Level.SEVERE, e.getMessage(), e.getCause());
-            logger.info(e.getStackTrace().toString());
+            String logMsg = " CAUSE: " + e.getCause() + "\n";
+            logger.log(Level.SEVERE, e.toString() + logMsg);
+            logger.log(Level.FINE, "STACKTRACE: ", e);
+            throw new DatabaseException(e.toString() + logMsg);
         } finally {
             Database.closeSafely(pstmt);
             Database.closeSafely(connection);
@@ -178,11 +125,86 @@ public class BatchDAO {
     }
 
     /**
+     * Gets the batch from the database.
+     *
+     * @param id
+     *            the id
+     * @return the batch
+     * @throws DatabaseException
+     *             the database exception
+     */
+    public Batch read(int id) throws DatabaseException {
+        Connection connection = null;
+        PreparedStatement pstmt = null;
+        ResultSet resultset = null;
+        Batch returnBatch = new Batch();
+        try {
+            connection = db.getConnection();
+            String selectsql = "SELECT * from Batch WHERE ID = ?";
+            pstmt = connection.prepareStatement(selectsql);
+            pstmt.setInt(1, id);
+
+            resultset = pstmt.executeQuery();
+
+            resultset.next();
+            returnBatch.setID(resultset.getInt(1));
+            returnBatch.setFilePath(resultset.getString(2));
+            returnBatch.setProjectID(resultset.getInt(3));
+            returnBatch.setState(resultset.getInt(4));
+        } catch (Exception e) {
+            String logMsg = " CAUSE: " + e.getCause() + "\n";
+            logger.log(Level.SEVERE, e.toString() + logMsg);
+            logger.log(Level.FINE, "STACKTRACE: ", e);
+            throw new DatabaseException(e.toString() + logMsg);
+        } finally {
+            Database.closeSafely(pstmt);
+            Database.closeSafely(connection);
+            Database.closeSafely(resultset);
+        }
+        if (returnBatch.getFilePath() == "") {
+            return null;
+        }
+        return returnBatch;
+    }
+
+    /**
+     * updates the batch.
+     *
+     * @param batch
+     *            -> batch to update with
+     * @throws DatabaseException
+     */
+
+    public void update(Batch batch) throws DatabaseException {
+        Connection connection = null;
+        PreparedStatement pstmt = null;
+        try {
+            connection = db.getConnection();
+            String selectsql = "UPDATE Batch SET State = ?" + "WHERE ID = ?";
+            pstmt = connection.prepareStatement(selectsql);
+            pstmt.setInt(1, batch.getState());
+            pstmt.setInt(2, batch.getID());
+
+            pstmt.executeUpdate();
+        } catch (Exception e) {
+            String logMsg = " CAUSE: " + e.getCause() + "\n";
+            logger.log(Level.SEVERE, e.toString() + logMsg);
+            logger.log(Level.FINE, "STACKTRACE: ", e);
+            throw new DatabaseException(e.toString() + logMsg);
+        } finally {
+            Database.closeSafely(pstmt);
+            Database.closeSafely(connection);
+        }
+    }
+
+    /**
      * Deletes the specified batch.
      *
-     * @param batch the batch
+     * @param batch
+     *            the batch
+     * @throws DatabaseException
      */
-    public void delete(Batch batch) {
+    public void delete(Batch batch) throws DatabaseException {
         Connection connection = null;
         PreparedStatement pstmt = null;
         try {
@@ -195,8 +217,10 @@ public class BatchDAO {
 
             pstmt.executeUpdate();
         } catch (Exception e) {
-            logger.log(Level.SEVERE, e.getMessage(), e.getCause());
-            logger.info(e.getStackTrace().toString());
+            String logMsg = " CAUSE: " + e.getCause() + "\n";
+            logger.log(Level.SEVERE, e.toString() + logMsg);
+            logger.log(Level.FINE, "STACKTRACE: ", e);
+            throw new DatabaseException(e.toString() + logMsg);
         } finally {
             Database.closeSafely(pstmt);
             Database.closeSafely(connection);

@@ -2,7 +2,7 @@
  * IndexerServerTesterFrame.java
  * JRE v1.7.0_76
  * 
- * Created by William Myers on Mar 10, 2015.
+ * Created by William Myers on Mar 14, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package servertester.views;
@@ -20,155 +20,154 @@ import static servertester.views.Constants.*;
  */
 @SuppressWarnings("serial")
 public class IndexerServerTesterFrame extends JFrame implements IView {
-	
-	/** The _controller. */
-	private IController _controller;
-	
-	/** The _settings panel. */
-	private SettingsPanel _settingsPanel;
-	
-	/** The _param panel. */
-	private ParamPanel _paramPanel;
-	
-	/** The _request panel. */
-	private TextPanel _requestPanel;
-	
-	/** The _response panel. */
-	private TextPanel _responsePanel;
-	
-	/**
+
+    /** The _controller. */
+    private IController   _controller;
+
+    /** The _settings panel. */
+    private SettingsPanel _settingsPanel;
+
+    /** The _param panel. */
+    private ParamPanel    _paramPanel;
+
+    /** The _request panel. */
+    private TextPanel     _requestPanel;
+
+    /** The _response panel. */
+    private TextPanel     _responsePanel;
+
+    /**
      * Instantiates a new indexer server tester frame.
      */
-	public IndexerServerTesterFrame() {
-		super();
+    public IndexerServerTesterFrame() {
+        super();
 
-		setTitle("Record Indexer - Server Tester");
-		
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
-		setLayout(new BoxLayout(getContentPane(), BoxLayout.PAGE_AXIS));		
-		
-		add(Box.createRigidArea(DOUBLE_VSPACE));
-		
-		_settingsPanel = new SettingsPanel();
-		add(_settingsPanel);
+        setTitle("Record Indexer - Server Tester");
 
-		add(Box.createRigidArea(DOUBLE_VSPACE));
-		
-		_paramPanel = new ParamPanel();
-		add(_paramPanel);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		add(Box.createRigidArea(DOUBLE_VSPACE));
-		
-		_requestPanel = new TextPanel("Request");
+        setLayout(new BoxLayout(getContentPane(), BoxLayout.PAGE_AXIS));
 
-		_responsePanel = new TextPanel("Response");
+        add(Box.createRigidArea(DOUBLE_VSPACE));
 
-		JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, 
-												_requestPanel, _responsePanel);
-		splitPane.setResizeWeight(0.5);
-		splitPane.setAlignmentX(Component.CENTER_ALIGNMENT);
-		add(splitPane);
-		
-		add(Box.createRigidArea(DOUBLE_VSPACE));
-		
-		addWindowListener(new WindowAdapter() {
-			@Override
-			public void windowClosed(WindowEvent arg0) {
-				// TODO Auto-generated method stub
-			
-			}		
-		});
-		
-		pack();
-		
-		setMinimumSize(getPreferredSize());
-	}
-	
-	public IController getController() {
-		return _controller;
-	}
-	
-	public void setController(IController value) {
-		_controller = value;
-		_settingsPanel.setController(value);
-		_paramPanel.setController(value);
-		_requestPanel.setController(value);
-		_responsePanel.setController(value);
-	}
+        _settingsPanel = new SettingsPanel();
+        add(_settingsPanel);
 
-	// IView methods
-	//
-	
-	@Override
-	public void setHost(String value) {
-		_settingsPanel.setHost(value);
-	}
+        add(Box.createRigidArea(DOUBLE_VSPACE));
 
-	@Override
-	public String getHost() {
-		return _settingsPanel.getHost();
-	}
+        _paramPanel = new ParamPanel();
+        add(_paramPanel);
 
-	@Override
-	public void setPort(String value) {
-		_settingsPanel.setPort(value);
-	}
+        add(Box.createRigidArea(DOUBLE_VSPACE));
 
-	@Override
-	public String getPort() {
-		return _settingsPanel.getPort();
-	}
+        _requestPanel = new TextPanel("Request");
 
-	@Override
-	public void setOperation(ServerOp value) {
-		_settingsPanel.setOperation(value);
-	}
+        _responsePanel = new TextPanel("Response");
 
-	@Override
-	public ServerOp getOperation() {
-		return _settingsPanel.getOperation();
-	}
+        JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
+                _requestPanel, _responsePanel);
+        splitPane.setResizeWeight(0.5);
+        splitPane.setAlignmentX(Component.CENTER_ALIGNMENT);
+        add(splitPane);
 
-	@Override
-	public void setParameterNames(String[] value) {
-		_paramPanel.setParameterNames(value);
-	}
-	
-	@Override
-	public String[] getParameterNames() {
-		return _paramPanel.getParameterNames();
-	}
-	
-	@Override
-	public void setParameterValues(String[] value) {
-		_paramPanel.setParameterValues(value);
-	}
+        add(Box.createRigidArea(DOUBLE_VSPACE));
 
-	@Override
-	public String[] getParameterValues() {
-		return _paramPanel.getParameterValues();
-	}
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent arg0) {
+                // TODO Auto-generated method stub
 
-	@Override
-	public void setRequest(String value) {
-		_requestPanel.setText(value);
-	}
+            }
+        });
 
-	@Override
-	public String getRequest() {
-		return _requestPanel.getText();
-	}
+        pack();
 
-	@Override
-	public void setResponse(String value) {
-		_responsePanel.setText(value);
-	}
+        setMinimumSize(getPreferredSize());
+    }
 
-	@Override
-	public String getResponse() {
-		return _responsePanel.getText();
-	}
+    public IController getController() {
+        return _controller;
+    }
+
+    public void setController(IController value) {
+        _controller = value;
+        _settingsPanel.setController(value);
+        _paramPanel.setController(value);
+        _requestPanel.setController(value);
+        _responsePanel.setController(value);
+    }
+
+    // IView methods
+    //
+
+    @Override
+    public void setHost(String value) {
+        _settingsPanel.setHost(value);
+    }
+
+    @Override
+    public String getHost() {
+        return _settingsPanel.getHost();
+    }
+
+    @Override
+    public void setPort(String value) {
+        _settingsPanel.setPort(value);
+    }
+
+    @Override
+    public String getPort() {
+        return _settingsPanel.getPort();
+    }
+
+    @Override
+    public void setOperation(ServerOp value) {
+        _settingsPanel.setOperation(value);
+    }
+
+    @Override
+    public ServerOp getOperation() {
+        return _settingsPanel.getOperation();
+    }
+
+    @Override
+    public void setParameterNames(String[] value) {
+        _paramPanel.setParameterNames(value);
+    }
+
+    @Override
+    public String[] getParameterNames() {
+        return _paramPanel.getParameterNames();
+    }
+
+    @Override
+    public void setParameterValues(String[] value) {
+        _paramPanel.setParameterValues(value);
+    }
+
+    @Override
+    public String[] getParameterValues() {
+        return _paramPanel.getParameterValues();
+    }
+
+    @Override
+    public void setRequest(String value) {
+        _requestPanel.setText(value);
+    }
+
+    @Override
+    public String getRequest() {
+        return _requestPanel.getText();
+    }
+
+    @Override
+    public void setResponse(String value) {
+        _responsePanel.setText(value);
+    }
+
+    @Override
+    public String getResponse() {
+        return _responsePanel.getText();
+    }
 
 }
-
