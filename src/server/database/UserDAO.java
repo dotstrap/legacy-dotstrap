@@ -24,7 +24,7 @@ public class UserDAO {
     private static Logger logger;
     static {
         logger = Logger.getLogger("server");
-    }
+   }
 
     /** The db. */
     private Database      db;
@@ -49,7 +49,6 @@ public class UserDAO {
             String selectsql = "SELECT * from User";
             pstmt = db.getConnection().prepareStatement(selectsql);
             resultset = pstmt.executeQuery();
-
             while (resultset.next()) {
                 User resultUser = new User();
 
@@ -86,9 +85,9 @@ public class UserDAO {
      *            - the user to validate
      * @return true, if successful
      */
-    public boolean validateUser(String username, String password) {
-        PreparedStatement pstmt = null;
-        boolean isValid = true;
+    //public boolean validateUser(String username, String password) {
+        //PreparedStatement pstmt = null;
+        //boolean isValid = true;
         //try {
             //String selectsql = "SELECT * from User WHERE Username = ? AND Password = ?";
             //pstmt = db.getConnection().prepareStatement(selectsql);
@@ -100,8 +99,8 @@ public class UserDAO {
         //} finally {
             //Database.closeSafely(pstmt);
         //}
-        return isValid;
-    }
+        //return isValid;
+    //}
 
     /**
      * Creates a new user.
@@ -135,7 +134,7 @@ public class UserDAO {
                 int id = resultset.getInt(1);
                 newUser.setID(id);
             } else {
-                throw new DatabaseException("Unable to insert user into database");
+                throw new DatabaseException("Unable to insert user into database.");
             }
         } catch (SQLException e) {
             logger.log(Level.SEVERE, e.toString());
@@ -173,7 +172,6 @@ public class UserDAO {
             resultset = pstmt.executeQuery();
 
             resultset.next();
-
             returnUser.setID(resultset.getInt(1));
             returnUser.setUsername(username);
             returnUser.setPassword(password);
@@ -186,7 +184,7 @@ public class UserDAO {
             logger.log(Level.SEVERE, e.toString());
             logger.log(Level.FINE, "STACKTRACE: ", e);
             throw new DatabaseException(e.toString());
-            // return null;
+            //return null;
         } finally {
             Database.closeSafely(pstmt);
             Database.closeSafely(resultset);

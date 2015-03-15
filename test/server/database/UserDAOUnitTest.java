@@ -1,5 +1,5 @@
 /**
- * UserDAOTest.java
+ * UserDAOUnitTest.java
  * JRE v1.7.0_76
  *
  * Created by William Myers on Mar 14, 2015.
@@ -17,9 +17,9 @@ import org.junit.*;
 import shared.model.User;
 
 /**
- * The Class UserDAOTest.
+ * The Class UserDAOUnitTest.
  */
-public class UserDAOTest {
+public class UserDAOUnitTest {
 
     /**
      * Sets up before class.
@@ -45,7 +45,7 @@ public class UserDAOTest {
     }
 
     private Database db;
-    private UserDAO  dbUser;
+    private UserDAO  dbUserTest;
 
     /**
      * Sets the database up.
@@ -55,14 +55,12 @@ public class UserDAOTest {
      */
     @Before
     public void setUp() throws Exception {
-
         // Delete all users from the database
         db = new Database();
         // db.initDBTables();
         db.startTransaction();
 
         ArrayList<User> users = db.getUserDAO().getAll();
-
         for (User u : users) {
             db.getUserDAO().delete(u);
         }
@@ -71,7 +69,7 @@ public class UserDAOTest {
         // Prepare database for test case
         db = new Database();
         db.startTransaction();
-        dbUser = db.getUserDAO();
+        dbUserTest = db.getUserDAO();
 
     }
 
@@ -86,8 +84,9 @@ public class UserDAOTest {
         // Roll back this transaction so changes are undone
         db.endTransaction(false);
         db = null;
-        dbUser = null;
+        dbUserTest = null;
     }
+
 
     /**
      * Safe equals.
@@ -120,14 +119,14 @@ public class UserDAOTest {
     }
 
     /**
-     * Test get allUsers.
+     * Test get all.
      *
      * @throws DatabaseException
      *             the database exception
      */
     @Test
     public void testGetAll() throws DatabaseException {
-        List<User> allUsers = dbUser.getAll();
+        List<User> allUsers = dbUserTest.getAll();
         assertEquals(0, allUsers.size());
     }
 
@@ -146,17 +145,17 @@ public class UserDAOTest {
         User testUser3 = new User("UserTestCreate3", "pass3", "first3", "last3",
                 "email3", 3, 3);
 
-        dbUser.create(testUser1);
-        dbUser.create(testUser2);
-        dbUser.create(testUser3);
+        dbUserTest.create(testUser1);
+        dbUserTest.create(testUser2);
+        dbUserTest.create(testUser3);
 
-        List<User> allUsers = dbUser.getAll();
-        assertEquals(3, allUsers.size());
+        List<User> all = dbUserTest.getAll();
+        assertEquals(3, all.size());
 
         boolean hasFoundUser1 = false;
         boolean hasFoundUser2 = false;
         boolean hasFoundUser3 = false;
-        for (User curr : allUsers) {
+        for (User curr : all) {
             assertFalse(curr.getID() == -1);
             if (!hasFoundUser1) {
                 hasFoundUser1 = areEqual(curr, testUser1, false);
@@ -186,9 +185,9 @@ public class UserDAOTest {
         User testUser3 = new User("UserTestUpdate3", "pass3", "first3", "last3",
                 "email3", 3, 3);
 
-        dbUser.create(testUser1);
-        dbUser.create(testUser2);
-        dbUser.create(testUser3);
+        dbUserTest.create(testUser1);
+        dbUserTest.create(testUser2);
+        dbUserTest.create(testUser3);
 
         testUser1.setFirst("first-001");
         testUser2.setFirst("first-002");
@@ -202,17 +201,17 @@ public class UserDAOTest {
         testUser2.setEmail("email-002");
         testUser3.setEmail("email-003");
 
-        dbUser.update(testUser1);
-        dbUser.update(testUser2);
-        dbUser.update(testUser3);
+        dbUserTest.update(testUser1);
+        dbUserTest.update(testUser2);
+        dbUserTest.update(testUser3);
 
-        List<User> allUsers = dbUser.getAll();
-        assertEquals(3, allUsers.size());
+        List<User> all = dbUserTest.getAll();
+        assertEquals(3, all.size());
 
         boolean hasFoundUser1 = false;
         boolean hasFoundUser2 = false;
         boolean hasFoundUser3 = false;
-        for (User curr : allUsers) {
+        for (User curr : all) {
             assertFalse(curr.getID() == -1);
             if (!hasFoundUser1) {
                 hasFoundUser1 = areEqual(curr, testUser1, false);
@@ -242,45 +241,42 @@ public class UserDAOTest {
         User testUser3 = new User("UserTestDelete3", "pass3", "first3", "last3",
                 "email3", 3, 3);
 
-        dbUser.create(testUser1);
-        dbUser.create(testUser2);
-        dbUser.create(testUser3);
+        dbUserTest.create(testUser1);
+        dbUserTest.create(testUser2);
+        dbUserTest.create(testUser3);
 
-        List<User> allUseres = dbUser.getAll();
+        List<User> allUseres = dbUserTest.getAll();
         assertEquals(3, allUseres.size());
 
-        dbUser.delete(testUser1);
-        allUseres = dbUser.getAll();
+        dbUserTest.delete(testUser1);
+        allUseres = dbUserTest.getAll();
         assertEquals(2, allUseres.size());
 
-        dbUser.delete(testUser3);
-        allUseres = dbUser.getAll();
+        dbUserTest.delete(testUser3);
+        allUseres = dbUserTest.getAll();
         assertEquals(1, allUseres.size());
 
-        dbUser.delete(testUser2);
-        allUseres = dbUser.getAll();
+        dbUserTest.delete(testUser2);
+        allUseres = dbUserTest.getAll();
         assertEquals(0, allUseres.size());
     }
 
-    //TODO: should I just use read method instead of validateUser?
     //@Test
     //public void testValidateUser() throws DatabaseException {
-        //User testUser1 = new User("UserTestValidate1", "pass1", "first1",
-                //"last1", "email1", 1, 1);
-        //User testUser2 = new User("UserTestValidate2", "pass2", "first2",
-                //"last2", "email2", 2, 2);
-        //User testUser3 = new User("UserTestValidate3", "pass3", "first3",
-                //"last3", "email3", 3, 3);
+        //User testUser1 = new User("UserTestCreate1", "pass1", "first1", "last1",
+                //"email1", 1, 1);
+        //User testUser2 = new User("UserTestCreate2", "pass2", "first2", "last2",
+                //"email2", 2, 2);
+        //User testUser3 = new User("UserTestCreate3", "pass3", "first3", "last3",
+                //"email3", 3, 3);
 
-        //dbUser.create(testUser1);
-        //dbUser.create(testUser2);
-        //dbUser.create(testUser3);
+        //dbUserTest.create(testUser1);
+        //dbUserTest.create(testUser2);
+        //dbUserTest.create(testUser3);
 
-        //List<User> allUsers = dbUser.getAll();
-        //assertEquals(3, allUsers.size());
+        //List<User> all = dbUserTest.getAll();
 
-        //assertFalse(dbUser.validateUser("UserTestValidate1", "INVALID"));
-        ////assertTrue(true && dbUser.validateUser("UserTestValidate2", "pass2"));
-        ////ussertFalse(dbUser.validateUser("UserTestValidate3", "INVALID"));
+        //assertEquals(3, all.size());
+        //assertTrue(dbUserTest.validateUser(testUser1) && dbUserTest.validateUser(testUser2));
     //}
 }

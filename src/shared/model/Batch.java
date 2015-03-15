@@ -1,7 +1,7 @@
 /**
  * Batch.java
  * JRE v1.7.0_76
- * 
+ *
  * Created by William Myers on Mar 14, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
@@ -21,8 +21,8 @@ public class Batch {
     /** The project id. */
     private int    projectID;
 
-    /** The state. */
-    private int    state;
+    /** The status. */
+    private int    status;
 
     /**
      * Instantiates a new Batch without params.
@@ -31,7 +31,7 @@ public class Batch {
         this.filePath = null;
         this.ID = 0;
         this.projectID = 0;
-        this.state = 0;
+        this.status = 0;
     }
 
     /**
@@ -39,12 +39,12 @@ public class Batch {
      *
      * @param filePath
      * @param projectID
-     * @param state
+     * @param status
      */
-    public Batch(String filePath, int projectID, int state) {
+    public Batch(String filePath, int projectID, int status) {
         this.filePath = filePath;
         this.projectID = projectID;
-        this.state = state;
+        this.status = status;
     }
 
     /**
@@ -54,14 +54,14 @@ public class Batch {
      *            the file path
      * @param projectID
      *            the project id
-     * @param state
-     *            the state
+     * @param status
+     *            the status
      */
-    public Batch(int id, String filePath, int projectID, int state) {
+    public Batch(int id, String filePath, int projectID, int status) {
         this.filePath = filePath;
         this.ID = id;
         this.projectID = projectID;
-        this.state = state;
+        this.status = status;
     }
 
     public String getFilePath() {
@@ -88,12 +88,12 @@ public class Batch {
         this.projectID = projectID;
     }
 
-    public int getState() {
-        return this.state;
+    public int getStatus() {
+        return this.status;
     }
 
-    public void setState(int state) {
-        this.state = state;
+    public void setStatus(int status) {
+        this.status = status;
     }
 
 }

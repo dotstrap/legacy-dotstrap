@@ -232,7 +232,7 @@ public class Database {
                 + "ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE,"
                 + "FilePath TEXT NOT NULL, "
                 + "ProjectID INTEGER NOT NULL, "
-                + "State INTEGER NOT NULL)";
+                + "Status INTEGER NOT NULL)";
 
         String dropFieldTable = "DROP TABLE IF EXISTS Field";
         String createFieldTable = "CREATE TABLE Field ("

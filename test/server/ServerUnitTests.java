@@ -87,7 +87,7 @@ public class ServerUnitTests {
      */
     public static void main(String[] args) {
         String[] testClasses = new String[] { "server.ServerUnitTests",
-                "server.database.UserDAOTest" };
+                "server.database.UserDAOUnitTest", "server.database.BatchDAOUnitTest"};
         /*
          * String[] testClasses = new String[] { "server.ServerUnitTests",
          * "server.database.UserDAOTest", "server.database.BatchDAOUnitTests",
