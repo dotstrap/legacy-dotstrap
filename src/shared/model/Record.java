@@ -1,7 +1,7 @@
 /**
  * Record.java
  * JRE v1.7.0_76
- * 
+ *
  * Created by William Myers on Mar 15, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
@@ -12,85 +12,122 @@ package shared.model;
  * The Class Record.
  */
 public class Record {
-
-    /** The batch id. */
-    private int    batchID;
-
-    /** The data. */
-    private String data;
-
-    /** The field id. */
-    private int    fieldID;
-
-    /** The id. */
     private int    ID;
-
-    /** The Rec num. */
-    private int    RecNum;
+    private int    fieldID;
+    private int    batchID;
+    private String batchURL;
+    private String data;
+    private int    RowNum;
+    private int    ColNum;
 
     /**
-     * Instantiates a new record.
+     * Instantiates a new Record.
      */
     public Record() {
-
+        ID       = -1;
+        fieldID  = -1;
+        batchID  = -1;
+        batchURL = "batchURL";
+        data     = "data";
+        RowNum   = -1;
+        ColNum   = -1;
     }
 
     /**
-     * Instantiates a new record.
+     * Instantiates a new Record.
      *
-     * @param rn
-     *            the rn
-     * @param bID
-     *            the b id
-     * @param d
-     *            the d
-     * @param fID
-     *            the f id
+     * @param fieldID
+     * @param batchID
+     * @param batchURL
+     * @param data
+     * @param rowNum
+     * @param colNum
      */
-    public Record(int rn, int bID, String d, int fID) {
-        RecNum = rn;
-        batchID = bID;
-        data = d;
-        fieldID = fID;
+    public Record(int fieldID, int batchID, String batchURL, String data,
+            int rowNum, int colNum) {
+        this.fieldID  = fieldID;
+        this.batchID  = batchID;
+        this.batchURL = batchURL;
+        this.data     = data;
+        this.RowNum   = rowNum;
+        this.ColNum   = colNum;
     }
 
-    public int getBatchID() {
-        return batchID;
-    }
-
-    public String getData() {
-        return data;
-    }
-
-    public int getFieldID() {
-        return fieldID;
+    /**
+     * Instantiates a new Record.
+     *
+     * @param id
+     * @param fieldID
+     * @param batchID
+     * @param batchURL
+     * @param data
+     * @param rowNum
+     * @param colNum
+     */
+    public Record(int id, int fieldID, int batchID, String batchURL, String data,
+            int rowNum, int colNum) {
+        this.ID       = id;
+        this.fieldID  = fieldID;
+        this.batchID  = batchID;
+        this.batchURL = batchURL;
+        this.data     = data;
+        this.RowNum   = rowNum;
+        this.ColNum   = colNum;
     }
 
     public int getID() {
-        return ID;
+        return this.ID;
     }
 
-    public int getRecordNumber() {
-        return RecNum;
+    public void setID(int id) {
+        this.ID = id;
     }
 
-    public void setBatchID(int i) {
-        batchID = i;
-    }
-
-    public void setData(String data) {
-        this.data = data;
+    public int getFieldID() {
+        return this.fieldID;
     }
 
     public void setFieldID(int fieldID) {
         this.fieldID = fieldID;
     }
 
-    public void setID(int i) {
-        ID = i;
+    public int getBatchID() {
+        return this.batchID;
     }
 
-    public void setRecordNumber(int i) {
-        RecNum = i;
+    public void setBatchID(int batchID) {
+        this.batchID = batchID;
+    }
+
+    public String getBatchURL() {
+        return this.batchURL;
+    }
+
+    public void setBatchURL(String batchURL) {
+        this.batchURL = batchURL;
+    }
+
+    public String getData() {
+        return this.data;
+    }
+
+    public void setData(String data) {
+        this.data = data;
+    }
+
+    public int getRowNum() {
+        return this.RowNum;
+    }
+
+    public void setRowNum(int rowNum) {
+        this.RowNum = rowNum;
+    }
+
+    public int getColNum() {
+        return this.ColNum;
+    }
+
+    public void setColNum(int colNum) {
+        this.ColNum = colNum;
     }
 }

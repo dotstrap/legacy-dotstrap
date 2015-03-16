@@ -1,7 +1,7 @@
 /**
  * BatchDAOUnitTest.java
  * JRE v1.7.0_76
- * 
+ *
  * Created by William Myers on Mar 15, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
@@ -37,10 +37,10 @@ public class BatchDAOUnitTest {
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
         logger.entering("server.database.BatchDAOUnitTest", "setUpBeforeClass");
-        
+
         // Load database drivers
         Database.initDriver();
-        
+
         logger.exiting("server.database.BatchDAOUnitTest", "setUpBeforeClass");
     }
 
@@ -69,13 +69,13 @@ public class BatchDAOUnitTest {
     @Before
     public void setUp() throws Exception {
         logger.entering("server.database.BatchDAOUnitTest", "setUp");
-        
+
         // Prepare database for test case
         db = new Database();
         db.startTransaction();
         db.initTables();
         dbBatchTest = db.getBatchDAO();
-        
+
         logger.exiting("server.database.BatchDAOUnitTest", "setUp");
     }
 
@@ -88,12 +88,12 @@ public class BatchDAOUnitTest {
     @After
     public void tearDown() throws Exception {
         logger.entering("server.database.BatchDAOUnitTest", "tearDown");
-        
+
         // Roll back this transaction so changes are undone
         db.endTransaction(false);
         db = null;
         dbBatchTest = null;
-        
+
         logger.exiting("server.database.BatchDAOUnitTest", "tearDown");
     }
 
@@ -145,10 +145,10 @@ public class BatchDAOUnitTest {
     @Test
     public void testGetAll() throws DatabaseException {
         logger.entering("server.database.BatchDAOUnitTest", "testGetAll");
-        
+
         List<Batch> allBatches = dbBatchTest.getAll();
         assertEquals(0, allBatches.size());
-        
+
         logger.exiting("server.database.BatchDAOUnitTest", "testGetAll");
     }
 
@@ -161,7 +161,7 @@ public class BatchDAOUnitTest {
     @Test
     public void testCreate() throws DatabaseException {
         logger.entering("server.database.BatchDAOUnitTest", "testCreate");
-        
+
         Batch testBatch1 = new Batch("batchTestCreate1", 10, 10);
         Batch testBatch2 = new Batch("batchTestCreate2", 10, 10);
         Batch testBatch3 = new Batch("batchTestCreate3", 10, 10);
@@ -189,7 +189,7 @@ public class BatchDAOUnitTest {
             }
         }
         assertTrue(hasFoundBatch1 && hasFoundBatch2 && hasFoundBatch3);
-        
+
         logger.exiting("server.database.BatchDAOUnitTest", "testCreate");
     }
 
@@ -202,7 +202,7 @@ public class BatchDAOUnitTest {
     @Test
     public void testUpdate() throws DatabaseException {
         logger.entering("server.database.BatchDAOUnitTest", "testUpdate");
-        
+
         Batch testBatch1 = new Batch("batchUdateTest1", 10, 10);
         Batch testBatch2 = new Batch("batchUdateTest2", 1, 1);
         Batch testBatch3 = new Batch("batchUdateTest3", 15, 15);
@@ -238,7 +238,7 @@ public class BatchDAOUnitTest {
             }
         }
         assertTrue(hasFoundBatch1 && hasFoundBatch2 && hasFoundBatch3);
-      
+
         logger.exiting("server.database.BatchDAOUnitTest", "testUpdate");
     }
 
@@ -251,7 +251,7 @@ public class BatchDAOUnitTest {
     @Test
     public void testDelete() throws DatabaseException {
         logger.entering("server.database.BatchDAOUnitTest", "testDelete");
-        
+
         Batch testBatch1 = new Batch("batchDeleteTest1", 10, 10);
         Batch testBatch2 = new Batch("batchDeleteTest2", 5, 5);
         Batch testBatch3 = new Batch("batchDeleteTest3", 1, 0);
@@ -273,7 +273,7 @@ public class BatchDAOUnitTest {
         dbBatchTest.delete(testBatch3);
         allBatches = dbBatchTest.getAll();
         assertEquals(0, allBatches.size());
-        
+
         logger.exiting("server.database.BatchDAOUnitTest", "testDelete");
     }
 }

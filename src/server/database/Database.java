@@ -1,7 +1,7 @@
 /**
  * Database.java
  * JRE v1.7.0_76
- * 
+ *
  * Created by William Myers on Mar 15, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
@@ -219,7 +219,7 @@ public class Database {
      * @throws DatabaseException
      */
     public void initTables() throws DatabaseException {
-        logger.entering("server.database.Database", "initDBTables");
+        logger.entering("server.database.Database", "initTables");
 
         String dropBatchTable = "DROP TABLE IF EXISTS Batch";
         String createBatchTable = "CREATE TABLE Batch ("
@@ -241,7 +241,7 @@ public class Database {
         String dropProjectTable = "DROP TABLE IF EXISTS Project";
         String createProjectTable = "CREATE TABLE Project ("
                 + "ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE, "
-                + "Name TEXT NOT NULL, "
+                + "Title TEXT NOT NULL, "
                 + "RecordsPerBatch INTEGER NOT NULL, "
                 + "FirstYCoord INTEGER, "
                 + "RecordHeight INTEGER)";
@@ -249,14 +249,16 @@ public class Database {
         String dropRecordTable = "DROP TABLE IF EXISTS Record";
         String createRecordTable = "CREATE TABLE Record ("
                 + "ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE, "
-                + "RowOnImage INTEGER NOT NULL, "
+                + "FieldID INTEGER NOT NULL, "
                 + "BatchID INTEGER NOT NULL, "
-                + "Data TEXT NOT NULL, "
-                + "FieldID INTEGER NOT NULL)";
+                + "BatchURL TEXT NOT NULL, "
+                + "Data TEXT NOT NULL COllATE NOCASE,"
+                + "RowNumber INTEGER NOT NULL, "
+                + "ColumnNumber INTEGER NOT NULL)";
 
         String dropUserTable = "DROP TABLE IF EXISTS User";
         String createUserTable = "CREATE TABLE User ("
-                + "ID INTEGER PRIMARY KEY NOT NULL UNIQUE, "
+                + "ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE, "
                 + "Username TEXT NOT NULL UNIQUE, "
                 + "Password TEXT NOT NULL, "
                 + "FirstName TEXT NOT NULL, "
@@ -264,6 +266,7 @@ public class Database {
                 + "Email TEXT NOT NULL UNIQUE, "
                 + "RecordCount INTEGER NOT NULL, "
                 + "CurrentBatchID INTEGER NOT NULL)";
+
         try {
             initCurrTable(dropBatchTable, createBatchTable);
         } catch (Exception e) {
@@ -312,7 +315,7 @@ public class Database {
             throw new DatabaseException(e.toString());
         }
 
-        logger.exiting("server.database.Database", "initDBTables");
+        logger.exiting("server.database.Database", "initTables");
     }
 
     /**
@@ -321,7 +324,7 @@ public class Database {
      * @param dropStmt
      *            the SQL statement to drop the given table
      * @param createStmt
-     *            the the SQL statement to create the given table
+     *            the SQL statement to create the given table
      */
     private void initCurrTable(String dropStmt, String createStmt)
             throws DatabaseException {
@@ -329,27 +332,11 @@ public class Database {
 
         PreparedStatement pstmt = null;
         try {
-            //try {
-                //startTransaction();
-            //} catch (DatabaseException e) {
-                //logger.log(Level.SEVERE, e.toString());
-                //logger.log(Level.FINE, "STACKTRACE: ", e);
-                //throw new DatabaseException(e.toString());
-            //}
-
             pstmt = connection.prepareStatement(dropStmt);
             pstmt.executeUpdate();
 
             pstmt = connection.prepareStatement(createStmt);
             pstmt.executeUpdate();
-
-            //try {
-                //endTransaction(true);
-            //} catch (DatabaseException e) {
-                //logger.log(Level.SEVERE, e.toString());
-                //logger.log(Level.FINE, "STACKTRACE: ", e);
-                //throw new DatabaseException(e.toString());
-            //}
         } catch (SQLException e) {
             logger.log(Level.SEVERE, e.toString());
             logger.log(Level.FINE, "STACKTRACE: ", e);

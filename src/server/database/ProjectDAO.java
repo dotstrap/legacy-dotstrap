@@ -1,13 +1,11 @@
 package server.database;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import shared.model.Project;
-import shared.model.ProjectInfo;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -16,10 +14,16 @@ import shared.model.ProjectInfo;
 public class ProjectDAO {
 
     /** The db. */
-    private Database db;
+    private Database      db;
+
+    /** The logger used throughout the project. */
+    private static Logger logger;
+    static {
+        logger = Logger.getLogger("server");
+    }
 
     /**
-     * Instantiates a new project dao.
+     * Instantiates a new project DAO.
      *
      * @param db
      *            the db
@@ -29,44 +33,91 @@ public class ProjectDAO {
     }
 
     /**
-     * Gets the all.
+     * Returns all Projects in an array.
      *
-     * @return the all
+     * @return -> project array if found, else return null
+     * @throws DatabaseException
      */
-    public ArrayList<Project> getAll() {
-        ArrayList<Project> projects = new ArrayList<Project>();
-        Connection connection = null;
+    public ArrayList<Project> getAll() throws DatabaseException {
+        logger.entering("server.database.ProjectDAO", "getAll");
+
+        ArrayList<Project> allProjects = new ArrayList<Project>();
         PreparedStatement pstmt = null;
         ResultSet resultset = null;
-
         try {
-            connection = db.getConnection();
             String selectsql = "SELECT * from Project";
-            pstmt = connection.prepareStatement(selectsql);
+            pstmt = db.getConnection().prepareStatement(selectsql);
 
             resultset = pstmt.executeQuery();
-
             while (resultset.next()) {
-                Project returnProject = new Project();
-                ProjectInfo p = new ProjectInfo();
-                p.setID(resultset.getInt(1));
-                p.setName(resultset.getString(2));
-                returnProject.setProjInfo(p);
-                returnProject.setRecordsPerBatch(resultset.getInt(3));
-                returnProject.setFirstY(resultset.getInt(4));
-                returnProject.setRecordHeight(resultset.getInt(5));
+                Project resultProject = new Project();
 
-                projects.add(returnProject);
+                resultProject.setID(resultset.getInt("ID"));
+                resultProject.setTitle(resultset.getString("Title"));
+                resultProject.setRecordsPerBatch(resultset
+                        .getInt("RecordsPerBatch"));
+                resultProject.setFirstYCoord(resultset.getInt("FirstYCoord"));
+                resultProject.setRecordHeight(resultset.getInt("RecordHeight"));
+
+                allProjects.add(resultProject);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, e.toString());
+            logger.log(Level.FINE, "STACKTRACE: ", e);
+            throw new DatabaseException(e.toString());
+        } finally {
+            Database.closeSafely(pstmt);
+            Database.closeSafely(resultset);
         }
 
-        connection = null;
-        pstmt = null;
-        resultset = null;
+        logger.exiting("server.database.ProjectDAO", "getAll");
+        return allProjects;
+    }
 
-        return projects;
+    /**
+     * Inserts the given project to the database.
+     *
+     * @param project
+     *            the project
+     * @return the int
+     */
+    public int create(Project project) throws DatabaseException {
+        logger.entering("server.database.ProjectDAO", "create");
+
+        PreparedStatement pstmt = null;
+        Statement stmt = null;
+        ResultSet resultset = null;
+        try {
+            String insertsql = "INSERT INTO Project (Title, RecordsPerBatch, FirstYCoord, RecordHeight)"
+                    + "VALUES (?, ?, ?, ?)";
+            pstmt = db.getConnection().prepareStatement(insertsql);
+
+            pstmt.setString(1, project.getTitle());
+            pstmt.setInt(2, project.getRecordsPerBatch());
+            pstmt.setInt(3, project.getFirstYCoord());
+            pstmt.setInt(4, project.getRecordHeight());
+
+            if (pstmt.executeUpdate() == 1) {
+                stmt = db.getConnection().createStatement();
+                resultset = stmt.executeQuery("SELECT last_insert_rowid()");
+                resultset.next();
+                int id = resultset.getInt(1);
+                project.setID(id);
+            } else {
+                throw new DatabaseException(
+                        "Unable to insert new project into database.");
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, e.toString());
+            logger.log(Level.FINE, "STACKTRACE: ", e);
+            throw new DatabaseException(e.toString());
+        } finally {
+            Database.closeSafely(pstmt);
+            Database.closeSafely(resultset);
+        }
+
+        logger.exiting("server.database.ProjectDAO", "create");
+        return project.getID();
     }
 
     /**
@@ -76,101 +127,68 @@ public class ProjectDAO {
      *            the id
      * @return the project
      */
-    public Project getProject(int id) {
-        Connection connection = null;
+    public Project read(int id) throws DatabaseException {
+        logger.entering("server.database.ProjectDAO", "read");
+
         PreparedStatement pstmt = null;
         ResultSet resultset = null;
-        Project returnProject = new Project();
+        Project resultProject = new Project();
         try {
-            connection = db.getConnection();
             String selectsql = "SELECT * from Project WHERE ID = ?";
-            pstmt = connection.prepareStatement(selectsql);
+            pstmt = db.getConnection().prepareStatement(selectsql);
             pstmt.setInt(1, id);
 
             resultset = pstmt.executeQuery();
 
             resultset.next();
-            ProjectInfo pi = new ProjectInfo();
-            pi.setID(id);
-            pi.setName(resultset.getString(2));
-            returnProject.setProjInfo(pi);
-            returnProject.setRecordsPerBatch(resultset.getInt(3));
-            returnProject.setFirstY(resultset.getInt(4));
-            returnProject.setRecordHeight(resultset.getInt(5));
-        } catch (Exception e) {
-            e.printStackTrace();
+            resultProject.setID(resultset.getInt(1));
+            resultProject.setTitle(resultset.getString(2));
+            resultProject.setRecordsPerBatch(resultset.getInt(3));
+            resultProject.setFirstYCoord(resultset.getInt(4));
+            resultProject.setRecordHeight(resultset.getInt(5));
+        }
+         catch (Exception e) {
+            logger.log(Level.SEVERE, e.toString());
+            logger.log(Level.FINE, "STACKTRACE: ", e);
+            throw new DatabaseException(e.toString());
+        } finally {
+            Database.closeSafely(pstmt);
+            Database.closeSafely(resultset);
         }
 
-        connection = null;
-        pstmt = null;
-        resultset = null;
-        if (returnProject.getProjInfo().getName() == "") {
+        logger.exiting("server.database.ProjectDAO", "read");
+        if (resultProject.getTitle() == "") {
             return null;
         }
-        return returnProject;
+        return resultProject;
     }
 
     /**
-     * Adds the.
+     * Deletes the specified project.
      *
      * @param project
      *            the project
-     * @return the int
+     * @throws DatabaseException
      */
-    public int add(Project project) {
-        Connection connection = null;
-        PreparedStatement pstmt = null;
-        Statement stmt = null;
-        ResultSet resultset = null;
-        int id = -1;
-        try {
-            connection = db.getConnection();
-            String insertsql = "INSERT INTO Project (Name, RecordsPerBatch, FirstYCoord, RecordHeight)"
-                               + "VALUES (?, ?, ?, ?)";
-            pstmt = connection.prepareStatement(insertsql);
-            pstmt.setString(1, project.getProjInfo().getName());
-            pstmt.setInt(2, project.getRecordsPerBatch());
-            pstmt.setInt(3, project.getFirstY());
-            pstmt.setInt(4, project.getRecordHeight());
+    public void delete(Project project) throws DatabaseException {
+        logger.entering("server.database.ProjectDAO", "delete");
 
-            if (pstmt.executeUpdate() == 1) {
-                stmt = connection.createStatement();
-                resultset = stmt.executeQuery("SELECT last_insert_rowid()");
-                resultset.next();
-                id = resultset.getInt(1);
-                project.getProjInfo().setID(id);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        connection = null;
-        pstmt = null;
-        stmt = null;
-        resultset = null;
-        return id;
-    }
-
-    /**
-     * Delete.
-     *
-     * @param project
-     *            the project
-     */
-    public void delete(Project project) {
-        Connection connection = null;
         PreparedStatement pstmt = null;
         try {
-            connection = db.getConnection();
             String selectsql = "DELETE from Project WHERE ID = ?";
-            pstmt = connection.prepareStatement(selectsql);
-            pstmt.setInt(1, project.getProjInfo().getID());
+
+            pstmt = db.getConnection().prepareStatement(selectsql);
+            pstmt.setInt(1, project.getID());
 
             pstmt.executeUpdate();
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, e.toString());
+            logger.log(Level.FINE, "STACKTRACE: ", e);
+            throw new DatabaseException(e.toString());
+        } finally {
+            Database.closeSafely(pstmt);
         }
 
-        connection = null;
-        pstmt = null;
+        logger.exiting("server.database.ProjectDAO", "delete");
     }
 }

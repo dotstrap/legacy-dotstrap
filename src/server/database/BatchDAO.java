@@ -1,7 +1,7 @@
 /**
  * BatchDAO.java
  * JRE v1.7.0_76
- * 
+ *
  * Created by William Myers on Mar 15, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
@@ -30,7 +30,7 @@ public class BatchDAO {
     }
 
     /**
-     * Instantiates a new batch dao.
+     * Instantiates a new batch DAO.
      *
      * @param db
      *            the db
@@ -40,13 +40,13 @@ public class BatchDAO {
     }
 
     /**
-     * returns all batches in an array.
+     * Returns all batches in an array.
      *
      * @return -> batch array if found, else return null
      * @throws DatabaseException
      */
     public ArrayList<Batch> getAll() throws DatabaseException {
-        logger.entering("server.database.UserDAO", "getAll");
+        logger.entering("server.database.BatchDAO", "getAll");
 
         ArrayList<Batch> allBatches = new ArrayList<Batch>();
         PreparedStatement pstmt = null;
@@ -54,6 +54,7 @@ public class BatchDAO {
         try {
             String selectsql = "SELECT * from Batch";
             pstmt = db.getConnection().prepareStatement(selectsql);
+
             resultset = pstmt.executeQuery();
             while (resultset.next()) {
                 Batch resultBatch = new Batch();
@@ -74,12 +75,12 @@ public class BatchDAO {
             Database.closeSafely(resultset);
         }
 
-        logger.exiting("server.database.UserDAO", "getAll");
+        logger.exiting("server.database.BatchDAO", "getAll");
         return allBatches;
     }
 
     /**
-     * Adds the given batch to the database.
+     * Inserts the given batch into the database.
      *
      * @param batch
      *            the batch
@@ -87,7 +88,7 @@ public class BatchDAO {
      * @throws DatabaseException
      */
     public int create(Batch batch) throws DatabaseException {
-        logger.entering("server.database.UserDAO", "create");
+        logger.entering("server.database.BatchDAO", "create");
 
         PreparedStatement pstmt = null;
         Statement stmt = null;
@@ -96,6 +97,7 @@ public class BatchDAO {
             String insertsql = "INSERT INTO Batch (FilePath, ProjectID, Status)"
                     + "VALUES(?, ?, ?)";
             pstmt = db.getConnection().prepareStatement(insertsql);
+
             pstmt.setString(1, batch.getFilePath());
             pstmt.setInt(2, batch.getProjectID());
             pstmt.setInt(3, batch.getStatus());
@@ -119,7 +121,7 @@ public class BatchDAO {
             Database.closeSafely(resultset);
         }
 
-        logger.exiting("server.database.UserDAO", "create");
+        logger.exiting("server.database.BatchDAO", "create");
         return batch.getID();
     }
 
@@ -133,11 +135,11 @@ public class BatchDAO {
      *             the database exception
      */
     public Batch read(int id) throws DatabaseException {
-        logger.entering("server.database.UserDAO", "read");
+        logger.entering("server.database.BatchDAO", "read");
 
         PreparedStatement pstmt = null;
         ResultSet resultset = null;
-        Batch returnBatch = new Batch();
+        Batch resultBatch = new Batch();
         try {
             String selectsql = "SELECT * from Batch WHERE ID = ?";
             pstmt = db.getConnection().prepareStatement(selectsql);
@@ -146,10 +148,10 @@ public class BatchDAO {
             resultset = pstmt.executeQuery();
 
             resultset.next();
-            returnBatch.setID(resultset.getInt(1));
-            returnBatch.setFilePath(resultset.getString(2));
-            returnBatch.setProjectID(resultset.getInt(3));
-            returnBatch.setStatus(resultset.getInt(4));
+            resultBatch.setID(resultset.getInt(1));
+            resultBatch.setFilePath(resultset.getString(2));
+            resultBatch.setProjectID(resultset.getInt(3));
+            resultBatch.setStatus(resultset.getInt(4));
         } catch (Exception e) {
             logger.log(Level.SEVERE, e.toString());
             logger.log(Level.FINE, "STACKTRACE: ", e);
@@ -158,12 +160,12 @@ public class BatchDAO {
             Database.closeSafely(pstmt);
             Database.closeSafely(resultset);
         }
-        if (returnBatch.getFilePath() == "") {
+
+        logger.exiting("server.database.BatchDAO", "read");
+        if (resultBatch.getFilePath() == "") {
             return null;
         }
-
-        logger.exiting("server.database.UserDAO", "read");
-        return returnBatch;
+        return resultBatch;
     }
 
     /**
@@ -175,7 +177,7 @@ public class BatchDAO {
      */
 
     public void update(Batch batch) throws DatabaseException {
-        logger.entering("server.database.UserDAO", "update");
+        logger.entering("server.database.BatchDAO", "update");
 
         PreparedStatement pstmt = null;
         try {
@@ -194,7 +196,7 @@ public class BatchDAO {
             Database.closeSafely(pstmt);
         }
 
-        logger.exiting("server.database.UserDAO", "update");
+        logger.exiting("server.database.BatchDAO", "update");
     }
 
     /**
@@ -205,7 +207,7 @@ public class BatchDAO {
      * @throws DatabaseException
      */
     public void delete(Batch batch) throws DatabaseException {
-        logger.entering("server.database.UserDAO", "delete");
+        logger.entering("server.database.BatchDAO", "delete");
 
         PreparedStatement pstmt = null;
         try {
@@ -223,6 +225,6 @@ public class BatchDAO {
             Database.closeSafely(pstmt);
         }
 
-        logger.exiting("server.database.UserDAO", "delete");
+        logger.exiting("server.database.BatchDAO", "delete");
     }
 }

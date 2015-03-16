@@ -1,7 +1,7 @@
 /**
  * ServerUnitTests.java
  * JRE v1.7.0_76
- * 
+ *
  * Created by William Myers on Mar 15, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
@@ -30,7 +30,7 @@ public class ServerUnitTests {
      *             Signals that an I/O exception has occurred.
      */
     private static void initLog() throws IOException {
-        Level logLevel = Level.FINER;
+        Level logLevel = Level.SEVERE;
         String logFile = "logs/server.log";
 
         logger = Logger.getLogger("server");
@@ -87,7 +87,10 @@ public class ServerUnitTests {
      */
     public static void main(String[] args) {
         String[] testClasses = new String[] { "server.ServerUnitTests",
-                "server.database.UserDAOUnitTest", "server.database.BatchDAOUnitTest"};
+                "server.database.BatchDAOUnitTest",
+                "server.database.ProjectDAOUnitTest",
+                "server.database.RecordDAOUnitTest",
+                "server.database.UserDAOUnitTest" };
         /*
          * String[] testClasses = new String[] { "server.ServerUnitTests",
          * "server.database.UserDAOTest", "server.database.BatchDAOUnitTests",

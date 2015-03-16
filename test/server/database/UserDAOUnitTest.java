@@ -1,7 +1,7 @@
 /**
  * UserDAOUnitTest.java
  * JRE v1.7.0_76
- * 
+ *
  * Created by William Myers on Mar 15, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
@@ -35,10 +35,10 @@ public class UserDAOUnitTest {
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
         logger.entering("server.database.UserDAOUnitTest", "setUpBeforeClass");
-  
+
         // Load database driver
         Database.initDriver();
-        
+
         logger.exiting("server.database.UserDAOUnitTest", "setUpBeforeClass");
     }
 
@@ -67,13 +67,13 @@ public class UserDAOUnitTest {
     @Before
     public void setUp() throws Exception {
         logger.entering("server.database.UserDAOUnitTest", "setUp");
-        
+
         // Prepare database for test case
         db = new Database();
         db.startTransaction();
         db.initTables();
         dbUserTest = db.getUserDAO();
-        
+
         logger.exiting("server.database.UserDAOUnitTest", "setUp");
     }
 
@@ -86,12 +86,12 @@ public class UserDAOUnitTest {
     @After
     public void tearDown() throws Exception {
         logger.entering("server.database.UserDAOUnitTest", "tearDown");
-        
+
         // Roll back this transaction so changes are undone
         db.endTransaction(false);
         db = null;
         dbUserTest = null;
-        
+
         logger.exiting("server.database.UserDAOUnitTest", "tearDown");
     }
 
@@ -134,10 +134,10 @@ public class UserDAOUnitTest {
     @Test
     public void testGetAll() throws DatabaseException {
         logger.entering("server.database.UserDAOUnitTest", "testGetAll");
-        
+
         List<User> allUsers = dbUserTest.getAll();
         assertEquals(0, allUsers.size());
-        
+
         logger.exiting("server.database.UserDAOUnitTest", "testGetAll");
     }
 
@@ -150,7 +150,7 @@ public class UserDAOUnitTest {
     @Test
     public void testCreate() throws DatabaseException {
         logger.entering("server.database.UserDAOUnitTest", "testCreate");
-        
+
         User testUser1 = new User("UserTestCreate1", "pass1", "first1", "last1",
                 "email1", 1, 1);
         User testUser2 = new User("UserTestCreate2", "pass2", "first2", "last2",
@@ -181,7 +181,7 @@ public class UserDAOUnitTest {
             }
         }
         assertTrue(hasFoundUser1 && hasFoundUser2 && hasFoundUser3);
-        
+
         logger.exiting("server.database.UserDAOUnitTest", "testCreate");
     }
 
@@ -194,7 +194,7 @@ public class UserDAOUnitTest {
     @Test
     public void testUpdate() throws DatabaseException {
         logger.entering("server.database.UserDAOUnitTest", "testUpdate");
-        
+
         User testUser1 = new User("UserTestUpdate1", "pass1", "first1", "last1",
                 "email1", 1, 1);
         User testUser2 = new User("UserTestUpdate2", "pass2", "first2", "last2",
@@ -241,7 +241,7 @@ public class UserDAOUnitTest {
             }
         }
         assertTrue(hasFoundUser1 && hasFoundUser2 && hasFoundUser3);
-        
+
         logger.exiting("server.database.UserDAOUnitTest", "testUpdate");
     }
 
@@ -254,7 +254,7 @@ public class UserDAOUnitTest {
     @Test
     public void testDelete() throws DatabaseException {
         logger.entering("server.database.UserDAOUnitTest", "testDelete");
-        
+
         User testUser1 = new User("UserTestDelete1", "pass1", "first1", "last1",
                 "email1", 1, 1);
         User testUser2 = new User("UserTestDelete2", "pass2", "first2", "last2",
@@ -280,7 +280,7 @@ public class UserDAOUnitTest {
         dbUserTest.delete(testUser2);
         allUseres = dbUserTest.getAll();
         assertEquals(0, allUseres.size());
-        
+
         logger.exiting("server.database.UserDAOUnitTest", "testDelete");
     }
 

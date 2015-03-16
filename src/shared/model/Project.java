@@ -1,7 +1,7 @@
 /**
  * Project.java
  * JRE v1.7.0_76
- * 
+ *
  * Created by William Myers on Mar 15, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
@@ -12,51 +12,56 @@ package shared.model;
  * The Class Project.
  */
 public class Project {
-
-    /** The project info. */
-    private String name;
-
-    /** The id. */
     private int    ID;
-
-    /** The record height. */
+    private String title;
+    private int    recordsPerBatch;
+    private int    firstYCoord;
     private int    recordHeight;
 
-    /** The records per batch. */
-    private int    recordsPerBatch;
+    /**
+     * Instantiates a new Project.
+     */
+    public Project() {
+        this.title           = "";
+        this.ID              = 0;
+        this.recordHeight    = 0;
+        this.recordsPerBatch = 0;
+        this.firstYCoord     = 0;
+    }
 
-    /** The first y. */
-    private int    firstY;
 
     /**
-     * Instantiates a new Project. =*
+     * Instantiates a new Project.
      *
-     * @param name
-     *            the name
-     * @param id
-     *            the id
-     * @param recordHeight
-     *            the record height
+     * @param title
      * @param recordsPerBatch
-     *            the records per batch
-     * @param firstY
-     *            the first y
+     * @param firstYCoord
+     * @param recordHeight
      */
-    public Project(String name, int id, int recordHeight, int recordsPerBatch,
-            int firstY) {
-        this.name = name;
-        this.ID = id;
-        this.recordHeight = recordHeight;
+    public Project(String title, int recordsPerBatch, int firstYCoord,
+            int recordHeight) {
+        this.title           = title;
         this.recordsPerBatch = recordsPerBatch;
-        this.firstY = firstY;
+        this.firstYCoord     = firstYCoord;
+        this.recordHeight    = recordHeight;
     }
 
-    public String getName() {
-        return this.name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    /**
+     * Instantiates a new Project.
+     *
+     * @param id
+     * @param title
+     * @param recordsPerBatch
+     * @param firstYCoord
+     * @param recordHeight
+     */
+    public Project(int id, String title, int recordsPerBatch, int firstYCoord,
+            int recordHeight) {
+        this.ID              = id;
+        this.title           = title;
+        this.recordsPerBatch = recordsPerBatch;
+        this.firstYCoord     = firstYCoord;
+        this.recordHeight    = recordHeight;
     }
 
     public int getID() {
@@ -67,12 +72,12 @@ public class Project {
         this.ID = id;
     }
 
-    public int getRecordHeight() {
-        return this.recordHeight;
+    public String getTitle() {
+        return this.title;
     }
 
-    public void setRecordHeight(int recordHeight) {
-        this.recordHeight = recordHeight;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public int getRecordsPerBatch() {
@@ -83,11 +88,19 @@ public class Project {
         this.recordsPerBatch = recordsPerBatch;
     }
 
-    public int getFirstY() {
-        return this.firstY;
+    public int getFirstYCoord() {
+        return this.firstYCoord;
     }
 
-    public void setFirstY(int firstY) {
-        this.firstY = firstY;
+    public void setFirstYCoord(int firstYCoord) {
+        this.firstYCoord = firstYCoord;
+    }
+
+    public int getRecordHeight() {
+        return this.recordHeight;
+    }
+
+    public void setRecordHeight(int recordHeight) {
+        this.recordHeight = recordHeight;
     }
 }

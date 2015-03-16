@@ -2,21 +2,19 @@
  * ProjectDAOUnitTest.java
  * JRE v1.7.0_76
  *
- * Created by William Myers on Mar 10, 2015.
+ * Created by William Myers on Mar 15, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
-
 package server.database;
 
 import static org.junit.Assert.*;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.junit.*;
 
 import shared.model.Project;
-import shared.model.ProjectInfo;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -24,58 +22,112 @@ import shared.model.ProjectInfo;
  */
 public class ProjectDAOUnitTest {
 
+    /** The logger used throughout the project. */
+    private static Logger logger;
+    static {
+        logger = Logger.getLogger("server");
+    }
+
     /**
      * Sets the up before class.
      *
-     * @throws Exception the exception
+     * @throws Exception
+     *             the exception
      */
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
+        logger.entering("server.database.ProjectDAOUnitTest", "setUpBeforeClass");
+
         // Load database drivers
         Database.initDriver();
+
+        logger.exiting("server.database.ProjectDAOUnitTest", "setUpBeforeClass");
     }
 
     /**
      * Tear down after class.
      *
-     * @throws Exception the exception
+     * @throws Exception
+     *             the exception
      */
     @AfterClass
     public static void tearDownAfterClass() throws Exception {
+        logger.entering("server.database.ProjectDAOUnitTest",
+                "tearDownAfterClass");
+        logger.exiting("server.database.ProjectDAOUnitTest", "tearDownAfterClass");
         return;
     }
 
-    /** The db. */
     private Database   db;
+    private ProjectDAO dbProjectTest;
 
-    /** The db project. */
-    private ProjectDAO dbProject;
+    /**
+     * Sets the database up.
+     *
+     * @throws Exception
+     *             the exception
+     */
+    @Before
+    public void setUp() throws Exception {
+        logger.entering("server.database.ProjectDAOUnitTest", "setUp");
+
+        // Prepare database for test case
+        db = new Database();
+        db.startTransaction();
+        db.initTables();
+        dbProjectTest = db.getProjectDAO();
+
+        logger.exiting("server.database.ProjectDAOUnitTest", "setUp");
+    }
+
+    /**
+     * Tear down.
+     *
+     * @throws Exception
+     *             the exception
+     */
+    @After
+    public void tearDown() throws Exception {
+        logger.entering("server.database.ProjectDAOUnitTest", "tearDown");
+
+        // Roll back this transaction so changes are undone
+        db.endTransaction(false);
+        db = null;
+        dbProjectTest = null;
+
+        logger.exiting("server.database.ProjectDAOUnitTest", "tearDown");
+    }
 
     /**
      * Are equal.
      *
-     * @param a the a
-     * @param b the b
-     * @param compareIDs the compare i ds
+     * @param a
+     *            the first project to compare
+     * @param b
+     *            the second project to compare
+     * @param compareIDs
+     *            compare by IDs?
      * @return true, if successful
      */
     private boolean areEqual(Project a, Project b, boolean compareIDs) {
         if (compareIDs) {
-            if (a.getProjInfo().getID() != b.getProjInfo().getID()) {
+            if (a.getID() != b.getID()) {
                 return false;
             }
         }
-        return (safeEquals(a.getFirstY(), b.getFirstY())
-                && safeEquals(a.getProjInfo().getName(), b.getProjInfo().getName())
+        return (safeEquals(a.getFirstYCoord(), b.getFirstYCoord())
+                && safeEquals(a.getTitle(), b.getTitle())
                 && safeEquals(a.getRecordHeight(), b.getRecordHeight()) && safeEquals(
-                        a.getRecordsPerBatch(), b.getRecordsPerBatch()));
+                    a.getRecordsPerBatch(), b.getRecordsPerBatch()));
     }
 
     /**
      * Safe equals.
      *
-     * @param a the a
-     * @param b the b
+     * @param a
+     *            the first project to compare
+     * @param b
+     *            the second project to compare
      * @return true, if successful
      */
     private boolean safeEquals(Object a, Object b) {
@@ -87,128 +139,144 @@ public class ProjectDAOUnitTest {
     }
 
     /**
-     * Sets the up.
+     * Test get allProjects.
      *
-     * @throws Exception the exception
-     */
-    @Before
-    public void setUp() throws Exception {
-        // Delete all users from the database
-        db = new Database();
-        db.startTransaction();
-
-        ArrayList<Project> projects = db.getProjectDAO().getAll();
-
-        for (Project p : projects) {
-            db.getProjectDAO().delete(p);
-        }
-
-        db.endTransaction(true);
-
-        // Prepare database for test case
-        db = new Database();
-        db.startTransaction();
-        dbProject = db.getProjectDAO();
-    }
-
-    /**
-     * Tear down.
-     *
-     * @throws Exception the exception
-     */
-    @After
-    public void tearDown() throws Exception {
-
-        // Roll back transaction so changes to database are undone
-        db.endTransaction(true);
-
-        db = null;
-        dbProject = null;
-    }
-
-    /*
-     * @Test public void testUpdate() throws DatabaseException { User bob = new
-     * User(new Credentials("BobWhite", "bobwhite"), new UserInfo("Bob",
-     * "White", "bobwhite@gmail.com")); User amy = new User(new
-     * Credentials("AmyBlack", "amyblack"), new UserInfo("Amy", "Black",
-     * "amyblack@gmail.com")); User davis = new User(new
-     * Credentials("davisHyer", "davishyer"), new UserInfo("Davis", "Hyer",
-     * "davishyer@gmail.com")); dbUser.add(bob); dbUser.add(amy);
-     * dbUser.add(davis); bob.getUserInfo().setFirstName("Robert");
-     * amy.getUserInfo().setLastName("White"); dbUser.update(bob);
-     * dbUser.update(amy); List<User> all = dbUser.getAll(); assertEquals(3,
-     * all.size()); boolean foundBob = false; boolean foundAmy = false; boolean
-     * foundDavis = false; for (User u : all) { assertFalse(u.getID() == -1); if
-     * (!foundBob) { foundBob = areEqual(u, bob, false); } if (!foundAmy) {
-     * foundAmy = areEqual(u, amy, false); } if (!foundDavis) { foundDavis =
-     * areEqual(u, davis, false); } } assertTrue(foundBob && foundAmy &&
-     * foundDavis); }
-     */
-
-    /**
-     * Test add.
-     *
-     * @throws DatabaseException the database exception
+     * @throws DatabaseException
+     *             the database exception
      */
     @Test
-    public void testAdd() throws DatabaseException {
-        Project one = new Project(new ProjectInfo("one"), 10, 10, 10);
-        Project two = new Project(new ProjectInfo("two"), 20, 20, 20);
+    public void testGetAll() throws DatabaseException {
+        logger.entering("server.database.ProjectDAOUnitTest", "testGetAll");
 
-        dbProject.add(one);
-        dbProject.add(two);
+        List<Project> allProjectes = dbProjectTest.getAll();
+        assertEquals(0, allProjectes.size());
 
-        List<Project> all = dbProject.getAll();
-        assertEquals(2, all.size());
+        logger.exiting("server.database.ProjectDAOUnitTest", "testGetAll");
+    }
 
-        boolean foundOne = false;
-        boolean foundTwo = false;
+    /**
+     * Test create.
+     *
+     * @throws DatabaseException
+     *             the database exception
+     */
+    @Test
+    public void testCreate() throws DatabaseException {
+        logger.entering("server.database.ProjectDAOUnitTest", "testCreate");
 
-        for (Project p : all) {
+        Project testProject1 = new Project("projectTestCreate1", 10, 11, 12);
+        Project testProject2 = new Project("projectTestCreate2", 20, 21, 22);
+        Project testProject3 = new Project("projectTestCreate3", 30, 31, 32);
 
-            assertFalse(p.getProjInfo().getID() == -1);
+        dbProjectTest.create(testProject1);
+        dbProjectTest.create(testProject2);
+        dbProjectTest.create(testProject3);
 
-            if (!foundOne) {
-                foundOne = areEqual(p, one, false);
+        List<Project> allProjectes = dbProjectTest.getAll();
+        assertEquals(3, allProjectes.size());
+
+        boolean hasFoundProject1 = false;
+        boolean hasFoundProject2 = false;
+        boolean hasFoundProject3 = false;
+        for (Project b : allProjectes) {
+            assertFalse(b.getID() == -1);
+            if (!hasFoundProject1) {
+                hasFoundProject1 = areEqual(b, testProject1, false);
             }
-            if (!foundTwo) {
-                foundTwo = areEqual(p, two, false);
+            if (!hasFoundProject2) {
+                hasFoundProject2 = areEqual(b, testProject2, false);
+            }
+            if (!hasFoundProject3) {
+                hasFoundProject3 = areEqual(b, testProject3, false);
             }
         }
-        assertTrue(foundOne && foundTwo);
+        assertTrue(hasFoundProject1 && hasFoundProject2 && hasFoundProject3);
+
+        logger.exiting("server.database.ProjectDAOUnitTest", "testCreate");
     }
+
+    /**
+     * Test update.
+     *
+     * @throws DatabaseException
+     *             the database exception
+     */
+    // @Test
+    // public void testUpdate() throws DatabaseException {
+    // logger.entering("server.database.ProjectDAOUnitTest", "testUpdate");
+
+    // Project testProject1 = new Project("projectUdateTest1", 10, 10);
+    // Project testProject2 = new Project("projectUdateTest2", 1, 1);
+    // Project testProject3 = new Project("projectUdateTest3", 15, 15);
+
+    // dbProjectTest.create(testProject1);
+    // dbProjectTest.create(testProject2);
+    // dbProjectTest.create(testProject3);
+
+    // testProject1.setStatus(0);
+    // testProject2.setStatus(1);
+    // testProject3.setStatus(2);
+
+    // dbProjectTest.update(testProject1);
+    // dbProjectTest.update(testProject2);
+    // dbProjectTest.update(testProject3);
+
+    // List<Project> allProjectes = dbProjectTest.getAll();
+    // assertEquals(3, allProjectes.size());
+
+    // boolean hasFoundProject1 = false;
+    // boolean hasFoundProject2 = false;
+    // boolean hasFoundProject3 = false;
+    // for (Project b : allProjectes) {
+    // assertFalse(b.getID() == -1);
+    // if (!hasFoundProject1) {
+    // hasFoundProject1 = areEqual(b, testProject1, false);
+    // }
+    // if (!hasFoundProject2) {
+    // hasFoundProject2 = areEqual(b, testProject2, false);
+    // }
+    // if (!hasFoundProject3) {
+    // hasFoundProject3 = areEqual(b, testProject3, false);
+    // }
+    // }
+    // assertTrue(hasFoundProject1 && hasFoundProject2 && hasFoundProject3);
+
+    // logger.exiting("server.database.ProjectDAOUnitTest", "testUpdate");
+    // }
 
     /**
      * Test delete.
      *
-     * @throws DatabaseException the database exception
+     * @throws DatabaseException
+     *             the database exception
      */
     @Test
     public void testDelete() throws DatabaseException {
-        Project one = new Project(new ProjectInfo("one"), 10, 10, 10);
-        Project two = new Project(new ProjectInfo("two"), 20, 20, 20);
+        logger.entering("server.database.ProjectDAOUnitTest", "testDelete");
 
-        dbProject.add(one);
-        dbProject.add(two);
+        Project testProject1 = new Project("projectTestCreate1", 10, 11, 12);
+        Project testProject2 = new Project("projectTestCreate2", 20, 21, 22);
+        Project testProject3 = new Project("projectTestCreate3", 30, 31, 32);
 
-        List<Project> all = dbProject.getAll();
-        assertEquals(2, all.size());
+        dbProjectTest.create(testProject1);
+        dbProjectTest.create(testProject2);
+        dbProjectTest.create(testProject3);
 
-        dbProject.delete(one);
-        dbProject.delete(two);
+        List<Project> allProjectes = dbProjectTest.getAll();
+        assertEquals(3, allProjectes.size());
 
-        all = dbProject.getAll();
-        assertEquals(0, all.size());
-    }
+        dbProjectTest.delete(testProject1);
+        allProjectes = dbProjectTest.getAll();
+        assertEquals(2, allProjectes.size());
 
-    /**
-     * Test get all.
-     *
-     * @throws DatabaseException the database exception
-     */
-    @Test
-    public void testGetAll() throws DatabaseException {
-        List<Project> all = dbProject.getAll();
-        assertEquals(0, all.size());
+        dbProjectTest.delete(testProject2);
+        allProjectes = dbProjectTest.getAll();
+        assertEquals(1, allProjectes.size());
+
+        dbProjectTest.delete(testProject3);
+        allProjectes = dbProjectTest.getAll();
+        assertEquals(0, allProjectes.size());
+
+        logger.exiting("server.database.ProjectDAOUnitTest", "testDelete");
     }
 }

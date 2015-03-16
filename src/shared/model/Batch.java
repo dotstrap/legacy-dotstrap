@@ -1,7 +1,7 @@
 /**
  * Batch.java
  * JRE v1.7.0_76
- * 
+ *
  * Created by William Myers on Mar 15, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
@@ -28,23 +28,26 @@ public class Batch {
      * Instantiates a new Batch without params.
      */
     public Batch() {
-        this.filePath = null;
-        this.ID = 0;
+        this.filePath  = null;
+        this.ID        = 0;
         this.projectID = 0;
-        this.status = 0;
+        this.status    = 0;
     }
 
     /**
-     * Overload constructor instantiates a new Batch.
+     * Overload constructor to instantiate a new Batch with params.
      *
      * @param filePath
+     *            the file path
      * @param projectID
+     *            the project id
      * @param status
+     *            the status
      */
     public Batch(String filePath, int projectID, int status) {
-        this.filePath = filePath;
+        this.filePath  = filePath;
         this.projectID = projectID;
-        this.status = status;
+        this.status    = status;
     }
 
     /**
@@ -58,10 +61,10 @@ public class Batch {
      *            the status
      */
     public Batch(int id, String filePath, int projectID, int status) {
-        this.filePath = filePath;
-        this.ID = id;
+        this.ID        = id;
+        this.filePath  = filePath;
         this.projectID = projectID;
-        this.status = status;
+        this.status    = status;
     }
 
     public String getFilePath() {
