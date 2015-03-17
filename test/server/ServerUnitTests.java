@@ -88,16 +88,10 @@ public class ServerUnitTests {
     public static void main(String[] args) {
         String[] testClasses = new String[] { "server.ServerUnitTests",
                 "server.database.BatchDAOUnitTest",
+                "server.database.FieldDAOUnitTest",
                 "server.database.ProjectDAOUnitTest",
                 "server.database.RecordDAOUnitTest",
                 "server.database.UserDAOUnitTest" };
-        /*
-         * String[] testClasses = new String[] { "server.ServerUnitTests",
-         * "server.database.UserDAOTest", "server.database.BatchDAOUnitTests",
-         * "server.database.FieldDAOUnitTest",
-         * "server.database.ProjectDAOUnitTest",
-         * "server.database.RecordDAOUnitTest" };
-         */
         org.junit.runner.JUnitCore.main(testClasses);
     }
 }

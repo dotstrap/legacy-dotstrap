@@ -97,7 +97,6 @@ public class BatchDAOUnitTest {
         logger.exiting("server.database.BatchDAOUnitTest", "tearDown");
     }
 
-
     /**
      * Are equal.
      *

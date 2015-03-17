@@ -1,7 +1,7 @@
 /**
  * Field.java
  * JRE v1.7.0_76
- * 
+ *
  * Created by William Myers on Mar 15, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
@@ -12,85 +12,88 @@ package shared.model;
  * The Class Field.
  */
 public class Field {
-
-    private String knownPath;
-
-    private String helpPath;
-
-    private int    ID;
-
-    private int    number;
-
+    private int    fieldID;
     private int    projectID;
-
     private String title;
-
-    private int    width;
-
+    private String knownData;
+    private String helpURL;
+    private String fieldPath;
     private int    xCoord;
+    private int    width;
+    private int    colNum;
 
     /**
      * Instantiates a new Field.
      *
-     * @param knownPath
-     *            the known path
-     * @param helpPath
-     *            the help path
-     * @param id
-     *            the id
-     * @param number
-     *            the number
-     * @param projectID
-     *            the project id
-     * @param title
-     *            the title
-     * @param width
-     *            the width
-     * @param xCoord
-     *            the x coord
      */
-    public Field(String helpPath, String knownPath, int id, int number,
-            int projectID, String title, int width, int xCoord) {
-        this.ID = id;
-        this.knownPath = knownPath;
-        this.helpPath = helpPath;
-        this.number = number;
+    public Field() {
+        this.fieldID   = -1;
+        this.projectID = -1;
+        this.title     = "title";
+        this.knownData = "knownData";
+        this.helpURL   = "helpURL";
+        this.fieldPath = "fieldPath";
+        this.xCoord    = -1;
+        this.width     = -1;
+        this.colNum    = -1;
+    }
+
+    /**
+     * Instantiates a new Field.
+     *
+     * @param projectID
+     * @param title
+     * @param knownData
+     * @param helpURL
+     * @param fieldPath
+     * @param xCoord
+     * @param width
+     * @param colNum
+     */
+    public Field(int projectID, String title, String knownData, String helpURL,
+            String fieldPath, int xCoord, int width, int colNum) {
         this.projectID = projectID;
         this.title = title;
-        this.width = width;
+        this.knownData = knownData;
+        this.helpURL = helpURL;
+        this.fieldPath = fieldPath;
         this.xCoord = xCoord;
+        this.width = width;
+        this.colNum = colNum;
     }
 
-    public String getKnownPath() {
-        return this.knownPath;
+    /**
+     * Instantiates a new Field.
+     *
+     * @param fieldID
+     * @param projectID
+     * @param title
+     * @param knownData
+     * @param helpURL
+     * @param fieldPath
+     * @param xCoord
+     * @param width
+     * @param colNum
+     */
+    public Field(int fieldID, int projectID, String title, String knownData,
+            String helpURL, String fieldPath, int xCoord, int width, int colNum) {
+        this.fieldID = fieldID;
+        this.projectID = projectID;
+        this.title = title;
+        this.knownData = knownData;
+        this.helpURL = helpURL;
+        this.fieldPath = fieldPath;
+        this.xCoord = xCoord;
+        this.width = width;
+        this.colNum = colNum;
     }
 
-    public void setKnownPath(String knownPath) {
-        this.knownPath = knownPath;
+    public int getFieldID() {
+        return this.fieldID;
     }
 
-    public String getHelpPath() {
-        return this.helpPath;
-    }
-
-    public void setHelpPath(String helpPath) {
-        this.helpPath = helpPath;
-    }
-
-    public int getID() {
-        return this.ID;
-    }
-
-    public void setID(int iD) {
-        this.ID = iD;
-    }
-
-    public int getNumber() {
-        return this.number;
-    }
-
-    public void setNumber(int number) {
-        this.number = number;
+    public void setFieldID(int fieldID) {
+        this.fieldID = fieldID;
     }
 
     public int getProjectID() {
@@ -109,6 +112,38 @@ public class Field {
         this.title = title;
     }
 
+    public String getKnownData() {
+        return this.knownData;
+    }
+
+    public void setKnownData(String knownData) {
+        this.knownData = knownData;
+    }
+
+    public String getHelpURL() {
+        return this.helpURL;
+    }
+
+    public void setHelpURL(String helpURL) {
+        this.helpURL = helpURL;
+    }
+
+    public String getFieldPath() {
+        return this.fieldPath;
+    }
+
+    public void setFieldPath(String fieldPath) {
+        this.fieldPath = fieldPath;
+    }
+
+    public int getxCoord() {
+        return this.xCoord;
+    }
+
+    public void setxCoord(int xCoord) {
+        this.xCoord = xCoord;
+    }
+
     public int getWidth() {
         return this.width;
     }
@@ -117,23 +152,12 @@ public class Field {
         this.width = width;
     }
 
-    /**
-     * Gets the x coord.
-     *
-     * @return the x coord
-     */
-    public int getxCoord() {
-        return this.xCoord;
+    public int getColNum() {
+        return this.colNum;
     }
 
-    /**
-     * Sets the x coord.
-     *
-     * @param xCoord
-     *            the new x coord
-     */
-    public void setxCoord(int xCoord) {
-        this.xCoord = xCoord;
+    public void setColNum(int colNum) {
+        this.colNum = colNum;
     }
 
 }

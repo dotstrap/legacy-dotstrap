@@ -24,33 +24,33 @@ public class Database {
 
     // DataBase Access /////////////
     /** The database driver connection. */
-    private Connection connection;
+    private Connection    connection;
 
     /**
      * The batch DataBaseAccess. interfaces with the database to modify the
      * batch (image) table
      */
-    private BatchDAO          batchDAO;
+    private BatchDAO      batchDAO;
     /**
      * The field DataBaseAccess. interfaces with the database to modify the
      * field table
      */
-    private FieldDAO          fieldDAO;
+    private FieldDAO      fieldDAO;
     /**
      * The project DataBaseAccess. interfaces with the database to modify the
      * project table
      */
-    private ProjectDAO        projectDAO;
+    private ProjectDAO    projectDAO;
     /**
      * The record DataBaseAccess. interfaces with the database to modify the
      * record table
      */
-    private RecordDAO         recordDAO;
+    private RecordDAO     recordDAO;
     /**
      * The user DataBaseAccess. interfaces with the database to modify the user
      * table
      */
-    private UserDAO           userDAO;
+    private UserDAO       userDAO;
 
     /**
      * Instantiates a new database.
@@ -58,11 +58,11 @@ public class Database {
     public Database() {
         connection = null;
 
-        batchDAO = new BatchDAO(this);
-        fieldDAO = new FieldDAO(this);
+        batchDAO   = new BatchDAO(this);
+        fieldDAO   = new FieldDAO(this);
         projectDAO = new ProjectDAO(this);
-        recordDAO = new RecordDAO(this);
-        userDAO = new UserDAO(this);
+        recordDAO  = new RecordDAO(this);
+        userDAO    = new UserDAO(this);
     }
 
     public Connection getConnection() {
@@ -193,21 +193,19 @@ public class Database {
         // Commit or rollback the transaction and finally close the connection
         logger.entering("server.database.Database", "endTransaction");
 
-        //if (connection != null) {
-            try {
-                if (shouldCommit) {
-                    connection.commit();
-                } else {
-                    connection.rollback();
-                }
-            } catch (SQLException e) {
-                logger.log(Level.SEVERE, e.toString());
-                logger.log(Level.FINE, "STACKTRACE: ", e);
-                throw new DatabaseException(e.toString());
-            } finally {
-                closeSafely(connection);
+        try {
+            if (shouldCommit) {
+                connection.commit();
+            } else {
+                connection.rollback();
             }
-       //}
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, e.toString());
+            logger.log(Level.FINE, "STACKTRACE: ", e);
+            throw new DatabaseException(e.toString());
+        } finally {
+            closeSafely(connection);
+        }
 
         logger.exiting("server.database.Database", "endTransaction");
     }
@@ -232,11 +230,13 @@ public class Database {
         String createFieldTable = "CREATE TABLE Field ("
                 + "FieldID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE, "
                 + "ProjectID INTEGER NOT NULL, "
+                + "Title TEXT NOT NULL"
+                + "KnownData TEXT NOT NULL"
+                + "HelpURL TEXT NOT NULL, "
                 + "FieldPath TEXT NOT NULL, "
-                + "KnownPath TEXT NOT NULL, "
-                + "Width INTEGER NOT NULL, "
                 + "XCoordinate INTEGER NOT NULL, "
-                + "Title TEXT NOT NULL)";
+                + "Width INTEGER NOT NULL, "
+                + "ColumnNumber INTEGER NOT NULL)";
 
         String dropProjectTable = "DROP TABLE IF EXISTS Project";
         String createProjectTable = "CREATE TABLE Project ("
@@ -269,45 +269,10 @@ public class Database {
 
         try {
             initCurrTable(dropBatchTable, createBatchTable);
-        } catch (Exception e) {
-            logger.log(Level.SEVERE, e.toString());
-            logger.log(Level.FINE, "STACKTRACE: ", e);
-            throw new DatabaseException(e.toString());
-        }
-
-        try {
             initCurrTable(dropFieldTable, createFieldTable);
-        } catch (Exception e) {
-            logger.log(Level.SEVERE, e.toString());
-            logger.log(Level.FINE, "STACKTRACE: ", e);
-            throw new DatabaseException(e.toString());
-        }
-
-        try {
             initCurrTable(dropBatchTable, createBatchTable);
-        } catch (Exception e) {
-            logger.log(Level.SEVERE, e.toString());
-            logger.log(Level.FINE, "STACKTRACE: ", e);
-            throw new DatabaseException(e.toString());
-        }
-
-        try {
             initCurrTable(dropProjectTable, createProjectTable);
-        } catch (Exception e) {
-            logger.log(Level.SEVERE, e.toString());
-            logger.log(Level.FINE, "STACKTRACE: ", e);
-            throw new DatabaseException(e.toString());
-        }
-
-        try {
             initCurrTable(dropRecordTable, createRecordTable);
-        } catch (Exception e) {
-            logger.log(Level.SEVERE, e.toString());
-            logger.log(Level.FINE, "STACKTRACE: ", e);
-            throw new DatabaseException(e.toString());
-        }
-
-        try {
             initCurrTable(dropUserTable, createUserTable);
         } catch (Exception e) {
             logger.log(Level.SEVERE, e.toString());
