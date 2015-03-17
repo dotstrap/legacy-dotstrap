@@ -58,7 +58,7 @@ public class BatchDAOUnitTest {
     }
 
     private Database db;
-    private BatchDAO dbBatchTest;
+    private BatchDAO testBatchDAO;
 
     /**
      * Sets the database up.
@@ -74,7 +74,7 @@ public class BatchDAOUnitTest {
         db = new Database();
         db.startTransaction();
         db.initTables();
-        dbBatchTest = db.getBatchDAO();
+        testBatchDAO = db.getBatchDAO();
 
         logger.exiting("server.database.BatchDAOUnitTest", "setUp");
     }
@@ -92,10 +92,11 @@ public class BatchDAOUnitTest {
         // Roll back this transaction so changes are undone
         db.endTransaction(false);
         db = null;
-        dbBatchTest = null;
+        testBatchDAO = null;
 
         logger.exiting("server.database.BatchDAOUnitTest", "tearDown");
     }
+
 
     /**
      * Are equal.
@@ -110,7 +111,7 @@ public class BatchDAOUnitTest {
      */
     private boolean areEqual(Batch a, Batch b, boolean compareIDs) {
         if (compareIDs) {
-            if (a.getID() != b.getID()) {
+            if (a.getBatchID() != b.getBatchID()) {
                 return false;
             }
         }
@@ -146,7 +147,7 @@ public class BatchDAOUnitTest {
     public void testGetAll() throws DatabaseException {
         logger.entering("server.database.BatchDAOUnitTest", "testGetAll");
 
-        List<Batch> allBatches = dbBatchTest.getAll();
+        List<Batch> allBatches = testBatchDAO.getAll();
         assertEquals(0, allBatches.size());
 
         logger.exiting("server.database.BatchDAOUnitTest", "testGetAll");
@@ -166,26 +167,26 @@ public class BatchDAOUnitTest {
         Batch testBatch2 = new Batch("batchTestCreate2", 10, 10);
         Batch testBatch3 = new Batch("batchTestCreate3", 10, 10);
 
-        dbBatchTest.create(testBatch1);
-        dbBatchTest.create(testBatch2);
-        dbBatchTest.create(testBatch3);
+        testBatchDAO.create(testBatch1);
+        testBatchDAO.create(testBatch2);
+        testBatchDAO.create(testBatch3);
 
-        List<Batch> allBatches = dbBatchTest.getAll();
+        List<Batch> allBatches = testBatchDAO.getAll();
         assertEquals(3, allBatches.size());
 
         boolean hasFoundBatch1 = false;
         boolean hasFoundBatch2 = false;
         boolean hasFoundBatch3 = false;
         for (Batch b : allBatches) {
-            assertFalse(b.getID() == -1);
+            assertFalse(b.getBatchID() == -1);
             if (!hasFoundBatch1) {
-                hasFoundBatch1 = areEqual(b, testBatch1, false);
+                hasFoundBatch1 = areEqual(b, testBatch1 ,false);
             }
             if (!hasFoundBatch2) {
-                hasFoundBatch2 = areEqual(b, testBatch2, false);
+                hasFoundBatch2 = areEqual(b, testBatch2 ,false);
             }
             if (!hasFoundBatch3) {
-                hasFoundBatch3 = areEqual(b, testBatch3, false);
+                hasFoundBatch3 = areEqual(b, testBatch3 ,false);
             }
         }
         assertTrue(hasFoundBatch1 && hasFoundBatch2 && hasFoundBatch3);
@@ -207,34 +208,34 @@ public class BatchDAOUnitTest {
         Batch testBatch2 = new Batch("batchUdateTest2", 1, 1);
         Batch testBatch3 = new Batch("batchUdateTest3", 15, 15);
 
-        dbBatchTest.create(testBatch1);
-        dbBatchTest.create(testBatch2);
-        dbBatchTest.create(testBatch3);
+        testBatchDAO.create(testBatch1);
+        testBatchDAO.create(testBatch2);
+        testBatchDAO.create(testBatch3);
 
         testBatch1.setStatus(0);
         testBatch2.setStatus(1);
         testBatch3.setStatus(2);
 
-        dbBatchTest.update(testBatch1);
-        dbBatchTest.update(testBatch2);
-        dbBatchTest.update(testBatch3);
+        testBatchDAO.update(testBatch1);
+        testBatchDAO.update(testBatch2);
+        testBatchDAO.update(testBatch3);
 
-        List<Batch> allBatches = dbBatchTest.getAll();
+        List<Batch> allBatches = testBatchDAO.getAll();
         assertEquals(3, allBatches.size());
 
         boolean hasFoundBatch1 = false;
         boolean hasFoundBatch2 = false;
         boolean hasFoundBatch3 = false;
         for (Batch b : allBatches) {
-            assertFalse(b.getID() == -1);
+            assertFalse(b.getBatchID() == -1);
             if (!hasFoundBatch1) {
-                hasFoundBatch1 = areEqual(b, testBatch1, false);
+                hasFoundBatch1 = areEqual(b, testBatch1 ,false);
             }
             if (!hasFoundBatch2) {
-                hasFoundBatch2 = areEqual(b, testBatch2, false);
+                hasFoundBatch2 = areEqual(b, testBatch2 ,false);
             }
             if (!hasFoundBatch3) {
-                hasFoundBatch3 = areEqual(b, testBatch3, false);
+                hasFoundBatch3 = areEqual(b, testBatch3 ,false);
             }
         }
         assertTrue(hasFoundBatch1 && hasFoundBatch2 && hasFoundBatch3);
@@ -255,23 +256,23 @@ public class BatchDAOUnitTest {
         Batch testBatch1 = new Batch("batchDeleteTest1", 10, 10);
         Batch testBatch2 = new Batch("batchDeleteTest2", 5, 5);
         Batch testBatch3 = new Batch("batchDeleteTest3", 1, 0);
-        dbBatchTest.create(testBatch1);
-        dbBatchTest.create(testBatch2);
-        dbBatchTest.create(testBatch3);
+        testBatchDAO.create(testBatch1);
+        testBatchDAO.create(testBatch2);
+        testBatchDAO.create(testBatch3);
 
-        List<Batch> allBatches = dbBatchTest.getAll();
+        List<Batch> allBatches = testBatchDAO.getAll();
         assertEquals(3, allBatches.size());
 
-        dbBatchTest.delete(testBatch1);
-        allBatches = dbBatchTest.getAll();
+        testBatchDAO.delete(testBatch1);
+        allBatches = testBatchDAO.getAll();
         assertEquals(2, allBatches.size());
 
-        dbBatchTest.delete(testBatch2);
-        allBatches = dbBatchTest.getAll();
+        testBatchDAO.delete(testBatch2);
+        allBatches = testBatchDAO.getAll();
         assertEquals(1, allBatches.size());
 
-        dbBatchTest.delete(testBatch3);
-        allBatches = dbBatchTest.getAll();
+        testBatchDAO.delete(testBatch3);
+        allBatches = testBatchDAO.getAll();
         assertEquals(0, allBatches.size());
 
         logger.exiting("server.database.BatchDAOUnitTest", "testDelete");

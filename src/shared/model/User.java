@@ -1,7 +1,7 @@
 /**
  * User.java
  * JRE v1.7.0_76
- * 
+ *
  * Created by William Myers on Mar 15, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
@@ -15,7 +15,7 @@ package shared.model;
 public class User {
 
     // Credentials
-    private int    ID;
+    private int    userID;
     private String username;
     private String password;
     // User info
@@ -30,7 +30,7 @@ public class User {
      * Instantiates a new User.
      */
     public User() {
-        this.ID = -1;
+        this.userID = -1;
         this.username = "username";
         this.password = "password";
         this.first = "first";
@@ -76,7 +76,7 @@ public class User {
      */
     public User(int id, String username, String password, String first,
             String last, String email, int recordCount, int currBatch) {
-        this.ID = id;
+        this.userID = id;
         this.username = username;
         this.password = password;
         this.first = first;
@@ -86,12 +86,12 @@ public class User {
         this.currBatch = currBatch;
     }
 
-    public int getID() {
-        return this.ID;
+    public int getUserID() {
+        return this.userID;
     }
 
-    public void setID(int id) {
-        this.ID = id;
+    public void setUserID(int id) {
+        this.userID = id;
     }
 
     public String getUsername() {

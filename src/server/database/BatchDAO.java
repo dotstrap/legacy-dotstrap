@@ -59,7 +59,7 @@ public class BatchDAO {
             while (resultset.next()) {
                 Batch resultBatch = new Batch();
 
-                resultBatch.setID(resultset.getInt("ID"));
+                resultBatch.setBatchID(resultset.getInt("BatchID"));
                 resultBatch.setFilePath(resultset.getString("Filepath"));
                 resultBatch.setProjectID(resultset.getInt("ProjectID"));
                 resultBatch.setStatus(resultset.getInt("Status"));
@@ -106,8 +106,8 @@ public class BatchDAO {
                 stmt = db.getConnection().createStatement();
                 resultset = stmt.executeQuery("SELECT last_insert_rowid()");
                 resultset.next();
-                int id = resultset.getInt(1);
-                batch.setID(id);
+                int batchid = resultset.getInt(1);
+                batch.setBatchID(batchid);
             } else {
                 throw new DatabaseException(
                         "Unable to insert new batch into database.");
@@ -122,33 +122,33 @@ public class BatchDAO {
         }
 
         logger.exiting("server.database.BatchDAO", "create");
-        return batch.getID();
+        return batch.getBatchID();
     }
 
     /**
      * Gets the batch from the database.
      *
-     * @param id
-     *            the id
+     * @param batchid
+     *            the batchid
      * @return the batch
      * @throws DatabaseException
      *             the database exception
      */
-    public Batch read(int id) throws DatabaseException {
+    public Batch read(int batchid) throws DatabaseException {
         logger.entering("server.database.BatchDAO", "read");
 
         PreparedStatement pstmt = null;
         ResultSet resultset = null;
         Batch resultBatch = new Batch();
         try {
-            String selectsql = "SELECT * from Batch WHERE ID = ?";
+            String selectsql = "SELECT * from Batch WHERE BatchID = ?";
             pstmt = db.getConnection().prepareStatement(selectsql);
-            pstmt.setInt(1, id);
+            pstmt.setInt(1, batchid);
 
             resultset = pstmt.executeQuery();
 
             resultset.next();
-            resultBatch.setID(resultset.getInt(1));
+            resultBatch.setBatchID(resultset.getInt(1));
             resultBatch.setFilePath(resultset.getString(2));
             resultBatch.setProjectID(resultset.getInt(3));
             resultBatch.setStatus(resultset.getInt(4));
@@ -181,11 +181,11 @@ public class BatchDAO {
 
         PreparedStatement pstmt = null;
         try {
-            String selectsql = "UPDATE Batch SET Status = ?" + "WHERE ID = ?";
+            String selectsql = "UPDATE Batch SET Status = ?" + "WHERE BatchID = ?";
 
             pstmt = db.getConnection().prepareStatement(selectsql);
             pstmt.setInt(1, batch.getStatus());
-            pstmt.setInt(2, batch.getID());
+            pstmt.setInt(2, batch.getBatchID());
 
             pstmt.executeUpdate();
         } catch (Exception e) {
@@ -211,10 +211,10 @@ public class BatchDAO {
 
         PreparedStatement pstmt = null;
         try {
-            String selectsql = "DELETE from Batch WHERE ID = ?";
+            String selectsql = "DELETE from Batch WHERE BatchID = ?";
 
             pstmt = db.getConnection().prepareStatement(selectsql);
-            pstmt.setInt(1, batch.getID());
+            pstmt.setInt(1, batch.getBatchID());
 
             pstmt.executeUpdate();
         } catch (Exception e) {

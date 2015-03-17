@@ -12,7 +12,7 @@ package shared.model;
  * The Class Record.
  */
 public class Record {
-    private int    ID;
+    private int    recordID;
     private int    fieldID;
     private int    batchID;
     private String batchURL;
@@ -20,17 +20,18 @@ public class Record {
     private int    RowNum;
     private int    ColNum;
 
+    // /**
     /**
      * Instantiates a new Record.
      */
     public Record() {
-        ID       = -1;
-        fieldID  = -1;
-        batchID  = -1;
+//        recordID = -1;
+        fieldID = -1;
+        batchID = -1;
         batchURL = "batchURL";
-        data     = "data";
-        RowNum   = -1;
-        ColNum   = -1;
+        data = "data";
+        RowNum = -1;
+        ColNum = -1;
     }
 
     /**
@@ -45,12 +46,13 @@ public class Record {
      */
     public Record(int fieldID, int batchID, String batchURL, String data,
             int rowNum, int colNum) {
-        this.fieldID  = fieldID;
-        this.batchID  = batchID;
+//        this.recordID = 99;
+        this.fieldID = fieldID;
+        this.batchID = batchID;
         this.batchURL = batchURL;
-        this.data     = data;
-        this.RowNum   = rowNum;
-        this.ColNum   = colNum;
+        this.data = data;
+        this.RowNum = rowNum;
+        this.ColNum = colNum;
     }
 
     /**
@@ -66,21 +68,21 @@ public class Record {
      */
     public Record(int id, int fieldID, int batchID, String batchURL, String data,
             int rowNum, int colNum) {
-        this.ID       = id;
-        this.fieldID  = fieldID;
-        this.batchID  = batchID;
+        this.recordID = id;
+        this.fieldID = fieldID;
+        this.batchID = batchID;
         this.batchURL = batchURL;
-        this.data     = data;
-        this.RowNum   = rowNum;
-        this.ColNum   = colNum;
+        this.data = data;
+        this.RowNum = rowNum;
+        this.ColNum = colNum;
     }
 
-    public int getID() {
-        return this.ID;
+    public int getRecordID() {
+        return this.recordID;
     }
 
-    public void setID(int id) {
-        this.ID = id;
+    public void setRecordID(int id) {
+        this.recordID = id;
     }
 
     public int getFieldID() {

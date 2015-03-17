@@ -59,7 +59,7 @@ public class ProjectDAOUnitTest {
     }
 
     private Database   db;
-    private ProjectDAO dbProjectTest;
+    private ProjectDAO testProjectDAO;
 
     /**
      * Sets the database up.
@@ -75,7 +75,7 @@ public class ProjectDAOUnitTest {
         db = new Database();
         db.startTransaction();
         db.initTables();
-        dbProjectTest = db.getProjectDAO();
+        testProjectDAO = db.getProjectDAO();
 
         logger.exiting("server.database.ProjectDAOUnitTest", "setUp");
     }
@@ -93,7 +93,7 @@ public class ProjectDAOUnitTest {
         // Roll back this transaction so changes are undone
         db.endTransaction(false);
         db = null;
-        dbProjectTest = null;
+        testProjectDAO = null;
 
         logger.exiting("server.database.ProjectDAOUnitTest", "tearDown");
     }
@@ -111,7 +111,7 @@ public class ProjectDAOUnitTest {
      */
     private boolean areEqual(Project a, Project b, boolean compareIDs) {
         if (compareIDs) {
-            if (a.getID() != b.getID()) {
+            if (a.getProjectID() != b.getProjectID()) {
                 return false;
             }
         }
@@ -148,7 +148,7 @@ public class ProjectDAOUnitTest {
     public void testGetAll() throws DatabaseException {
         logger.entering("server.database.ProjectDAOUnitTest", "testGetAll");
 
-        List<Project> allProjectes = dbProjectTest.getAll();
+        List<Project> allProjectes = testProjectDAO.getAll();
         assertEquals(0, allProjectes.size());
 
         logger.exiting("server.database.ProjectDAOUnitTest", "testGetAll");
@@ -168,18 +168,18 @@ public class ProjectDAOUnitTest {
         Project testProject2 = new Project("projectTestCreate2", 20, 21, 22);
         Project testProject3 = new Project("projectTestCreate3", 30, 31, 32);
 
-        dbProjectTest.create(testProject1);
-        dbProjectTest.create(testProject2);
-        dbProjectTest.create(testProject3);
+        testProjectDAO.create(testProject1);
+        testProjectDAO.create(testProject2);
+        testProjectDAO.create(testProject3);
 
-        List<Project> allProjectes = dbProjectTest.getAll();
+        List<Project> allProjectes = testProjectDAO.getAll();
         assertEquals(3, allProjectes.size());
 
         boolean hasFoundProject1 = false;
         boolean hasFoundProject2 = false;
         boolean hasFoundProject3 = false;
         for (Project b : allProjectes) {
-            assertFalse(b.getID() == -1);
+            assertFalse(b.getProjectID() == -1);
             if (!hasFoundProject1) {
                 hasFoundProject1 = areEqual(b, testProject1, false);
             }
@@ -228,15 +228,15 @@ public class ProjectDAOUnitTest {
     // boolean hasFoundProject2 = false;
     // boolean hasFoundProject3 = false;
     // for (Project b : allProjectes) {
-    // assertFalse(b.getID() == -1);
+    // assertFalse(b.getprojectID() == -1);
     // if (!hasFoundProject1) {
-    // hasFoundProject1 = areEqual(b, testProject1, false);
+    // hasFoundProject1 = areEqual(b, testProject1 ,false);
     // }
     // if (!hasFoundProject2) {
-    // hasFoundProject2 = areEqual(b, testProject2, false);
+    // hasFoundProject2 = areEqual(b, testProject2 ,false);
     // }
     // if (!hasFoundProject3) {
-    // hasFoundProject3 = areEqual(b, testProject3, false);
+    // hasFoundProject3 = areEqual(b, testProject3 ,false);
     // }
     // }
     // assertTrue(hasFoundProject1 && hasFoundProject2 && hasFoundProject3);
@@ -258,23 +258,23 @@ public class ProjectDAOUnitTest {
         Project testProject2 = new Project("projectTestCreate2", 20, 21, 22);
         Project testProject3 = new Project("projectTestCreate3", 30, 31, 32);
 
-        dbProjectTest.create(testProject1);
-        dbProjectTest.create(testProject2);
-        dbProjectTest.create(testProject3);
+        testProjectDAO.create(testProject1);
+        testProjectDAO.create(testProject2);
+        testProjectDAO.create(testProject3);
 
-        List<Project> allProjectes = dbProjectTest.getAll();
+        List<Project> allProjectes = testProjectDAO.getAll();
         assertEquals(3, allProjectes.size());
 
-        dbProjectTest.delete(testProject1);
-        allProjectes = dbProjectTest.getAll();
+        testProjectDAO.delete(testProject1);
+        allProjectes = testProjectDAO.getAll();
         assertEquals(2, allProjectes.size());
 
-        dbProjectTest.delete(testProject2);
-        allProjectes = dbProjectTest.getAll();
+        testProjectDAO.delete(testProject2);
+        allProjectes = testProjectDAO.getAll();
         assertEquals(1, allProjectes.size());
 
-        dbProjectTest.delete(testProject3);
-        allProjectes = dbProjectTest.getAll();
+        testProjectDAO.delete(testProject3);
+        allProjectes = testProjectDAO.getAll();
         assertEquals(0, allProjectes.size());
 
         logger.exiting("server.database.ProjectDAOUnitTest", "testDelete");

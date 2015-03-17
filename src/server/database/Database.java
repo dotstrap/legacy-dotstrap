@@ -223,14 +223,14 @@ public class Database {
 
         String dropBatchTable = "DROP TABLE IF EXISTS Batch";
         String createBatchTable = "CREATE TABLE Batch ("
-                + "ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE,"
+                + "BatchID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE,"
                 + "FilePath TEXT NOT NULL, "
                 + "ProjectID INTEGER NOT NULL, "
                 + "Status INTEGER NOT NULL)";
 
         String dropFieldTable = "DROP TABLE IF EXISTS Field";
         String createFieldTable = "CREATE TABLE Field ("
-                + "ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE, "
+                + "FieldID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE, "
                 + "ProjectID INTEGER NOT NULL, "
                 + "FieldPath TEXT NOT NULL, "
                 + "KnownPath TEXT NOT NULL, "
@@ -240,7 +240,7 @@ public class Database {
 
         String dropProjectTable = "DROP TABLE IF EXISTS Project";
         String createProjectTable = "CREATE TABLE Project ("
-                + "ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE, "
+                + "ProjectID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE, "
                 + "Title TEXT NOT NULL, "
                 + "RecordsPerBatch INTEGER NOT NULL, "
                 + "FirstYCoord INTEGER, "
@@ -248,7 +248,7 @@ public class Database {
 
         String dropRecordTable = "DROP TABLE IF EXISTS Record";
         String createRecordTable = "CREATE TABLE Record ("
-                + "ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE, "
+                + "RecordID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "
                 + "FieldID INTEGER NOT NULL, "
                 + "BatchID INTEGER NOT NULL, "
                 + "BatchURL TEXT NOT NULL, "
@@ -258,7 +258,7 @@ public class Database {
 
         String dropUserTable = "DROP TABLE IF EXISTS User";
         String createUserTable = "CREATE TABLE User ("
-                + "ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE, "
+                + "UserID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL , "
                 + "Username TEXT NOT NULL UNIQUE, "
                 + "Password TEXT NOT NULL, "
                 + "FirstName TEXT NOT NULL, "
@@ -330,19 +330,21 @@ public class Database {
             throws DatabaseException {
         logger.entering("test.server.database.Database", "initTable");
 
-        PreparedStatement pstmt = null;
+        Statement stmt1 = null;
+        Statement stmt2 = null;
         try {
-            pstmt = connection.prepareStatement(dropStmt);
-            pstmt.executeUpdate();
+            stmt1 = connection.createStatement();
+            stmt1.executeUpdate(dropStmt);
 
-            pstmt = connection.prepareStatement(createStmt);
-            pstmt.executeUpdate();
+            stmt2 = connection.createStatement();
+            stmt2.executeUpdate(createStmt);
         } catch (SQLException e) {
             logger.log(Level.SEVERE, e.toString());
             logger.log(Level.FINE, "STACKTRACE: ", e);
             throw new DatabaseException(e.toString());
         } finally {
-            closeSafely(pstmt);
+            closeSafely(stmt1);
+            closeSafely(stmt2);
         }
 
         logger.exiting("test.server.database.Database", "initTable");

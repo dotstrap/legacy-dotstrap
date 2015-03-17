@@ -1,7 +1,7 @@
 /**
  * UserDAO.java
  * JRE v1.7.0_76
- * 
+ *
  * Created by William Myers on Mar 15, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
@@ -52,7 +52,7 @@ public class UserDAO {
             while (resultset.next()) {
                 User resultUser = new User();
 
-                resultUser.setID(resultset.getInt("ID"));
+                resultUser.setUserID(resultset.getInt("UserID"));
                 resultUser.setUsername(resultset.getString("Username"));
                 resultUser.setPassword(resultset.getString("Password"));
 
@@ -107,7 +107,7 @@ public class UserDAO {
      *
      * @param newUser
      *            the user
-     * @return the int ID of the user
+     * @return the int UserID of the user
      */
     public int create(User newUser) throws DatabaseException {
         logger.entering("server.database.UserDAO", "create");
@@ -131,8 +131,8 @@ public class UserDAO {
                 Statement stmt = db.getConnection().createStatement();
                 resultset = stmt.executeQuery("SELECT last_insert_rowid()");
                 resultset.next();
-                int id = resultset.getInt(1);
-                newUser.setID(id);
+                int userid = resultset.getInt(1);
+                newUser.setUserID(userid);
             } else {
                 throw new DatabaseException("Unable to insert user into database.");
             }
@@ -146,7 +146,7 @@ public class UserDAO {
         }
 
         logger.exiting("server.database.UserDAO", "create");
-        return newUser.getID();
+        return newUser.getUserID();
     }
 
     /**
@@ -172,7 +172,7 @@ public class UserDAO {
             resultset = pstmt.executeQuery();
 
             resultset.next();
-            returnUser.setID(resultset.getInt(1));
+            returnUser.setUserID(resultset.getInt(1));
             returnUser.setUsername(username);
             returnUser.setPassword(password);
             returnUser.setFirst(resultset.getString(4));

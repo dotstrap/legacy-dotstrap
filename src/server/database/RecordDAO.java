@@ -53,7 +53,7 @@ public class RecordDAO {
             while (resultset.next()) {
                 Record resultRecord = new Record();
 
-                resultRecord.setID(resultset.getInt(1));
+                resultRecord.setRecordID(resultset.getInt(1));
                 resultRecord.setFieldID(resultset.getInt(2));
                 resultRecord.setBatchID(resultset.getInt(3));
                 resultRecord.setBatchURL(resultset.getString(4));
@@ -98,7 +98,7 @@ public class RecordDAO {
             while (resultset.next()) {
                 Record resultRecord = new Record();
 
-                resultRecord.setID(resultset.getInt(1));
+                resultRecord.setRecordID(resultset.getInt(1));
                 resultRecord.setFieldID(resultset.getInt(2));
                 resultRecord.setBatchID(batchID);
                 resultRecord.setBatchURL(resultset.getString(4));
@@ -161,7 +161,7 @@ public class RecordDAO {
             while (resultset.next()) {
                 Record resultRecord = new Record();
 
-                resultRecord.setID(resultset.getInt(1));
+                resultRecord.setRecordID(resultset.getInt(1));
                 resultRecord.setFieldID(resultset.getInt(2));
                 resultRecord.setBatchID(3);
                 resultRecord.setBatchURL(resultset.getString(4));
@@ -214,7 +214,7 @@ public class RecordDAO {
                 resultset = stmt.executeQuery("SELECT last_insert_rowid()");
                 resultset.next();
                 int id = resultset.getInt(1);
-                newRecord.setID(id);
+                newRecord.setRecordID(id);
             } else {
                 throw new DatabaseException(
                         "Unable to insert new record into database.");
@@ -229,7 +229,7 @@ public class RecordDAO {
         }
 
         logger.exiting("server.database.RecordDAO", "create");
-        return newRecord.getID();
+        return newRecord.getRecordID();
     }
 
     /**
@@ -242,12 +242,13 @@ public class RecordDAO {
     public Record read(int id) throws DatabaseException {
         logger.entering("server.database.RecordDAO", "read");
 
+        Record resultRecord = new Record();
+        resultRecord.setRecordID(id);
+
         PreparedStatement pstmt = null;
         ResultSet resultset = null;
-        Record resultRecord = new Record();
-        resultRecord.setID(id);
         try {
-            String selectsql = "SELECT * from Record WHERE ID = ?";
+            String selectsql = "SELECT * from Record WHERE RecordID = ?";
             pstmt = db.getConnection().prepareStatement(selectsql);
             pstmt.setInt(1, id);
 
@@ -286,10 +287,10 @@ public class RecordDAO {
 
         PreparedStatement pstmt = null;
         try {
-            String selectsql = "DELETE from Record WHERE ID = ?";
+            String selectsql = "DELETE from Record WHERE RecordID = ?";
 
             pstmt = db.getConnection().prepareStatement(selectsql);
-            pstmt.setInt(1, record.getID());
+            pstmt.setInt(1, record.getRecordID());
 
             pstmt.executeUpdate();
         } catch (Exception e) {

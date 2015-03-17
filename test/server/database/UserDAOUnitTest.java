@@ -56,7 +56,7 @@ public class UserDAOUnitTest {
     }
 
     private Database db;
-    private UserDAO  dbUserTest;
+    private UserDAO  testUserDAO;
 
     /**
      * Sets the database up.
@@ -72,7 +72,7 @@ public class UserDAOUnitTest {
         db = new Database();
         db.startTransaction();
         db.initTables();
-        dbUserTest = db.getUserDAO();
+        testUserDAO = db.getUserDAO();
 
         logger.exiting("server.database.UserDAOUnitTest", "setUp");
     }
@@ -90,7 +90,7 @@ public class UserDAOUnitTest {
         // Roll back this transaction so changes are undone
         db.endTransaction(false);
         db = null;
-        dbUserTest = null;
+        testUserDAO = null;
 
         logger.exiting("server.database.UserDAOUnitTest", "tearDown");
     }
@@ -114,7 +114,7 @@ public class UserDAOUnitTest {
 
     private boolean areEqual(User a, User b, boolean shouldCompareIDs) {
         if (shouldCompareIDs) {
-            if (a.getID() != b.getID()) {
+            if (a.getUserID() != b.getUserID()) {
                 return false;
             }
         }
@@ -135,7 +135,7 @@ public class UserDAOUnitTest {
     public void testGetAll() throws DatabaseException {
         logger.entering("server.database.UserDAOUnitTest", "testGetAll");
 
-        List<User> allUsers = dbUserTest.getAll();
+        List<User> allUsers = testUserDAO.getAll();
         assertEquals(0, allUsers.size());
 
         logger.exiting("server.database.UserDAOUnitTest", "testGetAll");
@@ -158,18 +158,18 @@ public class UserDAOUnitTest {
         User testUser3 = new User("UserTestCreate3", "pass3", "first3", "last3",
                 "email3", 3, 3);
 
-        dbUserTest.create(testUser1);
-        dbUserTest.create(testUser2);
-        dbUserTest.create(testUser3);
+        testUserDAO.create(testUser1);
+        testUserDAO.create(testUser2);
+        testUserDAO.create(testUser3);
 
-        List<User> all = dbUserTest.getAll();
+        List<User> all = testUserDAO.getAll();
         assertEquals(3, all.size());
 
         boolean hasFoundUser1 = false;
         boolean hasFoundUser2 = false;
         boolean hasFoundUser3 = false;
         for (User curr : all) {
-            assertFalse(curr.getID() == -1);
+            assertFalse(curr.getUserID() == -1);
             if (!hasFoundUser1) {
                 hasFoundUser1 = areEqual(curr, testUser1, false);
             }
@@ -202,9 +202,9 @@ public class UserDAOUnitTest {
         User testUser3 = new User("UserTestUpdate3", "pass3", "first3", "last3",
                 "email3", 3, 3);
 
-        dbUserTest.create(testUser1);
-        dbUserTest.create(testUser2);
-        dbUserTest.create(testUser3);
+        testUserDAO.create(testUser1);
+        testUserDAO.create(testUser2);
+        testUserDAO.create(testUser3);
 
         testUser1.setFirst("first-001");
         testUser2.setFirst("first-002");
@@ -218,18 +218,18 @@ public class UserDAOUnitTest {
         testUser2.setEmail("email-002");
         testUser3.setEmail("email-003");
 
-        dbUserTest.update(testUser1);
-        dbUserTest.update(testUser2);
-        dbUserTest.update(testUser3);
+        testUserDAO.update(testUser1);
+        testUserDAO.update(testUser2);
+        testUserDAO.update(testUser3);
 
-        List<User> all = dbUserTest.getAll();
+        List<User> all = testUserDAO.getAll();
         assertEquals(3, all.size());
 
         boolean hasFoundUser1 = false;
         boolean hasFoundUser2 = false;
         boolean hasFoundUser3 = false;
         for (User curr : all) {
-            assertFalse(curr.getID() == -1);
+            assertFalse(curr.getUserID() == -1);
             if (!hasFoundUser1) {
                 hasFoundUser1 = areEqual(curr, testUser1, false);
             }
@@ -262,23 +262,23 @@ public class UserDAOUnitTest {
         User testUser3 = new User("UserTestDelete3", "pass3", "first3", "last3",
                 "email3", 3, 3);
 
-        dbUserTest.create(testUser1);
-        dbUserTest.create(testUser2);
-        dbUserTest.create(testUser3);
+        testUserDAO.create(testUser1);
+        testUserDAO.create(testUser2);
+        testUserDAO.create(testUser3);
 
-        List<User> allUseres = dbUserTest.getAll();
+        List<User> allUseres = testUserDAO.getAll();
         assertEquals(3, allUseres.size());
 
-        dbUserTest.delete(testUser1);
-        allUseres = dbUserTest.getAll();
+        testUserDAO.delete(testUser1);
+        allUseres = testUserDAO.getAll();
         assertEquals(2, allUseres.size());
 
-        dbUserTest.delete(testUser3);
-        allUseres = dbUserTest.getAll();
+        testUserDAO.delete(testUser3);
+        allUseres = testUserDAO.getAll();
         assertEquals(1, allUseres.size());
 
-        dbUserTest.delete(testUser2);
-        allUseres = dbUserTest.getAll();
+        testUserDAO.delete(testUser2);
+        allUseres = testUserDAO.getAll();
         assertEquals(0, allUseres.size());
 
         logger.exiting("server.database.UserDAOUnitTest", "testDelete");

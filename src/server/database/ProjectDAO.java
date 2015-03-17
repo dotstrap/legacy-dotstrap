@@ -52,7 +52,7 @@ public class ProjectDAO {
             while (resultset.next()) {
                 Project resultProject = new Project();
 
-                resultProject.setID(resultset.getInt("ID"));
+                resultProject.setProjectID(resultset.getInt("projectID"));
                 resultProject.setTitle(resultset.getString("Title"));
                 resultProject.setRecordsPerBatch(resultset
                         .getInt("RecordsPerBatch"));
@@ -101,8 +101,8 @@ public class ProjectDAO {
                 stmt = db.getConnection().createStatement();
                 resultset = stmt.executeQuery("SELECT last_insert_rowid()");
                 resultset.next();
-                int id = resultset.getInt(1);
-                project.setID(id);
+                int projectID = resultset.getInt(1);
+                project.setProjectID(projectID);
             } else {
                 throw new DatabaseException(
                         "Unable to insert new project into database.");
@@ -117,7 +117,7 @@ public class ProjectDAO {
         }
 
         logger.exiting("server.database.ProjectDAO", "create");
-        return project.getID();
+        return project.getProjectID();
     }
 
     /**
@@ -127,21 +127,21 @@ public class ProjectDAO {
      *            the id
      * @return the project
      */
-    public Project read(int id) throws DatabaseException {
+    public Project read(int projectid) throws DatabaseException {
         logger.entering("server.database.ProjectDAO", "read");
 
         PreparedStatement pstmt = null;
         ResultSet resultset = null;
         Project resultProject = new Project();
         try {
-            String selectsql = "SELECT * from Project WHERE ID = ?";
+            String selectsql = "SELECT * from Project WHERE projectID = ?";
             pstmt = db.getConnection().prepareStatement(selectsql);
-            pstmt.setInt(1, id);
+            pstmt.setInt(1, projectid);
 
             resultset = pstmt.executeQuery();
 
             resultset.next();
-            resultProject.setID(resultset.getInt(1));
+            resultProject.setProjectID(resultset.getInt(1));
             resultProject.setTitle(resultset.getString(2));
             resultProject.setRecordsPerBatch(resultset.getInt(3));
             resultProject.setFirstYCoord(resultset.getInt(4));
@@ -175,10 +175,10 @@ public class ProjectDAO {
 
         PreparedStatement pstmt = null;
         try {
-            String selectsql = "DELETE from Project WHERE ID = ?";
+            String selectsql = "DELETE from Project WHERE projectID = ?";
 
             pstmt = db.getConnection().prepareStatement(selectsql);
-            pstmt.setInt(1, project.getID());
+            pstmt.setInt(1, project.getProjectID());
 
             pstmt.executeUpdate();
         } catch (Exception e) {

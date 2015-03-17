@@ -12,16 +12,9 @@ package shared.model;
  * The Class Batch A batch is considered an image.
  */
 public class Batch {
-    /** The id. */
-    private int    ID;
-
-    /** The file path. */
+    private int    batchID;
     private String filePath;
-
-    /** The project id. */
     private int    projectID;
-
-    /** The status. */
     private int    status;
 
     /**
@@ -29,42 +22,45 @@ public class Batch {
      */
     public Batch() {
         this.filePath  = null;
-        this.ID        = 0;
+        this.batchID        = 0;
         this.projectID = 0;
         this.status    = 0;
     }
 
     /**
-     * Overload constructor to instantiate a new Batch with params.
+     * Instantiates a new Batch.
      *
      * @param filePath
-     *            the file path
      * @param projectID
-     *            the project id
      * @param status
-     *            the status
      */
     public Batch(String filePath, int projectID, int status) {
-        this.filePath  = filePath;
+        this.filePath = filePath;
         this.projectID = projectID;
-        this.status    = status;
+        this.status = status;
     }
 
     /**
-     * Overload constructor to instantiate a new Batch with params.
+     * Instantiates a new Batch.
      *
+     * @param batchID
      * @param filePath
-     *            the file path
      * @param projectID
-     *            the project id
      * @param status
-     *            the status
      */
-    public Batch(int id, String filePath, int projectID, int status) {
-        this.ID        = id;
-        this.filePath  = filePath;
+    public Batch(int batchID, String filePath, int projectID, int status) {
+        this.batchID = batchID;
+        this.filePath = filePath;
         this.projectID = projectID;
-        this.status    = status;
+        this.status = status;
+    }
+
+    public int getBatchID() {
+        return this.batchID;
+    }
+
+    public void setBatchID(int batchID) {
+        this.batchID = batchID;
     }
 
     public String getFilePath() {
@@ -73,14 +69,6 @@ public class Batch {
 
     public void setFilePath(String filePath) {
         this.filePath = filePath;
-    }
-
-    public int getID() {
-        return this.ID;
-    }
-
-    public void setID(int id) {
-        this.ID = id;
     }
 
     public int getProjectID() {
@@ -98,5 +86,5 @@ public class Batch {
     public void setStatus(int status) {
         this.status = status;
     }
-
 }
+

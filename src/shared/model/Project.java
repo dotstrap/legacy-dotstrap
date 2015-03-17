@@ -12,7 +12,7 @@ package shared.model;
  * The Class Project.
  */
 public class Project {
-    private int    ID;
+    private int    projectID;
     private String title;
     private int    recordsPerBatch;
     private int    firstYCoord;
@@ -23,7 +23,7 @@ public class Project {
      */
     public Project() {
         this.title           = "";
-        this.ID              = 0;
+        this.projectID       = 0;
         this.recordHeight    = 0;
         this.recordsPerBatch = 0;
         this.firstYCoord     = 0;
@@ -57,19 +57,19 @@ public class Project {
      */
     public Project(int id, String title, int recordsPerBatch, int firstYCoord,
             int recordHeight) {
-        this.ID              = id;
+        this.projectID       = id;
         this.title           = title;
         this.recordsPerBatch = recordsPerBatch;
         this.firstYCoord     = firstYCoord;
         this.recordHeight    = recordHeight;
     }
 
-    public int getID() {
-        return this.ID;
+    public int getProjectID() {
+        return this.projectID;
     }
 
-    public void setID(int id) {
-        this.ID = id;
+    public void setProjectID(int id) {
+        this.projectID = id;
     }
 
     public String getTitle() {
