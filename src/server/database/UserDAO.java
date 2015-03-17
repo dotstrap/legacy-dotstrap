@@ -39,6 +39,41 @@ public class UserDAO {
         this.db = db;
     }
 
+    public void initTable() throws DatabaseException {
+        logger.entering("server.database.UserDAO", "initTable");
+
+        Statement stmt1 = null;
+        Statement stmt2 = null;
+
+        String dropUserTable = "DROP TABLE IF EXISTS User";
+        String createUserTable = "CREATE TABLE User ("
+                + "UserID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE, "
+                + "Username TEXT NOT NULL UNIQUE, "
+                + "Password TEXT NOT NULL, "
+                + "FirstName TEXT NOT NULL, "
+                + "LastName TEXT NOT NULL, "
+                + "Email TEXT NOT NULL UNIQUE, "
+                + "RecordCount INTEGER NOT NULL, "
+                + "CurrentBatchID INTEGER NOT NULL)";
+
+        try {
+            stmt1 = db.getConnection().createStatement();
+            stmt1.executeUpdate(dropUserTable);
+
+            stmt2 = db.getConnection().createStatement();
+            stmt2.executeUpdate(createUserTable);
+        }  catch (Exception e) {
+            logger.log(Level.SEVERE, e.toString());
+            logger.log(Level.FINE, "STACKTRACE: ", e);
+            throw new DatabaseException(e.toString());
+        } finally {
+            Database.closeSafely(stmt1);
+            Database.closeSafely(stmt2);
+        }
+
+        logger.exiting("server.database.FieldDAO", "initTable");
+    }
+
     public ArrayList<User> getAll() throws DatabaseException {
         logger.entering("server.database.UserDAO", "getAll");
 

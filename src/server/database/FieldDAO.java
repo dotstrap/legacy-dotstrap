@@ -39,6 +39,41 @@ public class FieldDAO {
         this.db = db;
     }
 
+    public void initTable() throws DatabaseException {
+        logger.entering("server.database.FieldDAO", "initTable");
+
+        Statement stmt1 = null;
+        Statement stmt2 = null;
+
+        String dropFieldTable = "DROP TABLE IF EXISTS Field";
+        String createFieldTable = "CREATE TABLE Field ("
+                + "FieldID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE, "
+                + "ProjectID INTEGER NOT NULL, "
+                + "Title TEXT NOT NULL, "
+                + "KnownData TEXT NOT NULL, "
+                + "HelpURL TEXT NOT NULL, "
+                + "FieldPath TEXT NOT NULL, "
+                + "XCoordinate INTEGER NOT NULL, "
+                + "Width INTEGER NOT NULL, "
+                + "ColumnNumber INTEGER NOT NULL)";
+        try {
+            stmt1 = db.getConnection().createStatement();
+            stmt1.executeUpdate(dropFieldTable);
+
+            stmt2 = db.getConnection().createStatement();
+            stmt2.executeUpdate(createFieldTable);
+        }  catch (Exception e) {
+            logger.log(Level.SEVERE, e.toString());
+            logger.log(Level.FINE, "STACKTRACE: ", e);
+            throw new DatabaseException(e.toString());
+        } finally {
+            Database.closeSafely(stmt1);
+            Database.closeSafely(stmt2);
+        }
+
+        logger.exiting("server.database.FieldDAO", "initTable");
+    }
+
     public ArrayList<Field> getAll() throws DatabaseException {
         logger.entering("server.database.FieldDAO", "getAll");
 
@@ -92,8 +127,8 @@ public class FieldDAO {
         PreparedStatement pstmt = null;
         ResultSet resultset = null;
         try {
-            String insertsql = "INSERT INTO Field (ProjectID, Title, KnownData, HelpURL, FieldPath, XCoordinate, Width)"
-                    + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+            String insertsql = "INSERT INTO Field (ProjectID, Title, KnownData, HelpURL, FieldPath, XCoordinate, Width, ColumnNumber)"
+                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
             pstmt = db.getConnection().prepareStatement(insertsql);
             pstmt.setInt(1, newField.getProjectID());
@@ -109,8 +144,8 @@ public class FieldDAO {
                 Statement stmt = db.getConnection().createStatement();
                 resultset = stmt.executeQuery("SELECT last_insert_rowid()");
                 resultset.next();
-                int fieldid = resultset.getInt(1);
-                newField.setFieldID(fieldid);
+                int fieldID = resultset.getInt(1);
+                newField.setFieldID(fieldID);
             } else {
                 throw new DatabaseException("Unable to insert field into database.");
             }

@@ -14,6 +14,8 @@ import java.util.logging.*;
 
 import org.junit.*;
 
+import server.database.Database;
+
 // TODO: Auto-generated Javadoc
 /**
  * The Class ServerUnitTests.
@@ -30,7 +32,7 @@ public class ServerUnitTests {
      *             Signals that an I/O exception has occurred.
      */
     private static void initLog() throws IOException {
-        Level logLevel = Level.SEVERE;
+        Level logLevel = Level.FINEST;
         String logFile = "logs/server.log";
 
         logger = Logger.getLogger("server");
@@ -86,6 +88,17 @@ public class ServerUnitTests {
      *            the arguments
      */
     public static void main(String[] args) {
+        //try {
+            //Database.initDriver();
+            //Database  db = new Database();
+            //db.startTransaction();
+            //db.initTables();
+            //db.endTransaction(true);
+        //} catch(Exception e){
+            //logger.log(Level.SEVERE, e.toString());
+            //logger.log(Level.FINE, "STACKTRACE: ", e);
+        //}
+
         String[] testClasses = new String[] { "server.ServerUnitTests",
                 "server.database.BatchDAOUnitTest",
                 "server.database.FieldDAOUnitTest",

@@ -32,6 +32,38 @@ public class ProjectDAO {
         this.db = db;
     }
 
+    public void initTable() throws DatabaseException {
+        logger.entering("server.database.ProjectDAO", "initTable");
+
+        Statement stmt1 = null;
+        Statement stmt2 = null;
+
+        String dropProjectTable = "DROP TABLE IF EXISTS Project";
+        String createProjectTable = "CREATE TABLE Project ("
+                + "ProjectID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE, "
+                + "Title TEXT NOT NULL, "
+                + "RecordsPerBatch INTEGER NOT NULL, "
+                + "FirstYCoord INTEGER NOT NULL, "
+                + "RecordHeight INTEGER NOT NULL)";
+
+        try {
+            stmt1 = db.getConnection().createStatement();
+            stmt1.executeUpdate(dropProjectTable);
+
+            stmt2 = db.getConnection().createStatement();
+            stmt2.executeUpdate(createProjectTable);
+        }  catch (Exception e) {
+            logger.log(Level.SEVERE, e.toString());
+            logger.log(Level.FINE, "STACKTRACE: ", e);
+            throw new DatabaseException(e.toString());
+        } finally {
+            Database.closeSafely(stmt1);
+            Database.closeSafely(stmt2);
+        }
+
+        logger.exiting("server.database.ProjectDAO", "initTable");
+    }
+
     /**
      * Returns all Projects in an array.
      *

@@ -33,10 +33,10 @@
     <property name="passoff" location="passoff"/>
     
     <!-- Database file used by the server -->
-    <property name="db-file" location="${database}/indexer_server.sqlite"/>
+    <property name="db-file" location="${database}/IndexerServer.sqlite"/>
     
     <!-- Database file containing empty tables. -->
-    <property name="empty-db-file" location="${database}/indexer_server_empty.sqlite"/>
+    <property name="empty-db-file" location="${database}/template/IndexerServer.sqlite"/>
     
     <!-- File containing the report output by Checkstyle -->
     <property name="checkstyle-report-file" location="checkstyle-report.txt"/>
@@ -94,6 +94,10 @@
         <javac srcdir="${test}" classpathref="lib-classpath" destdir="${build}" debug="true" includeantruntime="true" />
     </target>
     
+    <target name="clean-db" depends="clean" description="copy empty template database overwriting existing database">
+        <copy file="${empty-db-file}" tofile="${db-file}" overwrite="true"/>
+    </target>
+
     <!-- ant import -Dfile=<INDEXER_DATA_XML_FILE> -->
     <!-- EXAMPLE: ant import -Dfile=dir1/dir2/indexer_data.xml -->
     <target name="import" depends="compile" description="import indexer data">

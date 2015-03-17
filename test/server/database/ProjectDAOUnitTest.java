@@ -74,8 +74,8 @@ public class ProjectDAOUnitTest {
         // Prepare database for test case
         db = new Database();
         db.startTransaction();
-        db.initTables();
         testProjectDAO = db.getProjectDAO();
+        testProjectDAO.initTable();
 
         logger.exiting("server.database.ProjectDAOUnitTest", "setUp");
     }

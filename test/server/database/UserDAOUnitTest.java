@@ -71,8 +71,8 @@ public class UserDAOUnitTest {
         // Prepare database for test case
         db = new Database();
         db.startTransaction();
-        db.initTables();
         testUserDAO = db.getUserDAO();
+        testUserDAO.initTable();
 
         logger.exiting("server.database.UserDAOUnitTest", "setUp");
     }

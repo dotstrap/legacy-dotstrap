@@ -33,6 +33,40 @@ public class RecordDAO {
         this.db = db;
     }
 
+    public void initTable() throws DatabaseException {
+        logger.entering("server.database.RecordDAO", "initTable");
+
+        Statement stmt1 = null;
+        Statement stmt2 = null;
+
+        String dropRecordTable = "DROP TABLE IF EXISTS Record";
+        String createRecordTable = "CREATE TABLE Record ("
+                + "RecordID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE, "
+                + "FieldID INTEGER NOT NULL, "
+                + "BatchID INTEGER NOT NULL, "
+                + "BatchURL TEXT NOT NULL, "
+                + "Data TEXT NOT NULL COllATE NOCASE, "
+                + "RowNumber INTEGER NOT NULL, "
+                + "ColumnNumber INTEGER NOT NULL)";
+
+        try {
+            stmt1 = db.getConnection().createStatement();
+            stmt1.executeUpdate(dropRecordTable);
+
+            stmt2 = db.getConnection().createStatement();
+            stmt2.executeUpdate(createRecordTable);
+        }  catch (Exception e) {
+            logger.log(Level.SEVERE, e.toString());
+            logger.log(Level.FINE, "STACKTRACE: ", e);
+            throw new DatabaseException(e.toString());
+        } finally {
+            Database.closeSafely(stmt1);
+            Database.closeSafely(stmt2);
+        }
+
+        logger.exiting("server.database.RecordDAO", "initTable");
+    }
+
     /**
      * Returns all Records in an array.
      *

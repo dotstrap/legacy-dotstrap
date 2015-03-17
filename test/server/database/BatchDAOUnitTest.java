@@ -73,9 +73,8 @@ public class BatchDAOUnitTest {
         // Prepare database for test case
         db = new Database();
         db.startTransaction();
-        db.initTables();
         testBatchDAO = db.getBatchDAO();
-
+        testBatchDAO.initTable();
         logger.exiting("server.database.BatchDAOUnitTest", "setUp");
     }
 

@@ -7,6 +7,7 @@
  */
 package server.database;
 
+import java.io.File;
 import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -17,7 +18,7 @@ import java.util.logging.Logger;
  */
 public class Database {
     /** The logger used throughout the project. */
-    private static Logger     logger;
+    private static Logger logger;
     static {
         logger = Logger.getLogger("server");
     }
@@ -26,6 +27,11 @@ public class Database {
     /** The database driver connection. */
     private Connection    connection;
 
+    final static String   DB_DIRECTORY      = "database" + File.separator
+                                                    + "template";
+    final static String   DB_FILE           = "IndexerServer.sqlite";
+    final static String   DB_CONNECTION_URL = "jdbc:sqlite:" + DB_DIRECTORY
+                                                    + File.separator + DB_FILE;
     /**
      * The batch DataBaseAccess. interfaces with the database to modify the
      * batch (image) table
@@ -58,11 +64,11 @@ public class Database {
     public Database() {
         connection = null;
 
-        batchDAO   = new BatchDAO(this);
-        fieldDAO   = new FieldDAO(this);
+        batchDAO = new BatchDAO(this);
+        fieldDAO = new FieldDAO(this);
         projectDAO = new ProjectDAO(this);
-        recordDAO  = new RecordDAO(this);
-        userDAO    = new UserDAO(this);
+        recordDAO = new RecordDAO(this);
+        userDAO = new UserDAO(this);
     }
 
     public Connection getConnection() {
@@ -87,51 +93,6 @@ public class Database {
 
     public UserDAO getUserDAO() {
         return userDAO;
-    }
-
-    // TODO: how to make these into one generic method?
-    public static void closeSafely(Connection c) {
-        if (c != null) {
-            try {
-                c.close();
-            } catch (SQLException e) {
-                logger.log(Level.SEVERE, e.toString());
-                logger.log(Level.FINE, "STACKTRACE: ", e);
-            }
-        }
-    }
-
-    public static void closeSafely(Statement stmt) {
-        if (stmt != null) {
-            try {
-                stmt.close();
-            } catch (SQLException e) {
-                logger.log(Level.SEVERE, e.toString());
-                logger.log(Level.FINE, "STACKTRACE: ", e);
-            }
-        }
-    }
-
-    public static void closeSafely(PreparedStatement pstmt) {
-        if (pstmt != null) {
-            try {
-                pstmt.close();
-            } catch (SQLException e) {
-                logger.log(Level.SEVERE, e.toString());
-                logger.log(Level.FINE, "STACKTRACE: ", e);
-            }
-        }
-    }
-
-    public static void closeSafely(ResultSet rs) {
-        if (rs != null) {
-            try {
-                rs.close();
-            } catch (SQLException e) {
-                logger.log(Level.SEVERE, e.toString());
-                logger.log(Level.FINE, "STACKTRACE: ", e);
-            }
-        }
     }
 
     /**
@@ -164,13 +125,10 @@ public class Database {
     public void startTransaction() throws DatabaseException {
         logger.entering("server.database.Database", "startTransaction");
 
-        String dbDir = "database";
-        String dbFile = dbDir + "/indexer_server.sqlite";
-        String connectionURL = "jdbc:sqlite:" + dbFile;
         // Open a connection to the database and start a transaction
         try {
             assert (connection == null);
-            connection = DriverManager.getConnection(connectionURL);
+            connection = DriverManager.getConnection(DB_CONNECTION_URL);
             connection.setAutoCommit(false);
         } catch (Exception e) {
             logger.log(Level.SEVERE, e.toString());
@@ -219,61 +177,12 @@ public class Database {
     public void initTables() throws DatabaseException {
         logger.entering("server.database.Database", "initTables");
 
-        String dropBatchTable = "DROP TABLE IF EXISTS Batch";
-        String createBatchTable = "CREATE TABLE Batch ("
-                + "BatchID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE,"
-                + "FilePath TEXT NOT NULL, "
-                + "ProjectID INTEGER NOT NULL, "
-                + "Status INTEGER NOT NULL)";
-
-        String dropFieldTable = "DROP TABLE IF EXISTS Field";
-        String createFieldTable = "CREATE TABLE Field ("
-                + "FieldID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE, "
-                + "ProjectID INTEGER NOT NULL, "
-                + "Title TEXT NOT NULL"
-                + "KnownData TEXT NOT NULL"
-                + "HelpURL TEXT NOT NULL, "
-                + "FieldPath TEXT NOT NULL, "
-                + "XCoordinate INTEGER NOT NULL, "
-                + "Width INTEGER NOT NULL, "
-                + "ColumnNumber INTEGER NOT NULL)";
-
-        String dropProjectTable = "DROP TABLE IF EXISTS Project";
-        String createProjectTable = "CREATE TABLE Project ("
-                + "ProjectID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE, "
-                + "Title TEXT NOT NULL, "
-                + "RecordsPerBatch INTEGER NOT NULL, "
-                + "FirstYCoord INTEGER, "
-                + "RecordHeight INTEGER)";
-
-        String dropRecordTable = "DROP TABLE IF EXISTS Record";
-        String createRecordTable = "CREATE TABLE Record ("
-                + "RecordID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "
-                + "FieldID INTEGER NOT NULL, "
-                + "BatchID INTEGER NOT NULL, "
-                + "BatchURL TEXT NOT NULL, "
-                + "Data TEXT NOT NULL COllATE NOCASE,"
-                + "RowNumber INTEGER NOT NULL, "
-                + "ColumnNumber INTEGER NOT NULL)";
-
-        String dropUserTable = "DROP TABLE IF EXISTS User";
-        String createUserTable = "CREATE TABLE User ("
-                + "UserID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL , "
-                + "Username TEXT NOT NULL UNIQUE, "
-                + "Password TEXT NOT NULL, "
-                + "FirstName TEXT NOT NULL, "
-                + "LastName TEXT NOT NULL, "
-                + "Email TEXT NOT NULL UNIQUE, "
-                + "RecordCount INTEGER NOT NULL, "
-                + "CurrentBatchID INTEGER NOT NULL)";
-
         try {
-            initCurrTable(dropBatchTable, createBatchTable);
-            initCurrTable(dropFieldTable, createFieldTable);
-            initCurrTable(dropBatchTable, createBatchTable);
-            initCurrTable(dropProjectTable, createProjectTable);
-            initCurrTable(dropRecordTable, createRecordTable);
-            initCurrTable(dropUserTable, createUserTable);
+            batchDAO.initTable();
+            fieldDAO.initTable();
+            projectDAO.initTable();
+            recordDAO.initTable();
+            userDAO.initTable();
         } catch (Exception e) {
             logger.log(Level.SEVERE, e.toString());
             logger.log(Level.FINE, "STACKTRACE: ", e);
@@ -283,35 +192,49 @@ public class Database {
         logger.exiting("server.database.Database", "initTables");
     }
 
-    /**
-     * Initializes the given table.
-     *
-     * @param dropStmt
-     *            the SQL statement to drop the given table
-     * @param createStmt
-     *            the SQL statement to create the given table
-     */
-    private void initCurrTable(String dropStmt, String createStmt)
-            throws DatabaseException {
-        logger.entering("test.server.database.Database", "initTable");
-
-        Statement stmt1 = null;
-        Statement stmt2 = null;
-        try {
-            stmt1 = connection.createStatement();
-            stmt1.executeUpdate(dropStmt);
-
-            stmt2 = connection.createStatement();
-            stmt2.executeUpdate(createStmt);
-        } catch (SQLException e) {
-            logger.log(Level.SEVERE, e.toString());
-            logger.log(Level.FINE, "STACKTRACE: ", e);
-            throw new DatabaseException(e.toString());
-        } finally {
-            closeSafely(stmt1);
-            closeSafely(stmt2);
+    // TODO: how to make these into one generic method?
+    public static void closeSafely(Connection c) {
+        if (c != null) {
+            try {
+                c.close();
+            } catch (SQLException e) {
+                logger.log(Level.SEVERE, e.toString());
+                logger.log(Level.FINE, "STACKTRACE: ", e);
+            }
         }
-
-        logger.exiting("test.server.database.Database", "initTable");
     }
+
+    public static void closeSafely(Statement stmt) {
+        if (stmt != null) {
+            try {
+                stmt.close();
+            } catch (SQLException e) {
+                logger.log(Level.SEVERE, e.toString());
+                logger.log(Level.FINE, "STACKTRACE: ", e);
+            }
+        }
+    }
+
+    public static void closeSafely(PreparedStatement pstmt) {
+        if (pstmt != null) {
+            try {
+                pstmt.close();
+            } catch (SQLException e) {
+                logger.log(Level.SEVERE, e.toString());
+                logger.log(Level.FINE, "STACKTRACE: ", e);
+            }
+        }
+    }
+
+    public static void closeSafely(ResultSet rs) {
+        if (rs != null) {
+            try {
+                rs.close();
+            } catch (SQLException e) {
+                logger.log(Level.SEVERE, e.toString());
+                logger.log(Level.FINE, "STACKTRACE: ", e);
+            }
+        }
+    }
+
 }

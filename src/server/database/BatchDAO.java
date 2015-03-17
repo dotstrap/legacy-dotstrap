@@ -39,6 +39,37 @@ public class BatchDAO {
         this.db = db;
     }
 
+    public void initTable() throws DatabaseException {
+        logger.entering("server.database.BatchDAO", "initTable");
+
+        Statement stmt1 = null;
+        Statement stmt2 = null;
+
+        String dropBatchTable = "DROP TABLE IF EXISTS Batch";
+        String createBatchTable = "CREATE TABLE Batch ("
+                + "BatchID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE,"
+                + "FilePath TEXT NOT NULL, "
+                + "ProjectID INTEGER NOT NULL, "
+                + "Status INTEGER NOT NULL)";
+
+        try {
+            stmt1 = db.getConnection().createStatement();
+            stmt1.executeUpdate(dropBatchTable);
+
+            stmt2 = db.getConnection().createStatement();
+            stmt2.executeUpdate(createBatchTable);
+        }  catch (Exception e) {
+            logger.log(Level.SEVERE, e.toString());
+            logger.log(Level.FINE, "STACKTRACE: ", e);
+            throw new DatabaseException(e.toString());
+        } finally {
+            Database.closeSafely(stmt1);
+            Database.closeSafely(stmt2);
+        }
+
+        logger.exiting("server.database.BatchDAO", "initTable");
+    }
+
     /**
      * Returns all batches in an array.
      *
