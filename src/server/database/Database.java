@@ -17,6 +17,13 @@ import java.util.logging.Logger;
  * The Class Database.
  */
 public class Database {
+    final public static String DB_DIRECTORY = "database";
+    final public static String DB_FILE      = "IndexerServer.sqlite";
+    final public static String DB_TEMPLATE  = DB_DIRECTORY + File.separator
+                                                + "template" + File.separator + DB_FILE;
+    final static String DB_CONNECTION_URL   = "jdbc:sqlite:" + DB_DIRECTORY
+                                                + File.separator + DB_FILE;
+
     /** The logger used throughout the project. */
     private static Logger logger;
     static {
@@ -27,11 +34,6 @@ public class Database {
     /** The database driver connection. */
     private Connection    connection;
 
-    final static String   DB_DIRECTORY      = "database" + File.separator
-                                                    + "template";
-    final static String   DB_FILE           = "IndexerServer.sqlite";
-    final static String   DB_CONNECTION_URL = "jdbc:sqlite:" + DB_DIRECTORY
-                                                    + File.separator + DB_FILE;
     /**
      * The batch DataBaseAccess. interfaces with the database to modify the
      * batch (image) table
@@ -64,11 +66,27 @@ public class Database {
     public Database() {
         connection = null;
 
-        batchDAO = new BatchDAO(this);
-        fieldDAO = new FieldDAO(this);
+        batchDAO   = new BatchDAO(this);
+        fieldDAO   = new FieldDAO(this);
         projectDAO = new ProjectDAO(this);
-        recordDAO = new RecordDAO(this);
-        userDAO = new UserDAO(this);
+        recordDAO  = new RecordDAO(this);
+        userDAO    = new UserDAO(this);
+    }
+
+    /**
+     * Instantiates a new Database.
+     *
+     * @param batchDAO
+     * @param fieldDAO
+     * @param projectDAO
+     * @param recordDAO
+     */
+    public Database(BatchDAO batchDAO, FieldDAO fieldDAO, ProjectDAO projectDAO,
+            RecordDAO recordDAO) {
+        this.batchDAO = batchDAO;
+        this.fieldDAO = fieldDAO;
+        this.projectDAO = projectDAO;
+        this.recordDAO = recordDAO;
     }
 
     public Connection getConnection() {

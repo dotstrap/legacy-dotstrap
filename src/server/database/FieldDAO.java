@@ -52,7 +52,6 @@ public class FieldDAO {
                 + "Title TEXT NOT NULL, "
                 + "KnownData TEXT NOT NULL, "
                 + "HelpURL TEXT NOT NULL, "
-                + "FieldPath TEXT NOT NULL, "
                 + "XCoordinate INTEGER NOT NULL, "
                 + "Width INTEGER NOT NULL, "
                 + "ColumnNumber INTEGER NOT NULL)";
@@ -93,7 +92,6 @@ public class FieldDAO {
 
                 resultField.setKnownData(resultset.getString("KnownData"));
                 resultField.setHelpURL(resultset.getString("HelpURL"));
-                resultField.setFieldPath(resultset.getString("FieldPath"));
 
                 resultField.setxCoord(resultset.getInt("XCoordinate"));
                 resultField.setWidth(resultset.getInt("Width"));
@@ -115,6 +113,47 @@ public class FieldDAO {
     }
 
     /**
+     * Gets the id for the field of a project at a certain column
+     *
+     * @param projectID
+     *            the projectID for the desired fieldID
+     * @param colNum
+     *            the colNum for the desired fieldID
+     * @return the fieldID
+     * @throws DatabaseException
+     */
+    public int getFieldID(int projectID, int colNum) throws DatabaseException {
+        logger.entering("server.database.FieldDAO", "getFieldID");
+
+        int fieldID = -1;
+        PreparedStatement pstmt = null;
+        ResultSet resultset = null;
+        try {
+            String selectsql = "SELECT FieldID FROM Field "
+                    + "WHERE ProjectID = ? AND ColumnNumber = ?";
+            pstmt = db.getConnection().prepareStatement(selectsql);
+
+            pstmt.setInt(1, projectID);
+            pstmt.setInt(2, colNum);
+            resultset = pstmt.executeQuery();
+
+            resultset.next();
+            fieldID = resultset.getInt("FieldID");
+            assert (fieldID > 0);
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, e.toString());
+            logger.log(Level.FINE, "STACKTRACE: ", e);
+            throw new DatabaseException(e.toString());
+        } finally {
+            Database.closeSafely(pstmt);
+            Database.closeSafely(resultset);
+        }
+
+        logger.exiting("server.database.FieldDAO", "getFieldID");
+        return fieldID;
+    }
+
+    /**
      * Creates a new field.
      *
      * @param newField
@@ -127,18 +166,17 @@ public class FieldDAO {
         PreparedStatement pstmt = null;
         ResultSet resultset = null;
         try {
-            String insertsql = "INSERT INTO Field (ProjectID, Title, KnownData, HelpURL, FieldPath, XCoordinate, Width, ColumnNumber)"
-                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            String insertsql = "INSERT INTO Field (ProjectID, Title, KnownData, HelpURL, XCoordinate, Width, ColumnNumber)"
+                    + "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
             pstmt = db.getConnection().prepareStatement(insertsql);
             pstmt.setInt(1, newField.getProjectID());
             pstmt.setString(2, newField.getTitle());
             pstmt.setString(3, newField.getKnownData());
             pstmt.setString(4, newField.getHelpURL());
-            pstmt.setString(5, newField.getFieldPath());
-            pstmt.setInt(6, newField.getxCoord());
-            pstmt.setInt(7, newField.getWidth());
-            pstmt.setInt(8, newField.getColNum());
+            pstmt.setInt(5, newField.getxCoord());
+            pstmt.setInt(6, newField.getWidth());
+            pstmt.setInt(7, newField.getColNum());
 
             if (pstmt.executeUpdate() == 1) {
                 Statement stmt = db.getConnection().createStatement();
@@ -163,7 +201,7 @@ public class FieldDAO {
     }
 
     /**
-     * Gets the field with specified projectid and title
+     * Gets the field with specified projectID and title
      *
      * @param projectid
      * @param title
@@ -190,10 +228,9 @@ public class FieldDAO {
             returnField.setTitle(title);
             returnField.setKnownData(resultset.getString(4));
             returnField.setHelpURL(resultset.getString(5));
-            returnField.setFieldPath(resultset.getString(6));
-            returnField.setxCoord(resultset.getInt(7));
-            returnField.setWidth(resultset.getInt(8));
-            returnField.setColNum(resultset.getInt(9));
+            returnField.setxCoord(resultset.getInt(6));
+            returnField.setWidth(resultset.getInt(7));
+            returnField.setColNum(resultset.getInt(8));
         } catch (Exception e) {
             logger.log(Level.SEVERE, e.toString());
             logger.log(Level.FINE, "STACKTRACE: ", e);
@@ -220,21 +257,18 @@ public class FieldDAO {
         PreparedStatement pstmt = null;
         try {
             String selectsql = "UPDATE Field SET KnownData = ?, HelpURL = ?,"
-                    + "FieldPath = ?, XCoordinate = ?, Width = ?"
+                    + "XCoordinate = ?, Width = ?"
                     + "WHERE ProjectID = ? AND Title = ?";
 
             pstmt = db.getConnection().prepareStatement(selectsql);
 
-            //TODO: IDK if this is the correct order...
             pstmt.setString(1, field.getKnownData());
             pstmt.setString(2, field.getHelpURL());
-            pstmt.setString(3, field.getFieldPath());
-            pstmt.setInt(4, field.getxCoord());
-            pstmt.setInt(5, field.getWidth());
+            pstmt.setInt(3, field.getxCoord());
+            pstmt.setInt(4, field.getWidth());
 
-            pstmt.setString(6, field.getFieldPath());
-            pstmt.setString(7, field.getTitle());
-            pstmt.setInt(8, field.getColNum());
+            pstmt.setString(5, field.getTitle());
+            pstmt.setInt(6, field.getColNum());
 
             pstmt.executeUpdate();
         } catch (Exception e) {
@@ -257,7 +291,6 @@ public class FieldDAO {
     public void delete(Field field) throws DatabaseException {
         logger.entering("server.database.FieldDAO", "delete");
 
-        // Connection connection = null;
         PreparedStatement pstmt = null;
         try {
             String selectsql = "DELETE from Field WHERE ProjectID = ? AND Title = ?";

@@ -122,10 +122,8 @@ public class FieldDAOUnitTest {
                 && safeEquals(a.getTitle(), b.getTitle())
                 && safeEquals(a.getKnownData(), b.getKnownData())
                 && safeEquals(a.getHelpURL(), b.getHelpURL())
-                && safeEquals(a.getFieldPath(), b.getFieldPath())
                 && safeEquals(a.getxCoord(), b.getxCoord())
-                && safeEquals(a.getWidth(), b.getWidth())
-                && safeEquals(a.getFieldPath(), b.getFieldPath()));
+                && safeEquals(a.getWidth(), b.getWidth()));
     }
 
     /**
@@ -155,11 +153,11 @@ public class FieldDAOUnitTest {
         logger.entering("server.database.FieldDAOUnitTest", "testCreate");
 
         Field testField1 = new Field(100, 111, "FieldTestDelete1",
-                "KnownData1", "helpURL1", "FieldPath1", 1, 1, 1);
+                "KnownData1", "helpURL1", 1, 1, 1);
         Field testField2 = new Field(200, 222, "FieldTestDelete2",
-                "KnownData2", "helpURL2", "FieldPath2", 2, 2, 2);
+                "KnownData2", "helpURL2", 2, 2, 2);
         Field testField3 = new Field(300, 333, "FieldTestDelete3",
-                "KnownData3", "helpURL3", "FieldPath3", 3, 3, 3);
+                "KnownData3", "helpURL3", 3, 3, 3);
 
         testFieldDAO.create(testField1);
         testFieldDAO.create(testField2);
@@ -196,11 +194,11 @@ public class FieldDAOUnitTest {
         logger.entering("server.database.FieldDAOUnitTest", "testDelete");
 
         Field testField1 = new Field(100, 111, "FieldTestDelete1",
-                "KnownData1", "helpURL1", "FieldPath1", 1, 1, 1);
+                "KnownData1", "helpURL1", 1, 1, 1);
         Field testField2 = new Field(200, 222, "FieldTestDelete2",
-                "KnownData2", "helpURL2", "FieldPath2", 2, 2, 2);
+                "KnownData2", "helpURL2", 2, 2, 2);
         Field testField3 = new Field(300, 333, "FieldTestDelete3",
-                "KnownData3", "helpURL3", "FieldPath3", 3, 3, 3);
+                "KnownData3", "helpURL3", 3, 3, 3);
 
         testFieldDAO.create(testField1);
         testFieldDAO.create(testField2);
@@ -228,13 +226,13 @@ public class FieldDAOUnitTest {
     // public void testValidateField() throws DatabaseException {
     // Field testField1 = new Field("FieldTestCreate1", "ProjectID1",
     // "KnownData1", "helpURL1",
-    // "FieldPath1", 1, 1);
+    // 1, 1);
     // Field testField2 = new Field("FieldTestCreate2", "ProjectID2",
     // "KnownData2", "helpURL2",
-    // "FieldPath2", 2, 2);
+    // 2, 2);
     // Field testField3 = new Field("FieldTestCreate3", "ProjectID3",
     // "KnownData3", "helpURL3",
-    // "FieldPath3", 3, 3);
+    // 3, 3);
 
     // dbFieldTest.create(testField1);
     // dbFieldTest.create(testField2);

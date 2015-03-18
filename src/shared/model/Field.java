@@ -17,7 +17,6 @@ public class Field {
     private String title;
     private String knownData;
     private String helpURL;
-    private String fieldPath;
     private int    xCoord;
     private int    width;
     private int    colNum;
@@ -32,7 +31,6 @@ public class Field {
         this.title     = "title";
         this.knownData = "knownData";
         this.helpURL   = "helpURL";
-        this.fieldPath = "fieldPath";
         this.xCoord    = -1;
         this.width     = -1;
         this.colNum    = -1;
@@ -51,15 +49,14 @@ public class Field {
      * @param colNum
      */
     public Field(int projectID, String title, String knownData, String helpURL,
-            String fieldPath, int xCoord, int width, int colNum) {
+             int xCoord, int width, int colNum) {
         this.projectID = projectID;
-        this.title = title;
+        this.title     = title;
         this.knownData = knownData;
-        this.helpURL = helpURL;
-        this.fieldPath = fieldPath;
-        this.xCoord = xCoord;
-        this.width = width;
-        this.colNum = colNum;
+        this.helpURL   = helpURL;
+        this.xCoord    = xCoord;
+        this.width     = width;
+        this.colNum    = colNum;
     }
 
     /**
@@ -76,16 +73,15 @@ public class Field {
      * @param colNum
      */
     public Field(int fieldID, int projectID, String title, String knownData,
-            String helpURL, String fieldPath, int xCoord, int width, int colNum) {
-        this.fieldID = fieldID;
+            String helpURL, int xCoord, int width, int colNum) {
+        this.fieldID   = fieldID;
         this.projectID = projectID;
-        this.title = title;
+        this.title     = title;
         this.knownData = knownData;
-        this.helpURL = helpURL;
-        this.fieldPath = fieldPath;
-        this.xCoord = xCoord;
-        this.width = width;
-        this.colNum = colNum;
+        this.helpURL   = helpURL;
+        this.xCoord    = xCoord;
+        this.width     = width;
+        this.colNum    = colNum;
     }
 
     public int getFieldID() {
@@ -126,14 +122,6 @@ public class Field {
 
     public void setHelpURL(String helpURL) {
         this.helpURL = helpURL;
-    }
-
-    public String getFieldPath() {
-        return this.fieldPath;
-    }
-
-    public void setFieldPath(String fieldPath) {
-        this.fieldPath = fieldPath;
     }
 
     public int getxCoord() {

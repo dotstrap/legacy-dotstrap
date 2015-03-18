@@ -1,7 +1,7 @@
 /**
  * Server.java
  * JRE v1.7.0_76
- * 
+ *
  * Created by William Myers on Mar 15, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
@@ -29,16 +29,6 @@ public class Server {
     /** Default port number the server runs on (can be overridden via CLI args. */
     private static int       SERVER_PORT_NUMBER      = 8080;
 
-    /** The logger. */
-    private static Logger    logger;
-    static {
-        try {
-            initLog();
-        } catch (IOException e) {
-            System.out.println("Could not initialize log: " + e.getMessage());
-        }
-    }
-
     /**
      * Initializes the log.
      *
@@ -65,11 +55,21 @@ public class Server {
         logger.addHandler(fileHandler);
     }
 
+    /** The logger. */
+    private static Logger    logger;
+    static {
+        try {
+            initLog();
+        } catch (IOException e) {
+            System.out.println("Could not initialize log: " + e.getMessage());
+        }
+    }
+
     /**
      * The main method.
      *
      * @param args
-     *            the arguments
+     *            the arguments the port to run the indexer server on
      */
     public static void main(String[] args) {
         if (args == null) {
@@ -109,14 +109,14 @@ public class Server {
      */
     public Server() {
         logger.info("Initializing HTTP handlers...");
-        searchHandler = new SearchHandler();
-        validateUserHandler = new ValidateUserHandler();
-        getFieldsHandler = new GetFieldsHandler();
-        getProjectsHandler = new GetProjectsHandler();
+        searchHandler         = new SearchHandler();
+        validateUserHandler   = new ValidateUserHandler();
+        getFieldsHandler      = new GetFieldsHandler();
+        getProjectsHandler    = new GetProjectsHandler();
         getSampleImageHandler = new GetSampleImageHandler();
-        submitBatchHandler = new SubmitBatchHandler();
-        downloadBatchHandler = new DownloadBatchHandler();
-        downloadFileHandler = new DownloadFileHandler();
+        submitBatchHandler    = new SubmitBatchHandler();
+        downloadBatchHandler  = new DownloadBatchHandler();
+        downloadFileHandler   = new DownloadFileHandler();
     }
 
     /**
@@ -138,8 +138,7 @@ public class Server {
             server = HttpServer.create(new InetSocketAddress(SERVER_PORT_NUMBER),
                     MAX_WAITING_CONNECTIONS);
         } catch (IOException e) {
-            String logMsg = " CAUSE: " + e.getCause() + "\n";
-            logger.log(Level.SEVERE, e.toString() + logMsg);
+            logger.log(Level.SEVERE, e.toString());
             logger.log(Level.FINE, "STACKTRACE: ", e);
             return;
         }

@@ -46,13 +46,13 @@ public class Record {
      */
     public Record(int fieldID, int batchID, String batchURL, String data,
             int rowNum, int colNum) {
-//        this.recordID = 99;
-        this.fieldID = fieldID;
-        this.batchID = batchID;
+        this.recordID = -1;
+        this.fieldID  = fieldID;
+        this.batchID  = batchID;
         this.batchURL = batchURL;
-        this.data = data;
-        this.RowNum = rowNum;
-        this.ColNum = colNum;
+        this.data     = data;
+        this.RowNum   = rowNum;
+        this.ColNum   = colNum;
     }
 
     /**
@@ -69,12 +69,12 @@ public class Record {
     public Record(int id, int fieldID, int batchID, String batchURL, String data,
             int rowNum, int colNum) {
         this.recordID = id;
-        this.fieldID = fieldID;
-        this.batchID = batchID;
+        this.fieldID  = fieldID;
+        this.batchID  = batchID;
         this.batchURL = batchURL;
-        this.data = data;
-        this.RowNum = rowNum;
-        this.ColNum = colNum;
+        this.data     = data;
+        this.RowNum   = rowNum;
+        this.ColNum   = colNum;
     }
 
     public int getRecordID() {

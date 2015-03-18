@@ -50,7 +50,8 @@ public class BatchDAO {
                 + "BatchID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE,"
                 + "FilePath TEXT NOT NULL, "
                 + "ProjectID INTEGER NOT NULL, "
-                + "Status INTEGER NOT NULL)";
+                + "Status INTEGER NOT NULL, "
+                + "CurrentUserID INTEGER NOT NULL)";
 
         try {
             stmt1 = db.getConnection().createStatement();
@@ -125,13 +126,14 @@ public class BatchDAO {
         Statement stmt = null;
         ResultSet resultset = null;
         try {
-            String insertsql = "INSERT INTO Batch (FilePath, ProjectID, Status)"
-                    + "VALUES(?, ?, ?)";
+            String insertsql = "INSERT INTO Batch (FilePath, ProjectID, Status, CurrentUserID)"
+                    + "VALUES(?, ?, ?, ?)";
             pstmt = db.getConnection().prepareStatement(insertsql);
 
             pstmt.setString(1, batch.getFilePath());
             pstmt.setInt(2, batch.getProjectID());
             pstmt.setInt(3, batch.getStatus());
+            pstmt.setInt(4, batch.getCurrUserID());
 
             if (pstmt.executeUpdate() == 1) {
                 stmt = db.getConnection().createStatement();
