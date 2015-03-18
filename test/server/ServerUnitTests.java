@@ -14,8 +14,6 @@ import java.util.logging.*;
 
 import org.junit.*;
 
-import server.database.Database;
-
 // TODO: Auto-generated Javadoc
 /**
  * The Class ServerUnitTests.
@@ -33,7 +31,7 @@ public class ServerUnitTests {
      */
     private static void initLog() throws IOException {
         Level logLevel = Level.FINEST;
-        String logFile = "logs/server.log";
+        String logFile = "logs/server-test.log";
 
         logger = Logger.getLogger("server");
         logger.setLevel(logLevel);
@@ -88,23 +86,14 @@ public class ServerUnitTests {
      *            the arguments
      */
     public static void main(String[] args) {
-        //try {
-            //Database.initDriver();
-            //Database  db = new Database();
-            //db.startTransaction();
-            //db.initTables();
-            //db.endTransaction(true);
-        //} catch(Exception e){
-            //logger.log(Level.SEVERE, e.toString());
-            //logger.log(Level.FINE, "STACKTRACE: ", e);
-        //}
 
         String[] testClasses = new String[] { "server.ServerUnitTests",
                 "server.database.BatchDAOUnitTest",
                 "server.database.FieldDAOUnitTest",
                 "server.database.ProjectDAOUnitTest",
                 "server.database.RecordDAOUnitTest",
-                "server.database.UserDAOUnitTest" };
+                "server.database.UserDAOUnitTest",
+                "server.ImporterUnitTest"};
         org.junit.runner.JUnitCore.main(testClasses);
     }
 }

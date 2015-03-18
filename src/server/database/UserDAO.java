@@ -150,8 +150,9 @@ public class UserDAO {
         PreparedStatement pstmt = null;
         ResultSet resultset = null;
         try {
-            String insertsql = "INSERT INTO User (Username, Password, FirstName, LastName, Email, RecordCount, CurrentBatchID)"
-                    + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+            String insertsql = "INSERT INTO User ("
+                + "Username, Password, FirstName, LastName, Email, RecordCount, CurrentBatchID)"
+                + "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
             pstmt = db.getConnection().prepareStatement(insertsql);
             pstmt.setString(1, newUser.getUsername());

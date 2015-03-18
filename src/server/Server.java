@@ -96,7 +96,7 @@ public class Server {
 
     /**
      * Instantiates a new Server.
-     *
+     *Server
      * @param searchHandler
      * @param getFieldsHandler
      * @param getProjectsHandler

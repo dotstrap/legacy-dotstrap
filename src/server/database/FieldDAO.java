@@ -24,10 +24,10 @@ public class FieldDAO {
     private static Logger logger;
     static {
         logger = Logger.getLogger("server");
-   }
+    }
 
     /** The db. */
-    private Database      db;
+    private Database db;
 
     /**
      * Instantiates a new field dao.
@@ -61,7 +61,7 @@ public class FieldDAO {
 
             stmt2 = db.getConnection().createStatement();
             stmt2.executeUpdate(createFieldTable);
-        }  catch (Exception e) {
+        } catch (Exception e) {
             logger.log(Level.SEVERE, e.toString());
             logger.log(Level.FINE, "STACKTRACE: ", e);
             throw new DatabaseException(e.toString());
@@ -166,7 +166,8 @@ public class FieldDAO {
         PreparedStatement pstmt = null;
         ResultSet resultset = null;
         try {
-            String insertsql = "INSERT INTO Field (ProjectID, Title, KnownData, HelpURL, XCoordinate, Width, ColumnNumber)"
+            String insertsql = "INSERT INTO Field ("
+                    + "ProjectID, Title, KnownData, HelpURL, XCoordinate, Width, ColumnNumber)"
                     + "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
             pstmt = db.getConnection().prepareStatement(insertsql);
@@ -185,7 +186,8 @@ public class FieldDAO {
                 int fieldID = resultset.getInt(1);
                 newField.setFieldID(fieldID);
             } else {
-                throw new DatabaseException("Unable to insert field into database.");
+                throw new DatabaseException(
+                        "Unable to insert field into database.");
             }
         } catch (SQLException e) {
             logger.log(Level.SEVERE, e.toString());
@@ -235,7 +237,7 @@ public class FieldDAO {
             logger.log(Level.SEVERE, e.toString());
             logger.log(Level.FINE, "STACKTRACE: ", e);
             throw new DatabaseException(e.toString());
-            //return null;
+            // return null;
         } finally {
             Database.closeSafely(pstmt);
             Database.closeSafely(resultset);

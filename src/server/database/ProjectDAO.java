@@ -120,8 +120,9 @@ public class ProjectDAO {
         Statement stmt = null;
         ResultSet resultset = null;
         try {
-            String insertsql = "INSERT INTO Project (Title, RecordsPerBatch, FirstYCoord, RecordHeight)"
-                    + "VALUES (?, ?, ?, ?)";
+            String insertsql = "INSERT INTO Project ("
+                + "Title, RecordsPerBatch, FirstYCoord, RecordHeight)"
+                + "VALUES (?, ?, ?, ?)";
             pstmt = db.getConnection().prepareStatement(insertsql);
 
             pstmt.setString(1, project.getTitle());

@@ -4,15 +4,24 @@ import shared.model.*;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Class ValidateUserCredentials.
+ * The Class ValidateUserParameters.
  */
-public class ValidateUserCredentials {
-    
+public class ValidateUserParameters {
+
     /** The username. */
     private String username;
-    
+
     /** The password. */
     private String password;
+
+    /**
+     * Instantiates a new ValidateUserParameters.
+     *
+     */
+    public ValidateUserParameters() {
+        this.username = "";
+        this.password = "";
+    }
 
     /**
      * Instantiates a new validate user credentials.
@@ -20,7 +29,7 @@ public class ValidateUserCredentials {
      * @param u the u
      * @param p the p
      */
-    public ValidateUserCredentials(String u, String p) {
+    public ValidateUserParameters(String u, String p) {
         username = u;
         password = p;
     }

@@ -16,10 +16,16 @@ workbench.xmi
 .DS_Store
 logs/
 .ant_targets
-Records.zip
 build/
 .project
 .classpath
 log4j2-test.json
 bin
 .settings
+Records
+Records/Records.xml
+Records/fieldhelp
+Records/images
+Records/knowndata
+Records.zip
+checkstyle-report.txt

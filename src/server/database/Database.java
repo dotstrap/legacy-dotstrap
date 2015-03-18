@@ -50,8 +50,7 @@ public class Database {
      * project table
      */
     private ProjectDAO    projectDAO;
-    /**
-     * The record DataBaseAccess. interfaces with the database to modify the
+    /*     * The record DataBaseAccess. interfaces with the database to modify the
      * record table
      */
     private RecordDAO     recordDAO;

@@ -10,16 +10,16 @@ import shared.model.Record;
  * The Class SearchResult.
  */
 public class SearchResult {
-    
+
     /** The records. */
     private ArrayList<Record> records;
-    
+
     /** The urls. */
     private ArrayList<URL>    urls;
-    
+
     /** The links. */
     private ArrayList<String> links;
-    
+
     /** The valid user. */
     private boolean           validUser;
 
@@ -42,7 +42,8 @@ public class SearchResult {
     /**
      * Sets the records.
      *
-     * @param records the new records
+     * @param records
+     *            the new records
      */
     public void setRecords(ArrayList<Record> records) {
         this.records = records;
@@ -60,7 +61,8 @@ public class SearchResult {
     /**
      * Sets the urls.
      *
-     * @param urls the new urls
+     * @param urls
+     *            the new urls
      */
     public void setUrls(ArrayList<URL> urls) {
         this.urls = urls;
@@ -78,7 +80,8 @@ public class SearchResult {
     /**
      * Sets the valid user.
      *
-     * @param validUser the new valid user
+     * @param validUser
+     *            the new valid user
      */
     public void setValidUser(boolean validUser) {
         this.validUser = validUser;
@@ -96,14 +99,15 @@ public class SearchResult {
     /**
      * Sets the links.
      *
-     * @param links the new links
+     * @param links
+     *            the new links
      */
     public void setLinks(ArrayList<String> links) {
         this.links = links;
     }
 
     /**
-     *  
+     *
      * (non-Javadoc).
      *
      * @return the string

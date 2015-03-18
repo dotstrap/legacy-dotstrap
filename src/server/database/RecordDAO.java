@@ -42,8 +42,7 @@ public class RecordDAO {
         String dropRecordTable = "DROP TABLE IF EXISTS Record";
         String createRecordTable = "CREATE TABLE Record ("
                 + "RecordID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE, "
-                + "FieldID INTEGER NOT NULL, "
-                + "BatchID INTEGER NOT NULL, "
+                + "FieldID INTEGER NOT NULL, " + "BatchID INTEGER NOT NULL, "
                 + "BatchURL TEXT NOT NULL, "
                 + "Data TEXT NOT NULL COllATE NOCASE, "
                 + "RowNumber INTEGER NOT NULL, "
@@ -55,7 +54,7 @@ public class RecordDAO {
 
             stmt2 = db.getConnection().createStatement();
             stmt2.executeUpdate(createRecordTable);
-        }  catch (Exception e) {
+        } catch (Exception e) {
             logger.log(Level.SEVERE, e.toString());
             logger.log(Level.FINE, "STACKTRACE: ", e);
             throw new DatabaseException(e.toString());
@@ -157,9 +156,11 @@ public class RecordDAO {
 
     /**
      * Searches the records table for a string
-     * @return          the records that contain the string
-     * */
-    public List<Record> search(List<Integer> searchFieldIDs, List<String> searchRecords) throws DatabaseException {
+     *
+     * @return the records that contain the string
+     */
+    public List<Record> search(List<Integer> searchFieldIDs,
+            List<String> searchRecords) throws DatabaseException {
         logger.entering("server.database.RecordDAO", "search");
 
         ArrayList<Record> searchResult = new ArrayList<Record>();
@@ -187,9 +188,9 @@ public class RecordDAO {
         recordString.append(") ");
 
         try {
-            String selectsql = "SELECT * FROM Records "
-                    + "WHERE " + fieldString + "AND " + recordString + "COLLATE NOCASE";
-            pstmt  = db.getConnection().prepareStatement(selectsql);
+            String selectsql = "SELECT * FROM Records " + "WHERE " + fieldString
+                    + "AND " + recordString + "COLLATE NOCASE";
+            pstmt = db.getConnection().prepareStatement(selectsql);
             resultset = pstmt.executeQuery();
 
             while (resultset.next()) {
@@ -205,11 +206,9 @@ public class RecordDAO {
 
                 searchResult.add(resultRecord);
             }
-        }
-        catch (SQLException err) {
+        } catch (SQLException err) {
             throw new DatabaseException("Unable to get all records", err);
-        }
-        finally {
+        } finally {
             Database.closeSafely(pstmt);
             Database.closeSafely(resultset);
         }

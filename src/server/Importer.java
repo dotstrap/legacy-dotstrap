@@ -18,7 +18,7 @@ import shared.model.*;
  * Imports data from an XML file to database
  */
 public class Importer {
-    //TODO: change the logging to non static throughout the project
+    // TODO: change the logging to non static throughout the project
     /**
      * Initializes the log.
      *
@@ -57,7 +57,8 @@ public class Importer {
     /**
      * The main method
      *
-     * @param args the xml file to import into the database
+     * @param args
+     *            the xml file to import into the database
      */
     public static void main(String[] args) {
         File xmlImportFile = new File(args[0]);
@@ -77,11 +78,12 @@ public class Importer {
             db.initTables();
             db.endTransaction(true);
 
-            File activeDB   = new File(Database.DB_FILE);
+            File activeDB = new File(Database.DB_FILE);
             File templateDB = new File(Database.DB_TEMPLATE);
             FileUtils.copyFile(activeDB, templateDB);
 
-            DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilderFactory docFactory = DocumentBuilderFactory
+                    .newInstance();
             DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
             Document doc = docBuilder.parse(xmlImportFile);
             doc.getDocumentElement().normalize();
@@ -136,6 +138,7 @@ public class Importer {
 
     /**
      * Loads record indexer data into memory and the database
+     *
      * @param root
      */
     private void importData(Element root) {
@@ -162,28 +165,29 @@ public class Importer {
     private void loadUsers(Element userElem) {
         logger.entering("server.Importer", "loadUsers");
 
-        //Get all User elements
-        Element usernameElem = (Element)userElem.getElementsByTagName("username").item(0);
-        Element passElem     = (Element)userElem.getElementsByTagName("password").item(0);
-        Element firstElem    = (Element)userElem.getElementsByTagName("firstname").item(0);
-        Element lastElem     = (Element)userElem.getElementsByTagName("lastname").item(0);
-        Element emailElem    = (Element)userElem.getElementsByTagName("email").item(0);
-        Element indexedElem  = (Element)userElem.getElementsByTagName("indexedrecords").item(0);
+        // Get all User elements
+        Element usernameElem = (Element) userElem.getElementsByTagName("username").item(0);
+        Element passElem = (Element) userElem.getElementsByTagName("password").item(0);
+        Element firstElem = (Element) userElem.getElementsByTagName("firstname").item(0);
+        Element lastElem = (Element) userElem.getElementsByTagName("lastname").item(0);
+        Element emailElem = (Element) userElem.getElementsByTagName("email").item(0);
+        Element indexedElem = (Element) userElem.getElementsByTagName("indexedrecords").item(0);
 
-        //Get all User primitives from User Elements
-        String username    = usernameElem.getTextContent();
-        String password    = passElem.getTextContent();
-        String firstName   = firstElem.getTextContent();
-        String lastName    = lastElem.getTextContent();
-        String email       = emailElem.getTextContent();
+        // Get all User primitives from User Elements
+        String username = usernameElem.getTextContent();
+        String password = passElem.getTextContent();
+        String firstName = firstElem.getTextContent();
+        String lastName = lastElem.getTextContent();
+        String email = emailElem.getTextContent();
         int indexedRecords = Integer.parseInt(indexedElem.getTextContent());
 
-        //Create new User and add it to the database
+        // Create new User and add it to the database
         Database db = new Database();
         try {
             db.startTransaction();
 
-            User newUser = new User(username, password, firstName, lastName, email, indexedRecords, 0);
+            User newUser = new User(username, password, firstName, lastName,
+                    email, indexedRecords, 0);
             db.getUserDAO().create(newUser);
 
             db.endTransaction(true);
@@ -201,25 +205,30 @@ public class Importer {
     private void loadProjects(Element projectElem) {
         logger.entering("server.Importer", "loadProjects");
 
-        //Get Project Elements
-        Element titleElem     = (Element)projectElem.getElementsByTagName("title").item(0);
-        Element recPerImgElem = (Element)projectElem.getElementsByTagName("recordsperimage").item(0);
-        Element firstYElem    = (Element)projectElem.getElementsByTagName("firstycoord").item(0);
-        Element recordElem    = (Element)projectElem.getElementsByTagName("recordheight").item(0);
+        // Get Project Elements
+        Element titleElem = (Element) projectElem.getElementsByTagName("title")
+                .item(0);
+        Element recPerImgElem = (Element) projectElem.getElementsByTagName(
+                "recordsperimage").item(0);
+        Element firstYElem = (Element) projectElem.getElementsByTagName(
+                "firstycoord").item(0);
+        Element recordElem = (Element) projectElem.getElementsByTagName(
+                "recordheight").item(0);
 
-        //Get Project primitives from Project elements
-        String title        = titleElem.getTextContent();
+        // Get Project primitives from Project elements
+        String title = titleElem.getTextContent();
         int recordsPerImage = Integer.parseInt(recPerImgElem.getTextContent());
-        int firstYCoord     = Integer.parseInt(firstYElem.getTextContent());
-        int recordHeight    = Integer.parseInt(recordElem.getTextContent());
+        int firstYCoord = Integer.parseInt(firstYElem.getTextContent());
+        int recordHeight = Integer.parseInt(recordElem.getTextContent());
 
         int projectID = -1;
         Database db = new Database();
-        //Create new project and add it to the database
+        // Create new project and add it to the database
         try {
             db.startTransaction();
 
-            Project newProject = new Project(title, recordsPerImage, firstYCoord, recordHeight);
+            Project newProject = new Project(title, recordsPerImage, firstYCoord,
+                    recordHeight);
             projectID = db.getProjectDAO().create(newProject);
             assert (projectID > 0);
 
@@ -231,8 +240,8 @@ public class Importer {
 
         // Get project fields and images
         ArrayList<Element> children = getChildElements(projectElem);
-        ArrayList<Element> fields   = getChildElements(children.get(4));
-        ArrayList<Element> images   = getChildElements(children.get(5));
+        ArrayList<Element> fields = getChildElements(children.get(4));
+        ArrayList<Element> images = getChildElements(children.get(5));
 
         // Add fields to database
         int colNum = 1;
@@ -253,19 +262,19 @@ public class Importer {
     private void loadFields(Element fieldElem, int projectID, int colNum) {
         logger.entering("server.Importer", "loadFields");
 
-        //Get Field elements
-        Element titleElem  = (Element)fieldElem.getElementsByTagName("title").item(0);
-        Element xCoordElem = (Element)fieldElem.getElementsByTagName("xcoord").item(0);
-        Element knownDataElem  = (Element)fieldElem.getElementsByTagName("knowndata").item(0);
-        Element helpElem   = (Element)fieldElem.getElementsByTagName("helphtml").item(0);
-        Element widthElem  = (Element)fieldElem.getElementsByTagName("width").item(0);
+        // Get Field elements
+        Element titleElem = (Element) fieldElem.getElementsByTagName("title").item(0);
+        Element xCoordElem = (Element) fieldElem.getElementsByTagName("xcoord").item(0);
+        Element knownDataElem = (Element) fieldElem.getElementsByTagName("knowndata").item(0);
+        Element helpElem = (Element) fieldElem.getElementsByTagName("helphtml").item(0);
+        Element widthElem = (Element) fieldElem.getElementsByTagName("width").item(0);
 
-        //Get Field primitives from Field elements
-        String title     = titleElem.getTextContent();
-        int xCoord       = Integer.parseInt(xCoordElem.getTextContent());
+        // Get Field primitives from Field elements
+        String title = titleElem.getTextContent();
+        int xCoord = Integer.parseInt(xCoordElem.getTextContent());
         String knownData = "";
-        String helpHtml  = helpElem.getTextContent();
-        int width        = Integer.parseInt(widthElem.getTextContent());
+        String helpHtml = helpElem.getTextContent();
+        int width = Integer.parseInt(widthElem.getTextContent());
 
         if (knownDataElem != null) {
             knownData = "Records/" + knownDataElem.getTextContent();
@@ -275,7 +284,8 @@ public class Importer {
         try {
             db.startTransaction();
 
-            Field newField = new Field(-1, projectID, title, knownData, helpHtml, xCoord, width, colNum);
+            Field newField = new Field(-1, projectID, title, knownData, helpHtml,
+                    xCoord, width, colNum);
             db.getFieldDAO().create(newField);
 
             db.endTransaction(true);
@@ -293,10 +303,11 @@ public class Importer {
     private void loadBatches(Element batchElem, int projectId) {
         logger.entering("server.Importer", "loadBatches");
 
-        //get file element
-        Element batchFileElem = (Element)batchElem.getElementsByTagName("file").item(0);
+        // get file element
+        Element batchFileElem = (Element) batchElem.getElementsByTagName("file")
+                .item(0);
 
-        //get Batch primitive from batch file element
+        // get Batch primitive from batch file element
         String batchUrl = batchFileElem.getTextContent();
 
         int batchID = -1;
@@ -329,12 +340,12 @@ public class Importer {
     /**
      * Inserts a Record element into the database
      */
-    private void loadRecords(Element recordElem, int projectID,
-            int batchID, String batchUrl, int rowNum) {
+    private void loadRecords(Element recordElem, int projectID, int batchID,
+            String batchUrl, int rowNum) {
         logger.entering("server.Importer", "loadRecords");
 
         ArrayList<Element> children = getChildElements(recordElem);
-        ArrayList<Element> records  = getChildElements(children.get(0));
+        ArrayList<Element> records = getChildElements(children.get(0));
 
         int colNum = 1;
         for (Element curr : records) {
@@ -345,7 +356,8 @@ public class Importer {
                 db.startTransaction();
                 fieldID = db.getFieldDAO().getFieldID(projectID, colNum);
                 assert (fieldID > 0);
-                Record newRecord = new Record(fieldID, batchID, batchUrl, recordData, rowNum, colNum);
+                Record newRecord = new Record(fieldID, batchID, batchUrl,
+                        recordData, rowNum, colNum);
                 db.getRecordDAO().create(newRecord);
                 db.endTransaction(true);
             } catch (DatabaseException e) {
