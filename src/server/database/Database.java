@@ -17,12 +17,13 @@ import java.util.logging.Logger;
  * The Class Database.
  */
 public class Database {
+    final public static String DB_NAME      = "IndexerServer.sqlite";
     final public static String DB_DIRECTORY = "database";
-    final public static String DB_FILE      = "IndexerServer.sqlite";
+    final public static String DB_FILE      = DB_DIRECTORY + File.separator + DB_NAME;
     final public static String DB_TEMPLATE  = DB_DIRECTORY + File.separator
-                                                + "template" + File.separator + DB_FILE;
+                                                + "template" + File.separator + DB_NAME;
     final static String DB_CONNECTION_URL   = "jdbc:sqlite:" + DB_DIRECTORY
-                                                + File.separator + DB_FILE;
+                                                + File.separator + DB_NAME;
 
     /** The logger used throughout the project. */
     private static Logger logger;

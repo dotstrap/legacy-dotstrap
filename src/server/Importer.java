@@ -26,7 +26,7 @@ public class Importer {
      *             Signals that an I/O exception has occurred.
      */
     private static void initLog() throws IOException {
-        Level logLevel = Level.SEVERE;
+        Level logLevel = Level.FINEST;
         String logFile = "logs/importer.log";
 
         logger = Logger.getLogger("server");
@@ -68,8 +68,8 @@ public class Importer {
                     .equals(destImportDir.getCanonicalPath())) {
                 FileUtils.deleteDirectory(destImportDir);
             }
-
             FileUtils.copyDirectory(xmlImportFile.getParentFile(), destImportDir);
+
             Database.initDriver();
 
             Database db = new Database();
@@ -77,9 +77,9 @@ public class Importer {
             db.initTables();
             db.endTransaction(true);
 
-             File activeDB   = new File(Database.DB_FILE);
-             File templateDB = new File(Database.DB_TEMPLATE);
-             FileUtils.copyFile(activeDB, templateDB);
+            File activeDB   = new File(Database.DB_FILE);
+            File templateDB = new File(Database.DB_TEMPLATE);
+            FileUtils.copyFile(activeDB, templateDB);
 
             DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
@@ -139,6 +139,8 @@ public class Importer {
      * @param root
      */
     private void importData(Element root) {
+        logger.entering("server.Importer", "importData");
+
         ArrayList<Element> rootElems = getChildElements(root);
 
         for (Element curr : getChildElements(rootElems.get(0))) {
@@ -148,6 +150,8 @@ public class Importer {
         for (Element curr : getChildElements(rootElems.get(1))) {
             loadProjects(curr);
         }
+
+        logger.exiting("server.Importer", "importData");
     }
 
     /**
@@ -156,6 +160,8 @@ public class Importer {
      * @param userElem
      */
     private void loadUsers(Element userElem) {
+        logger.entering("server.Importer", "loadUsers");
+
         //Get all User elements
         Element usernameElem = (Element)userElem.getElementsByTagName("username").item(0);
         Element passElem     = (Element)userElem.getElementsByTagName("password").item(0);
@@ -177,7 +183,7 @@ public class Importer {
         try {
             db.startTransaction();
 
-            User newUser = new User(-1, username, password, firstName, lastName, email, indexedRecords, 0);
+            User newUser = new User(username, password, firstName, lastName, email, indexedRecords, 0);
             db.getUserDAO().create(newUser);
 
             db.endTransaction(true);
@@ -185,12 +191,16 @@ public class Importer {
             logger.log(Level.SEVERE, e.toString());
             logger.log(Level.FINE, "STACKTRACE: ", e);
         }
+
+        logger.exiting("server.Importer", "loadUsers");
     }
 
     /**
      * Inserts a Project element into database
      */
     private void loadProjects(Element projectElem) {
+        logger.entering("server.Importer", "loadProjects");
+
         //Get Project Elements
         Element titleElem     = (Element)projectElem.getElementsByTagName("title").item(0);
         Element recPerImgElem = (Element)projectElem.getElementsByTagName("recordsperimage").item(0);
@@ -209,7 +219,7 @@ public class Importer {
         try {
             db.startTransaction();
 
-            Project newProject = new Project(-1, title, recordsPerImage, firstYCoord, recordHeight);
+            Project newProject = new Project(title, recordsPerImage, firstYCoord, recordHeight);
             projectID = db.getProjectDAO().create(newProject);
             assert (projectID > 0);
 
@@ -233,12 +243,16 @@ public class Importer {
         for (Element curr : images) {
             loadBatches(curr, projectID);
         }
+
+        logger.exiting("server.Importer", "loadProjects");
     }
 
     /**
      * Inserts a Field element into database
      */
     private void loadFields(Element fieldElem, int projectID, int colNum) {
+        logger.entering("server.Importer", "loadFields");
+
         //Get Field elements
         Element titleElem  = (Element)fieldElem.getElementsByTagName("title").item(0);
         Element xCoordElem = (Element)fieldElem.getElementsByTagName("xcoord").item(0);
@@ -265,17 +279,20 @@ public class Importer {
             db.getFieldDAO().create(newField);
 
             db.endTransaction(true);
-            db.endTransaction(true);
         } catch (DatabaseException e) {
             logger.log(Level.SEVERE, e.toString());
             logger.log(Level.FINE, "STACKTRACE: ", e);
         }
+
+        logger.exiting("server.Importer", "loadFields");
     }
 
     /**
      * Inserts an Image element into database
      */
     private void loadBatches(Element batchElem, int projectId) {
+        logger.entering("server.Importer", "loadBatches");
+
         //get file element
         Element batchFileElem = (Element)batchElem.getElementsByTagName("file").item(0);
 
@@ -305,6 +322,8 @@ public class Importer {
                 loadRecords(curr, projectId, batchID, batchUrl, rowNum++);
             }
         }
+
+        logger.exiting("server.Importer", "importBatches");
     }
 
     /**
@@ -312,6 +331,8 @@ public class Importer {
      */
     private void loadRecords(Element recordElem, int projectID,
             int batchID, String batchUrl, int rowNum) {
+        logger.entering("server.Importer", "loadRecords");
+
         ArrayList<Element> children = getChildElements(recordElem);
         ArrayList<Element> records  = getChildElements(children.get(0));
 
@@ -332,5 +353,7 @@ public class Importer {
                 logger.log(Level.FINE, "STACKTRACE: ", e);
             }
         }
+
+        logger.exiting("server.Importer", "loadRecords");
     }
 }

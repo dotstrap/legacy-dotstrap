@@ -55,7 +55,6 @@ public class Server {
         logger.addHandler(fileHandler);
     }
 
-    /** The logger. */
     private static Logger    logger;
     static {
         try {
@@ -69,15 +68,15 @@ public class Server {
      * The main method.
      *
      * @param args
-     *            the arguments the port to run the indexer server on
+     *            the CLI arguments: the port to run the indexer server on
      */
     public static void main(String[] args) {
         if (args == null) {
-            SERVER_PORT_NUMBER = 50080;
+            SERVER_PORT_NUMBER = 8080;
         } else if (args.length > 0) {
             SERVER_PORT_NUMBER = Integer.parseInt(args[0]);
         } else {
-            SERVER_PORT_NUMBER = 8080;
+            SERVER_PORT_NUMBER = 25565; //else use default minecraft server port number
         }
         logger.info("Bootstrapping server on port:" + SERVER_PORT_NUMBER + "...");
         new Server().bootstrap();
