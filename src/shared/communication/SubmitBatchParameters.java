@@ -1,22 +1,32 @@
 package shared.communication;
 
+import java.util.List;
+
+import shared.model.Record;
+
 // TODO: Auto-generated Javadoc
 /**
  * The Class SubmitBatchParameters.
  */
 public class SubmitBatchParameters {
-    
-    /** The name. */
-    private String name;
-    
-    /** The password. */
+    private String username;
     private String password;
-    
-    /** The batch id. */
     private int    batchID;
-    
-    /** The field values. */
-    private String fieldValues;
+    private List<Record> fieldValues;
+
+    /**
+     * @param username
+     * @param password
+     * @param batchID
+     * @param fieldValues
+     */
+    public SubmitBatchParameters(String username, String password, int batchID,
+            List<Record> fieldValues) {
+        this.username = username;
+        this.password = password;
+        this.batchID = batchID;
+        this.fieldValues = fieldValues;
+    }
 
     /**
      * Instantiates a new submit batch parameters.
@@ -26,42 +36,20 @@ public class SubmitBatchParameters {
     }
 
     /**
-     * Instantiates a new submit batch parameters.
-     *
-     * @param name the name
-     * @param password the password
-     * @param batchID the batch id
-     * @param fieldValues the field values
+     * @return the username
      */
-    public SubmitBatchParameters(String name, String password, int batchID,
-            String fieldValues) {
-        this.name = name;
-        this.password = password;
-        this.batchID = batchID;
-        this.fieldValues = fieldValues;
+    public String getUsername() {
+        return username;
     }
 
     /**
-     * Gets the name.
-     *
-     * @return the name
+     * @param username the username to set
      */
-    public String getName() {
-        return name;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     /**
-     * Sets the name.
-     *
-     * @param name the new name
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    /**
-     * Gets the password.
-     *
      * @return the password
      */
     public String getPassword() {
@@ -69,47 +57,38 @@ public class SubmitBatchParameters {
     }
 
     /**
-     * Sets the password.
-     *
-     * @param password the new password
+     * @param password the password to set
      */
     public void setPassword(String password) {
         this.password = password;
     }
 
     /**
-     * Gets the batch id.
-     *
-     * @return the batch id
+     * @return the batchID
      */
     public int getBatchID() {
         return batchID;
     }
 
     /**
-     * Sets the batch id.
-     *
-     * @param batchID the new batch id
+     * @param batchID the batchID to set
      */
     public void setBatchID(int batchID) {
         this.batchID = batchID;
     }
 
     /**
-     * Gets the field values.
-     *
-     * @return the field values
+     * @return the fieldValues
      */
-    public String getFieldValues() {
+    public List<Record> getFieldValues() {
         return fieldValues;
     }
 
     /**
-     * Sets the field values.
-     *
-     * @param fieldValues the new field values
+     * @param fieldValues the fieldValues to set
      */
-    public void setFieldValues(String fieldValues) {
+    public void setFieldValues(List<Record> fieldValues) {
         this.fieldValues = fieldValues;
     }
+
 }

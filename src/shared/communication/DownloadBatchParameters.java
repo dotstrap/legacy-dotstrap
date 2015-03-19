@@ -7,7 +7,7 @@ package shared.communication;
 public class DownloadBatchParameters {
 
     /** The name. */
-    private String name;
+    private String username;
 
     /** The password. */
     private String password;
@@ -33,7 +33,7 @@ public class DownloadBatchParameters {
      *            the project id
      */
     public DownloadBatchParameters(String name, String password, int projectID) {
-        this.name = name;
+        this.username = name;
         this.password = password;
         this.projectID = projectID;
     }
@@ -43,8 +43,8 @@ public class DownloadBatchParameters {
      *
      * @return the name
      */
-    public String getName() {
-        return name;
+    public String getUsername() {
+        return username;
     }
 
     /**
@@ -53,8 +53,8 @@ public class DownloadBatchParameters {
      * @param name
      *            the new name
      */
-    public void setName(String name) {
-        this.name = name;
+    public void setUsername(String name) {
+        this.username = name;
     }
 
     /**

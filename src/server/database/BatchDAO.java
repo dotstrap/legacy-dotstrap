@@ -95,6 +95,7 @@ public class BatchDAO {
                 resultBatch.setFilePath(resultset.getString("Filepath"));
                 resultBatch.setProjectID(resultset.getInt("ProjectID"));
                 resultBatch.setStatus(resultset.getInt("Status"));
+                resultBatch.setCurrUserID(resultset.getInt("CurrentUserID"));
 
                 allBatches.add(resultBatch);
             }
@@ -198,6 +199,84 @@ public class BatchDAO {
         if (resultBatch.getFilePath() == "") {
             return null;
         }
+        return resultBatch;
+    }
+   /**
+     * Gets a sample batch for a project
+     *
+     * @param projectId
+     *            the id of the project the sample batch is in
+     * @return the sample batch
+     * */
+    public Batch getIncompleteBatch(int projectId) throws DatabaseException {
+        logger.entering("server.database.BatchDAO", "read");
+
+        Batch resultBatch = new Batch();
+        resultBatch.setProjectID(projectId);
+        PreparedStatement pstmt = null;
+        ResultSet resultset = null;
+
+        try { String selectsql = "SELECT * from Batch WHERE ProjectID = ?";
+            pstmt = db.getConnection().prepareStatement(selectsql);
+            pstmt.setInt(1, projectId);
+            pstmt.setInt(2, Batch.INCOMPLETE);
+
+            resultset = pstmt.executeQuery();
+            resultset.next();
+
+            resultBatch.setBatchID(resultset.getInt("BatchID"));
+            resultBatch.setFilePath(resultset.getString("FilePath"));
+            resultBatch.setStatus(resultset.getInt("Status"));
+            resultBatch.setCurrUserID(resultset.getInt("CurrentUserID"));
+        }
+        catch (SQLException err) {
+            throw new DatabaseException("Unable to get sample batch", err);
+        }
+        finally {
+            Database.closeSafely(pstmt);
+            Database.closeSafely(resultset);
+        }
+        logger.exiting("server.database.BatchDAO", "read");
+
+        return resultBatch;
+    }
+
+    /**
+     * Gets a sample batch for a project
+     *
+     * @param projectId
+     *            the id of the project the sample batch is in
+     * @return the sample batch
+     * */
+    public Batch getSampleBatch(int projectId) throws DatabaseException {
+        logger.entering("server.database.BatchDAO", "read");
+
+        Batch resultBatch = new Batch();
+        resultBatch.setProjectID(projectId);
+        PreparedStatement pstmt = null;
+        ResultSet resultset = null;
+
+        try { String selectsql = "SELECT * from Batch WHERE ProjectID = ?";
+            pstmt = db.getConnection().prepareStatement(selectsql);
+
+            pstmt.setInt(1, projectId);
+            resultset = pstmt.executeQuery();
+
+            resultset.next();
+            resultBatch.setBatchID(resultset.getInt("BatchID"));
+            resultBatch.setFilePath(resultset.getString("FilePath"));
+            resultBatch.setStatus(resultset.getInt("Status"));
+            resultBatch.setCurrUserID(resultset.getInt("CurrentUserID"));
+        }
+        catch (SQLException err) {
+            throw new DatabaseException("Unable to get sample batch", err);
+        }
+        finally {
+            Database.closeSafely(pstmt);
+            Database.closeSafely(resultset);
+        }
+        logger.exiting("server.database.BatchDAO", "read");
+
         return resultBatch;
     }
 

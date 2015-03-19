@@ -20,12 +20,11 @@ public class Record {
     private int    RowNum;
     private int    ColNum;
 
-    // /**
     /**
      * Instantiates a new Record.
      */
     public Record() {
-//        recordID = -1;
+        recordID = -1;
         fieldID = -1;
         batchID = -1;
         batchURL = "batchURL";

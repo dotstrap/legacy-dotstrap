@@ -48,12 +48,9 @@ public class FieldDAO {
         String dropFieldTable = "DROP TABLE IF EXISTS Field";
         String createFieldTable = "CREATE TABLE Field ("
                 + "FieldID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE, "
-                + "ProjectID INTEGER NOT NULL, "
-                + "Title TEXT NOT NULL, "
-                + "KnownData TEXT NOT NULL, "
-                + "HelpURL TEXT NOT NULL, "
-                + "XCoordinate INTEGER NOT NULL, "
-                + "Width INTEGER NOT NULL, "
+                + "ProjectID INTEGER NOT NULL, " + "Title TEXT NOT NULL, "
+                + "KnownData TEXT NOT NULL, " + "HelpURL TEXT NOT NULL, "
+                + "XCoordinate INTEGER NOT NULL, " + "Width INTEGER NOT NULL, "
                 + "ColumnNumber INTEGER NOT NULL)";
         try {
             stmt1 = db.getConnection().createStatement();
@@ -81,6 +78,45 @@ public class FieldDAO {
         ResultSet resultset = null;
         try {
             String selectsql = "SELECT * from Field";
+            pstmt = db.getConnection().prepareStatement(selectsql);
+            resultset = pstmt.executeQuery();
+            while (resultset.next()) {
+                Field resultField = new Field();
+
+                resultField.setFieldID(resultset.getInt("FieldID"));
+                resultField.setProjectID(resultset.getInt("ProjectID"));
+                resultField.setTitle(resultset.getString("Title"));
+
+                resultField.setKnownData(resultset.getString("KnownData"));
+                resultField.setHelpURL(resultset.getString("HelpURL"));
+
+                resultField.setxCoord(resultset.getInt("XCoordinate"));
+                resultField.setWidth(resultset.getInt("Width"));
+                resultField.setWidth(resultset.getInt("ColumnNumber"));
+
+                allFields.add(resultField);
+            }
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, e.toString());
+            logger.log(Level.FINE, "STACKTRACE: ", e);
+            throw new DatabaseException(e.toString());
+        } finally {
+            Database.closeSafely(pstmt);
+            Database.closeSafely(resultset);
+        }
+
+        logger.exiting("server.database.FieldDAO", "getAll");
+        return allFields;
+    }
+
+    public ArrayList<Field> getAll(int ProjectID) throws DatabaseException {
+        logger.entering("server.database.FieldDAO", "getAll");
+
+        ArrayList<Field> allFields = new ArrayList<Field>();
+        PreparedStatement pstmt = null;
+        ResultSet resultset = null;
+        try {
+            String selectsql = "SELECT * from Field WHERE ProjectID = ?";
             pstmt = db.getConnection().prepareStatement(selectsql);
             resultset = pstmt.executeQuery();
             while (resultset.next()) {

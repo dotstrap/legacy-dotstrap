@@ -5,14 +5,8 @@ package shared.communication;
  * The Class GetFieldsParameters.
  */
 public class GetFieldsParameters {
-
-    /** The name. */
-    private String name;
-
-    /** The password. */
+    private String username;
     private String password;
-
-    /** The project id. */
     private int    projectID;
 
     /**
@@ -33,7 +27,7 @@ public class GetFieldsParameters {
      *            the project id
      */
     public GetFieldsParameters(String name, String password, int projectID) {
-        this.name = name;
+        this.username = name;
         this.password = password;
         this.projectID = projectID;
     }
@@ -43,8 +37,8 @@ public class GetFieldsParameters {
      *
      * @return the name
      */
-    public String getName() {
-        return name;
+    public String getUsername() {
+        return username;
     }
 
     /**
@@ -53,8 +47,8 @@ public class GetFieldsParameters {
      * @param name
      *            the new name
      */
-    public void setName(String name) {
-        this.name = name;
+    public void setUsername(String name) {
+        this.username = name;
     }
 
     /**

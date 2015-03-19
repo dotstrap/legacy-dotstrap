@@ -1,13 +1,19 @@
 package server;
 
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.List;
 
 import server.ServerException;
 import server.database.*;
+
 import shared.model.*;
 import shared.communication.*;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.apache.commons.io.IOUtils;
 
 /**
  */
@@ -19,17 +25,18 @@ public class ServerFacade {
         try {
             logger = Logger.getLogger("server");
             Database.initDriver();
-        }
-        catch (DatabaseException e) {
+        } catch (DatabaseException e) {
             throw new ServerException(e.getMessage(), e);
         }
     }
 
     /**
      * Validates a username/password combination
+     *
      * @throws ServerException
      */
-    public static ValidateUserResult validateUser(ValidateUserParameters params) throws ServerException {
+    public static ValidateUserResult validateUser(ValidateUserParameters params)
+            throws ServerException {
         Database db = new Database();
         boolean isValid = false;
         String username = params.getUsername();
@@ -38,7 +45,7 @@ public class ServerFacade {
         try {
             db.startTransaction();
             user = db.getUserDAO().read(username, password);
-            //Preform an additional check on password...
+            // Preform an additional check on password...
             isValid = user.getPassword().equals(password);
             db.endTransaction(true);
         } catch (DatabaseException e) {
@@ -59,104 +66,103 @@ public class ServerFacade {
     /**
      * Gets all the projects in the database
      */
-    public static GetProjectsResult getProjects(GetProjectsParameters params) throws ServerException {
+    public static GetProjectsResult getProjects(GetProjectsParameters params)
+            throws ServerException {
         ValidateUserParameters validate = new ValidateUserParameters();
         validate.setUsername(params.getUsername());
         validate.setPassword(params.getPassword());
 
         boolean isValid = validateUser(validate).isValid();
-        if (!isvalid)
+        if (!isValid) {
             throw new ServerException("Invalid user credentials");
+        }
 
         Database db = new Database();
         List<Project> projects = null;
 
         try {
             db.startTransaction();
-            projects = db.getProjectsDAO().getAllProjects();
+            projects = db.getProjectDAO().getAll();
             db.endTransaction(true);
-        }
-        catch (DatabaseException e) {
-            db.endTransaction(false);
+        } catch (DatabaseException e) {
             logger.log(Level.SEVERE, e.toString());
             logger.log(Level.FINE, "STACKTRACE: ", e);
             throw new ServerException(e.toString());
         }
 
         GetProjectsResult result = new GetProjectsResult();
-        result.setAllProjects(projects);
+        result.setProjects(projects);
 
         return result;
     }
 
     /**
-     * Gets a sample image from a project
+     * Gets a sample batch from a project
      */
-    public static GetSampleImageResult getSampleImage(GetSampleImageParameters params) throws ServerException {
+    public static GetSampleBatchResult getSampleBatch(
+            GetSampleBatchParameters params) throws ServerException {
         ValidateUserParameters validate = new ValidateUserParameters();
         validate.setUsername(params.getUsername());
         validate.setPassword(params.getPassword());
-        boolean isValid = validateUser(validate).isValid();
 
-        if (!isValid)
+        boolean isValid = validateUser(validate).isValid();
+        if (!isValid) {
             throw new ServerException("Invalid user credentials");
+        }
 
         Database db = new Database();
-        Image image = null;
+        Batch sampleBatch = null;
 
         try {
             db.startTransaction();
-            image = db.getImagesDAO().getSampleImage(params.getProjectId());
+            sampleBatch = db.getBatchDAO()
+                    .getSampleBatch(params.getProjectID());
             db.endTransaction(true);
-        }
-        catch (DatabaseException e) {
-            db.endTransaction(false);
+        } catch (DatabaseException e) {
             logger.log(Level.SEVERE, e.toString());
             logger.log(Level.FINE, "STACKTRACE: ", e);
             throw new ServerException(e.toString());
         }
 
-        GetSampleImageResult result = new GetSampleImageResult();
-        result.setSampleImage(image);
+        GetSampleBatchResult result = new GetSampleBatchResult();
+        result.setSampleBatch(sampleBatch);
 
         return result;
     }
 
     /**
-     * Downloads an incomplete image from a project.
-     * This includes information from images, projects, and fields
+     * Downloads an incomplete batch from a project. This includes information
+     * from batchs, projects, and fields
      */
-    public static DownloadBatchResult downloadBatch(DownloadBatchParameters params) throws ServerException {
+    public static DownloadBatchResult downloadBatch(
+            DownloadBatchParameters params) throws ServerException {
         ValidateUserParameters validate = new ValidateUserParameters();
         validate.setUsername(params.getUsername());
         validate.setPassword(params.getPassword());
         boolean isValid = validateUser(validate).isValid();
-
-        if (!isValid)
+        if (!isValid) {
             throw new ServerException("Invalid user credentials");
+        }
 
         Database db = new Database();
-        int project_id = params.getProjectId();
-        Image image = null;
+        int projectId = params.getProjectID();
+        Batch batchToDownload = null;
         Project project = null;
         List<Field> fields = null;
-
         try {
             db.startTransaction();
-            image = db.getImagesDAO().getIncompleteImage(project_id);
-            project = db.getProjectsDAO().getProject(project_id);
-            fields = db.getFieldsDAO().getAllFields(project_id);
+            batchToDownload = db.getBatchDAO().getIncompleteBatch(projectId);
+            project = db.getProjectDAO().read(projectId);
+            fields = db.getFieldDAO().getAll(projectId);
             db.endTransaction(true);
-        }
-        catch (DatabaseException e) {
-            db.endTransaction(false);
+        } catch (DatabaseException e) {
             logger.log(Level.SEVERE, e.toString());
             logger.log(Level.FINE, "STACKTRACE: ", e);
             throw new ServerException(e.toString());
         }
 
         DownloadBatchResult result = new DownloadBatchResult();
-        result.setImage(image);
+        result.setBatch(batchToDownload);
         result.setProject(project);
         result.setFields(fields);
 
@@ -166,38 +172,37 @@ public class ServerFacade {
     /**
      * Submits values from a batch into the database
      */
-    public static void submitBatch(SubmitBatchParameters params) throws ServerException {
+    public static void submitBatch(SubmitBatchParameters params)
+            throws ServerException {
         ValidateUserParameters validate = new ValidateUserParameters();
         validate.setUsername(params.getUsername());
         validate.setPassword(params.getPassword());
         boolean isValid = validateUser(validate).isValid();
-
-        if (!isValid)
+        if (!isValid) {
             throw new ServerException("Invalid user credentials");
+        }
 
-        // Values have all member variables set except for image_url and field_id
         Database db = new Database();
-        int image_id = params.getImageId();
-        List<Value> values = params.getNewValues();
-        Image image = null;
-        String image_url = null;
-        int project_id = 0;
+        int batchId = params.getBatchID();
+        List<Record> records = params.getFieldValues();
+        Batch batch = null;
+        String batchUrl = null;
+        int projectId = 0;
 
         try {
             db.startTransaction();
-            image = db.getImagesDAO().getImage(image_id);
-            image_url = image.getImageUrl();
-            project_id = image.getProjectId();
+            batch = db.getBatchDAO().read(batchId);
+            batchUrl = batch.getFilePath();
+            projectId = batch.getProjectID();
 
-            for (Value each : values) {
-                int field_id = db.getFieldsDAO().getFieldId(project_id, each.getColumnNumber());
-                each.setFieldId(field_id);
-                each.setImageUrl(image_url);
-                db.getValuesDAO().addValue(each);
+            for (Record curr : records) {
+                int fieldId = db.getFieldDAO().getFieldID(projectId,
+                        curr.getColNum());
+                curr.setFieldID(fieldId);
+                curr.setBatchURL(batchUrl);
+                db.getRecordDAO().create(curr);
             }
-        }
-        catch (DatabaseException e) {
-            db.endTransaction(false);
+        } catch (DatabaseException e) {
             logger.log(Level.SEVERE, e.toString());
             logger.log(Level.FINE, "STACKTRACE: ", e);
             throw new ServerException(e.toString());
@@ -209,26 +214,26 @@ public class ServerFacade {
     /**
      * Gets the fields for a project
      */
-    public static GetFieldsResult getFields(GetFieldsParameters params) throws ServerException {
+    public static GetFieldsResult getFields(GetFieldsParameters params)
+            throws ServerException {
         ValidateUserParameters validate = new ValidateUserParameters();
         validate.setUsername(params.getUsername());
         validate.setPassword(params.getPassword());
         boolean isValid = validateUser(validate).isValid();
-
-        if (!isValid)
+        if (!isValid) {
             throw new ServerException("Invalid user credentials");
+        }
 
         Database db = new Database();
-        int project_id = params.getProjectId();
+        int projectId = params.getProjectID();
         List<Field> fields = null;
 
         try {
             db.startTransaction();
-            fields = project_id > 0 ? db.getFieldsDAO().getAllFields(project_id) : db.getFieldsDAO().getAllFields();
+            fields = projectId > 0 ? db.getFieldDAO().getAll(projectId) : db
+                    .getFieldDAO().getAll();
             db.endTransaction(true);
-        }
-        catch (DatabaseException e) {
-            db.endTransaction(false);
+        } catch (DatabaseException e) {
             logger.log(Level.SEVERE, e.toString());
             logger.log(Level.FINE, "STACKTRACE: ", e);
             throw new ServerException(e.toString());
@@ -243,32 +248,32 @@ public class ServerFacade {
     /**
      * Searches certain fields for certain values
      */
-    public static SearchResult search(SearchParameters params) throws ServerException {
+    public static SearchResult search(SearchParameters params)
+            throws ServerException {
         ValidateUserParameters validate = new ValidateUserParameters();
         validate.setUsername(params.getUsername());
         validate.setPassword(params.getPassword());
         boolean isValid = validateUser(validate).isValid();
-
-        if (!isValid)
+        if (!isValid) {
             throw new ServerException("Invalid user credentials");
+        }
 
         Database db = new Database();
-        List<Value> values = null;
+        List<Record> records = null;
 
         try {
             db.startTransaction();
-            values = db.getValuesDAO().search(params.getFieldIds(), params.getValues());
+            records = db.getRecordDAO().search(params.getFieldIds(),
+                    params.getSearchQueries());
             db.endTransaction(true);
-        }
-        catch (DatabaseException e) {
-            db.endTransaction(false);
+        } catch (DatabaseException e) {
             logger.log(Level.SEVERE, e.toString());
             logger.log(Level.FINE, "STACKTRACE: ", e);
             throw new ServerException(e.toString());
         }
 
         SearchResult result = new SearchResult();
-        result.setFoundImages(values);
+        result.setFoundRecords(records);
 
         return result;
     }
@@ -276,29 +281,28 @@ public class ServerFacade {
     /**
      * Downloads a file from the server TODO
      */
-    public static DownloadFileResult downloadFile(DownloadFileParameters params) throws ServerException {
+    public static DownloadFileResult downloadFile(DownloadFileParameters params)
+            throws ServerException {
         ValidateUserParameters validate = new ValidateUserParameters();
         validate.setUsername(params.getUsername());
         validate.setPassword(params.getPassword());
         boolean isValid = validateUser(validate).isValid();
-
-        if (!isValid)
+        if (!isValid) {
             throw new ServerException("Invalid user credentials");
+        }
 
+        InputStream is;
+        byte[] data = null;
+        try {
+            is = new FileInputStream(params.getUrl());
+            data = IOUtils.toByteArray(is);
+            is.close();
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, e.toString());
+            logger.log(Level.FINE, "STACKTRACE: ", e);
+            throw new ServerException(e.toString());
 
-
-
-        return null;
+        }
+        return new DownloadFileResult(data);
     }
 }
-
-
-
-
-
-
-
-
-
-
-

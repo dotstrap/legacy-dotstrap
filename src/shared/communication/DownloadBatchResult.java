@@ -1,6 +1,7 @@
 package shared.communication;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import shared.model.Batch;
 import shared.model.Field;
@@ -11,30 +12,14 @@ import shared.model.Project;
  * The Class DownloadBatchResult.
  */
 public class DownloadBatchResult {
-
-    /** The batch. */
     private Batch            batch;
-
-    /** The project. */
     private Project          project;
-
-    /** The fields. */
-    private ArrayList<Field> fields;
-
-    /** The number of fields. */
-    private int              numberOfFields;
-
-    /** The url. */
-    private String           url;
-
-    /** The valid user. */
-    private boolean          validUser;
+    private List<Field> fields;
 
     /**
      * Instantiates a new download batch result.
      */
     public DownloadBatchResult() {
-        validUser = false;
     }
 
     /**
@@ -54,73 +39,6 @@ public class DownloadBatchResult {
         this.batch = batch;
         this.project = project;
         this.fields = fields;
-        this.numberOfFields = numberOfFields;
-    }
-
-    /**
-     * Gets the batch.
-     *
-     * @return the batch
-     */
-    public Batch getBatch() {
-        return batch;
-    }
-
-    /**
-     * Sets the batch.
-     *
-     * @param batch
-     *            the new batch
-     */
-    public void setBatch(Batch batch) {
-        this.batch = batch;
-    }
-
-    /**
-     * Gets the project.
-     *
-     * @return the project
-     */
-    public Project getProject() {
-        return project;
-    }
-
-    /**
-     * Sets the project.
-     *
-     * @param project
-     *            the new project
-     */
-    public void setProject(Project project) {
-        this.project = project;
-    }
-
-    /**
-     * Gets the fields.
-     *
-     * @return the fields
-     */
-    public ArrayList<Field> getFields() {
-        return fields;
-    }
-
-    /**
-     * Sets the fields.
-     *
-     * @param fields
-     *            the new fields
-     */
-    public void setFields(ArrayList<Field> fields) {
-        this.fields = fields;
-    }
-
-    /**
-     * Gets the number of fields.
-     *
-     * @return the number of fields
-     */
-    public int getNumberOfFields() {
-        return numberOfFields;
     }
 
     /**
@@ -129,46 +47,48 @@ public class DownloadBatchResult {
      * @param numberOfFields
      *            the new number of fields
      */
-    public void setNumberOfFields(int numberOfFields) {
-        this.numberOfFields = numberOfFields;
+
+
+    /**
+     * @return the batch
+     */
+    public Batch getBatch() {
+        return batch;
     }
 
     /**
-     * Checks if is valid user.
-     *
-     * @return true, if is valid user
+     * @param batch the batch to set
      */
-    public boolean isValidUser() {
-        return validUser;
+    public void setBatch(Batch batch) {
+        this.batch = batch;
     }
 
     /**
-     * Sets the valid user.
-     *
-     * @param validUser
-     *            the new valid user
+     * @return the project
      */
-    public void setValidUser(boolean validUser) {
-        this.validUser = validUser;
+    public Project getProject() {
+        return project;
     }
 
     /**
-     * Gets the url.
-     *
-     * @return the url
+     * @param project the project to set
      */
-    public String getUrl() {
-        return url;
+    public void setProject(Project project) {
+        this.project = project;
     }
 
     /**
-     * Sets the url.
-     *
-     * @param url
-     *            the new url
+     * @return the fields
      */
-    public void setUrl(String url) {
-        this.url = url;
+    public List<Field> getFields() {
+        return fields;
+    }
+
+    /**
+     * @param fields the fields to set
+     */
+    public void setFields(List<Field> fields) {
+        this.fields = fields;
     }
 
     /**
@@ -180,7 +100,7 @@ public class DownloadBatchResult {
     //public String toString() {
         //StringBuilder sb = new StringBuilder();
         //if (validUser) {
-            //sb.append(this.batch.getID() + "\n");
+            //sb.append(this.batch.getBatchID() + "\n");
             //sb.append(this.project.getProjInfo().getID() + "\n");
             //sb.append(this.url + "/" + this.batch.getFilePath() + "\n");
             //sb.append(this.project.getFirstY() + "\n");
@@ -205,4 +125,5 @@ public class DownloadBatchResult {
         //}
         //return sb.toString();
     //}
+
 }

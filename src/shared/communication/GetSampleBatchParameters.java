@@ -2,23 +2,20 @@ package shared.communication;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Class GetSampleImageParameters.
+ * The Class GetSampleBatchParameters.
  */
-public class GetSampleImageParameters {
-    
-    /** The name. */
-    private String name;
-    
-    /** The password. */
+public class GetSampleBatchParameters {
+
+    private String username;
+
     private String password;
-    
-    /** The project id. */
+
     private int    projectID;
 
     /**
      * Instantiates a new gets the sample image parameters.
      */
-    public GetSampleImageParameters() {
+    public GetSampleBatchParameters() {
 
     }
 
@@ -29,8 +26,8 @@ public class GetSampleImageParameters {
      * @param password the password
      * @param projectID the project id
      */
-    public GetSampleImageParameters(String name, String password, int projectID) {
-        this.name = name;
+    public GetSampleBatchParameters(String name, String password, int projectID) {
+        this.username = name;
         this.password = password;
         this.projectID = projectID;
     }
@@ -40,8 +37,8 @@ public class GetSampleImageParameters {
      *
      * @return the name
      */
-    public String getName() {
-        return name;
+    public String getUsername() {
+        return username;
     }
 
     /**
@@ -49,8 +46,8 @@ public class GetSampleImageParameters {
      *
      * @param name the new name
      */
-    public void setName(String name) {
-        this.name = name;
+    public void setUsername(String name) {
+        this.username = name;
     }
 
     /**

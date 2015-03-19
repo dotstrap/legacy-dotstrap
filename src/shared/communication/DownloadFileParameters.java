@@ -5,23 +5,28 @@ package shared.communication;
  * The Class DownloadFileParameters.
  */
 public class DownloadFileParameters {
-
-    /** The url. */
     private String url;
+    private String username;
+    private String password;
 
-    /**
-     * Instantiates a new download file parameters.
+   /**
      *
-     * @param url
-     *            the url
      */
-    public DownloadFileParameters(String url) {
-        this.url = url;
+    public DownloadFileParameters() {
     }
 
     /**
-     * Gets the url.
-     *
+     * @param url
+     * @param username
+     * @param password
+     */
+    public DownloadFileParameters(String url, String username, String password) {
+        this.url = url;
+        this.username = username;
+        this.password = password;
+    }
+
+    /**
      * @return the url
      */
     public String getUrl() {
@@ -29,12 +34,38 @@ public class DownloadFileParameters {
     }
 
     /**
-     * Sets the url.
-     *
-     * @param url
-     *            the new url
+     * @param url the url to set
      */
     public void setUrl(String url) {
         this.url = url;
     }
-}
+
+    /**
+     * @return the username
+     */
+    public String getUsername() {
+        return username;
+    }
+
+    /**
+     * @param username the username to set
+     */
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    /**
+     * @return the password
+     */
+    public String getPassword() {
+        return password;
+    }
+
+    /**
+     * @param password the password to set
+     */
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+  }

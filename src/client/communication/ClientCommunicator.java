@@ -8,13 +8,11 @@ import shared.communication.GetFieldsParameters;
 import shared.communication.GetFieldsResult;
 import shared.communication.GetProjectsParameters;
 import shared.communication.GetProjectsResult;
-import shared.communication.GetSampleImageParameters;
-import shared.communication.GetSampleImageResult;
+import shared.communication.GetSampleBatchParameters;
 import shared.communication.SearchParameters;
 import shared.communication.SearchResult;
 import shared.communication.SubmitBatchParameters;
 import shared.communication.SubmitBatchResult;
-import shared.communication.ValidateUserCredentials;
 import shared.communication.ValidateUserResult;
 
 /**
@@ -89,7 +87,7 @@ public class ClientCommunicator {
      *            the params
      * @return the sample image
      */
-    public GetSampleImageResult getSampleImage(GetSampleImageParameters params) {
+    public GetSampleImageResult getSampleImage(GetSampleBatchParameters params) {
         return null;
     }
 

@@ -2,17 +2,18 @@ package shared.communication;
 
 import java.net.URL;
 
+import shared.model.Batch;
+
 // TODO: Auto-generated Javadoc
 /**
- * The Class GetSampleImageResult.
+ * The Class GetSampleBatchResult.
  */
-public class GetSampleImageResult {
-    
-    /** The url. */
+public class GetSampleBatchResult {
+
     private URL    url;
-    
-    /** The link. */
     private String link;
+    private Batch sampleBatch;
+    private boolean validUser;
 
     /**
      * Gets the link.
@@ -32,13 +33,10 @@ public class GetSampleImageResult {
         this.link = link;
     }
 
-    /** The valid user. */
-    private boolean validUser;
-
     /**
      * Instantiates a new gets the sample image result.
      */
-    public GetSampleImageResult() {
+    public GetSampleBatchResult() {
         validUser = false;
     }
 
@@ -61,6 +59,20 @@ public class GetSampleImageResult {
     }
 
     /**
+     * @return the sampleBatch
+     */
+    public Batch getSampleBatch() {
+        return sampleBatch;
+    }
+
+    /**
+     * @param sampleBatch the sampleBatch to set
+     */
+    public void setSampleBatch(Batch sampleBatch) {
+        this.sampleBatch = sampleBatch;
+    }
+
+    /**
      * Checks if is valid user.
      *
      * @return true, if is valid user
@@ -79,7 +91,7 @@ public class GetSampleImageResult {
     }
 
     /**
-     * 
+     *
      * (non-Javadoc).
      *
      * @return the string

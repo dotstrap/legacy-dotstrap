@@ -1,6 +1,6 @@
 package shared.communication;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import shared.model.Project;
 
@@ -11,16 +11,16 @@ import shared.model.Project;
 public class GetProjectsResult {
 
     /** The projects. */
-    private ArrayList<Project> projects;
+    private List<Project> projects;
 
     /** The valid user. */
-    private boolean            validUser;
+    private boolean            userIsValid;
 
     /**
      * Instantiates a new gets the projects result.
      */
     public GetProjectsResult() {
-        validUser = false;
+        userIsValid = false;
     }
 
     /**
@@ -28,7 +28,7 @@ public class GetProjectsResult {
      *
      * @return -> array of projectinfo if found, else return null
      */
-    public ArrayList<Project> getProjects() {
+    public List<Project> getProjects() {
         return projects;
     }
 
@@ -37,7 +37,7 @@ public class GetProjectsResult {
      *
      * @param projects            -> array of new projects with which to replace
      */
-    public void setProjects(ArrayList<Project> projects) {
+    public void setProjects(List<Project> projects) {
         this.projects = projects;
     }
 
@@ -46,17 +46,17 @@ public class GetProjectsResult {
      *
      * @return true, if is valid user
      */
-    public boolean isValidUser() {
-        return validUser;
+    public boolean isUserIsValid() {
+        return userIsValid;
     }
 
     /**
      * Sets the valid user.
      *
-     * @param validUser the new valid user
+     * @param v the new valid user
      */
-    public void setValidUser(boolean validUser) {
-        this.validUser = validUser;
+    public void setUserIsValid(boolean v) {
+        this.userIsValid = v;
     }
 
     /**
@@ -66,16 +66,16 @@ public class GetProjectsResult {
      * @return the string
      * @see java.lang.Object#toString()
      */
-    //public String toString() {
-        //StringBuilder sb = new StringBuilder();
-        //if (validUser) {
-            //for (Project p : projects) {
-                //sb.append(p.getProjInfo().getID() + "\n");
-                //sb.append(p.getProjInfo().getName() + "\n");
-            //}
-        //} else {
-            //sb.append("FAILED\n");
-        //}
-        //return sb.toString();
-    //}
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        if (userIsValid) {
+            for (Project p : projects) {
+                sb.append(p.getProjectID() + "\n");
+                sb.append(p.getTitle() + "\n");
+            }
+        } else {
+            sb.append("FAILED\n");
+        }
+        return sb.toString();
+    }
 }

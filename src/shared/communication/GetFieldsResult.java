@@ -1,6 +1,6 @@
 package shared.communication;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import shared.model.Field;
 
@@ -9,74 +9,54 @@ import shared.model.Field;
  * The Class GetFieldsResult.
  */
 public class GetFieldsResult {
-    
-    /** The fields. */
-    private ArrayList<Field> fields;
-    
-    /** The valid user. */
-    private boolean          validUser;
+    private List<Field> fields;
 
     /**
      * Instantiates a new gets the fields result.
      */
     public GetFieldsResult() {
-        validUser = false;
+        this.fields = null;
     }
 
     /**
-     * Gets the fields.
-     *
-     * @return the fields
+     * @param fields
      */
-    public ArrayList<Field> getFields() {
-        return fields;
-    }
-
-    /**
-     * Sets the fields.
-     *
-     * @param fields the new fields
-     */
-    public void setFields(ArrayList<Field> fields) {
+    public GetFieldsResult(List<Field> fields) {
         this.fields = fields;
     }
 
     /**
-     * Checks if is valid user.
-     *
-     * @return true, if is valid user
+     * @return the fields
      */
-    public boolean isValidUser() {
-        return validUser;
+    public List<Field> getFields() {
+        return fields;
     }
 
     /**
-     * Sets the valid user.
-     *
-     * @param validUser the new valid user
+     * @param fields the fields to set
      */
-    public void setValidUser(boolean validUser) {
-        this.validUser = validUser;
+    public void setFields(List<Field> fields) {
+        this.fields = fields;
     }
 
     /**
-     *  
+     *
      * (non-Javadoc).
      *
      * @return the string
      * @see java.lang.Object#toString()
      */
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        if (validUser) {
-            for (Field f : fields) {
-                sb.append(f.getProjectID() + "\n");
-                sb.append(f.getID() + "\n");
-                sb.append(f.getTitle() + "\n");
-            }
-        } else {
-            sb.append("FAILED\n");
-        }
-        return sb.toString();
-    }
+    //public String toString() {
+        //StringBuilder sb = new StringBuilder();
+        //if (validUser) {
+            //for (Field f : fields) {
+                //sb.append(f.getProjectID() + "\n");
+                //sb.append(f.getID() + "\n");
+                //sb.append(f.getTitle() + "\n");
+            //}
+        //} else {
+            //sb.append("FAILED\n");
+        //}
+        //return sb.toString();
+    //}
 }

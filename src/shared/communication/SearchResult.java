@@ -1,7 +1,6 @@
 package shared.communication;
 
-import java.net.URL;
-import java.util.ArrayList;
+import java.util.List;
 
 import shared.model.Record;
 
@@ -10,122 +9,59 @@ import shared.model.Record;
  * The Class SearchResult.
  */
 public class SearchResult {
-
-    /** The records. */
-    private ArrayList<Record> records;
-
-    /** The urls. */
-    private ArrayList<URL>    urls;
-
-    /** The links. */
-    private ArrayList<String> links;
-
-    /** The valid user. */
-    private boolean           validUser;
+    private List<Record> foundRecords;
 
     /**
-     * Instantiates a new search result.
+     * @param foundRecords
+     */
+    public SearchResult(List<Record> foundRecords) {
+        this.foundRecords = foundRecords;
+    }
+
+    /**
+     *
      */
     public SearchResult() {
-        validUser = false;
+        this.foundRecords = null;
     }
 
     /**
-     * Gets the records.
-     *
-     * @return the records
+     * @return the foundRecords
      */
-    public ArrayList<Record> getRecords() {
-        return records;
+    public List<Record> getFoundRecords() {
+        return foundRecords;
     }
 
     /**
-     * Sets the records.
-     *
-     * @param records
-     *            the new records
+     * @param foundRecords the foundRecords to set
      */
-    public void setRecords(ArrayList<Record> records) {
-        this.records = records;
-    }
-
-    /**
-     * Gets the urls.
-     *
-     * @return the urls
-     */
-    public ArrayList<URL> getUrls() {
-        return urls;
-    }
-
-    /**
-     * Sets the urls.
-     *
-     * @param urls
-     *            the new urls
-     */
-    public void setUrls(ArrayList<URL> urls) {
-        this.urls = urls;
-    }
-
-    /**
-     * Checks if is valid user.
-     *
-     * @return true, if is valid user
-     */
-    public boolean isValidUser() {
-        return validUser;
-    }
-
-    /**
-     * Sets the valid user.
-     *
-     * @param validUser
-     *            the new valid user
-     */
-    public void setValidUser(boolean validUser) {
-        this.validUser = validUser;
+    public void setFoundRecords(List<Record> foundRecords) {
+        this.foundRecords = foundRecords;
     }
 
     /**
      * Gets the links.
      *
-     * @return the links
-     */
-    public ArrayList<String> getLinks() {
-        return links;
-    }
-
-    /**
-     * Sets the links.
-     *
-     * @param links
-     *            the new links
-     */
-    public void setLinks(ArrayList<String> links) {
-        this.links = links;
-    }
-
-    /**
+      /**
      *
      * (non-Javadoc).
      *
      * @return the string
      * @see java.lang.Object#toString()
      */
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        if (validUser & records.size() > 0) {
-            for (int i = 0; i < records.size(); ++i) {
-                sb.append(records.get(i).getBatchID() + "\n");
-                sb.append(urls.get(i) + "\n");
-                sb.append(records.get(i).getRecordNumber() + "\n");
-                sb.append(records.get(i).getFieldID() + "\n");
-            }
-        } else {
-            sb.append("FAILED\n");
-        }
-        return sb.toString();
-    }
+    //public String toString() {
+        //StringBuilder sb = new StringBuilder();
+        //if (validUser & records.size() > 0) {
+            //for (int i = 0; i < records.size(); ++i) {
+                //sb.append(records.get(i).getBatchID() + "\n");
+                //sb.append(urls.get(i) + "\n");
+                //sb.append(records.get(i).getRecordNumber() + "\n");
+                //sb.append(records.get(i).getFieldID() + "\n");
+            //}
+        //} else {
+            //sb.append("FAILED\n");
+        //}
+        //return sb.toString();
+    //}
 
 }
