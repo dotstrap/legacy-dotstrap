@@ -9,9 +9,9 @@ import shared.model.Record;
  * The Class SubmitBatchParameters.
  */
 public class SubmitBatchParameters {
-    private String username;
-    private String password;
-    private int    batchID;
+    private String       username;
+    private String       password;
+    private int          batchID;
     private List<Record> fieldValues;
 
     /**
@@ -22,9 +22,9 @@ public class SubmitBatchParameters {
      */
     public SubmitBatchParameters(String username, String password, int batchID,
             List<Record> fieldValues) {
-        this.username = username;
-        this.password = password;
-        this.batchID = batchID;
+        this.username    = username;
+        this.password    = password;
+        this.batchID     = batchID;
         this.fieldValues = fieldValues;
     }
 

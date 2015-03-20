@@ -70,13 +70,4 @@ public class ValidateUserParameters {
         password = s;
     }
 
-    /**
-     * Gets the user.
-     *
-     * @return the user
-     */
-    public User getUser() {
-        User user = new User();
-        return user;
-    }
-}
+ }

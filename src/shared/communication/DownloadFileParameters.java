@@ -9,13 +9,24 @@ public class DownloadFileParameters {
     private String username;
     private String password;
 
-   /**
+    /**
+     * Instantiates a new DownloadFileParameters.
      *
      */
-    public DownloadFileParameters() {
+    public DownloadFileParameters() {}
+
+    /**
+     * Instantiates a new DownloadFileParameters.
+     *
+     * @param url
+     */
+    public DownloadFileParameters(String url) {
+        this.url = url;
     }
 
     /**
+     * Instantiates a new DownloadFileParameters.
+     *
      * @param url
      * @param username
      * @param password
@@ -68,4 +79,4 @@ public class DownloadFileParameters {
         this.password = password;
     }
 
-  }
+}

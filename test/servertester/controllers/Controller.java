@@ -1,28 +1,15 @@
-/**
- * Controller.java
- * JRE v1.7.0_76
- * 
- * Created by William Myers on Mar 15, 2015.
- * Copyright (c) 2015 William Myers. All Rights reserved.
- */
 package servertester.controllers;
 
 import java.util.*;
 
+import client.communication.ClientCommunicator;
 import servertester.views.*;
+import shared.communication.*;
 
-// TODO: Auto-generated Javadoc
-/**
- * The Class Controller.
- */
 public class Controller implements IController {
 
-    /** The _view. */
     private IView _view;
 
-    /**
-     * Instantiates a new controller.
-     */
     public Controller() {
         return;
     }
@@ -36,25 +23,14 @@ public class Controller implements IController {
     }
 
     // IController methods
-    //
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see servertester.controllers.IController#initialize()
-     */
     @Override
     public void initialize() {
         getView().setHost("localhost");
-        getView().setPort("39640");
+        getView().setPort("50080");
         operationSelected();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see servertester.controllers.IController#operationSelected()
-     */
     @Override
     public void operationSelected() {
         ArrayList<String> paramNames = new ArrayList<String>();
@@ -62,119 +38,200 @@ public class Controller implements IController {
         paramNames.add("Password");
 
         switch (getView().getOperation()) {
-        case VALIDATE_USER:
-            break;
-        case GET_PROJECTS:
-            break;
-        case GET_SAMPLE_IMAGE:
-            paramNames.add("Project");
-            break;
-        case DOWNLOAD_BATCH:
-            paramNames.add("Project");
-            break;
-        case GET_FIELDS:
-            paramNames.add("Project");
-            break;
-        case SUBMIT_BATCH:
-            paramNames.add("Batch");
-            paramNames.add("Record Values");
-            break;
-        case SEARCH:
-            paramNames.add("Fields");
-            paramNames.add("Search Values");
-            break;
-        default:
-            assert false;
-            break;
+            case VALIDATE_USER:
+                break;
+            case GET_PROJECTS:
+                break;
+            case GET_SAMPLE_IMAGE:
+                paramNames.add("Project");
+                break;
+            case DOWNLOAD_BATCH:
+                paramNames.add("Project");
+                break;
+            case GET_FIELDS:
+                paramNames.add("Project");
+                break;
+            case SUBMIT_BATCH:
+                paramNames.add("Batch");
+                paramNames.add("Record Values");
+                break;
+            case SEARCH:
+                paramNames.add("Fields");
+                paramNames.add("Search Values");
+                break;
+            default:
+                assert false;
+                break;
         }
 
         getView().setRequest("");
         getView().setResponse("");
-        getView().setParameterNames(
-                paramNames.toArray(new String[paramNames.size()]));
+        getView().setParameterNames(paramNames.toArray(new String[paramNames.size()]));
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see servertester.controllers.IController#executeOperation()
-     */
     @Override
     public void executeOperation() {
         switch (getView().getOperation()) {
-        case VALIDATE_USER:
-            validateUser();
-            break;
-        case GET_PROJECTS:
-            getProjects();
-            break;
-        case GET_SAMPLE_IMAGE:
-            getSampleImage();
-            break;
-        case DOWNLOAD_BATCH:
-            downloadBatch();
-            break;
-        case GET_FIELDS:
-            getFields();
-            break;
-        case SUBMIT_BATCH:
-            submitBatch();
-            break;
-        case SEARCH:
-            search();
-            break;
-        default:
-            assert false;
-            break;
+            case VALIDATE_USER:
+                validateUser();
+                break;
+            case GET_PROJECTS:
+                getProjects();
+                break;
+            case GET_SAMPLE_IMAGE:
+                getSampleBatch();
+                break;
+            case DOWNLOAD_BATCH:
+                downloadBatch();
+                break;
+            case GET_FIELDS:
+                getFields();
+                break;
+            case SUBMIT_BATCH:
+                submitBatch();
+                break;
+            case SEARCH:
+                search();
+                break;
+            default:
+                assert false;
+                break;
         }
     }
 
-    /**
-     * Validate user.
-     */
     private void validateUser() {
+        String[] args = getView().getParameterValues();
+        String port = getView().getPort();
+        try {
+            String host = getView().getHost();
+
+            ClientCommunicator client = new ClientCommunicator(port, host);
+            ValidateUserParameters creds = new ValidateUserParameters(args[0], args[1]);
+            ValidateUserResult result = client.validateUser(creds);
+            getView().setResponse(result.toString());
+        } catch (Exception e) {
+            getView().setResponse("FAILED\n");
+        }
     }
 
-    /**
-     * Gets the projects.
-     *
-     * @return the projects
-     */
     private void getProjects() {
+        String[] args = getView().getParameterValues();
+        String port = getView().getPort();
+        try {
+            String host = getView().getHost();
+
+            ClientCommunicator client = new ClientCommunicator(port, host);
+            GetProjectsParameters params = new GetProjectsParameters(args[0], args[1]);
+            GetProjectsResult result = client.getProjects(params);
+            getView().setResponse(result.toString());
+        } catch (Exception e) {
+            getView().setResponse("FAILED\n");
+        }
     }
 
-    /**
-     * Gets the sample image.
-     *
-     * @return the sample image
-     */
-    private void getSampleImage() {
+    private void getSampleBatch() {
+        String[] args = getView().getParameterValues();
+        String port = getView().getPort();
+        try {
+            String host = getView().getHost();
+
+            ClientCommunicator client = new ClientCommunicator(port, host);
+            GetSampleBatchParameters params =
+                    new GetSampleBatchParameters(args[0], args[1], Integer.parseInt(args[2]));
+            GetSampleBatchResult result = client.getSampleBatch(params);
+            getView().setResponse(result.toString());
+        } catch (Exception e) {
+            getView().setResponse("FAILED\n");
+        }
     }
 
-    /**
-     * Download batch.
-     */
     private void downloadBatch() {
+        String[] args = getView().getParameterValues();
+        String port = getView().getPort();
+        try {
+            String host = getView().getHost();
+
+            ClientCommunicator client = new ClientCommunicator(port, host);
+            DownloadBatchParameters creds =
+                    new DownloadBatchParameters(args[0], args[1], Integer.parseInt(args[2]));
+            DownloadBatchResult result = client.downloadBatch(creds);
+            getView().setResponse(result.toString());
+        } catch (Exception e) {
+            getView().setResponse("FAILED\n");
+        }
     }
 
-    /**
-     * Gets the fields.
-     *
-     * @return the fields
-     */
     private void getFields() {
+        String[] args = getView().getParameterValues();
+        int projectId = -1;
+        try {
+            if (args[2].length() != 0) {
+                projectId = Integer.parseInt(args[2]);
+                if (projectId == -1) {
+                    getView().setResponse("FAILED\n");
+                    return;
+                }
+            }
+
+            String port = getView().getPort();
+            String host = getView().getHost();
+
+            ClientCommunicator client = new ClientCommunicator(port, host);
+            GetFieldsParameters params = new GetFieldsParameters(args[0], args[1], projectId);
+            GetFieldsResult result = client.getFields(params);
+            getView().setResponse(result.toString());
+        } catch (Exception e) {
+            getView().setResponse("FAILED\n");
+        }
     }
 
-    /**
-     * Submit batch.
-     */
     private void submitBatch() {
+        //String[] args = getView().getParameterValues();
+        //String port = getView().getPort();
+        //try {
+            //String host = getView().getHost();
+
+            //ClientCommunicator client = new ClientCommunicator(port, host); // TODO: parse fields as strings
+            //SubmitBatchParameters params =
+                    //new SubmitBatchParameters(args[0], args[1], Integer.parseInt(args[2]), args[3]);
+            //SubmitBatchResult result = client.submitBatch(params);
+            //getView().setResponse(result.toString());
+        //} catch (Exception e) {
+            //getView().setResponse("FAILED\n");
+        //}
     }
 
-    /**
-     * Search.
-     */
     private void search() {
+        String[] args = getView().getParameterValues();
+        String fieldID = args[2];
+        ArrayList<Integer> fieldList = new ArrayList<Integer>();
+        ArrayList<String> searchList = new ArrayList<String>();
+
+        try {
+            List<String> holder = Arrays.asList(fieldID.split(",", -1));
+            for (String s : holder) {
+                if (!fieldList.contains(Integer.parseInt(s))) {
+                    fieldList.add(Integer.parseInt(s));
+                }
+            }
+            String search = args[3];
+            List<String> holder2 = Arrays.asList(search.split(",", -1));
+            for (String s : holder2) {
+                s = s.toUpperCase();
+                if (!searchList.contains(s)) {
+                    searchList.add(s);
+                }
+            }
+            String port = getView().getPort();
+            String host = getView().getHost();
+
+            ClientCommunicator client = new ClientCommunicator(port, host);
+            SearchParameters params = new SearchParameters(args[0], args[1], fieldList, searchList);
+            SearchResult result = client.search(params);
+            getView().setResponse(result.toString());
+        } catch (Exception e) {
+            getView().setResponse("FAILED\n");
+        }
     }
 
 }

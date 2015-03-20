@@ -9,10 +9,9 @@ import shared.model.Batch;
  * The Class GetSampleBatchResult.
  */
 public class GetSampleBatchResult {
-
-    private URL    url;
-    private String link;
-    private Batch sampleBatch;
+    private URL     url;
+    private String  link;
+    private Batch   sampleBatch;
     private boolean validUser;
 
     /**
@@ -27,7 +26,8 @@ public class GetSampleBatchResult {
     /**
      * Sets the link.
      *
-     * @param link the new link
+     * @param link
+     *            the new link
      */
     public void setLink(String link) {
         this.link = link;
@@ -43,9 +43,10 @@ public class GetSampleBatchResult {
     /**
      * Sets the url.
      *
-     * @param url the new url
+     * @param url
+     *            the new url
      */
-    public void setURL(URL url) {
+    public void setUrl(URL url) {
         this.url = url;
     }
 
@@ -66,7 +67,8 @@ public class GetSampleBatchResult {
     }
 
     /**
-     * @param sampleBatch the sampleBatch to set
+     * @param sampleBatch
+     *            the sampleBatch to set
      */
     public void setSampleBatch(Batch sampleBatch) {
         this.sampleBatch = sampleBatch;
@@ -84,7 +86,8 @@ public class GetSampleBatchResult {
     /**
      * Sets the valid user.
      *
-     * @param validUser the new valid user
+     * @param validUser
+     *            the new valid user
      */
     public void setValidUser(boolean validUser) {
         this.validUser = validUser;

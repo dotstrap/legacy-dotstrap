@@ -9,18 +9,13 @@ import shared.model.Project;
  * The Class GetProjectsResult.
  */
 public class GetProjectsResult {
-
     /** The projects. */
     private List<Project> projects;
-
-    /** The valid user. */
-    private boolean            userIsValid;
 
     /**
      * Instantiates a new gets the projects result.
      */
     public GetProjectsResult() {
-        userIsValid = false;
     }
 
     /**
@@ -35,28 +30,11 @@ public class GetProjectsResult {
     /**
      * replaces projects with new projects.
      *
-     * @param projects            -> array of new projects with which to replace
+     * @param projects
+     *            -> array of new projects with which to replace
      */
     public void setProjects(List<Project> projects) {
         this.projects = projects;
-    }
-
-    /**
-     * Checks if is valid user.
-     *
-     * @return true, if is valid user
-     */
-    public boolean isUserIsValid() {
-        return userIsValid;
-    }
-
-    /**
-     * Sets the valid user.
-     *
-     * @param v the new valid user
-     */
-    public void setUserIsValid(boolean v) {
-        this.userIsValid = v;
     }
 
     /**
@@ -68,13 +46,9 @@ public class GetProjectsResult {
      */
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        if (userIsValid) {
-            for (Project p : projects) {
-                sb.append(p.getProjectID() + "\n");
-                sb.append(p.getTitle() + "\n");
-            }
-        } else {
-            sb.append("FAILED\n");
+        for (Project p : projects) {
+            sb.append(p.getProjectID() + "\n");
+            sb.append(p.getTitle() + "\n");
         }
         return sb.toString();
     }

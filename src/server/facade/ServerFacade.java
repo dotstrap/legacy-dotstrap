@@ -1,4 +1,4 @@
-package server;
+package server.facade;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -53,10 +53,10 @@ public class ServerFacade {
             logger.log(Level.FINE, "STACKTRACE: ", e);
             throw new ServerException(e.toString());
         }
-        // TODO: should i handle it this way?
-        if (!isValid) {
-            user = new User();
-        }
+         //TODO: should i handle it this way?
+        //if (!isValid) {
+            //user = new User();
+        //}
 
         ValidateUserResult result = new ValidateUserResult(user, isValid);
 
@@ -71,15 +71,13 @@ public class ServerFacade {
         ValidateUserParameters validate = new ValidateUserParameters();
         validate.setUsername(params.getUsername());
         validate.setPassword(params.getPassword());
-
         boolean isValid = validateUser(validate).isValid();
         if (!isValid) {
-            throw new ServerException("Invalid user credentials");
+            throw new ServerException("FAILED\n");
         }
 
         Database db = new Database();
         List<Project> projects = null;
-
         try {
             db.startTransaction();
             projects = db.getProjectDAO().getAll();
@@ -87,7 +85,7 @@ public class ServerFacade {
         } catch (DatabaseException e) {
             logger.log(Level.SEVERE, e.toString());
             logger.log(Level.FINE, "STACKTRACE: ", e);
-            throw new ServerException(e.toString());
+            throw new ServerException("FAILED\n");
         }
 
         GetProjectsResult result = new GetProjectsResult();
@@ -99,15 +97,14 @@ public class ServerFacade {
     /**
      * Gets a sample batch from a project
      */
-    public static GetSampleBatchResult getSampleBatch(
-            GetSampleBatchParameters params) throws ServerException {
+    public static GetSampleBatchResult getSampleBatch(GetSampleBatchParameters params)
+            throws ServerException {
         ValidateUserParameters validate = new ValidateUserParameters();
         validate.setUsername(params.getUsername());
         validate.setPassword(params.getPassword());
-
         boolean isValid = validateUser(validate).isValid();
         if (!isValid) {
-            throw new ServerException("Invalid user credentials");
+            throw new ServerException("FAILED\n");
         }
 
         Database db = new Database();
@@ -115,8 +112,7 @@ public class ServerFacade {
 
         try {
             db.startTransaction();
-            sampleBatch = db.getBatchDAO()
-                    .getSampleBatch(params.getProjectID());
+            sampleBatch = db.getBatchDAO().getSampleBatch(params.getProjectID());
             db.endTransaction(true);
         } catch (DatabaseException e) {
             logger.log(Level.SEVERE, e.toString());
@@ -131,17 +127,17 @@ public class ServerFacade {
     }
 
     /**
-     * Downloads an incomplete batch from a project. This includes information
-     * from batchs, projects, and fields
+     * Downloads an incomplete batch from a project. This includes information from batchs,
+     * projects, and fields
      */
-    public static DownloadBatchResult downloadBatch(
-            DownloadBatchParameters params) throws ServerException {
+    public static DownloadBatchResult downloadBatch(DownloadBatchParameters params)
+            throws ServerException {
         ValidateUserParameters validate = new ValidateUserParameters();
         validate.setUsername(params.getUsername());
         validate.setPassword(params.getPassword());
         boolean isValid = validateUser(validate).isValid();
         if (!isValid) {
-            throw new ServerException("Invalid user credentials");
+            throw new ServerException("FAILED\n");
         }
 
         Database db = new Database();
@@ -172,14 +168,13 @@ public class ServerFacade {
     /**
      * Submits values from a batch into the database
      */
-    public static void submitBatch(SubmitBatchParameters params)
-            throws ServerException {
+    public static void submitBatch(SubmitBatchParameters params) throws ServerException {
         ValidateUserParameters validate = new ValidateUserParameters();
         validate.setUsername(params.getUsername());
         validate.setPassword(params.getPassword());
         boolean isValid = validateUser(validate).isValid();
         if (!isValid) {
-            throw new ServerException("Invalid user credentials");
+            throw new ServerException("FAILED\n");
         }
 
         Database db = new Database();
@@ -196,8 +191,7 @@ public class ServerFacade {
             projectId = batch.getProjectID();
 
             for (Record curr : records) {
-                int fieldId = db.getFieldDAO().getFieldID(projectId,
-                        curr.getColNum());
+                int fieldId = db.getFieldDAO().getFieldID(projectId, curr.getColNum());
                 curr.setFieldID(fieldId);
                 curr.setBatchURL(batchUrl);
                 db.getRecordDAO().create(curr);
@@ -207,21 +201,18 @@ public class ServerFacade {
             logger.log(Level.FINE, "STACKTRACE: ", e);
             throw new ServerException(e.toString());
         }
-
-        return;
     }
 
     /**
      * Gets the fields for a project
      */
-    public static GetFieldsResult getFields(GetFieldsParameters params)
-            throws ServerException {
+    public static GetFieldsResult getFields(GetFieldsParameters params) throws ServerException {
         ValidateUserParameters validate = new ValidateUserParameters();
         validate.setUsername(params.getUsername());
         validate.setPassword(params.getPassword());
         boolean isValid = validateUser(validate).isValid();
         if (!isValid) {
-            throw new ServerException("Invalid user credentials");
+            throw new ServerException("FAILED\n");
         }
 
         Database db = new Database();
@@ -230,8 +221,7 @@ public class ServerFacade {
 
         try {
             db.startTransaction();
-            fields = projectId > 0 ? db.getFieldDAO().getAll(projectId) : db
-                    .getFieldDAO().getAll();
+            fields = projectId > 0 ? db.getFieldDAO().getAll(projectId) : db.getFieldDAO().getAll();
             db.endTransaction(true);
         } catch (DatabaseException e) {
             logger.log(Level.SEVERE, e.toString());
@@ -248,14 +238,13 @@ public class ServerFacade {
     /**
      * Searches certain fields for certain values
      */
-    public static SearchResult search(SearchParameters params)
-            throws ServerException {
+    public static SearchResult search(SearchParameters params) throws ServerException {
         ValidateUserParameters validate = new ValidateUserParameters();
         validate.setUsername(params.getUsername());
         validate.setPassword(params.getPassword());
         boolean isValid = validateUser(validate).isValid();
         if (!isValid) {
-            throw new ServerException("Invalid user credentials");
+            throw new ServerException("FAILED\n");
         }
 
         Database db = new Database();
@@ -263,8 +252,7 @@ public class ServerFacade {
 
         try {
             db.startTransaction();
-            records = db.getRecordDAO().search(params.getFieldIds(),
-                    params.getSearchQueries());
+            records = db.getRecordDAO().search(params.getFieldIds(), params.getSearchQueries());
             db.endTransaction(true);
         } catch (DatabaseException e) {
             logger.log(Level.SEVERE, e.toString());
@@ -279,7 +267,11 @@ public class ServerFacade {
     }
 
     /**
-     * Downloads a file from the server TODO
+     * Downloads a file from the server
+     *
+     * @param params
+     * @return
+     * @throws ServerException
      */
     public static DownloadFileResult downloadFile(DownloadFileParameters params)
             throws ServerException {
@@ -288,7 +280,7 @@ public class ServerFacade {
         validate.setPassword(params.getPassword());
         boolean isValid = validateUser(validate).isValid();
         if (!isValid) {
-            throw new ServerException("Invalid user credentials");
+            throw new ServerException("FAILED\n");
         }
 
         InputStream is;
@@ -301,7 +293,6 @@ public class ServerFacade {
             logger.log(Level.SEVERE, e.toString());
             logger.log(Level.FINE, "STACKTRACE: ", e);
             throw new ServerException(e.toString());
-
         }
         return new DownloadFileResult(data);
     }

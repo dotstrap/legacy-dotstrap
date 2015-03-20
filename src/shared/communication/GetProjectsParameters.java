@@ -5,7 +5,6 @@ package shared.communication;
  * The Class GetProjectsParameters.
  */
 public class GetProjectsParameters {
-
     /** The name. */
     private String username;
 

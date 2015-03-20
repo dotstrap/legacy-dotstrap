@@ -39,7 +39,7 @@
     <property name="empty-db-file" location="${database}/template/IndexerServer.sqlite"/>
     
     <!-- File containing the report output by Checkstyle -->
-    <property name="checkstyle-report-file" location="checkstyle-report.txt"/>
+    <property name="checkstyle-report-file" location="${logs}/checkstyle-report.txt"/>
    
     <!-- Deployment mechanism: rysnc -->
     <property name="rsync" value="/usr/local/bin/rsync"/>
@@ -50,7 +50,7 @@
     <!-- Default values for command-line properties.  Values specified on the command-line will override these. -->
     <property name="file" value="import/Records.xml"/>
     <property name="host" value="localhost"/>
-    <property name="port" value="39640"/>
+    <property name="port" value="50080"/>
 
     <!-- CLASS PATHS -->
     <!-- *********** -->
@@ -129,7 +129,7 @@
         </java>
     </target>
 
-    <target name="server-gui" depends="compile,server" description="run the server test gui">
+    <target name="server-gui" depends="compile" description="run the server test gui">
         <java classname="servertester.GuiTester" fork="yes">
             <classpath>
                 <path refid="all-classpath"/>

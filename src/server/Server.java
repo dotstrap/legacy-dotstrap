@@ -36,17 +36,17 @@ public class Server {
      *             Signals that an I/O exception has occurred.
      */
     private static void initLog() throws IOException {
-        Level logLevel = Level.SEVERE;
+        Level logLevel = Level.FINEST;
         String logFile = "logs/server.log";
 
         logger = Logger.getLogger("server");
         logger.setLevel(logLevel);
         logger.setUseParentHandlers(false);
 
-        // Handler consoleHandler = new ConsoleHandler();
-        // consoleHandler.setLevel(logLevel);
-        // consoleHandler.setFormatter(new SimpleFormatter());
-        // logger.addHandler(consoleHandler);
+        Handler consoleHandler = new ConsoleHandler();
+        consoleHandler.setLevel(logLevel);
+        consoleHandler.setFormatter(new SimpleFormatter());
+        logger.addHandler(consoleHandler);
 
         // Set up 5 rolling logs each with a max file size of 3MB
         FileHandler fileHandler = new FileHandler(logFile, 3000000, 5, false);
@@ -55,7 +55,7 @@ public class Server {
         logger.addHandler(fileHandler);
     }
 
-    private static Logger    logger;
+    private static Logger logger;
     static {
         try {
             initLog();
@@ -68,7 +68,7 @@ public class Server {
      * The main method.
      *
      * @param args
-     *            the CLI arguments: the port to run the indexer server on
+     *            the port to run the indexer server on
      */
     public static void main(String[] args) {
         if (args == null) {
@@ -76,10 +76,17 @@ public class Server {
         } else if (args.length > 0) {
             SERVER_PORT_NUMBER = Integer.parseInt(args[0]);
         } else {
-            SERVER_PORT_NUMBER = 25565; //else use default minecraft server port number
+            SERVER_PORT_NUMBER = 25565; // else use default minecraft server
+                                        // port number
         }
-        logger.info("Bootstrapping server on port:" + SERVER_PORT_NUMBER + "...");
-        new Server().bootstrap();
+
+        logger.info("Bootstrapping server on port: " + SERVER_PORT_NUMBER + "...");
+        try {
+            new Server().bootstrap();
+        } catch(ServerException e) {
+            logger.log(Level.SEVERE, e.toString());
+            logger.log(Level.FINE, "STACKTRACE: ", e);
+        }
     }
 
     // The server
@@ -95,17 +102,8 @@ public class Server {
     private DownloadFileHandler   downloadFileHandler;
 
     /**
-     * Instantiates a new Server.
-     *Server
-     * @param searchHandler
-     * @param getFieldsHandler
-     * @param getProjectsHandler
-     * @param getSampleImageHandler
-     * @param submitBatchHandler
-     * @param validateUserHandler
-     * @param downloadBatchHandler
-     * @param downloadFileHandler
-     */
+     * Instantiates a new Server. Server
+        */
     public Server() {
         logger.info("Initializing HTTP handlers...");
         searchHandler         = new SearchHandler();
@@ -122,15 +120,16 @@ public class Server {
      * Bootstraps the server: Initializes the models Starts the HTTP server
      * Creates contexts Starts the server
      */
-    private void bootstrap() {
+    private void bootstrap() throws ServerException {
 
         logger.info("Initializing Model...");
-        // try {
-        // ServerFacade.initialize();
-        // } catch (ServerException e) {
-        // logger.log(Level.SEVERE, e.getMessage(), e);
-        // return;
-        // }
+        try {
+            ServerFacade.initialize();
+        } catch (ServerException e) {
+            logger.log(Level.SEVERE, e.toString());
+            logger.log(Level.FINE, "STACKTRACE: ", e);
+            throw new ServerException(e.toString());
+        }
 
         logger.info("Initializing HTTP Server...");
         try {
@@ -139,7 +138,7 @@ public class Server {
         } catch (IOException e) {
             logger.log(Level.SEVERE, e.toString());
             logger.log(Level.FINE, "STACKTRACE: ", e);
-            return;
+            throw new ServerException(e.toString());
         }
 
         server.setExecutor(null); // use the default executor
