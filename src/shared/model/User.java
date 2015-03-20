@@ -1,19 +1,15 @@
 /**
- * User.java
- * JRE v1.7.0_76
+ * User.java JRE v1.7.0_76
  *
- * Created by William Myers on Mar 15, 2015.
- * Copyright (c) 2015 William Myers. All Rights reserved.
+ * Created by William Myers on Mar 15, 2015. Copyright (c) 2015 William Myers. All Rights reserved.
  */
 
 package shared.model;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class User.
  */
 public class User {
-
     // Credentials
     private int    userID;
     private String username;
@@ -26,18 +22,19 @@ public class User {
     private int    recordCount;
     private int    currBatch;
 
+    //@formatter:off
     /**
      * Instantiates a new User.
      */
     public User() {
-        this.userID = -1;
-        this.username = "username";
-        this.password = "password";
-        this.first = "first";
-        this.last = "last";
-        this.email = "email";
+        this.userID      = -1;
+        this.username    = "username";
+        this.password    = "password";
+        this.first       = "first";
+        this.last        = "last";
+        this.email       = "email";
         this.recordCount = -1;
-        this.currBatch = -1;
+        this.currBatch   = -1;
     }
 
     /**
@@ -51,15 +48,15 @@ public class User {
      * @param recordCount
      * @param currBatch
      */
-    public User(String username, String password, String first, String last,
-            String email, int recordCount, int currBatch) {
-        this.username = username;
-        this.password = password;
-        this.first = first;
-        this.last = last;
-        this.email = email;
+    public User(String username, String password, String first, String last, String email,
+            int recordCount, int currBatch) {
+        this.username    = username;
+        this.password    = password;
+        this.first       = first;
+        this.last        = last;
+        this.email       = email;
         this.recordCount = recordCount;
-        this.currBatch = currBatch;
+        this.currBatch   = currBatch;
     }
 
     /**
@@ -76,15 +73,16 @@ public class User {
      */
     public User(int id, String username, String password, String first,
             String last, String email, int recordCount, int currBatch) {
-        this.userID = id;
-        this.username = username;
-        this.password = password;
-        this.first = first;
-        this.last = last;
-        this.email = email;
+        this.userID      = id;
+        this.username    = username;
+        this.password    = password;
+        this.first       = first;
+        this.last        = last;
+        this.email       = email;
         this.recordCount = recordCount;
-        this.currBatch = currBatch;
+        this.currBatch   = currBatch;
     }
+    //@formatter:on
 
     public int getUserID() {
         return this.userID;

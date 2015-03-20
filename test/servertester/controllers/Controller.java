@@ -108,6 +108,7 @@ public class Controller implements IController {
             ClientCommunicator client = new ClientCommunicator(port, host);
             ValidateUserParameters creds = new ValidateUserParameters(args[0], args[1]);
             ValidateUserResult result = client.validateUser(creds);
+            //getView().setRequest();
             getView().setResponse(result.toString());
         } catch (Exception e) {
             getView().setResponse("FAILED\n");
@@ -186,19 +187,20 @@ public class Controller implements IController {
     }
 
     private void submitBatch() {
-        //String[] args = getView().getParameterValues();
-        //String port = getView().getPort();
-        //try {
-            //String host = getView().getHost();
+        // String[] args = getView().getParameterValues();
+        // String port = getView().getPort();
+        // try {
+        // String host = getView().getHost();
 
-            //ClientCommunicator client = new ClientCommunicator(port, host); // TODO: parse fields as strings
-            //SubmitBatchParameters params =
-                    //new SubmitBatchParameters(args[0], args[1], Integer.parseInt(args[2]), args[3]);
-            //SubmitBatchResult result = client.submitBatch(params);
-            //getView().setResponse(result.toString());
-        //} catch (Exception e) {
-            //getView().setResponse("FAILED\n");
-        //}
+        // ClientCommunicator client = new ClientCommunicator(port, host); // TODO: parse fields as
+        // strings
+        // SubmitBatchParameters params =
+        // new SubmitBatchParameters(args[0], args[1], Integer.parseInt(args[2]), args[3]);
+        // SubmitBatchResult result = client.submitBatch(params);
+        // getView().setResponse(result.toString());
+        // } catch (Exception e) {
+        // getView().setResponse("FAILED\n");
+        // }
     }
 
     private void search() {

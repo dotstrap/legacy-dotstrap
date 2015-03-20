@@ -8,9 +8,9 @@ import java.util.List;
  * The Class SearchParameters.
  */
 public class SearchParameters {
-    private String username;
-    private String password;
-    private List<Integer> fieldIds;
+    private String            username;
+    private String            password;
+    private List<Integer>     fieldIds;
     private ArrayList<String> searchQueries;
 
     /**
@@ -20,6 +20,7 @@ public class SearchParameters {
 
     }
 
+    //@formatter:off
     /**
      * Instantiates a new search parameters.
      *
@@ -34,8 +35,8 @@ public class SearchParameters {
      */
     public SearchParameters(String name, String password,
             ArrayList<Integer> fieldID, ArrayList<String> search) {
-        this.username = name;
-        this.password = password;
+        this.username      = name;
+        this.password      = password;
         this.searchQueries = search;
     }
 
@@ -47,12 +48,12 @@ public class SearchParameters {
      */
     public SearchParameters(String name, String password,
             List<Integer> fieldIds, ArrayList<String> searchQuery) {
-        this.username = name;
-        this.password = password;
-        this.fieldIds = fieldIds;
+        this.username      = name;
+        this.password      = password;
+        this.fieldIds      = fieldIds;
         this.searchQueries = searchQuery;
     }
-
+    //@formatter:on
     /**
      * Gets the name.
      *
@@ -65,8 +66,7 @@ public class SearchParameters {
     /**
      * Sets the name.
      *
-     * @param name
-     *            the new name
+     * @param name the new name
      */
     public void setUsername(String name) {
         this.username = name;
@@ -84,8 +84,7 @@ public class SearchParameters {
     /**
      * Sets the password.
      *
-     * @param password
-     *            the new password
+     * @param password the new password
      */
     public void setPassword(String password) {
         this.password = password;
@@ -117,8 +116,7 @@ public class SearchParameters {
     /**
      * Sets the search.
      *
-     * @param search
-     *            the new search
+     * @param search the new search
      */
     public void setSearchQueries(ArrayList<String> search) {
         this.searchQueries = search;

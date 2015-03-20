@@ -23,6 +23,7 @@ public class DownloadBatchResult {
     public DownloadBatchResult() {
     }
 
+    //@formatter:off
     /**
      * Instantiates a new DownloadBatchResult.
      *
@@ -38,7 +39,7 @@ public class DownloadBatchResult {
         this.fields  = fields;
         this.url     = url;
     }
-
+    //@formatter:on
     /**
      * @return the batch
      */

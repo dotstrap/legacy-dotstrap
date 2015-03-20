@@ -14,28 +14,29 @@ import shared.communication.*;
 import server.facade.*;
 
 public class ValidateUserHandler implements HttpHandler {
-/** The logger used throughout the project. */
+    /** The logger used throughout the project. */
     private static Logger logger;
     static {
         logger = Logger.getLogger("server");
     }
 
+    private XStream       xs = new XStream(new DomDriver());
+
     @Override
     public void handle(HttpExchange exchange) throws IOException {
-        XStream xs = new XStream(new DomDriver());
-        ValidateUserParameters params = (ValidateUserParameters) xs
-                .fromXML(exchange.getRequestBody());
+        ValidateUserParameters params =
+                (ValidateUserParameters) xs.fromXML(exchange.getRequestBody());
+        ValidateUserResult result = null;
 
         try {
-            ValidateUserResult result = ServerFacade.validateUser(params);
-            exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
-            xs.toXML(result, exchange.getResponseBody());
-            exchange.getResponseBody().close();
+            result = ServerFacade.validateUser(params);
         } catch (Exception e) {
             logger.log(Level.SEVERE, e.getMessage(), e);
-            exchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR,
-                    -1);
-            exchange.getResponseBody().close();
+            exchange.sendResponseHeaders(HttpURLConnection.HTTP_INTERNAL_ERROR, -1);
+            return;
         }
+        exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
+        xs.toXML(result, exchange.getResponseBody());
+        exchange.getResponseBody().close();
     }
 }

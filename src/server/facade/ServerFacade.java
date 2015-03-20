@@ -47,16 +47,17 @@ public class ServerFacade {
             user = db.getUserDAO().read(username, password);
             // Preform an additional check on password...
             isValid = user.getPassword().equals(password);
-            db.endTransaction(true);
         } catch (DatabaseException e) {
             logger.log(Level.SEVERE, e.toString());
             logger.log(Level.FINE, "STACKTRACE: ", e);
             throw new ServerException(e.toString());
+        } finally {
+            db.endTransaction(true);
         }
          //TODO: should i handle it this way?
-        //if (!isValid) {
-            //user = new User();
-        //}
+        if (!isValid) {
+            user = new User();
+        }
 
         ValidateUserResult result = new ValidateUserResult(user, isValid);
 
@@ -239,31 +240,34 @@ public class ServerFacade {
      * Searches certain fields for certain values
      */
     public static SearchResult search(SearchParameters params) throws ServerException {
-        ValidateUserParameters validate = new ValidateUserParameters();
-        validate.setUsername(params.getUsername());
-        validate.setPassword(params.getPassword());
-        boolean isValid = validateUser(validate).isValid();
-        if (!isValid) {
-            throw new ServerException("FAILED\n");
-        }
-
-        Database db = new Database();
-        List<Record> records = null;
-
-        try {
-            db.startTransaction();
-            records = db.getRecordDAO().search(params.getFieldIds(), params.getSearchQueries());
-            db.endTransaction(true);
-        } catch (DatabaseException e) {
-            logger.log(Level.SEVERE, e.toString());
-            logger.log(Level.FINE, "STACKTRACE: ", e);
-            throw new ServerException(e.toString());
-        }
-
-        SearchResult result = new SearchResult();
-        result.setFoundRecords(records);
-
-        return result;
+/*
+ *        ValidateUserParameters validate = new ValidateUserParameters();
+ *        validate.setUsername(params.getUsername());
+ *        validate.setPassword(params.getPassword());
+ *        boolean isValid = validateUser(validate).isValid();
+ *        if (!isValid) {
+ *            throw new ServerException("FAILED\n");
+ *        }
+ *
+ *        Database db = new Database();
+ *        List<Record> records = null;
+ *
+ *        try {
+ *            db.startTransaction();
+ *            records = db.getRecordDAO().search(params.getFieldIds(), params.getSearchQueries());
+ *            db.endTransaction(true);
+ *        } catch (DatabaseException e) {
+ *            logger.log(Level.SEVERE, e.toString());
+ *            logger.log(Level.FINE, "STACKTRACE: ", e);
+ *            throw new ServerException(e.toString());
+ *        }
+ *
+ *        SearchResult result = new SearchResult();
+ *        result.setFoundRecords(records);
+ *
+ *        return result;
+ */
+        return null;
     }
 
     /**

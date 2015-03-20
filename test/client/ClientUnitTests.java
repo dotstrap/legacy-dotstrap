@@ -1,31 +1,41 @@
 /**
- * ClientUnitTests.java
- * JRE v1.7.0_76
- * 
- * Created by William Myers on Mar 15, 2015.
- * Copyright (c) 2015 William Myers. All Rights reserved.
+ * ClientUnitTests.java JRE v1.7.0_76
+ *
+ * Created by William Myers on Mar 15, 2015. Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package client;
 
 import static org.junit.Assert.*;
 
 import org.junit.*;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.logging.*;
 
 // TODO: Auto-generated Javadoc
 /**
  * The Class ClientUnitTests.
  */
 public class ClientUnitTests {
+    /** The logger. */
+    private static Logger logger;
 
     /**
      * The main method.
      *
-     * @param args
-     *            the arguments
+     * @param args the arguments
      */
     public static void main(String[] args) {
+        try {
+            final FileInputStream is = new FileInputStream("logging.properties");
+            LogManager.getLogManager().readConfiguration(is);
+            logger = Logger.getLogger("clientTest");
+        } catch (final IOException e) {
+            Logger.getAnonymousLogger().severe("ERROR: unable to load logging propeties file...");
+            Logger.getAnonymousLogger().severe(e.getMessage());
+        }
 
-        String[] testClasses = new String[] { "client.ClientUnitTests" };
+        String[] testClasses = new String[] {"client.ClientUnitTests"};
 
         org.junit.runner.JUnitCore.main(testClasses);
     }
@@ -34,15 +44,13 @@ public class ClientUnitTests {
      * Setup.
      */
     @Before
-    public void setup() {
-    }
+    public void setup() {}
 
     /**
      * Teardown.
      */
     @After
-    public void teardown() {
-    }
+    public void teardown() {}
 
     /**
      * Test_1.

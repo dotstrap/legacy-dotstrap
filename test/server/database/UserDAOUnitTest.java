@@ -1,9 +1,7 @@
 /**
- * UserDAOUnitTest.java
- * JRE v1.7.0_76
+ * UserDAOUnitTest.java JRE v1.7.0_76
  *
- * Created by William Myers on Mar 15, 2015.
- * Copyright (c) 2015 William Myers. All Rights reserved.
+ * Created by William Myers on Mar 15, 2015. Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package server.database;
 
@@ -23,14 +21,13 @@ public class UserDAOUnitTest {
     /** The logger used throughout the project. */
     private static Logger logger;
     static {
-        logger = Logger.getLogger("server");
+        logger = Logger.getLogger("serverTest");
     }
 
     /**
      * Sets up before class.
      *
-     * @throws Exception
-     *             the exception
+     * @throws Exception the exception
      */
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
@@ -45,8 +42,7 @@ public class UserDAOUnitTest {
     /**
      * Tear down after class.
      *
-     * @throws Exception
-     *             the exception
+     * @throws Exception the exception
      */
     @AfterClass
     public static void tearDownAfterClass() throws Exception {
@@ -61,8 +57,7 @@ public class UserDAOUnitTest {
     /**
      * Sets the database up.
      *
-     * @throws Exception
-     *             the exception
+     * @throws Exception the exception
      */
     @Before
     public void setUp() throws Exception {
@@ -80,8 +75,7 @@ public class UserDAOUnitTest {
     /**
      * Tear down.
      *
-     * @throws Exception
-     *             the exception
+     * @throws Exception the exception
      */
     @After
     public void tearDown() throws Exception {
@@ -98,10 +92,8 @@ public class UserDAOUnitTest {
     /**
      * Safe equals.
      *
-     * @param a
-     *            the a
-     * @param b
-     *            the b
+     * @param a the a
+     * @param b the b
      * @return true, if successful
      */
     private boolean safeEquals(Object a, Object b) {
@@ -118,8 +110,7 @@ public class UserDAOUnitTest {
                 return false;
             }
         }
-        return (safeEquals(a.getFirst(), b.getFirst())
-                && safeEquals(a.getLast(), b.getLast())
+        return (safeEquals(a.getFirst(), b.getFirst()) && safeEquals(a.getLast(), b.getLast())
                 && safeEquals(a.getEmail(), b.getEmail())
                 && safeEquals(a.getRecordCount(), b.getRecordCount()) && safeEquals(
                     a.getCurrBatch(), b.getCurrBatch()));
@@ -128,8 +119,7 @@ public class UserDAOUnitTest {
     /**
      * Test get all.
      *
-     * @throws DatabaseException
-     *             the database exception
+     * @throws DatabaseException the database exception
      */
     @Test
     public void testGetAll() throws DatabaseException {
@@ -144,19 +134,15 @@ public class UserDAOUnitTest {
     /**
      * Test create.
      *
-     * @throws DatabaseException
-     *             the database exception
+     * @throws DatabaseException the database exception
      */
     @Test
     public void testCreate() throws DatabaseException {
         logger.entering("server.database.UserDAOUnitTest", "testCreate");
 
-        User testUser1 = new User("UserTestCreate1", "pass1", "first1", "last1",
-                "email1", 1, 1);
-        User testUser2 = new User("UserTestCreate2", "pass2", "first2", "last2",
-                "email2", 2, 2);
-        User testUser3 = new User("UserTestCreate3", "pass3", "first3", "last3",
-                "email3", 3, 3);
+        User testUser1 = new User("Create1", "pass1", "first1", "last1", "email1", 1, 1);
+        User testUser2 = new User("Create2", "pass2", "first2", "last2", "email2", 2, 2);
+        User testUser3 = new User("Create3", "pass3", "first3", "last3", "email3", 3, 3);
 
         testUserDAO.create(testUser1);
         testUserDAO.create(testUser2);
@@ -188,19 +174,15 @@ public class UserDAOUnitTest {
     /**
      * Test update.
      *
-     * @throws DatabaseException
-     *             the database exception
+     * @throws DatabaseException the database exception
      */
     @Test
     public void testUpdate() throws DatabaseException {
         logger.entering("server.database.UserDAOUnitTest", "testUpdate");
 
-        User testUser1 = new User("UserTestUpdate1", "pass1", "first1", "last1",
-                "email1", 1, 1);
-        User testUser2 = new User("UserTestUpdate2", "pass2", "first2", "last2",
-                "email2", 2, 2);
-        User testUser3 = new User("UserTestUpdate3", "pass3", "first3", "last3",
-                "email3", 3, 3);
+        User testUser1 = new User("Update1", "pass1", "first1", "last1", "email1", 1, 1);
+        User testUser2 = new User("Update2", "pass2", "first2", "last2", "email2", 2, 2);
+        User testUser3 = new User("Update3", "pass3", "first3", "last3", "email3", 3, 3);
 
         testUserDAO.create(testUser1);
         testUserDAO.create(testUser2);
@@ -248,19 +230,15 @@ public class UserDAOUnitTest {
     /**
      * Test delete.
      *
-     * @throws DatabaseException
-     *             the database exception
+     * @throws DatabaseException the database exception
      */
     @Test
     public void testDelete() throws DatabaseException {
         logger.entering("server.database.UserDAOUnitTest", "testDelete");
 
-        User testUser1 = new User("UserTestDelete1", "pass1", "first1", "last1",
-                "email1", 1, 1);
-        User testUser2 = new User("UserTestDelete2", "pass2", "first2", "last2",
-                "email2", 2, 2);
-        User testUser3 = new User("UserTestDelete3", "pass3", "first3", "last3",
-                "email3", 3, 3);
+        User testUser1 = new User("Delete1", "pass1", "first1", "last1", "email1", 1, 1);
+        User testUser2 = new User("Delete2", "pass2", "first2", "last2", "email2", 2, 2);
+        User testUser3 = new User("Delete3", "pass3", "first3", "last3", "email3", 3, 3);
 
         testUserDAO.create(testUser1);
         testUserDAO.create(testUser2);
@@ -284,23 +262,4 @@ public class UserDAOUnitTest {
         logger.exiting("server.database.UserDAOUnitTest", "testDelete");
     }
 
-    // @Test
-    // public void testValidateUser() throws DatabaseException {
-    // User testUser1 = new User("UserTestCreate1", "pass1", "first1", "last1",
-    // "email1", 1, 1);
-    // User testUser2 = new User("UserTestCreate2", "pass2", "first2", "last2",
-    // "email2", 2, 2);
-    // User testUser3 = new User("UserTestCreate3", "pass3", "first3", "last3",
-    // "email3", 3, 3);
-
-    // dbUserTest.create(testUser1);
-    // dbUserTest.create(testUser2);
-    // dbUserTest.create(testUser3);
-
-    // List<User> all = dbUserTest.getAll();
-
-    // assertEquals(3, all.size());
-    // assertTrue(dbUserTest.validateUser(testUser1) &&
-    // dbUserTest.validateUser(testUser2));
-    // }
 }

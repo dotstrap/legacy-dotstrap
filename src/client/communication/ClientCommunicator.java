@@ -18,15 +18,29 @@ import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 
 public class ClientCommunicator {
+
+
+
+
+
     private static Logger       logger;
 
-    private static String       SERVER_HOST = "localhost";
-    private static int          SERVER_PORT = 50080;
-    private static String       URL_PREFIX  = "http://" + SERVER_HOST + ":" + SERVER_PORT;
-    private static final String HTTP_GET    = "GET";
-    private static final String HTTP_POST   = "POST";
+    //@formatter:off
+    private String       SERVER_HOST = "localhost";
+    private int          SERVER_PORT = 50080;
+    private String       URL_PREFIX  = "http://" + SERVER_HOST + ":" + SERVER_PORT;
+    private final String HTTP_GET    = "GET";
+    private final String HTTP_POST   = "POST";
+    //@formatter:on
 
-    @SuppressWarnings("static-access")
+    /**
+     * Instantiates a new ClientCommunicator.
+     *
+     */
+    public ClientCommunicator() {
+        logger = Logger.getLogger("client");
+    }
+
     public ClientCommunicator(String port, String host) {
         logger = Logger.getLogger("client");
         this.SERVER_PORT = Integer.parseInt(port);
@@ -57,7 +71,7 @@ public class ClientCommunicator {
     }
 
     public GetSampleBatchResult getSampleBatch(GetSampleBatchParameters params)
-            throws ClientException {
+                    throws ClientException {
         try {
             GetSampleBatchResult result = (GetSampleBatchResult) doPost("/GetSampleImage", params);
             URL url = new URL(URL_PREFIX + "/" + result.getSampleBatch().getFilePath());
@@ -106,58 +120,29 @@ public class ClientCommunicator {
     }
 
     public SearchResult search(SearchParameters params) {
-        // try {
-        // SearchResult result = (SearchResult) doPost("/Search", params);
-
-        // List<URL> urls = new ArrayList<URL>();
-        // for (Record r : result.getFoundRecords()) {
-        // URL url = new URL(URL_PREFIX + "/" + s);
-        // urls.add(url);
-        // }
-        // result.setUrls(urls);
-        // return result;
-        // } catch (ClientException | MalformedURLException e) {
-        // logger.log(Level.SEVERE, e.toString());
-        // logger.log(Level.FINE, "STACKTRACE: ", e);
-        // throw new ClientException(e);
-        // }
+/*
+ *        try {
+ *            SearchResult result = (SearchResult) doPost("/Search", params);
+ *
+ *            List<URL> urls = new ArrayList<URL>();
+ *            for (Record r : result.getFoundRecords()) {
+ *                URL url = new URL(URL_PREFIX + "/" + s);
+ *                urls.add(url);
+ *            }
+ *            result.setUrls(urls);
+ *            return result;
+ *        } catch (ClientException | MalformedURLException e) {
+ *            logger.log(Level.SEVERE, e.toString());
+ *            logger.log(Level.FINE, "STACKTRACE: ", e);
+ *            throw new ClientException(e);
+ *        }
+ */
         return null;
     }
 
     public DownloadFileResult downloadFile(DownloadFileParameters params) throws ClientException {
         return new DownloadFileResult(doGet("http://" + SERVER_HOST + ":" + SERVER_PORT
-                + File.separator + params.getUrl()));
-    }
-
-    public Object doPost(String commandName, Object postData) throws ClientException {
-        assert commandName != null;
-        assert postData != null;
-
-        URL url;
-        try {
-            url = new URL(URL_PREFIX + commandName);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod(HTTP_POST);
-            connection.setDoInput(true);
-            connection.setDoOutput(true);
-            connection.setRequestProperty("Accept", "html/text");
-            connection.connect();
-            URL_PREFIX = "http://" + SERVER_HOST + ":" + SERVER_PORT;
-            XStream x = new XStream(new DomDriver());
-            x.toXML(postData, connection.getOutputStream());
-
-            if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                Object o = (Object) x.fromXML(connection.getInputStream());
-                return o;
-            } else {
-                throw new ClientException(String.format("doPost failed: %s (http code %d)",
-                        commandName, connection.getResponseCode()));
-            }
-        } catch (Exception e) {
-            logger.log(Level.SEVERE, e.toString());
-            logger.log(Level.FINE, "STACKTRACE: ", e);
-            throw new ClientException(e);
-        }
+                        + File.separator + params.getUrl()));
     }
 
     public byte[] doGet(String urlPath) throws ClientException {
@@ -181,4 +166,37 @@ public class ClientCommunicator {
         }
         return result;
     }
+
+    public Object doPost(String commandName, Object postData) throws ClientException {
+        assert commandName != null;
+        assert postData != null;
+
+        URL url;
+        try {
+            url = new URL(URL_PREFIX + commandName);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod(HTTP_POST);
+            connection.setDoInput(true);
+            connection.setDoOutput(true);
+            connection.setRequestProperty("Accept", "html/text");
+            connection.connect();
+            URL_PREFIX = "http://" + SERVER_HOST + ":" + SERVER_PORT;
+            XStream x = new XStream(new DomDriver());
+            x.toXML(postData, connection.getOutputStream());
+
+            if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                Object o = (Object) x.fromXML(connection.getInputStream());
+                return o;
+            } else {
+                // return null;
+                throw new ClientException(String.format("doPost FAILED: %s HTTP code: %d",
+                                commandName, connection.getResponseCode()));
+            }
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, e.toString());
+            logger.log(Level.FINE, "STACKTRACE: ", e);
+            throw new ClientException(e);
+        }
+    }
+
 }

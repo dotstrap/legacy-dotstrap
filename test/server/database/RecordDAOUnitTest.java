@@ -21,11 +21,10 @@ import shared.model.Record;
  * The Class RecordDAOUnitTest.
  */
 public class RecordDAOUnitTest {
-
     /** The logger used throughout the project. */
     private static Logger logger;
     static {
-        logger = Logger.getLogger("server");
+        logger = Logger.getLogger("serverTest");
     }
 
     /**

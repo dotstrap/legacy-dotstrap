@@ -1,7 +1,6 @@
 package server;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.logging.*;
 
@@ -12,57 +11,33 @@ import org.apache.commons.io.FileUtils;
 import org.w3c.dom.*;
 
 import server.database.*;
+
 import shared.model.*;
 
 /**
  * Imports data from an XML file to database
  */
 public class Importer {
-    // TODO: change the logging to non static throughout the project
-    /**
-     * Initializes the log.
-     *
-     * @throws IOException
-     *             Signals that an I/O exception has occurred.
-     */
-    private static void initLog() throws IOException {
-        Level logLevel = Level.FINEST;
-        String logFile = "logs/importer.log";
-
-        logger = Logger.getLogger("server");
-        logger.setLevel(logLevel);
-        logger.setUseParentHandlers(false);
-
-        // Handler consoleHandler = new ConsoleHandler();
-        // consoleHandler.setLevel(logLevel);
-        // consoleHandler.setFormatter(new SimpleFormatter());
-        // logger.addHandler(consoleHandler);
-
-        // Set up 5 rolling logs each with a max file size of 3MB
-        FileHandler fileHandler = new FileHandler(logFile, 3000000, 5, false);
-        fileHandler.setLevel(logLevel);
-        fileHandler.setFormatter(new SimpleFormatter());
-        logger.addHandler(fileHandler);
-    }
-
     private static Logger logger;
-    static {
-        try {
-            initLog();
-        } catch (IOException e) {
-            System.out.println("Could not initialize log: " + e.getMessage());
-        }
-    }
 
     /**
      * The main method
      *
-     * @param args
-     *            the xml file to import into the database
+     * @param args the xml file to import into the database
      */
     public static void main(String[] args) {
         File xmlImportFile = new File(args[0]);
         File destImportDir = new File("Records");
+
+        try {
+            final FileInputStream is = new FileInputStream("logging.properties");
+            LogManager.getLogManager().readConfiguration(is);
+
+            logger = Logger.getLogger("importer");
+        } catch (final IOException e) {
+            Logger.getAnonymousLogger().severe("ERROR: unable to load logging propeties file...");
+            Logger.getAnonymousLogger().severe(e.getMessage());
+        }
 
         try {
             if (!xmlImportFile.getParentFile().getCanonicalPath()
@@ -82,8 +57,7 @@ public class Importer {
             File templateDB = new File(Database.DB_TEMPLATE);
             FileUtils.copyFile(activeDB, templateDB);
 
-            DocumentBuilderFactory docFactory = DocumentBuilderFactory
-                    .newInstance();
+            DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
             Document doc = docBuilder.parse(xmlImportFile);
             doc.getDocumentElement().normalize();
@@ -109,10 +83,8 @@ public class Importer {
     /**
      * Checks if an Element contains a certain attribute
      *
-     * @param elem
-     *            the element to check for the attr
-     * @param attr
-     *            the attribute to check
+     * @param elem the element to check for the attr
+     * @param attr the attribute to check
      * @return true if elem > 0
      */
     private boolean contains(Element elem, String attr) {
@@ -186,8 +158,8 @@ public class Importer {
         try {
             db.startTransaction();
 
-            User newUser = new User(username, password, firstName, lastName,
-                    email, indexedRecords, 0);
+            User newUser =
+                    new User(username, password, firstName, lastName, email, indexedRecords, 0);
             db.getUserDAO().create(newUser);
 
             db.endTransaction(true);
@@ -206,14 +178,11 @@ public class Importer {
         logger.entering("server.Importer", "loadProjects");
 
         // Get Project Elements
-        Element titleElem = (Element) projectElem.getElementsByTagName("title")
-                .item(0);
-        Element recPerImgElem = (Element) projectElem.getElementsByTagName(
-                "recordsperimage").item(0);
-        Element firstYElem = (Element) projectElem.getElementsByTagName(
-                "firstycoord").item(0);
-        Element recordElem = (Element) projectElem.getElementsByTagName(
-                "recordheight").item(0);
+        Element titleElem = (Element) projectElem.getElementsByTagName("title").item(0);
+        Element recPerImgElem =
+                (Element) projectElem.getElementsByTagName("recordsperimage").item(0);
+        Element firstYElem = (Element) projectElem.getElementsByTagName("firstycoord").item(0);
+        Element recordElem = (Element) projectElem.getElementsByTagName("recordheight").item(0);
 
         // Get Project primitives from Project elements
         String title = titleElem.getTextContent();
@@ -227,8 +196,7 @@ public class Importer {
         try {
             db.startTransaction();
 
-            Project newProject = new Project(title, recordsPerImage, firstYCoord,
-                    recordHeight);
+            Project newProject = new Project(title, recordsPerImage, firstYCoord, recordHeight);
             projectID = db.getProjectDAO().create(newProject);
             assert (projectID > 0);
 
@@ -284,8 +252,8 @@ public class Importer {
         try {
             db.startTransaction();
 
-            Field newField = new Field(-1, projectID, title, knownData, helpHtml,
-                    xCoord, width, colNum);
+            Field newField =
+                    new Field(-1, projectID, title, knownData, helpHtml, xCoord, width, colNum);
             db.getFieldDAO().create(newField);
 
             db.endTransaction(true);
@@ -304,8 +272,7 @@ public class Importer {
         logger.entering("server.Importer", "loadBatches");
 
         // get file element
-        Element batchFileElem = (Element) batchElem.getElementsByTagName("file")
-                .item(0);
+        Element batchFileElem = (Element) batchElem.getElementsByTagName("file").item(0);
 
         // get Batch primitive from batch file element
         String batchUrl = batchFileElem.getTextContent();
@@ -340,8 +307,8 @@ public class Importer {
     /**
      * Inserts a Record element into the database
      */
-    private void loadRecords(Element recordElem, int projectID, int batchID,
-            String batchUrl, int rowNum) {
+    private void loadRecords(Element recordElem, int projectID, int batchID, String batchUrl,
+            int rowNum) {
         logger.entering("server.Importer", "loadRecords");
 
         ArrayList<Element> children = getChildElements(recordElem);
@@ -356,8 +323,8 @@ public class Importer {
                 db.startTransaction();
                 fieldID = db.getFieldDAO().getFieldID(projectID, colNum);
                 assert (fieldID > 0);
-                Record newRecord = new Record(fieldID, batchID, batchUrl,
-                        recordData, rowNum, colNum);
+                Record newRecord =
+                        new Record(fieldID, batchID, batchUrl, recordData, rowNum, colNum);
                 db.getRecordDAO().create(newRecord);
                 db.endTransaction(true);
             } catch (DatabaseException e) {

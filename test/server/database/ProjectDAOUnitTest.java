@@ -21,11 +21,10 @@ import shared.model.Project;
  * The Class ProjectDAOUnitTest.
  */
 public class ProjectDAOUnitTest {
-
     /** The logger used throughout the project. */
     private static Logger logger;
     static {
-        logger = Logger.getLogger("server");
+        logger = Logger.getLogger("serverTest");
     }
 
     /**

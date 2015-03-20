@@ -1,9 +1,7 @@
 /**
- * FieldDAOUnitTest.java
- * JRE v1.7.0_76
+ * FieldDAOUnitTest.java JRE v1.7.0_76
  *
- * Created by William Myers on Mar 15, 2015.
- * Copyright (c) 2015 William Myers. All Rights reserved.
+ * Created by William Myers on Mar 15, 2015. Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package server.database;
 
@@ -23,14 +21,13 @@ public class FieldDAOUnitTest {
     /** The logger used throughout the project. */
     private static Logger logger;
     static {
-        logger = Logger.getLogger("server");
+        logger = Logger.getLogger("serverTest");
     }
 
     /**
      * Sets up before class.
      *
-     * @throws Exception
-     *             the exception
+     * @throws Exception the exception
      */
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
@@ -45,8 +42,7 @@ public class FieldDAOUnitTest {
     /**
      * Tear down after class.
      *
-     * @throws Exception
-     *             the exception
+     * @throws Exception the exception
      */
     @AfterClass
     public static void tearDownAfterClass() throws Exception {
@@ -61,8 +57,7 @@ public class FieldDAOUnitTest {
     /**
      * Sets the database up.
      *
-     * @throws Exception
-     *             the exception
+     * @throws Exception the exception
      */
     @Before
     public void setUp() throws Exception {
@@ -80,8 +75,7 @@ public class FieldDAOUnitTest {
     /**
      * Tear down.
      *
-     * @throws Exception
-     *             the exception
+     * @throws Exception the exception
      */
     @After
     public void tearDown() throws Exception {
@@ -98,10 +92,8 @@ public class FieldDAOUnitTest {
     /**
      * Safe equals.
      *
-     * @param a
-     *            the a
-     * @param b
-     *            the b
+     * @param a the a
+     * @param b the b
      * @return true, if successful
      */
     private boolean safeEquals(Object a, Object b) {
@@ -122,15 +114,14 @@ public class FieldDAOUnitTest {
                 && safeEquals(a.getTitle(), b.getTitle())
                 && safeEquals(a.getKnownData(), b.getKnownData())
                 && safeEquals(a.getHelpURL(), b.getHelpURL())
-                && safeEquals(a.getxCoord(), b.getxCoord())
-                && safeEquals(a.getWidth(), b.getWidth()));
+                && safeEquals(a.getxCoord(), b.getxCoord()) && safeEquals(a.getWidth(),
+                    b.getWidth()));
     }
 
     /**
      * Test get all.
      *
-     * @throws DatabaseException
-     *             the database exception
+     * @throws DatabaseException the database exception
      */
     @Test
     public void testGetAll() throws DatabaseException {
@@ -145,19 +136,18 @@ public class FieldDAOUnitTest {
     /**
      * Test create.
      *
-     * @throws DatabaseException
-     *             the database exception
+     * @throws DatabaseException the database exception
      */
     @Test
     public void testCreate() throws DatabaseException {
         logger.entering("server.database.FieldDAOUnitTest", "testCreate");
 
-        Field testField1 = new Field(100, 111, "FieldTestDelete1",
-                "KnownData1", "helpURL1", 1, 1, 1);
-        Field testField2 = new Field(200, 222, "FieldTestDelete2",
-                "KnownData2", "helpURL2", 2, 2, 2);
-        Field testField3 = new Field(300, 333, "FieldTestDelete3",
-                "KnownData3", "helpURL3", 3, 3, 3);
+        Field testField1 =
+                new Field(100, 111, "FieldTestDelete1", "KnownData1", "helpURL1", 1, 1, 1);
+        Field testField2 =
+                new Field(200, 222, "FieldTestDelete2", "KnownData2", "helpURL2", 2, 2, 2);
+        Field testField3 =
+                new Field(300, 333, "FieldTestDelete3", "KnownData3", "helpURL3", 3, 3, 3);
 
         testFieldDAO.create(testField1);
         testFieldDAO.create(testField2);
@@ -186,19 +176,18 @@ public class FieldDAOUnitTest {
     /**
      * Test delete.
      *
-     * @throws DatabaseException
-     *             the database exception
+     * @throws DatabaseException the database exception
      */
     @Test
     public void testDelete() throws DatabaseException {
         logger.entering("server.database.FieldDAOUnitTest", "testDelete");
 
-        Field testField1 = new Field(100, 111, "FieldTestDelete1",
-                "KnownData1", "helpURL1", 1, 1, 1);
-        Field testField2 = new Field(200, 222, "FieldTestDelete2",
-                "KnownData2", "helpURL2", 2, 2, 2);
-        Field testField3 = new Field(300, 333, "FieldTestDelete3",
-                "KnownData3", "helpURL3", 3, 3, 3);
+        Field testField1 =
+                new Field(100, 111, "FieldTestDelete1", "KnownData1", "helpURL1", 1, 1, 1);
+        Field testField2 =
+                new Field(200, 222, "FieldTestDelete2", "KnownData2", "helpURL2", 2, 2, 2);
+        Field testField3 =
+                new Field(300, 333, "FieldTestDelete3", "KnownData3", "helpURL3", 3, 3, 3);
 
         testFieldDAO.create(testField1);
         testFieldDAO.create(testField2);

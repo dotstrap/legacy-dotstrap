@@ -1,9 +1,7 @@
 /**
- * Record.java
- * JRE v1.7.0_76
+ * Record.java JRE v1.7.0_76
  *
- * Created by William Myers on Mar 15, 2015.
- * Copyright (c) 2015 William Myers. All Rights reserved.
+ * Created by William Myers on Mar 15, 2015. Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package shared.model;
 
@@ -20,17 +18,18 @@ public class Record {
     private int    RowNum;
     private int    ColNum;
 
+    //@formatter:off
     /**
      * Instantiates a new Record.
      */
     public Record() {
         recordID = -1;
-        fieldID = -1;
-        batchID = -1;
+        fieldID  = -1;
+        batchID  = -1;
         batchURL = "batchURL";
-        data = "data";
-        RowNum = -1;
-        ColNum = -1;
+        data     = "data";
+        RowNum   = -1;
+        ColNum   = -1;
     }
 
     /**
@@ -75,6 +74,7 @@ public class Record {
         this.RowNum   = rowNum;
         this.ColNum   = colNum;
     }
+    //@formatter:on
 
     public int getRecordID() {
         return this.recordID;

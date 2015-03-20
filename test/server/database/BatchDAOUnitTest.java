@@ -1,9 +1,7 @@
 /**
- * BatchDAOUnitTest.java
- * JRE v1.7.0_76
+ * BatchDAOUnitTest.java JRE v1.7.0_76
  *
- * Created by William Myers on Mar 15, 2015.
- * Copyright (c) 2015 William Myers. All Rights reserved.
+ * Created by William Myers on Mar 15, 2015. Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package server.database;
 
@@ -21,18 +19,16 @@ import shared.model.Batch;
  * The Class BatchDAOUnitTest.
  */
 public class BatchDAOUnitTest {
-
     /** The logger used throughout the project. */
     private static Logger logger;
     static {
-        logger = Logger.getLogger("server");
+        logger = Logger.getLogger("serverTest");
     }
 
     /**
      * Sets the up before class.
      *
-     * @throws Exception
-     *             the exception
+     * @throws Exception the exception
      */
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
@@ -47,8 +43,7 @@ public class BatchDAOUnitTest {
     /**
      * Tear down after class.
      *
-     * @throws Exception
-     *             the exception
+     * @throws Exception the exception
      */
     @AfterClass
     public static void tearDownAfterClass() throws Exception {
@@ -63,26 +58,24 @@ public class BatchDAOUnitTest {
     /**
      * Sets the database up.
      *
-     * @throws Exception
-     *             the exception
+     * @throws Exception the exception
      */
     @Before
     public void setUp() throws Exception {
         logger.entering("server.database.BatchDAOUnitTest", "setUp");
 
-        // Prepare database for test case
         db = new Database();
         db.startTransaction();
         testBatchDAO = db.getBatchDAO();
         testBatchDAO.initTable();
+
         logger.exiting("server.database.BatchDAOUnitTest", "setUp");
     }
 
     /**
      * Tear down.
      *
-     * @throws Exception
-     *             the exception
+     * @throws Exception the exception
      */
     @After
     public void tearDown() throws Exception {
@@ -99,12 +92,9 @@ public class BatchDAOUnitTest {
     /**
      * Are equal.
      *
-     * @param a
-     *            the a
-     * @param b
-     *            the b
-     * @param compareIDs
-     *            the compare i ds
+     * @param a the a
+     * @param b the b
+     * @param compareIDs the compare i ds
      * @return true, if successful
      */
     private boolean areEqual(Batch a, Batch b, boolean compareIDs) {
@@ -114,17 +104,15 @@ public class BatchDAOUnitTest {
             }
         }
         return (safeEquals(a.getFilePath(), b.getFilePath())
-                && safeEquals(a.getProjectID(), b.getProjectID()) && safeEquals(
-                    a.getStatus(), b.getStatus()));
+                && safeEquals(a.getProjectID(), b.getProjectID()) && safeEquals(a.getStatus(),
+                    b.getStatus()));
     }
 
     /**
      * Safe equals.
      *
-     * @param a
-     *            the a
-     * @param b
-     *            the b
+     * @param a the a
+     * @param b the b
      * @return true, if successful
      */
     private boolean safeEquals(Object a, Object b) {
@@ -138,8 +126,7 @@ public class BatchDAOUnitTest {
     /**
      * Test get allBatches.
      *
-     * @throws DatabaseException
-     *             the database exception
+     * @throws DatabaseException the database exception
      */
     @Test
     public void testGetAll() throws DatabaseException {
@@ -154,8 +141,7 @@ public class BatchDAOUnitTest {
     /**
      * Test create.
      *
-     * @throws DatabaseException
-     *             the database exception
+     * @throws DatabaseException the database exception
      */
     @Test
     public void testCreate() throws DatabaseException {
@@ -178,13 +164,13 @@ public class BatchDAOUnitTest {
         for (Batch b : allBatches) {
             assertFalse(b.getBatchID() == -1);
             if (!hasFoundBatch1) {
-                hasFoundBatch1 = areEqual(b, testBatch1 ,false);
+                hasFoundBatch1 = areEqual(b, testBatch1, false);
             }
             if (!hasFoundBatch2) {
-                hasFoundBatch2 = areEqual(b, testBatch2 ,false);
+                hasFoundBatch2 = areEqual(b, testBatch2, false);
             }
             if (!hasFoundBatch3) {
-                hasFoundBatch3 = areEqual(b, testBatch3 ,false);
+                hasFoundBatch3 = areEqual(b, testBatch3, false);
             }
         }
         assertTrue(hasFoundBatch1 && hasFoundBatch2 && hasFoundBatch3);
@@ -195,8 +181,7 @@ public class BatchDAOUnitTest {
     /**
      * Test update.
      *
-     * @throws DatabaseException
-     *             the database exception
+     * @throws DatabaseException the database exception
      */
     @Test
     public void testUpdate() throws DatabaseException {
@@ -227,13 +212,13 @@ public class BatchDAOUnitTest {
         for (Batch b : allBatches) {
             assertFalse(b.getBatchID() == -1);
             if (!hasFoundBatch1) {
-                hasFoundBatch1 = areEqual(b, testBatch1 ,false);
+                hasFoundBatch1 = areEqual(b, testBatch1, false);
             }
             if (!hasFoundBatch2) {
-                hasFoundBatch2 = areEqual(b, testBatch2 ,false);
+                hasFoundBatch2 = areEqual(b, testBatch2, false);
             }
             if (!hasFoundBatch3) {
-                hasFoundBatch3 = areEqual(b, testBatch3 ,false);
+                hasFoundBatch3 = areEqual(b, testBatch3, false);
             }
         }
         assertTrue(hasFoundBatch1 && hasFoundBatch2 && hasFoundBatch3);
@@ -244,8 +229,7 @@ public class BatchDAOUnitTest {
     /**
      * Test delete.
      *
-     * @throws DatabaseException
-     *             the database exception
+     * @throws DatabaseException the database exception
      */
     @Test
     public void testDelete() throws DatabaseException {
@@ -254,6 +238,7 @@ public class BatchDAOUnitTest {
         Batch testBatch1 = new Batch("batchDeleteTest1", 10, 10);
         Batch testBatch2 = new Batch("batchDeleteTest2", 5, 5);
         Batch testBatch3 = new Batch("batchDeleteTest3", 1, 0);
+
         testBatchDAO.create(testBatch1);
         testBatchDAO.create(testBatch2);
         testBatchDAO.create(testBatch3);

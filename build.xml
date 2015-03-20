@@ -151,7 +151,8 @@
         </java>
     </target>
     
-    
+  
+
     <!-- ant server-passoff {-Dhost=<SERVER_HOST>} {-Dport=<SERVER_PORT_NUMBER>} -->
     <!-- EXAMPLE: ant server-passoff -Dhost=testserver.cs.byu.edu -Dport=39640 -->
     <!-- If host and/or port number are omitted, default values are used. -->
@@ -196,7 +197,21 @@
             </assertions>
         </java>
     </target>
-    
+
+      <target name="shared-tests" depends="compile" description="run automated shared tests">
+        <java classname="shared.SharedUnitTests" fork="yes">
+            <classpath>
+                <path refid="all-classpath"/>
+            </classpath>
+            <assertions>
+                <enable/>
+            </assertions>
+        </java>
+    </target>
+
+      <target name="all-tests" depends="compile, server-tests, shared-tests" description="run all automated tests">
+      </target>
+
     <target name="checkstyle" depends="compile" description="run checkstyle on all source code">
         <checkstyle config="checkstyle.xml">
             <fileset dir="${src}" includes="**/*.java">

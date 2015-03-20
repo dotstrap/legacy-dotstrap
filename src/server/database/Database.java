@@ -1,9 +1,7 @@
 /**
- * Database.java
- * JRE v1.7.0_76
+ * Database.java JRE v1.7.0_76
  *
- * Created by William Myers on Mar 15, 2015.
- * Copyright (c) 2015 William Myers. All Rights reserved.
+ * Created by William Myers on Mar 15, 2015. Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package server.database;
 
@@ -17,49 +15,46 @@ import java.util.logging.Logger;
  * The Class Database.
  */
 public class Database {
-    final public static String DB_NAME      = "IndexerServer.sqlite";
-    final public static String DB_DIRECTORY = "database";
-    final public static String DB_FILE      = DB_DIRECTORY + File.separator + DB_NAME;
-    final public static String DB_TEMPLATE  = DB_DIRECTORY + File.separator
-                                                + "template" + File.separator + DB_NAME;
-    final static String DB_CONNECTION_URL   = "jdbc:sqlite:" + DB_DIRECTORY
-                                                + File.separator + DB_NAME;
+    final public static String DB_NAME           = "IndexerServer.sqlite";
+    final public static String DB_DIRECTORY      = "database";
+    final public static String DB_FILE           = DB_DIRECTORY + File.separator + DB_NAME;
+    final public static String DB_TEMPLATE       = DB_DIRECTORY + File.separator + "template"
+                                                         + File.separator + DB_NAME;
+    final static String        DB_CONNECTION_URL = "jdbc:sqlite:" + DB_DIRECTORY + File.separator
+                                                         + DB_NAME;
 
     /** The logger used throughout the project. */
-    private static Logger logger;
+    private static Logger      logger;
     static {
         logger = Logger.getLogger("server");
     }
 
     // DataBase Access /////////////
     /** The database driver connection. */
-    private Connection    connection;
+    private Connection         connection;
 
     /**
-     * The batch DataBaseAccess. interfaces with the database to modify the
-     * batch (image) table
+     * The batch DataBaseAccess. interfaces with the database to modify the batch (image) table
      */
-    private BatchDAO      batchDAO;
+    private BatchDAO           batchDAO;
     /**
-     * The field DataBaseAccess. interfaces with the database to modify the
-     * field table
+     * The field DataBaseAccess. interfaces with the database to modify the field table
      */
-    private FieldDAO      fieldDAO;
+    private FieldDAO           fieldDAO;
     /**
-     * The project DataBaseAccess. interfaces with the database to modify the
-     * project table
+     * The project DataBaseAccess. interfaces with the database to modify the project table
      */
-    private ProjectDAO    projectDAO;
-    /*     * The record DataBaseAccess. interfaces with the database to modify the
-     * record table
+    private ProjectDAO         projectDAO;
+    /*
+     * * The record DataBaseAccess. interfaces with the database to modify the record table
      */
-    private RecordDAO     recordDAO;
+    private RecordDAO          recordDAO;
     /**
-     * The user DataBaseAccess. interfaces with the database to modify the user
-     * table
+     * The user DataBaseAccess. interfaces with the database to modify the user table
      */
-    private UserDAO       userDAO;
+    private UserDAO            userDAO;
 
+    //@formatter:off
     /**
      * Instantiates a new database.
      */
@@ -81,12 +76,11 @@ public class Database {
      * @param projectDAO
      * @param recordDAO
      */
-    public Database(BatchDAO batchDAO, FieldDAO fieldDAO, ProjectDAO projectDAO,
-            RecordDAO recordDAO) {
-        this.batchDAO = batchDAO;
-        this.fieldDAO = fieldDAO;
+    public Database(BatchDAO batchDAO, FieldDAO fieldDAO, ProjectDAO projectDAO, RecordDAO recordDAO) {
+        this.batchDAO   = batchDAO;
+        this.fieldDAO   = fieldDAO;
         this.projectDAO = projectDAO;
-        this.recordDAO = recordDAO;
+        this.recordDAO  = recordDAO;
     }
 
     public Connection getConnection() {
@@ -112,12 +106,11 @@ public class Database {
     public UserDAO getUserDAO() {
         return userDAO;
     }
-
+    //@formatter:on
     /**
      * Initializes the Java SQL driver.
      *
-     * @throws DatabaseException
-     *             the database exception
+     * @throws DatabaseException the database exception
      */
     public static void initDriver() throws DatabaseException {
         logger.entering("server.database.Database", "initDriver");
@@ -137,8 +130,7 @@ public class Database {
     /**
      * Starts the transaction.
      *
-     * @throws DatabaseException
-     *             the database exception
+     * @throws DatabaseException the database exception
      */
     public void startTransaction() throws DatabaseException {
         logger.entering("server.database.Database", "startTransaction");
@@ -160,35 +152,34 @@ public class Database {
     /**
      * Ends the database transaction.
      *
-     * @param shouldCommit
-     *            - commit or rollback transaction?
-     * @throws DatabaseException
-     *             the database exception
+     * @param shouldCommit - commit or rollback transaction?
+     * @throws DatabaseException the database exception
      */
-    public void endTransaction(boolean shouldCommit) throws DatabaseException {
+    public void endTransaction(boolean shouldCommit) {
         // Commit or rollback the transaction and finally close the connection
         logger.entering("server.database.Database", "endTransaction");
-
-        try {
-            if (shouldCommit) {
-                connection.commit();
-            } else {
-                connection.rollback();
+        if (connection != null) {
+            try {
+                if (shouldCommit) {
+                    connection.commit();
+                } else {
+                    connection.rollback();
+                }
+            } catch (SQLException e) {
+                logger.log(Level.SEVERE, e.toString());
+                logger.log(Level.FINE, "STACKTRACE: ", e);
+                // throw new DatabaseException(e.toString());
+            } finally {
+                closeSafely(connection);
+                connection = null;
             }
-        } catch (SQLException e) {
-            logger.log(Level.SEVERE, e.toString());
-            logger.log(Level.FINE, "STACKTRACE: ", e);
-            throw new DatabaseException(e.toString());
-        } finally {
-            closeSafely(connection);
         }
 
         logger.exiting("server.database.Database", "endTransaction");
     }
 
     /**
-     * Initializes the database by sequentially dropping each table and then
-     * creating it.
+     * Initializes the database by sequentially dropping each table and then creating it.
      *
      * @throws DatabaseException
      */

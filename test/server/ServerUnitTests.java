@@ -1,14 +1,8 @@
-/**
- * ServerUnitTests.java
- * JRE v1.7.0_76
- *
- * Created by William Myers on Mar 15, 2015.
- * Copyright (c) 2015 William Myers. All Rights reserved.
- */
 package server;
 
 import static org.junit.Assert.*;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.logging.*;
 
@@ -19,47 +13,8 @@ import org.junit.*;
  * The Class ServerUnitTests.
  */
 public class ServerUnitTests {
-
     /** The logger. */
     private static Logger logger;
-
-    /**
-     * Initializes the log.
-     *
-     * @throws IOException
-     *             Signals that an I/O exception has occurred.
-     */
-    private static void initLog() throws IOException {
-        Level logLevel = Level.FINEST;
-        String logFile = "logs/server-test.log";
-
-        logger = Logger.getLogger("server");
-        logger.setLevel(logLevel);
-        logger.setUseParentHandlers(false);
-
-        // Handler consoleHandler = new ConsoleHandler();
-        // consoleHandler.setLevel(logLevel);
-        // consoleHandler.setFormatter(new SimpleFormatter());
-        // logger.addHandler(consoleHandler);
-
-        // Set up 5 rolling logs each with a max file size of 3MB
-        FileHandler fileHandler = new FileHandler(logFile, 0, 5, false);
-        fileHandler.setLevel(logLevel);
-        fileHandler.setFormatter(new SimpleFormatter());
-        logger.addHandler(fileHandler);
-    }
-
-    /**
-     * Setup.
-     */
-    @Before
-    public void setup() {
-        try {
-            initLog();
-        } catch (IOException e) {
-            System.out.println("Could not initialize log: " + e.getMessage());
-        }
-    }
 
     /**
      * Teardown.
@@ -82,18 +37,24 @@ public class ServerUnitTests {
     /**
      * The main method.
      *
-     * @param args
-     *            the arguments
+     * @param args the arguments
      */
     public static void main(String[] args) {
+        try {
+            final FileInputStream is = new FileInputStream("logging.properties");
+            LogManager.getLogManager().readConfiguration(is);
+            logger = Logger.getLogger("serverTest");
+        } catch (final IOException e) {
+            Logger.getAnonymousLogger().severe("ERROR: unable to load logging propeties file...");
+            Logger.getAnonymousLogger().severe(e.getMessage());
+        }
 
-        String[] testClasses = new String[] { "server.ServerUnitTests",
-                "server.database.BatchDAOUnitTest",
-                "server.database.FieldDAOUnitTest",
-                "server.database.ProjectDAOUnitTest",
-                "server.database.RecordDAOUnitTest",
-                "server.database.UserDAOUnitTest",
-                "server.ImporterUnitTest"};
+        logger.info("Running all server tests...");
+        String[] testClasses =
+                new String[] {"server.ServerUnitTests", "server.database.BatchDAOUnitTest",
+                        "server.database.FieldDAOUnitTest", "server.database.ProjectDAOUnitTest",
+                        "server.database.RecordDAOUnitTest", "server.database.UserDAOUnitTest",
+                        "server.ImporterUnitTest"};
         org.junit.runner.JUnitCore.main(testClasses);
     }
 }

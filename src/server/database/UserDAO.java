@@ -1,9 +1,7 @@
 /**
- * UserDAO.java
- * JRE v1.7.0_76
+ * UserDAO.java JRE v1.7.0_76
  *
- * Created by William Myers on Mar 15, 2015.
- * Copyright (c) 2015 William Myers. All Rights reserved.
+ * Created by William Myers on Mar 15, 2015. Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package server.database;
 
@@ -15,16 +13,14 @@ import java.util.logging.Logger;
 import shared.model.User;
 
 /**
- * The Class UserDAO. Interfaces with the database to CRUD users & getAll()
- * users.
+ * The Class UserDAO. Interfaces with the database to CRUD users & getAll() users.
  */
 public class UserDAO {
-
     /** The logger used throughout the project. */
     private static Logger logger;
     static {
         logger = Logger.getLogger("server");
-   }
+    }
 
     /** The db. */
     private Database      db;
@@ -32,8 +28,7 @@ public class UserDAO {
     /**
      * Instantiates a new user dao.
      *
-     * @param db
-     *            the db
+     * @param db the db
      */
     public UserDAO(Database db) {
         this.db = db;
@@ -45,24 +40,25 @@ public class UserDAO {
         Statement stmt1 = null;
         Statement stmt2 = null;
 
+        // @formatter:off
         String dropUserTable = "DROP TABLE IF EXISTS User";
         String createUserTable = "CREATE TABLE User ("
-                + "UserID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE, "
-                + "Username TEXT NOT NULL UNIQUE, "
-                + "Password TEXT NOT NULL, "
-                + "FirstName TEXT NOT NULL, "
-                + "LastName TEXT NOT NULL, "
-                + "Email TEXT NOT NULL UNIQUE, "
-                + "RecordCount INTEGER NOT NULL, "
-                + "CurrentBatchID INTEGER NOT NULL)";
-
+                                 + "UserID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE, "
+                                 + "Username TEXT NOT NULL UNIQUE, "
+                                 + "Password TEXT NOT NULL, "
+                                 + "FirstName TEXT NOT NULL, "
+                                 + "LastName TEXT NOT NULL, "
+                                 + "Email TEXT NOT NULL UNIQUE, "
+                                 + "RecordCount INTEGER NOT NULL, "
+                                 + "CurrentBatchID INTEGER NOT NULL)";
+        // @formatter:on
         try {
             stmt1 = db.getConnection().createStatement();
             stmt1.executeUpdate(dropUserTable);
 
             stmt2 = db.getConnection().createStatement();
             stmt2.executeUpdate(createUserTable);
-        }  catch (Exception e) {
+        } catch (Exception e) {
             logger.log(Level.SEVERE, e.toString());
             logger.log(Level.FINE, "STACKTRACE: ", e);
             throw new DatabaseException(e.toString());
@@ -114,46 +110,23 @@ public class UserDAO {
     }
 
     /**
-     * Validate user.
-     *
-     * @param user
-     *            - the user to validate
-     * @return true, if successful
-     */
-    //public boolean validateUser(String username, String password) {
-        //PreparedStatement pstmt = null;
-        //boolean isValid = true;
-        //try {
-            //String selectsql = "SELECT * from User WHERE Username = ? AND Password = ?";
-            //pstmt = db.getConnection().prepareStatement(selectsql);
-            //pstmt.setString(1, username);
-            //pstmt.setString(2, password);
-            //pstmt.executeQuery();
-        //} catch (SQLException e) {
-            //isValid = false;
-        //} finally {
-            //Database.closeSafely(pstmt);
-        //}
-        //return isValid;
-    //}
-
-    /**
      * Creates a new user.
      *
-     * @param newUser
-     *            the user
+     * @param newUser the user
      * @return the int UserID of the user
      */
     public int create(User newUser) throws DatabaseException {
         logger.entering("server.database.UserDAO", "create");
 
+        //@formatter:off
         PreparedStatement pstmt = null;
         ResultSet resultset = null;
         try {
             String insertsql = "INSERT INTO User ("
-                + "Username, Password, FirstName, LastName, Email, RecordCount, CurrentBatchID)"
-                + "VALUES (?, ?, ?, ?, ?, ?, ?)";
-
+                                + "Username, Password, FirstName, LastName, "
+                                + "Email, RecordCount, CurrentBatchID)"
+                                + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+    //@formatter:on
             pstmt = db.getConnection().prepareStatement(insertsql);
             pstmt.setString(1, newUser.getUsername());
             pstmt.setString(2, newUser.getPassword());
@@ -220,7 +193,6 @@ public class UserDAO {
             logger.log(Level.SEVERE, e.toString());
             logger.log(Level.FINE, "STACKTRACE: ", e);
             throw new DatabaseException(e.toString());
-            //return null;
         } finally {
             Database.closeSafely(pstmt);
             Database.closeSafely(resultset);
@@ -233,18 +205,19 @@ public class UserDAO {
     /**
      * Updates the given user with the provided information.
      *
-     * @param user
-     *            the user
+     * @param user the user
      */
     public void update(User user) throws DatabaseException {
         logger.entering("server.database.UserDAO", "update");
 
+    //@formatter:off
         PreparedStatement pstmt = null;
         try {
             String selectsql = "UPDATE User SET FirstName = ?, LastName = ?,"
-                    + "Email = ?, RecordCount = ?, CurrentBatchID = ?"
-                    + "WHERE Username = ? AND Password = ?";
+                                + "Email = ?, RecordCount = ?, CurrentBatchID = ?"
+                                + "WHERE Username = ? AND Password = ?";
 
+    //@formatter:on
             pstmt = db.getConnection().prepareStatement(selectsql);
 
             pstmt.setString(1, user.getFirst());
@@ -271,8 +244,7 @@ public class UserDAO {
     /**
      * Deletes the specified user.
      *
-     * @param user
-     *            the user
+     * @param user the user
      */
     public void delete(User user) throws DatabaseException {
         logger.entering("server.database.UserDAO", "delete");
