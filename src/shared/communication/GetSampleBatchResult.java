@@ -9,9 +9,9 @@ import shared.model.Batch;
  * The Class GetSampleBatchResult.
  */
 public class GetSampleBatchResult {
-    private URL     url;
-    private String  link;
-    private Batch   sampleBatch;
+    private URL url;
+    private String link;
+    private Batch sampleBatch;
     private boolean validUser;
 
     /**
@@ -102,11 +102,7 @@ public class GetSampleBatchResult {
      */
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        if (validUser) {
-            sb.append(url + "\n");
-        } else {
-            sb.append("FAILED\n");
-        }
+        sb.append(url + "\n");
         return sb.toString();
     }
 }

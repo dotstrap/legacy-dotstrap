@@ -21,7 +21,7 @@ import shared.model.Batch;
 public class BatchDAO {
 
     /** The db. */
-    private Database      db;
+    private Database db;
 
     /** The logger used throughout the project. */
     private static Logger logger;
@@ -48,8 +48,7 @@ public class BatchDAO {
         String dropBatchTable = "DROP TABLE IF EXISTS Batch";
         String createBatchTable = "CREATE TABLE Batch ("
                 + "BatchID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE,"
-                + "FilePath TEXT NOT NULL, "
-                + "ProjectID INTEGER NOT NULL, "
+                + "FilePath TEXT NOT NULL, " + "ProjectID INTEGER NOT NULL, "
                 + "Status INTEGER NOT NULL, "
                 + "CurrentUserID INTEGER NOT NULL)";
 
@@ -59,7 +58,7 @@ public class BatchDAO {
 
             stmt2 = db.getConnection().createStatement();
             stmt2.executeUpdate(createBatchTable);
-        }  catch (Exception e) {
+        } catch (Exception e) {
             logger.log(Level.SEVERE, e.toString());
             logger.log(Level.FINE, "STACKTRACE: ", e);
             throw new DatabaseException(e.toString());
@@ -201,7 +200,8 @@ public class BatchDAO {
         }
         return resultBatch;
     }
-   /**
+
+    /**
      * Gets a sample batch for a project
      *
      * @param projectId
@@ -209,15 +209,17 @@ public class BatchDAO {
      * @return the sample batch
      * */
     public Batch getIncompleteBatch(int projectId) throws DatabaseException {
-        logger.entering("server.database.BatchDAO", "read");
+        logger.entering("server.database.BatchDAO", "getIncompleteBatch");
 
         Batch resultBatch = new Batch();
         resultBatch.setProjectID(projectId);
         PreparedStatement pstmt = null;
         ResultSet resultset = null;
 
-        try { String selectsql = "SELECT * from Batch WHERE ProjectID = ?";
+        try {
+            String selectsql = "SELECT * from Batch WHERE ProjectID = ? AND Status = ?";
             pstmt = db.getConnection().prepareStatement(selectsql);
+
             pstmt.setInt(1, projectId);
             pstmt.setInt(2, Batch.INCOMPLETE);
 
@@ -228,16 +230,14 @@ public class BatchDAO {
             resultBatch.setFilePath(resultset.getString("FilePath"));
             resultBatch.setStatus(resultset.getInt("Status"));
             resultBatch.setCurrUserID(resultset.getInt("CurrentUserID"));
-        }
-        catch (SQLException err) {
-            throw new DatabaseException("Unable to get sample batch", err);
-        }
-        finally {
+        } catch (SQLException e) {
+            throw new DatabaseException("Unable to get incomplete batch", e);
+        } finally {
             Database.closeSafely(pstmt);
             Database.closeSafely(resultset);
         }
-        logger.exiting("server.database.BatchDAO", "read");
 
+        logger.exiting("server.database.BatchDAO", "getIncompleteBatch");
         return resultBatch;
     }
 
@@ -249,14 +249,15 @@ public class BatchDAO {
      * @return the sample batch
      * */
     public Batch getSampleBatch(int projectId) throws DatabaseException {
-        logger.entering("server.database.BatchDAO", "read");
+        logger.entering("server.database.BatchDAO", "getSampleBatch");
 
         Batch resultBatch = new Batch();
         resultBatch.setProjectID(projectId);
         PreparedStatement pstmt = null;
         ResultSet resultset = null;
 
-        try { String selectsql = "SELECT * from Batch WHERE ProjectID = ?";
+        try {
+            String selectsql = "SELECT * from Batch WHERE ProjectID = ?";
             pstmt = db.getConnection().prepareStatement(selectsql);
 
             pstmt.setInt(1, projectId);
@@ -267,16 +268,14 @@ public class BatchDAO {
             resultBatch.setFilePath(resultset.getString("FilePath"));
             resultBatch.setStatus(resultset.getInt("Status"));
             resultBatch.setCurrUserID(resultset.getInt("CurrentUserID"));
-        }
-        catch (SQLException err) {
-            throw new DatabaseException("Unable to get sample batch", err);
-        }
-        finally {
+        } catch (SQLException e) {
+            throw new DatabaseException("Unable to get sample batch", e);
+        } finally {
             Database.closeSafely(pstmt);
             Database.closeSafely(resultset);
         }
-        logger.exiting("server.database.BatchDAO", "read");
 
+        logger.exiting("server.database.BatchDAO", "GetSampleBatch");
         return resultBatch;
     }
 
@@ -293,7 +292,8 @@ public class BatchDAO {
 
         PreparedStatement pstmt = null;
         try {
-            String selectsql = "UPDATE Batch SET Status = ?" + "WHERE BatchID = ?";
+            String selectsql = "UPDATE Batch SET Status = ?"
+                    + "WHERE BatchID = ?";
 
             pstmt = db.getConnection().prepareStatement(selectsql);
             pstmt.setInt(1, batch.getStatus());

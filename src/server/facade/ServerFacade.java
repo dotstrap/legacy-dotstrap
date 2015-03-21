@@ -54,7 +54,7 @@ public class ServerFacade {
         } finally {
             db.endTransaction(true);
         }
-         //TODO: should i handle it this way?
+         //TODO: should I handle it this way?
         if (!isValid) {
             user = new User();
         }
@@ -105,7 +105,7 @@ public class ServerFacade {
         validate.setPassword(params.getPassword());
         boolean isValid = validateUser(validate).isValid();
         if (!isValid) {
-            throw new ServerException("FAILED\n");
+            throw new ServerException("00000000000000000000");
         }
 
         Database db = new Database();
