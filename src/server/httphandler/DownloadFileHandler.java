@@ -1,7 +1,6 @@
 package server.httphandler;
 
-import java.io.File;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -10,6 +9,7 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
 import server.facade.ServerFacade;
+
 import shared.communication.DownloadFileParameters;
 import shared.communication.DownloadFileResult;
 
@@ -21,7 +21,7 @@ public class DownloadFileHandler implements HttpHandler {
     }
 
     @Override
-    public void handle(HttpExchange exchange) {
+    public void handle(HttpExchange exchange) throws IOException {
         logger.entering("server.HttpHandler.DownloadFileHandler", "handle");
 
         try {
@@ -35,6 +35,8 @@ public class DownloadFileHandler implements HttpHandler {
         } catch (Exception e) {
             logger.log(Level.SEVERE, e.toString());
             logger.log(Level.FINE, "STACKTRACE: ", e);
+        } finally {
+            exchange.getResponseBody().close();
         }
     }
 }

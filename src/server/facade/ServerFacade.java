@@ -74,7 +74,7 @@ public class ServerFacade {
         validate.setPassword(params.getPassword());
         boolean isValid = validateUser(validate).isValid();
         if (!isValid) {
-            throw new ServerException("FAILED\n");
+            throw new ServerException("Invalid credentials...");
         }
 
         Database db = new Database();
@@ -105,7 +105,7 @@ public class ServerFacade {
         validate.setPassword(params.getPassword());
         boolean isValid = validateUser(validate).isValid();
         if (!isValid) {
-            throw new ServerException("00000000000000000000");
+            throw new ServerException("Invalid credentials...");
         }
 
         Database db = new Database();
@@ -138,7 +138,7 @@ public class ServerFacade {
         validate.setPassword(params.getPassword());
         boolean isValid = validateUser(validate).isValid();
         if (!isValid) {
-            throw new ServerException("FAILED\n");
+            throw new ServerException("Invalid credentials...");
         }
 
         Database db = new Database();
@@ -175,7 +175,7 @@ public class ServerFacade {
         validate.setPassword(params.getPassword());
         boolean isValid = validateUser(validate).isValid();
         if (!isValid) {
-            throw new ServerException("FAILED\n");
+            throw new ServerException("Invalid credentials...");
         }
 
         Database db = new Database();
@@ -213,7 +213,7 @@ public class ServerFacade {
         validate.setPassword(params.getPassword());
         boolean isValid = validateUser(validate).isValid();
         if (!isValid) {
-            throw new ServerException("FAILED\n");
+            throw new ServerException("Invalid credentials...");
         }
 
         Database db = new Database();
@@ -232,7 +232,6 @@ public class ServerFacade {
 
         GetFieldsResult result = new GetFieldsResult();
         result.setFields(fields);
-
         return result;
     }
 
@@ -240,34 +239,30 @@ public class ServerFacade {
      * Searches certain fields for certain values
      */
     public static SearchResult search(SearchParameters params) throws ServerException {
-/*
- *        ValidateUserParameters validate = new ValidateUserParameters();
- *        validate.setUsername(params.getUsername());
- *        validate.setPassword(params.getPassword());
- *        boolean isValid = validateUser(validate).isValid();
- *        if (!isValid) {
- *            throw new ServerException("FAILED\n");
- *        }
- *
- *        Database db = new Database();
- *        List<Record> records = null;
- *
- *        try {
- *            db.startTransaction();
- *            records = db.getRecordDAO().search(params.getFieldIds(), params.getSearchQueries());
- *            db.endTransaction(true);
- *        } catch (DatabaseException e) {
- *            logger.log(Level.SEVERE, e.toString());
- *            logger.log(Level.FINE, "STACKTRACE: ", e);
- *            throw new ServerException(e.toString());
- *        }
- *
- *        SearchResult result = new SearchResult();
- *        result.setFoundRecords(records);
- *
- *        return result;
- */
-        return null;
+        ValidateUserParameters validate = new ValidateUserParameters();
+        validate.setUsername(params.getUsername());
+        validate.setPassword(params.getPassword());
+        boolean isValid = validateUser(validate).isValid();
+        if (!isValid) {
+            throw new ServerException("Invalid credentials...");
+        }
+
+        Database db = new Database();
+        List<Record> records = null;
+        try {
+            db.startTransaction();
+            records = db.getRecordDAO().search(params.getFieldIds(), params.getSearchQueries());
+            db.endTransaction(true);
+        } catch (DatabaseException e) {
+            logger.log(Level.SEVERE, e.toString());
+            logger.log(Level.FINE, "STACKTRACE: ", e);
+            throw new ServerException(e.toString());
+        }
+
+        SearchResult result = new SearchResult();
+        result.setFoundRecords(records);
+
+        return result;
     }
 
     /**
@@ -284,7 +279,7 @@ public class ServerFacade {
         validate.setPassword(params.getPassword());
         boolean isValid = validateUser(validate).isValid();
         if (!isValid) {
-            throw new ServerException("FAILED\n");
+            throw new ServerException("Invalid credentials...");
         }
 
         InputStream is;

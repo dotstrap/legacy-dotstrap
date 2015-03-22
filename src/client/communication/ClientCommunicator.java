@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 import org.apache.commons.io.IOUtils;
 
 import shared.communication.*;
+import shared.model.Record;
 
 import client.ClientException;
 
@@ -18,11 +19,7 @@ import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 
 public class ClientCommunicator {
-
-
-
-
-
+    /** The logger used throughout the project. */
     private static Logger       logger;
 
     //@formatter:off
@@ -49,100 +46,98 @@ public class ClientCommunicator {
     }
 
     public ValidateUserResult validateUser(ValidateUserParameters params) {
+        ValidateUserResult result = null;
         try {
-            ValidateUserResult result = (ValidateUserResult) doPost("/ValidateUser", params);
-            return result;
+            result = (ValidateUserResult) doPost("/ValidateUser", params);
         } catch (ClientException e) {
             logger.log(Level.SEVERE, e.toString());
             logger.log(Level.FINE, "STACKTRACE: ", e);
         }
-        return null;
+        return result;
     }
 
     public GetProjectsResult getProjects(GetProjectsParameters creds) {
+        GetProjectsResult result = null;
         try {
-            GetProjectsResult result = (GetProjectsResult) doPost("/GetProjects", creds);
-            return result;
+            result = (GetProjectsResult) doPost("/GetProjects", creds);
         } catch (ClientException e) {
             logger.log(Level.SEVERE, e.toString());
             logger.log(Level.FINE, "STACKTRACE: ", e);
         }
-        return null;
+        return result;
     }
 
     public GetSampleBatchResult getSampleBatch(GetSampleBatchParameters params)
                     throws ClientException {
+                    GetSampleBatchResult result = null;
         try {
-            GetSampleBatchResult result = (GetSampleBatchResult) doPost("/GetSampleImage", params);
+            result = (GetSampleBatchResult) doPost("/GetSampleImage", params);
             URL url = new URL(URL_PREFIX + "/" + result.getSampleBatch().getFilePath());
             result.setUrl(url);
-            return result;
         } catch (MalformedURLException e) {
             logger.log(Level.SEVERE, e.toString());
             logger.log(Level.FINE, "STACKTRACE: ", e);
             throw new ClientException(e);
         }
+        return result;
     }
 
     public DownloadBatchResult downloadBatch(DownloadBatchParameters params) throws ClientException {
+        DownloadBatchResult result = null;
         try {
-            DownloadBatchResult result = (DownloadBatchResult) doPost("/DownloadBatch", params);
+            result = (DownloadBatchResult) doPost("/DownloadBatch", params);
             URL url = new URL(URL_PREFIX + "/" + result.getBatch().getFilePath());
             result.setUrl(url);
-            return result;
         } catch (MalformedURLException e) {
             logger.log(Level.SEVERE, e.toString());
             logger.log(Level.FINE, "STACKTRACE: ", e);
             throw new ClientException(e);
         }
+        return result;
     }
 
     public SubmitBatchResult submitBatch(SubmitBatchParameters params) {
+        SubmitBatchResult result = null;
         try {
-            SubmitBatchResult result = (SubmitBatchResult) doPost("/SubmitBatch", params);
-            return result;
+            result = (SubmitBatchResult) doPost("/SubmitBatch", params);
         } catch (ClientException e) {
             logger.log(Level.SEVERE, e.toString());
             logger.log(Level.FINE, "STACKTRACE: ", e);
         }
-        return null;
+        return result;
     }
 
     public GetFieldsResult getFields(GetFieldsParameters params) {
+        GetFieldsResult result = null;
         try {
-            GetFieldsResult result = (GetFieldsResult) doPost("/GetFields", params);
-            return result;
+            result = (GetFieldsResult) doPost("/GetFields", params);
         } catch (ClientException e) {
             logger.log(Level.SEVERE, e.toString());
             logger.log(Level.FINE, "STACKTRACE: ", e);
         }
-        return null;
+        return result;
     }
 
-    public SearchResult search(SearchParameters params) {
-/*
- *        try {
- *            SearchResult result = (SearchResult) doPost("/Search", params);
- *
- *            List<URL> urls = new ArrayList<URL>();
- *            for (Record r : result.getFoundRecords()) {
- *                URL url = new URL(URL_PREFIX + "/" + s);
- *                urls.add(url);
- *            }
- *            result.setUrls(urls);
- *            return result;
- *        } catch (ClientException | MalformedURLException e) {
- *            logger.log(Level.SEVERE, e.toString());
- *            logger.log(Level.FINE, "STACKTRACE: ", e);
- *            throw new ClientException(e);
- *        }
- */
-        return null;
+    public SearchResult search(SearchParameters params) throws ClientException {
+        SearchResult result;
+        try {
+            result = (SearchResult) doPost("/Search", params);
+            List<URL> urls = new ArrayList<URL>();
+            for (Record r : result.getFoundRecords()) {
+                URL url = new URL(URL_PREFIX + "/" + r.getBatchURL());
+                urls.add(url);
+            }
+            result.setUrls(urls);
+        } catch (ClientException | MalformedURLException e) {
+            logger.log(Level.SEVERE, e.toString());
+            logger.log(Level.FINE, "STACKTRACE: ", e);
+            throw new ClientException(e);
+        }
+        return result;
     }
 
     public DownloadFileResult downloadFile(DownloadFileParameters params) throws ClientException {
-        return new DownloadFileResult(doGet("http://" + SERVER_HOST + ":" + SERVER_PORT
-                        + File.separator + params.getUrl()));
+        return new DownloadFileResult(doGet(URL_PREFIX + File.separator + params.getUrl()));
     }
 
     public byte[] doGet(String urlPath) throws ClientException {
@@ -180,7 +175,6 @@ public class ClientCommunicator {
             connection.setDoOutput(true);
             connection.setRequestProperty("Accept", "html/text");
             connection.connect();
-            URL_PREFIX = "http://" + SERVER_HOST + ":" + SERVER_PORT;
             XStream x = new XStream(new DomDriver());
             x.toXML(postData, connection.getOutputStream());
 

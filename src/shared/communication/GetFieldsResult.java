@@ -46,17 +46,13 @@ public class GetFieldsResult {
      * @return the string
      * @see java.lang.Object#toString()
      */
-    //public String toString() {
-        //StringBuilder sb = new StringBuilder();
-        //if (validUser) {
-            //for (Field f : fields) {
-                //sb.append(f.getProjectID() + "\n");
-                //sb.append(f.getID() + "\n");
-                //sb.append(f.getTitle() + "\n");
-            //}
-        //} else {
-            //sb.append("FAILED\n");
-        //}
-        //return sb.toString();
-    //}
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for (Field f : fields) {
+            sb.append(f.getProjectID() + "\n");
+            sb.append(f.getFieldID() + "\n");
+            sb.append(f.getTitle() + "\n");
+        }
+        return sb.toString();
+    }
 }
