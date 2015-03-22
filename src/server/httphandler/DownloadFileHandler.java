@@ -17,8 +17,8 @@ import com.sun.net.httpserver.HttpHandler;
 
 import server.facade.ServerFacade;
 
-import shared.communication.DownloadFileParameters;
-import shared.communication.DownloadFileResult;
+import shared.communication.DownloadFileRequest;
+import shared.communication.DownloadFileResponse;
 
 public class DownloadFileHandler implements HttpHandler {
     /** The logger used throughout the project. */
@@ -33,8 +33,8 @@ public class DownloadFileHandler implements HttpHandler {
 
         try {
             String url = new File("").getAbsolutePath() + exchange.getRequestURI().getPath();
-            DownloadFileResult result = null;
-            DownloadFileParameters params = new DownloadFileParameters(url);
+            DownloadFileResponse result = null;
+            DownloadFileRequest params = new DownloadFileRequest(url);
             result = ServerFacade.downloadFile(params);
             OutputStream response = exchange.getResponseBody();
             exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);

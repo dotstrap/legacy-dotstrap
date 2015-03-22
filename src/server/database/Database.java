@@ -31,9 +31,9 @@ public class Database {
    
     /** The logger used throughout the project. */
     private static Logger      logger;
-    public final static String logName = "server";
+    public final static String LOG_NAME = "server";
     static {
-        logger = Logger.getLogger(logName);
+        logger = Logger.getLogger(LOG_NAME);
     }
     // @formatter:on
     // DataBase Access /////////////

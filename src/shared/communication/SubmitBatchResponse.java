@@ -1,5 +1,5 @@
 /**
- * SubmitBatchResult.java
+ * SubmitBatchResponse.java
  * JRE v1.8.0_40
  * 
  * Created by William Myers on Mar 22, 2015.
@@ -9,9 +9,9 @@ package shared.communication;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Class SubmitBatchResult.
+ * The Class SubmitBatchResponse.
  */
-public class SubmitBatchResult {
+public class SubmitBatchResponse {
     
     /** The success. */
     private boolean success;
@@ -19,7 +19,7 @@ public class SubmitBatchResult {
     /**
      * Instantiates a new submit batch result.
      */
-    public SubmitBatchResult() {
+    public SubmitBatchResponse() {
         success = false;
     }
 

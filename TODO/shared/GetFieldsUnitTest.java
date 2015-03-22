@@ -14,8 +14,8 @@ import server.database.Database;
 import server.database.DatabaseException;
 import server.database.FieldDAO;
 import server.database.UserDAO;
-import shared.communication.GetFieldsParameters;
-import shared.communication.GetFieldsResult;
+import shared.communication.GetFieldsRequest;
+import shared.communication.GetFieldsResponse;
 import shared.model.Credentials;
 import shared.model.Field;
 import shared.model.User;
@@ -86,7 +86,7 @@ public class GetFieldsUnitTest
 		//invalid user
 		GetFieldsResult result2 = cCom.getFields(new GetFieldsParameters("invalid", "validate", 1));
 		assertEquals(false, result2.isValidUser());
-		//invalid projectID
+		//invalid projectId
 		GetFieldsResult result3 = cCom.getFields(new GetFieldsParameters("validate", "validate", 100));
 		assertEquals(0, result3.getFields().size());
 	}

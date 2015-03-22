@@ -32,9 +32,9 @@ public class SearchHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         XStream xs = new XStream(new DomDriver());
-        SearchParameters params = (SearchParameters) xs.fromXML(exchange.getRequestBody());
+        SearchRequest params = (SearchRequest) xs.fromXML(exchange.getRequestBody());
         try {
-            SearchResult result = ServerFacade.search(params);
+            SearchResponse result = ServerFacade.search(params);
             exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
             xs.toXML(result, exchange.getResponseBody());
         } catch (ServerException e) {

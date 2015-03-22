@@ -61,14 +61,14 @@ public class SettingsPanel extends BasePanel {
         add(Box.createRigidArea(SINGLE_HSPACE));
 
         _opComboBox = new JComboBox();
-        _opComboBox.addItem(ServerOp.VALIDATE_USER);
+        _opComboBox.addItem(ServerOp.VALIdATE_USER);
         _opComboBox.addItem(ServerOp.GET_PROJECTS);
         _opComboBox.addItem(ServerOp.GET_SAMPLE_IMAGE);
         _opComboBox.addItem(ServerOp.DOWNLOAD_BATCH);
         _opComboBox.addItem(ServerOp.SUBMIT_BATCH);
         _opComboBox.addItem(ServerOp.GET_FIELDS);
         _opComboBox.addItem(ServerOp.SEARCH);
-        _opComboBox.setSelectedItem(ServerOp.VALIDATE_USER);
+        _opComboBox.setSelectedItem(ServerOp.VALIdATE_USER);
         _opComboBox.setMinimumSize(_opComboBox.getPreferredSize());
         add(_opComboBox);
         add(Box.createRigidArea(TRIPLE_HSPACE));

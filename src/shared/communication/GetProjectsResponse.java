@@ -1,5 +1,5 @@
 /**
- * GetProjectsResult.java
+ * GetProjectsResponse.java
  * JRE v1.8.0_40
  * 
  * Created by William Myers on Mar 22, 2015.
@@ -13,16 +13,16 @@ import shared.model.Project;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Class GetProjectsResult.
+ * The Class GetProjectsResponse.
  */
-public class GetProjectsResult {
+public class GetProjectsResponse {
     /** The projects. */
     private List<Project> projects;
 
     /**
      * Instantiates a new gets the projects result.
      */
-    public GetProjectsResult() {
+    public GetProjectsResponse() {
     }
 
     /**
@@ -54,7 +54,7 @@ public class GetProjectsResult {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         for (Project p : projects) {
-            sb.append(p.getProjectID() + "\n");
+            sb.append(p.getProjectId() + "\n");
             sb.append(p.getTitle() + "\n");
         }
         return sb.toString();

@@ -52,10 +52,10 @@ public class ClientCommunicator {
         this.URL_PREFIX = "http://" + SERVER_HOST + ":" + SERVER_PORT;
     }
 
-    public ValidateUserResult validateUser(ValidateUserParameters params) {
-        ValidateUserResult result = null;
+    public ValidateUserResponse validateUser(ValidateUserRequest params) {
+        ValidateUserResponse result = null;
         try {
-            result = (ValidateUserResult) doPost("/ValidateUser", params);
+            result = (ValidateUserResponse) doPost("/ValidateUser", params);
         } catch (ClientException e) {
             logger.log(Level.SEVERE, e.toString());
             logger.log(Level.FINE, "STACKTRACE: ", e);
@@ -63,10 +63,10 @@ public class ClientCommunicator {
         return result;
     }
 
-    public GetProjectsResult getProjects(GetProjectsParameters creds) {
-        GetProjectsResult result = null;
+    public GetProjectsResponse getProjects(GetProjectsRequest creds) {
+        GetProjectsResponse result = null;
         try {
-            result = (GetProjectsResult) doPost("/GetProjects", creds);
+            result = (GetProjectsResponse) doPost("/GetProjects", creds);
         } catch (ClientException e) {
             logger.log(Level.SEVERE, e.toString());
             logger.log(Level.FINE, "STACKTRACE: ", e);
@@ -74,11 +74,11 @@ public class ClientCommunicator {
         return result;
     }
 
-    public GetSampleBatchResult getSampleBatch(GetSampleBatchParameters params)
+    public GetSampleBatchResponse getSampleBatch(GetSampleBatchRequest params)
                     throws ClientException {
-                    GetSampleBatchResult result = null;
+                    GetSampleBatchResponse result = null;
         try {
-            result = (GetSampleBatchResult) doPost("/GetSampleImage", params);
+            result = (GetSampleBatchResponse) doPost("/GetSampleImage", params);
             URL url = new URL(URL_PREFIX + "/" + result.getSampleBatch().getFilePath());
             result.setUrl(url);
         } catch (MalformedURLException e) {
@@ -89,10 +89,10 @@ public class ClientCommunicator {
         return result;
     }
 
-    public DownloadBatchResult downloadBatch(DownloadBatchParameters params) throws ClientException {
-        DownloadBatchResult result = null;
+    public DownloadBatchResponse downloadBatch(DownloadBatchRequest params) throws ClientException {
+        DownloadBatchResponse result = null;
         try {
-            result = (DownloadBatchResult) doPost("/DownloadBatch", params);
+            result = (DownloadBatchResponse) doPost("/DownloadBatch", params);
             URL url = new URL(URL_PREFIX + "/" + result.getBatch().getFilePath());
             result.setUrl(url);
         } catch (MalformedURLException e) {
@@ -103,10 +103,10 @@ public class ClientCommunicator {
         return result;
     }
 
-    public SubmitBatchResult submitBatch(SubmitBatchParameters params) {
-        SubmitBatchResult result = null;
+    public SubmitBatchResponse submitBatch(SubmitBatchRequest params) {
+        SubmitBatchResponse result = null;
         try {
-            result = (SubmitBatchResult) doPost("/SubmitBatch", params);
+            result = (SubmitBatchResponse) doPost("/SubmitBatch", params);
         } catch (ClientException e) {
             logger.log(Level.SEVERE, e.toString());
             logger.log(Level.FINE, "STACKTRACE: ", e);
@@ -114,10 +114,10 @@ public class ClientCommunicator {
         return result;
     }
 
-    public GetFieldsResult getFields(GetFieldsParameters params) {
-        GetFieldsResult result = null;
+    public GetFieldsResponse getFields(GetFieldsRequest params) {
+        GetFieldsResponse result = null;
         try {
-            result = (GetFieldsResult) doPost("/GetFields", params);
+            result = (GetFieldsResponse) doPost("/GetFields", params);
         } catch (ClientException e) {
             logger.log(Level.SEVERE, e.toString());
             logger.log(Level.FINE, "STACKTRACE: ", e);
@@ -125,10 +125,10 @@ public class ClientCommunicator {
         return result;
     }
 
-    public SearchResult search(SearchParameters params) throws ClientException {
-        SearchResult result;
+    public SearchResponse search(SearchRequest params) throws ClientException {
+        SearchResponse result;
         try {
-            result = (SearchResult) doPost("/Search", params);
+            result = (SearchResponse) doPost("/Search", params);
             List<URL> urls = new ArrayList<URL>();
             for (Record r : result.getFoundRecords()) {
                 URL url = new URL(URL_PREFIX + "/" + r.getBatchURL());
@@ -143,8 +143,8 @@ public class ClientCommunicator {
         return result;
     }
 
-    public DownloadFileResult downloadFile(DownloadFileParameters params) throws ClientException {
-        return new DownloadFileResult(doGet(URL_PREFIX + File.separator + params.getUrl()));
+    public DownloadFileResponse downloadFile(DownloadFileRequest params) throws ClientException {
+        return new DownloadFileResponse(doGet(URL_PREFIX + File.separator + params.getUrl()));
     }
 
     public byte[] doGet(String urlPath) throws ClientException {

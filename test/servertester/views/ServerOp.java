@@ -14,7 +14,7 @@ package servertester.views;
 public enum ServerOp {
 
     /** The validate user. */
-    VALIDATE_USER("Validate User"), // Username, Password (String, String)
+    VALIdATE_USER("Validate User"), // Username, Password (String, String)
     /** The get projects. */
     GET_PROJECTS("Get Projects"), // Username, Password (String, String)
     /** The get sample image. */

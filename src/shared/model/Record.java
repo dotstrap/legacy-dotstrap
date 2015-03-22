@@ -12,9 +12,9 @@ package shared.model;
  * The Class Record.
  */
 public class Record {
-    private int    recordID;
-    private int    fieldID;
-    private int    batchID;
+    private int    recordId;
+    private int    fieldId;
+    private int    batchId;
     private String batchURL;
     private String data;
     private int    RowNum;
@@ -24,11 +24,11 @@ public class Record {
     /**
      * Instantiates a new Record.
      */
-    public Record() {
-        recordID = -1;
-        fieldID  = -1;
-        batchID  = -1;
-        batchURL = "batchURL";
+    public Record() { 
+        recordId = -1;
+        fieldId  = -1;
+        batchId  = -1;
+        batchURL = "batchURL"; 
         data     = "data";
         RowNum   = -1;
         ColNum   = -1;
@@ -37,18 +37,18 @@ public class Record {
     /**
      * Instantiates a new Record.
      *
-     * @param fieldID
-     * @param batchID
+     * @param fieldId
+     * @param batchId
      * @param batchURL
      * @param data
      * @param rowNum
      * @param colNum
      */
-    public Record(int fieldID, int batchID, String batchURL, String data,
+    public Record(int fieldId, int batchId, String batchURL, String data,
             int rowNum, int colNum) {
-        this.recordID = -1;
-        this.fieldID  = fieldID;
-        this.batchID  = batchID;
+        this.recordId = -1;
+        this.fieldId  = fieldId;
+        this.batchId  = batchId;
         this.batchURL = batchURL;
         this.data     = data;
         this.RowNum   = rowNum;
@@ -59,18 +59,18 @@ public class Record {
      * Instantiates a new Record.
      *
      * @param id
-     * @param fieldID
-     * @param batchID
+     * @param fieldId
+     * @param batchId
      * @param batchURL
      * @param data
      * @param rowNum
      * @param colNum
      */
-    public Record(int id, int fieldID, int batchID, String batchURL, String data,
+    public Record(int id, int fieldId, int batchId, String batchURL, String data,
             int rowNum, int colNum) {
-        this.recordID = id;
-        this.fieldID  = fieldID;
-        this.batchID  = batchID;
+        this.recordId = id;
+        this.fieldId  = fieldId;
+        this.batchId  = batchId;
         this.batchURL = batchURL;
         this.data     = data;
         this.RowNum   = rowNum;
@@ -78,28 +78,28 @@ public class Record {
     }
     //@formatter:on
 
-    public int getRecordID() {
-        return this.recordID;
+    public int getRecordId() {
+        return this.recordId;
     }
 
-    public void setRecordID(int id) {
-        this.recordID = id;
+    public void setRecordId(int id) {
+        this.recordId = id;
     }
 
-    public int getFieldID() {
-        return this.fieldID;
+    public int getFieldId() {
+        return this.fieldId;
     }
 
-    public void setFieldID(int fieldID) {
-        this.fieldID = fieldID;
+    public void setFieldId(int fieldId) {
+        this.fieldId = fieldId;
     }
 
-    public int getBatchID() {
-        return this.batchID;
+    public int getBatchId() {
+        return this.batchId;
     }
 
-    public void setBatchID(int batchID) {
-        this.batchID = batchID;
+    public void setBatchId(int batchId) {
+        this.batchId = batchId;
     }
 
     public String getBatchURL() {

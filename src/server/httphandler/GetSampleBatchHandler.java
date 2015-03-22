@@ -32,10 +32,10 @@ public class GetSampleBatchHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         XStream xs = new XStream(new DomDriver());
-        GetSampleBatchParameters params = (GetSampleBatchParameters) xs
+        GetSampleBatchRequest params = (GetSampleBatchRequest) xs
                 .fromXML(exchange.getRequestBody());
         try {
-            GetSampleBatchResult result = ServerFacade.getSampleBatch(params);
+            GetSampleBatchResponse result = ServerFacade.getSampleBatch(params);
             exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
             xs.toXML(result, exchange.getResponseBody());
         } catch (ServerException e) {

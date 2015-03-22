@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 
 import org.junit.*;
 
+import server.ServerUnitTests;
 import server.database.dao.ProjectDAO;
 
 import shared.model.Project;
@@ -26,7 +27,7 @@ public class ProjectDAOUnitTest {
     /** The logger used throughout the project. */
     private static Logger logger;
     static {
-        logger = Logger.getLogger("serverTest");
+        logger = Logger.getLogger(ServerUnitTests.LOG_NAME);
     }
 
     /**
@@ -106,13 +107,13 @@ public class ProjectDAOUnitTest {
      *            the first project to compare
      * @param b
      *            the second project to compare
-     * @param compareIDs
-     *            compare by IDs?
+     * @param compareIds
+     *            compare by Ids?
      * @return true, if successful
      */
-    private boolean areEqual(Project a, Project b, boolean compareIDs) {
-        if (compareIDs) {
-            if (a.getProjectID() != b.getProjectID()) {
+    private boolean areEqual(Project a, Project b, boolean compareIds) {
+        if (compareIds) {
+            if (a.getProjectId() != b.getProjectId()) {
                 return false;
             }
         }
@@ -180,7 +181,7 @@ public class ProjectDAOUnitTest {
         boolean hasFoundProject2 = false;
         boolean hasFoundProject3 = false;
         for (Project b : allProjectes) {
-            assertFalse(b.getProjectID() == -1);
+            assertFalse(b.getProjectId() == -1);
             if (!hasFoundProject1) {
                 hasFoundProject1 = areEqual(b, testProject1, false);
             }
@@ -229,7 +230,7 @@ public class ProjectDAOUnitTest {
     // boolean hasFoundProject2 = false;
     // boolean hasFoundProject3 = false;
     // for (Project b : allProjectes) {
-    // assertFalse(b.getprojectID() == -1);
+    // assertFalse(b.getprojectId() == -1);
     // if (!hasFoundProject1) {
     // hasFoundProject1 = areEqual(b, testProject1 ,false);
     // }

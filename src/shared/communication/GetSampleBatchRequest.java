@@ -1,5 +1,5 @@
 /**
- * GetProjectsParameters.java
+ * GetSampleBatchRequest.java
  * JRE v1.8.0_40
  * 
  * Created by William Myers on Mar 22, 2015.
@@ -9,32 +9,34 @@ package shared.communication;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Class GetProjectsParameters.
+ * The Class GetSampleBatchRequest.
  */
-public class GetProjectsParameters {
-    /** The name. */
+public class GetSampleBatchRequest {
+
     private String username;
 
-    /** The password. */
     private String password;
 
+    private int    projectId;
+
     /**
-     * Instantiates a new gets the projects parameters.
+     * Instantiates a new gets the sample image parameters.
      */
-    public GetProjectsParameters() {
-            username = "newuser";
-            password = "changeme";
+    public GetSampleBatchRequest() {
+
     }
 
     /**
-     * Instantiates a new gets the projects parameters.
+     * Instantiates a new gets the sample image parameters.
      *
      * @param name the name
      * @param password the password
+     * @param projectId the project id
      */
-    public GetProjectsParameters(String name, String password) {
+    public GetSampleBatchRequest(String name, String password, int projectId) {
         this.username = name;
         this.password = password;
+        this.projectId = projectId;
     }
 
     /**
@@ -71,6 +73,24 @@ public class GetProjectsParameters {
      */
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    /**
+     * Gets the project id.
+     *
+     * @return the project id
+     */
+    public int getProjectId() {
+        return projectId;
+    }
+
+    /**
+     * Sets the project id.
+     *
+     * @param projectId the new project id
+     */
+    public void setProjectId(int projectId) {
+        this.projectId = projectId;
     }
 
 }

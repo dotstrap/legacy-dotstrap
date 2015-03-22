@@ -32,9 +32,9 @@ public class GetFieldsHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         XStream xs = new XStream(new DomDriver());
-        GetFieldsParameters params = (GetFieldsParameters) xs.fromXML(exchange.getRequestBody());
+        GetFieldsRequest params = (GetFieldsRequest) xs.fromXML(exchange.getRequestBody());
         try {
-            GetFieldsResult result = ServerFacade.getFields(params);
+            GetFieldsResponse result = ServerFacade.getFields(params);
             exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
             xs.toXML(result, exchange.getResponseBody());
         } catch (ServerException e) {

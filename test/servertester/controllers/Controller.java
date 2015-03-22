@@ -51,7 +51,7 @@ public class Controller implements IController {
         paramNames.add("Password");
 
         switch (getView().getOperation()) {
-            case VALIDATE_USER:
+            case VALIdATE_USER:
                 break;
             case GET_PROJECTS:
                 break;
@@ -85,7 +85,7 @@ public class Controller implements IController {
     @Override
     public void executeOperation() {
         switch (getView().getOperation()) {
-            case VALIDATE_USER:
+            case VALIdATE_USER:
                 validateUser();
                 break;
             case GET_PROJECTS:
@@ -119,8 +119,8 @@ public class Controller implements IController {
             String host = getView().getHost();
 
             ClientCommunicator client = new ClientCommunicator(port, host);
-            ValidateUserParameters creds = new ValidateUserParameters(args[0], args[1]);
-            ValidateUserResult result = client.validateUser(creds);
+            ValidateUserRequest creds = new ValidateUserRequest(args[0], args[1]);
+            ValidateUserResponse result = client.validateUser(creds);
             //getView().setRequest(.toString());
             getView().setResponse(result.toString());
         } catch (Exception e) {
@@ -137,8 +137,8 @@ public class Controller implements IController {
             String host = getView().getHost();
 
             ClientCommunicator client = new ClientCommunicator(port, host);
-            GetProjectsParameters params = new GetProjectsParameters(args[0], args[1]);
-            GetProjectsResult result = client.getProjects(params);
+            GetProjectsRequest params = new GetProjectsRequest(args[0], args[1]);
+            GetProjectsResponse result = client.getProjects(params);
             getView().setResponse(result.toString());
         } catch (Exception e) {
             logger.log(Level.SEVERE, e.toString());
@@ -154,10 +154,10 @@ public class Controller implements IController {
             String host = getView().getHost();
 
             ClientCommunicator client = new ClientCommunicator(port, host);
-            GetSampleBatchParameters params =
-                            new GetSampleBatchParameters(args[0], args[1],
+            GetSampleBatchRequest params =
+                            new GetSampleBatchRequest(args[0], args[1],
                                             Integer.parseInt(args[2]));
-            GetSampleBatchResult result = client.getSampleBatch(params);
+            GetSampleBatchResponse result = client.getSampleBatch(params);
             getView().setResponse(result.toString());
         } catch (Exception e) {
             logger.log(Level.SEVERE, e.toString());
@@ -173,9 +173,9 @@ public class Controller implements IController {
             String host = getView().getHost();
 
             ClientCommunicator client = new ClientCommunicator(port, host);
-            DownloadBatchParameters creds =
-                            new DownloadBatchParameters(args[0], args[1], Integer.parseInt(args[2]));
-            DownloadBatchResult result = client.downloadBatch(creds);
+            DownloadBatchRequest creds =
+                            new DownloadBatchRequest(args[0], args[1], Integer.parseInt(args[2]));
+            DownloadBatchResponse result = client.downloadBatch(creds);
             getView().setResponse(result.toString());
         } catch (Exception e) {
             logger.log(Level.SEVERE, e.toString());
@@ -201,8 +201,8 @@ public class Controller implements IController {
             String host = getView().getHost();
 
             ClientCommunicator client = new ClientCommunicator(port, host);
-            GetFieldsParameters params = new GetFieldsParameters(args[0], args[1], projectId);
-            GetFieldsResult result = client.getFields(params);
+            GetFieldsRequest params = new GetFieldsRequest(args[0], args[1], projectId);
+            GetFieldsResponse result = client.getFields(params);
             getView().setResponse(result.toString());
         } catch (Exception e) {
             logger.log(Level.SEVERE, e.toString());
@@ -220,10 +220,10 @@ public class Controller implements IController {
         // ClientCommunicator client = new ClientCommunicator(port, host); //
         // TODO: parse fields as
         // strings
-        // SubmitBatchParameters params =
-        // new SubmitBatchParameters(args[0], args[1],
+        // SubmitBatchRequest params =
+        // new SubmitBatchRequest(args[0], args[1],
         // Integer.parseInt(args[2]), args[3]);
-        // SubmitBatchResult result = client.submitBatch(params);
+        // SubmitBatchResponse result = client.submitBatch(params);
         // getView().setResponse(result.toString());
         // } catch (Exception e) {
         // getView().setResponse("FAILED\n");
@@ -235,9 +235,9 @@ public class Controller implements IController {
         ArrayList<Integer> fieldList = new ArrayList<Integer>();
         ArrayList<String> searchList = new ArrayList<String>();
 
-        String fieldID = args[2];
+        String fieldId = args[2];
         try {
-            List<String> tempFieldId = Arrays.asList(fieldID.split(",", -1));
+            List<String> tempFieldId = Arrays.asList(fieldId.split(",", -1));
             for (String s : tempFieldId) {
                 if (!fieldList.contains(Integer.parseInt(s))) {
                     fieldList.add(Integer.parseInt(s));
@@ -255,8 +255,8 @@ public class Controller implements IController {
             String host = getView().getHost();
 
             ClientCommunicator client = new ClientCommunicator(port, host);
-            SearchParameters params = new SearchParameters(args[0], args[1], fieldList, searchList);
-            SearchResult result = client.search(params);
+            SearchRequest params = new SearchRequest(args[0], args[1], fieldList, searchList);
+            SearchResponse result = client.search(params);
             getView().setResponse(result.toString());
         } catch (Exception e) {
             logger.log(Level.SEVERE, e.toString());

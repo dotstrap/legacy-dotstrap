@@ -1,5 +1,5 @@
 /**
- * GetSampleBatchResult.java
+ * GetSampleBatchResponse.java
  * JRE v1.8.0_40
  * 
  * Created by William Myers on Mar 22, 2015.
@@ -13,9 +13,9 @@ import shared.model.Batch;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Class GetSampleBatchResult.
+ * The Class GetSampleBatchResponse.
  */
-public class GetSampleBatchResult {
+public class GetSampleBatchResponse {
     private URL url;
     private String link;
     private Batch sampleBatch;
@@ -43,7 +43,7 @@ public class GetSampleBatchResult {
     /**
      * Instantiates a new gets the sample image result.
      */
-    public GetSampleBatchResult() {
+    public GetSampleBatchResponse() {
         validUser = false;
     }
 

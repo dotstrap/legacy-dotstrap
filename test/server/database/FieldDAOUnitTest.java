@@ -15,6 +15,7 @@ import java.util.logging.Logger;
 
 import org.junit.*;
 
+import server.ServerUnitTests;
 import server.database.dao.FieldDAO;
 
 import shared.model.Field;
@@ -26,7 +27,7 @@ public class FieldDAOUnitTest {
     /** The logger used throughout the project. */
     private static Logger logger;
     static {
-        logger = Logger.getLogger("serverTest");
+        logger = Logger.getLogger(ServerUnitTests.LOG_NAME);
     }
 
     /**
@@ -109,13 +110,13 @@ public class FieldDAOUnitTest {
         }
     }
 
-    private boolean areEqual(Field a, Field b, boolean shouldCompareIDs) {
-        if (shouldCompareIDs) {
-            if (a.getFieldID() != b.getFieldID()) {
+    private boolean areEqual(Field a, Field b, boolean shouldCompareIds) {
+        if (shouldCompareIds) {
+            if (a.getFieldId() != b.getFieldId()) {
                 return false;
             }
         }
-        return (safeEquals(a.getProjectID(), b.getProjectID())
+        return (safeEquals(a.getProjectId(), b.getProjectId())
                 && safeEquals(a.getTitle(), b.getTitle())
                 && safeEquals(a.getKnownData(), b.getKnownData())
                 && safeEquals(a.getHelpURL(), b.getHelpURL())
@@ -165,7 +166,7 @@ public class FieldDAOUnitTest {
         boolean hasFoundField2 = false;
         boolean hasFoundField3 = false;
         for (Field curr : all) {
-            assertFalse(curr.getFieldID() == -1);
+            assertFalse(curr.getFieldId() == -1);
             if (!hasFoundField1) {
                 hasFoundField1 = areEqual(curr, testField1, false);
             }
@@ -218,13 +219,13 @@ public class FieldDAOUnitTest {
 
     // @Test
     // public void testValidateField() throws DatabaseException {
-    // Field testField1 = new Field("FieldTestCreate1", "ProjectID1",
+    // Field testField1 = new Field("FieldTestCreate1", "ProjectId1",
     // "KnownData1", "helpURL1",
     // 1, 1);
-    // Field testField2 = new Field("FieldTestCreate2", "ProjectID2",
+    // Field testField2 = new Field("FieldTestCreate2", "ProjectId2",
     // "KnownData2", "helpURL2",
     // 2, 2);
-    // Field testField3 = new Field("FieldTestCreate3", "ProjectID3",
+    // Field testField3 = new Field("FieldTestCreate3", "ProjectId3",
     // "KnownData3", "helpURL3",
     // 3, 3);
 

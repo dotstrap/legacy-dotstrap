@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 
 import org.junit.*;
 
+import server.ServerUnitTests;
 import server.database.dao.BatchDAO;
 
 import shared.model.Batch;
@@ -26,7 +27,7 @@ public class BatchDAOUnitTest {
     /** The logger used throughout the project. */
     private static Logger logger;
     static {
-        logger = Logger.getLogger("serverTest");
+        logger = Logger.getLogger(ServerUnitTests.LOG_NAME);
     }
 
     /**
@@ -98,17 +99,17 @@ public class BatchDAOUnitTest {
      *
      * @param a the a
      * @param b the b
-     * @param compareIDs the compare i ds
+     * @param compareIds the compare i ds
      * @return true, if successful
      */
-    private boolean areEqual(Batch a, Batch b, boolean compareIDs) {
-        if (compareIDs) {
-            if (a.getBatchID() != b.getBatchID()) {
+    private boolean areEqual(Batch a, Batch b, boolean compareIds) {
+        if (compareIds) {
+            if (a.getBatchId() != b.getBatchId()) {
                 return false;
             }
         }
         return (safeEquals(a.getFilePath(), b.getFilePath())
-                && safeEquals(a.getProjectID(), b.getProjectID()) && safeEquals(a.getStatus(),
+                && safeEquals(a.getProjectId(), b.getProjectId()) && safeEquals(a.getStatus(),
                     b.getStatus()));
     }
 
@@ -150,6 +151,7 @@ public class BatchDAOUnitTest {
     @Test
     public void testCreate() throws DatabaseException {
         logger.entering("server.database.BatchDAOUnitTest", "testCreate");
+        // TODO:refractor these for all unit test cases into the setup method
 
         Batch testBatch1 = new Batch("batchTestCreate1", 10, 10);
         Batch testBatch2 = new Batch("batchTestCreate2", 10, 10);
@@ -166,7 +168,7 @@ public class BatchDAOUnitTest {
         boolean hasFoundBatch2 = false;
         boolean hasFoundBatch3 = false;
         for (Batch b : allBatches) {
-            assertFalse(b.getBatchID() == -1);
+            assertFalse(b.getBatchId() == -1);
             if (!hasFoundBatch1) {
                 hasFoundBatch1 = areEqual(b, testBatch1, false);
             }
@@ -214,7 +216,7 @@ public class BatchDAOUnitTest {
         boolean hasFoundBatch2 = false;
         boolean hasFoundBatch3 = false;
         for (Batch b : allBatches) {
-            assertFalse(b.getBatchID() == -1);
+            assertFalse(b.getBatchId() == -1);
             if (!hasFoundBatch1) {
                 hasFoundBatch1 = areEqual(b, testBatch1, false);
             }

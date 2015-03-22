@@ -1,5 +1,5 @@
 /**
- * GetFieldsResult.java
+ * GetFieldsResponse.java
  * JRE v1.8.0_40
  * 
  * Created by William Myers on Mar 22, 2015.
@@ -13,22 +13,22 @@ import shared.model.Field;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Class GetFieldsResult.
+ * The Class GetFieldsResponse.
  */
-public class GetFieldsResult {
+public class GetFieldsResponse {
     private List<Field> fields;
 
     /**
      * Instantiates a new gets the fields result.
      */
-    public GetFieldsResult() {
+    public GetFieldsResponse() {
         this.fields = null;
     }
 
     /**
      * @param fields
      */
-    public GetFieldsResult(List<Field> fields) {
+    public GetFieldsResponse(List<Field> fields) {
         this.fields = fields;
     }
 
@@ -56,8 +56,8 @@ public class GetFieldsResult {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         for (Field f : fields) {
-            sb.append(f.getProjectID() + "\n");
-            sb.append(f.getFieldID() + "\n");
+            sb.append(f.getProjectId() + "\n");
+            sb.append(f.getFieldId() + "\n");
             sb.append(f.getTitle() + "\n");
         }
         return sb.toString();

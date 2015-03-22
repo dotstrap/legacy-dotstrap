@@ -1,5 +1,5 @@
 /**
- * GetFieldsParameters.java
+ * GetFieldsRequest.java
  * JRE v1.8.0_40
  * 
  * Created by William Myers on Mar 22, 2015.
@@ -9,17 +9,17 @@ package shared.communication;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Class GetFieldsParameters.
+ * The Class GetFieldsRequest.
  */
-public class GetFieldsParameters {
+public class GetFieldsRequest {
     private String username;
     private String password;
-    private int    projectID;
+    private int    projectId;
 
     /**
      * Instantiates a new gets the fields parameters.
      */
-    public GetFieldsParameters() {
+    public GetFieldsRequest() {
 
     }
 
@@ -30,13 +30,13 @@ public class GetFieldsParameters {
      *            the name
      * @param password
      *            the password
-     * @param projectID
+     * @param projectId
      *            the project id
      */
-    public GetFieldsParameters(String name, String password, int projectID) {
+    public GetFieldsRequest(String name, String password, int projectId) {
         this.username = name;
         this.password = password;
-        this.projectID = projectID;
+        this.projectId = projectId;
     }
 
     /**
@@ -82,18 +82,18 @@ public class GetFieldsParameters {
      *
      * @return the project id
      */
-    public int getProjectID() {
-        return projectID;
+    public int getProjectId() {
+        return projectId;
     }
 
     /**
      * Sets the project id.
      *
-     * @param projectID
+     * @param projectId
      *            the new project id
      */
-    public void setProjectID(int projectID) {
-        this.projectID = projectID;
+    public void setProjectId(int projectId) {
+        this.projectId = projectId;
     }
 
 }

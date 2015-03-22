@@ -19,8 +19,8 @@ import client.communication.ClientCommunicator;
 
 import server.database.*;
 
-import shared.communication.DownloadBatchParameters;
-import shared.communication.DownloadBatchResult;
+import shared.communication.DownloadBatchRequest;
+import shared.communication.DownloadBatchResponse;
 import shared.model.Batch;
 import shared.model.User;
 
@@ -97,17 +97,17 @@ public class DownloadBatchUnitTest {
         // invalid user
         boolean isValid = true;
         try {
-            clientComm.downloadBatch(new DownloadBatchParameters("userTest1", "INVALID", 1));
+            clientComm.downloadBatch(new DownloadBatchRequest("userTest1", "INVALId", 1));
         } catch (ClientException e) {
             isValid = false;
         }
         assertEquals(false, isValid);
 
-        // invalid projectID
-        DownloadBatchResult result2 = new DownloadBatchResult();
+        // invalid projectId
+        DownloadBatchResponse result2 = new DownloadBatchResponse();
         try {
             result2 =
-                    clientComm.downloadBatch(new DownloadBatchParameters("userTest2", "pass2",
+                    clientComm.downloadBatch(new DownloadBatchRequest("userTest2", "pass2",
                             100));
         } catch (ClientException e) {
             logger.finer("Caught invalid projectId test...");

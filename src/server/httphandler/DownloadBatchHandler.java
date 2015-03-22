@@ -32,10 +32,10 @@ public class DownloadBatchHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         XStream xs = new XStream(new DomDriver());
-        DownloadBatchParameters params = (DownloadBatchParameters) xs
+        DownloadBatchRequest params = (DownloadBatchRequest) xs
                 .fromXML(exchange.getRequestBody());
         try {
-            DownloadBatchResult result = ServerFacade.downloadBatch(params);
+            DownloadBatchResponse result = ServerFacade.downloadBatch(params);
             exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
             xs.toXML(result, exchange.getResponseBody());
         } catch (Exception e) {

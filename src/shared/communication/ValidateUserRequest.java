@@ -1,5 +1,5 @@
 /**
- * ValidateUserParameters.java
+ * ValidateUserRequest.java
  * JRE v1.8.0_40
  * 
  * Created by William Myers on Mar 22, 2015.
@@ -11,9 +11,9 @@ import shared.model.*;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Class ValidateUserParameters.
+ * The Class ValidateUserRequest.
  */
-public class ValidateUserParameters {
+public class ValidateUserRequest {
 
     /** The username. */
     private String username;
@@ -22,10 +22,10 @@ public class ValidateUserParameters {
     private String password;
 
     /**
-     * Instantiates a new ValidateUserParameters.
+     * Instantiates a new ValidateUserRequest.
      *
      */
-    public ValidateUserParameters() {
+    public ValidateUserRequest() {
         this.username = "";
         this.password = "";
     }
@@ -36,7 +36,7 @@ public class ValidateUserParameters {
      * @param u the u
      * @param p the p
      */
-    public ValidateUserParameters(String u, String p) {
+    public ValidateUserRequest(String u, String p) {
         username = u;
         password = p;
     }

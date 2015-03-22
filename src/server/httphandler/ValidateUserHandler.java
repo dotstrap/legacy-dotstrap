@@ -31,9 +31,9 @@ public class ValidateUserHandler implements HttpHandler {
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
-        ValidateUserParameters params =
-                (ValidateUserParameters) xs.fromXML(exchange.getRequestBody());
-        ValidateUserResult result = null;
+        ValidateUserRequest params =
+                (ValidateUserRequest) xs.fromXML(exchange.getRequestBody());
+        ValidateUserResponse result = null;
 
         try {
             result = ServerFacade.validateUser(params);

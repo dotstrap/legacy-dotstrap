@@ -30,7 +30,7 @@ public class Server {
     private static int       SERVER_PORT_NUMBER      = 8080;
 
     private static Logger    logger;
-    private static String    logName                 = "server";
+    private static String    LOG_NAME                 = "server";
 
     /**
      * The main method.
@@ -41,12 +41,12 @@ public class Server {
         try {
             final FileInputStream is = new FileInputStream("logging.properties");
             LogManager.getLogManager().readConfiguration(is);
-            logger = Logger.getLogger(logName);
+            logger = Logger.getLogger(LOG_NAME);
         } catch (final IOException e) {
             Logger.getAnonymousLogger().severe("ERROR: unable to load logging propeties file...");
             Logger.getAnonymousLogger().severe(e.getMessage());
         }
-        logger.info("Initialized " + logName + " log...");
+        logger.info("Initialized " + LOG_NAME + " log...");
 
         if (args == null) {
             SERVER_PORT_NUMBER = 8080;

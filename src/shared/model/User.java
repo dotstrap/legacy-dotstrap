@@ -13,7 +13,7 @@ package shared.model;
  */
 public class User {
     // Credentials
-    private int    userID;
+    private int    userId;
     private String username;
     private String password;
     // User info
@@ -29,7 +29,7 @@ public class User {
      * Instantiates a new User.
      */
     public User() {
-        this.userID      = -1;
+        this.userId      = -1;
         this.username    = "username";
         this.password    = "password";
         this.first       = "first";
@@ -75,7 +75,7 @@ public class User {
      */
     public User(int id, String username, String password, String first,
             String last, String email, int recordCount, int currBatch) {
-        this.userID      = id;
+        this.userId      = id;
         this.username    = username;
         this.password    = password;
         this.first       = first;
@@ -86,12 +86,12 @@ public class User {
     }
     //@formatter:on
 
-    public int getUserID() {
-        return this.userID;
+    public int getUserId() {
+        return this.userId;
     }
 
-    public void setUserID(int id) {
-        this.userID = id;
+    public void setUserId(int id) {
+        this.userId = id;
     }
 
     public String getUsername() {

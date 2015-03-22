@@ -12,8 +12,8 @@ package shared.model;
  * The Class Field.
  */
 public class Field {
-    private int    fieldID;
-    private int    projectID;
+    private int    fieldId;
+    private int    projectId;
     private String title;
     private String knownData;
     private String helpURL;
@@ -26,8 +26,8 @@ public class Field {
      *
      */
     public Field() {
-        this.fieldID   = -1;
-        this.projectID = -1;
+        this.fieldId   = -1;
+        this.projectId = -1;
         this.title     = "title";
         this.knownData = "knownData";
         this.helpURL   = "helpURL";
@@ -39,7 +39,7 @@ public class Field {
     /**
      * Instantiates a new Field.
      *
-     * @param projectID
+     * @param projectId
      * @param title
      * @param knownData
      * @param helpURL
@@ -48,9 +48,9 @@ public class Field {
      * @param width
      * @param colNum
      */
-    public Field(int projectID, String title, String knownData, String helpURL,
+    public Field(int projectId, String title, String knownData, String helpURL,
              int xCoord, int width, int colNum) {
-        this.projectID = projectID;
+        this.projectId = projectId;
         this.title     = title;
         this.knownData = knownData;
         this.helpURL   = helpURL;
@@ -62,8 +62,8 @@ public class Field {
     /**
      * Instantiates a new Field.
      *
-     * @param fieldID
-     * @param projectID
+     * @param fieldId
+     * @param projectId
      * @param title
      * @param knownData
      * @param helpURL
@@ -72,10 +72,10 @@ public class Field {
      * @param width
      * @param colNum
      */
-    public Field(int fieldID, int projectID, String title, String knownData,
+    public Field(int fieldId, int projectId, String title, String knownData,
             String helpURL, int xCoord, int width, int colNum) {
-        this.fieldID   = fieldID;
-        this.projectID = projectID;
+        this.fieldId   = fieldId;
+        this.projectId = projectId;
         this.title     = title;
         this.knownData = knownData;
         this.helpURL   = helpURL;
@@ -84,20 +84,20 @@ public class Field {
         this.colNum    = colNum;
     }
 
-    public int getFieldID() {
-        return this.fieldID;
+    public int getFieldId() {
+        return this.fieldId;
     }
 
-    public void setFieldID(int fieldID) {
-        this.fieldID = fieldID;
+    public void setFieldId(int fieldId) {
+        this.fieldId = fieldId;
     }
 
-    public int getProjectID() {
-        return this.projectID;
+    public int getProjectId() {
+        return this.projectId;
     }
 
-    public void setProjectID(int projectID) {
-        this.projectID = projectID;
+    public void setProjectId(int projectId) {
+        this.projectId = projectId;
     }
 
     public String getTitle() {

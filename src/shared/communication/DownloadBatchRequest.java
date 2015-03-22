@@ -11,7 +11,7 @@ package shared.communication;
 /**
  * The Class DownloadBatchParameters.
  */
-public class DownloadBatchParameters {
+public class DownloadBatchRequest {
 
     /** The name. */
     private String username;
@@ -20,12 +20,12 @@ public class DownloadBatchParameters {
     private String password;
 
     /** The project id. */
-    private int    projectID;
+    private int    projectId;
 
     /**
      * Instantiates a new download batch parameters.
      */
-    public DownloadBatchParameters() {
+    public DownloadBatchRequest() {
 
     }
 
@@ -36,13 +36,13 @@ public class DownloadBatchParameters {
      *            the name
      * @param password
      *            the password
-     * @param projectID
+     * @param projectId
      *            the project id
      */
-    public DownloadBatchParameters(String name, String password, int projectID) {
+    public DownloadBatchRequest(String name, String password, int projectId) {
         this.username = name;
         this.password = password;
-        this.projectID = projectID;
+        this.projectId = projectId;
     }
 
     /**
@@ -88,18 +88,18 @@ public class DownloadBatchParameters {
      *
      * @return the project id
      */
-    public int getProjectID() {
-        return projectID;
+    public int getProjectId() {
+        return projectId;
     }
 
     /**
      * Sets the project id.
      *
-     * @param projectID
+     * @param projectId
      *            the new project id
      */
-    public void setProjectID(int projectID) {
-        this.projectID = projectID;
+    public void setProjectId(int projectId) {
+        this.projectId = projectId;
     }
 
 }

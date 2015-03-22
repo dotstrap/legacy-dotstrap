@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 
 import org.junit.*;
 
+import server.ServerUnitTests;
 import server.database.dao.UserDAO;
 
 import shared.model.User;
@@ -25,7 +26,7 @@ public class UserDAOUnitTest {
     /** The logger used throughout the project. */
     private static Logger logger;
     static {
-        logger = Logger.getLogger("serverTest");
+        logger = Logger.getLogger(ServerUnitTests.LOG_NAME);
     }
 
     /**
@@ -108,9 +109,9 @@ public class UserDAOUnitTest {
         }
     }
 
-    private boolean areEqual(User a, User b, boolean shouldCompareIDs) {
-        if (shouldCompareIDs) {
-            if (a.getUserID() != b.getUserID()) {
+    private boolean areEqual(User a, User b, boolean shouldCompareIds) {
+        if (shouldCompareIds) {
+            if (a.getUserId() != b.getUserId()) {
                 return false;
             }
         }
@@ -159,7 +160,7 @@ public class UserDAOUnitTest {
         boolean hasFoundUser2 = false;
         boolean hasFoundUser3 = false;
         for (User curr : all) {
-            assertFalse(curr.getUserID() == -1);
+            assertFalse(curr.getUserId() == -1);
             if (!hasFoundUser1) {
                 hasFoundUser1 = areEqual(curr, testUser1, false);
             }
@@ -215,7 +216,7 @@ public class UserDAOUnitTest {
         boolean hasFoundUser2 = false;
         boolean hasFoundUser3 = false;
         for (User curr : all) {
-            assertFalse(curr.getUserID() == -1);
+            assertFalse(curr.getUserId() == -1);
             if (!hasFoundUser1) {
                 hasFoundUser1 = areEqual(curr, testUser1, false);
             }

@@ -15,7 +15,7 @@ import server.database.Database;
 import server.database.DatabaseException;
 import server.database.UserDAO;
 import shared.communication.ValidateUserCredentials;
-import shared.communication.ValidateUserResult;
+import shared.communication.ValidateUserResponse;
 import shared.model.Credentials;
 import shared.model.User;
 import shared.model.UserInfo;

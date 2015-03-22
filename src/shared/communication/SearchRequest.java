@@ -1,5 +1,5 @@
 /**
- * SearchParameters.java
+ * SearchRequest.java
  * JRE v1.8.0_40
  * 
  * Created by William Myers on Mar 22, 2015.
@@ -12,9 +12,9 @@ import java.util.List;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Class SearchParameters.
+ * The Class SearchRequest.
  */
-public class SearchParameters {
+public class SearchRequest {
     private String            username;
     private String            password;
     private List<Integer>     fieldIds;
@@ -23,7 +23,7 @@ public class SearchParameters {
     /**
      * Instantiates a new search parameters.
      */
-    public SearchParameters() {
+    public SearchRequest() {
 
     }
 
@@ -35,13 +35,13 @@ public class SearchParameters {
      *            the name
      * @param password
      *            the password
-     * @param fieldID
+     * @param fieldId
      *            the field id
      * @param search
      *            the search
      */
-    public SearchParameters(String name, String password,
-            ArrayList<Integer> fieldID, ArrayList<String> search) {
+    public SearchRequest(String name, String password,
+            ArrayList<Integer> fieldId, ArrayList<String> search) {
         this.username      = name;
         this.password      = password;
         this.searchQueries = search;
@@ -53,7 +53,7 @@ public class SearchParameters {
      * @param fieldIds
      * @param searchQuery
      */
-    public SearchParameters(String name, String password,
+    public SearchRequest(String name, String password,
             List<Integer> fieldIds, ArrayList<String> searchQuery) {
         this.username      = name;
         this.password      = password;

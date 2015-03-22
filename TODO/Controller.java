@@ -45,7 +45,7 @@ public class Controller implements IController
 		
 		switch (getView().getOperation()) 
 		{
-		case VALIDATE_USER:
+		case VALIdATE_USER:
 			break;
 		case GET_PROJECTS:
 			break;
@@ -81,7 +81,7 @@ public class Controller implements IController
 	{
 		switch (getView().getOperation()) 
 		{
-		case VALIDATE_USER:
+		case VALIdATE_USER:
 			validateUser();
 			break;
 		case GET_PROJECTS:
@@ -236,13 +236,13 @@ public class Controller implements IController
 	private void search()
 	{
 		String[] args = getView().getParameterValues();
-		String fieldID = args[2];
+		String fieldId = args[2];
 		ArrayList<Integer> fieldList = new ArrayList<Integer>();
 		ArrayList<String> searchList = new ArrayList<String>();
 
 		try
 		{	
-			List<String> holder = Arrays.asList(fieldID.split(",",-1));
+			List<String> holder = Arrays.asList(fieldId.split(",",-1));
 			for(String s : holder)
 			{
 				if(!fieldList.contains(Integer.parseInt(s)))

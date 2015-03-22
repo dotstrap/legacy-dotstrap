@@ -1,5 +1,5 @@
 /**
- * SearchResult.java
+ * SearchResponse.java
  * JRE v1.8.0_40
  * 
  * Created by William Myers on Mar 22, 2015.
@@ -13,24 +13,24 @@ import java.util.List;
 import shared.model.Record;
 
 /**
- * The Class SearchResult.
+ * The Class SearchResponse.
  */
-public class SearchResult {
+public class SearchResponse {
     private List<Record> foundRecords;
     private List<URL> urls;
 
     /**
-     * Instantiates a new SearchResult.
+     * Instantiates a new SearchResponse.
      *
      */
-    public SearchResult() {
+    public SearchResponse() {
         this.foundRecords = null;
     }
 
     /**
      * @param foundRecords
      */
-    public SearchResult(List<Record> foundRecords) {
+    public SearchResponse(List<Record> foundRecords) {
         this.foundRecords = foundRecords;
     }
 
@@ -63,10 +63,10 @@ public class SearchResult {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < foundRecords.size(); ++i) {
-            sb.append(this.foundRecords.get(i).getBatchID() + "\n");
+            sb.append(this.foundRecords.get(i).getBatchId() + "\n");
             sb.append(urls.get(i) + "\n");
             sb.append(foundRecords.get(i).getRowNum() + "\n");
-            sb.append(foundRecords.get(i).getFieldID() + "\n");
+            sb.append(foundRecords.get(i).getFieldId() + "\n");
         }
         return sb.toString();
     }

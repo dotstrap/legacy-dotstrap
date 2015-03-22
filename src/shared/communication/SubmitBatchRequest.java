@@ -1,5 +1,5 @@
 /**
- * SubmitBatchParameters.java
+ * SubmitBatchRequest.java
  * JRE v1.8.0_40
  * 
  * Created by William Myers on Mar 22, 2015.
@@ -13,32 +13,32 @@ import shared.model.Record;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Class SubmitBatchParameters.
+ * The Class SubmitBatchRequest.
  */
-public class SubmitBatchParameters {
+public class SubmitBatchRequest {
     private String       username;
     private String       password;
-    private int          batchID;
+    private int          batchId;
     private List<Record> fieldValues;
 
     /**
      * @param username
      * @param password
-     * @param batchID
+     * @param batchId
      * @param fieldValues
      */
-    public SubmitBatchParameters(String username, String password, int batchID,
+    public SubmitBatchRequest(String username, String password, int batchId,
             List<Record> fieldValues) {
         this.username    = username;
         this.password    = password;
-        this.batchID     = batchID;
+        this.batchId     = batchId;
         this.fieldValues = fieldValues;
     }
 
     /**
      * Instantiates a new submit batch parameters.
      */
-    public SubmitBatchParameters() {
+    public SubmitBatchRequest() {
 
     }
 
@@ -71,17 +71,17 @@ public class SubmitBatchParameters {
     }
 
     /**
-     * @return the batchID
+     * @return the batchId
      */
-    public int getBatchID() {
-        return batchID;
+    public int getBatchId() {
+        return batchId;
     }
 
     /**
-     * @param batchID the batchID to set
+     * @param batchId the batchId to set
      */
-    public void setBatchID(int batchID) {
-        this.batchID = batchID;
+    public void setBatchId(int batchId) {
+        this.batchId = batchId;
     }
 
     /**

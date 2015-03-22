@@ -20,8 +20,8 @@ import com.thoughtworks.xstream.io.xml.DomDriver;
 import server.ServerException;
 import server.facade.ServerFacade;
 
-import shared.communication.GetProjectsParameters;
-import shared.communication.GetProjectsResult;
+import shared.communication.GetProjectsRequest;
+import shared.communication.GetProjectsResponse;
 
 public class GetProjectsHandler implements HttpHandler {
 
@@ -34,10 +34,10 @@ public class GetProjectsHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         XStream xs = new XStream(new DomDriver());
-        GetProjectsParameters params =
-                (GetProjectsParameters) xs.fromXML(exchange.getRequestBody());
+        GetProjectsRequest params =
+                (GetProjectsRequest) xs.fromXML(exchange.getRequestBody());
         try {
-            GetProjectsResult result = ServerFacade.getProjects(params);
+            GetProjectsResponse result = ServerFacade.getProjects(params);
             exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
             xs.toXML(result, exchange.getResponseBody());
         } catch (ServerException e) {

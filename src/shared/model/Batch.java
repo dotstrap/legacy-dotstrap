@@ -16,78 +16,78 @@ public class Batch {
     public final static int ACTIVE     = 1;
     public final static int COMPLETE   = 2;
 
-    private int    batchID;
+    private int    batchId;
     private String filePath;
-    private int    projectID;
+    private int    projectId;
     private int    status;
-    private int    currUserID;
+    private int    currUserId;
 
     /**
      * Instantiates a new Batch without params.
      */
     public Batch() {
-        this.batchID    = -1;
+        this.batchId    = -1;
         this.filePath   = "filePath";
-        this.projectID  = -1;
+        this.projectId  = -1;
         this.status     = INCOMPLETE;
-        this.currUserID = -1;
+        this.currUserId = -1;
     }
 
     /**
      * Instantiates a new Batch.
      *
      * @param filePath
-     * @param projectID
+     * @param projectId
      * @param status
      */
-    public Batch(String filePath, int projectID, int status) {
-        this.batchID    = -1;
+    public Batch(String filePath, int projectId, int status) {
+        this.batchId    = -1;
         this.filePath   = filePath;
-        this.projectID  = projectID;
+        this.projectId  = projectId;
         this.status     = status;
-        this.currUserID = -1;
+        this.currUserId = -1;
     }
 
     /**
      * Instantiates a new Batch.
      *
      * @param filePath
-     * @param projectID
+     * @param projectId
      * @param status
-     * @param currUserID
+     * @param currUserId
      */
-    public Batch(String filePath, int projectID, int status, int currUserID) {
-        this.batchID    = -1;
+    public Batch(String filePath, int projectId, int status, int currUserId) {
+        this.batchId    = -1;
         this.filePath   = filePath;
-        this.projectID  = projectID;
+        this.projectId  = projectId;
         this.status     = status;
-        this.currUserID = currUserID;
+        this.currUserId = currUserId;
     }
 
     /**
      * Instantiates a new Batch.
      *
-     * @param batchID
+     * @param batchId
      * @param filePath
-     * @param projectID
+     * @param projectId
      * @param status
-     * @param currUserID
+     * @param currUserId
      */
-    public Batch(int batchID, String filePath, int projectID, int status,
-            int currUserID) {
-        this.batchID    = batchID;
+    public Batch(int batchId, String filePath, int projectId, int status,
+            int currUserId) {
+        this.batchId    = batchId;
         this.filePath   = filePath;
-        this.projectID  = projectID;
+        this.projectId  = projectId;
         this.status     = status;
-        this.currUserID = currUserID;
+        this.currUserId = currUserId;
     }
 
-    public int getBatchID() {
-        return this.batchID;
+    public int getBatchId() {
+        return this.batchId;
     }
 
-    public void setBatchID(int batchID) {
-        this.batchID = batchID;
+    public void setBatchId(int batchId) {
+        this.batchId = batchId;
     }
 
     public String getFilePath() {
@@ -98,12 +98,12 @@ public class Batch {
         this.filePath = filePath;
     }
 
-    public int getProjectID() {
-        return this.projectID;
+    public int getProjectId() {
+        return this.projectId;
     }
 
-    public void setProjectID(int projectID) {
-        this.projectID = projectID;
+    public void setProjectId(int projectId) {
+        this.projectId = projectId;
     }
 
     public int getStatus() {
@@ -114,11 +114,11 @@ public class Batch {
         this.status = status;
     }
 
-    public int getCurrUserID() {
-        return this.currUserID;
+    public int getCurrUserId() {
+        return this.currUserId;
     }
 
-    public void setCurrUserID(int currUserID) {
-        this.currUserID = currUserID;
+    public void setCurrUserId(int currUserId) {
+        this.currUserId = currUserId;
     }
 }

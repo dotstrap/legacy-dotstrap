@@ -46,7 +46,7 @@ public class TestView implements IView {
         _controller = null;
         _host = "";
         _port = "";
-        _op = ServerOp.VALIDATE_USER;
+        _op = ServerOp.VALIdATE_USER;
         _paramNames = new String[0];
         _paramValues = new String[0];
         _request = "";

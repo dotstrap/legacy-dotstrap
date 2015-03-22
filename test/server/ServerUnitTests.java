@@ -11,9 +11,11 @@ import static org.junit.Assert.*;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.logging.*;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
 
-import org.junit.*;
+import org.junit.After;
+import org.junit.Test;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -22,7 +24,7 @@ import org.junit.*;
 public class ServerUnitTests {
     /** The logger. */
     private static Logger logger;
-
+public final static String LOG_NAME = "serverTest";
     /**
      * Teardown.
      */
@@ -50,7 +52,7 @@ public class ServerUnitTests {
         try {
             final FileInputStream is = new FileInputStream("logging.properties");
             LogManager.getLogManager().readConfiguration(is);
-            logger = Logger.getLogger("serverTest");
+            logger = Logger.getLogger(LOG_NAME);
         } catch (final IOException e) {
             Logger.getAnonymousLogger().severe("ERROR: unable to load logging propeties file...");
             Logger.getAnonymousLogger().severe(e.getMessage());

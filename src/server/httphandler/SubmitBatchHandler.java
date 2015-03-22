@@ -32,8 +32,8 @@ public class SubmitBatchHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         XStream xs = new XStream(new DomDriver());
-        SubmitBatchParameters params =
-                (SubmitBatchParameters) xs.fromXML(exchange.getRequestBody());
+        SubmitBatchRequest params =
+                (SubmitBatchRequest) xs.fromXML(exchange.getRequestBody());
         try {
             // TODO: should submitBatch return something?
             ServerFacade.submitBatch(params);

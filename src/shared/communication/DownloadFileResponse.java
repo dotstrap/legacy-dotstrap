@@ -1,5 +1,5 @@
 /**
- * DownloadFileResult.java
+ * DownloadFileResponse.java
  * JRE v1.8.0_40
  * 
  * Created by William Myers on Mar 22, 2015.
@@ -9,9 +9,9 @@ package shared.communication;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Class DownloadFileResult.
+ * The Class DownloadFileResponse.
  */
-public class DownloadFileResult {
+public class DownloadFileResponse {
 
     /** The file bytes. */
     private byte[] fileBytes;
@@ -22,7 +22,7 @@ public class DownloadFileResult {
      * @param fileBytes
      *            the file bytes
      */
-    public DownloadFileResult(byte[] fileBytes) {
+    public DownloadFileResponse(byte[] fileBytes) {
         this.fileBytes = fileBytes;
     }
 

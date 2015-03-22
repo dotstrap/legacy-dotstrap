@@ -1,5 +1,5 @@
 /**
- * DownloadBatchResult.java
+ * DownloadBatchResponse.java
  * JRE v1.8.0_40
  * 
  * Created by William Myers on Mar 22, 2015.
@@ -16,9 +16,9 @@ import shared.model.Project;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Class DownloadBatchResult.
+ * The Class DownloadBatchResponse.
  */
-public class DownloadBatchResult {
+public class DownloadBatchResponse {
     private Batch batch;
     private Project project;
     private List<Field> fields;
@@ -27,19 +27,19 @@ public class DownloadBatchResult {
     /**
      * Instantiates a new download batch result.
      */
-    public DownloadBatchResult() {
+    public DownloadBatchResponse() {
     }
 
     // @formatter:off
     /**
-     * Instantiates a new DownloadBatchResult.
+     * Instantiates a new DownloadBatchResponse.
      *
      * @param batch
      * @param project
      * @param fields
      * @param url
      */
-    public DownloadBatchResult(Batch batch, Project project,
+    public DownloadBatchResponse(Batch batch, Project project,
             List<Field> fields, URL url) {
         this.batch = batch;
         this.project = project;
@@ -109,9 +109,9 @@ public class DownloadBatchResult {
      */
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(this.batch.getBatchID() + "\n");
+        sb.append(this.batch.getBatchId() + "\n");
 
-        sb.append(this.project.getProjectID() + "\n");
+        sb.append(this.project.getProjectId() + "\n");
         sb.append(this.url + "/" + this.batch.getFilePath() + "\n");
         sb.append(this.project.getFirstYCoord() + "\n");
         sb.append(this.project.getRecordHeight() + "\n");
@@ -119,7 +119,7 @@ public class DownloadBatchResult {
         // sb.append(this.fields.getSize() + "\n");
         int i = 1;
         for (Field f : fields) {
-            sb.append(f.getFieldID() + "\n");
+            sb.append(f.getFieldId() + "\n");
             sb.append(i + "\n");
             sb.append(f.getTitle() + "\n");
             sb.append("TEST" + "/" + f.getHelpURL() + "\n");

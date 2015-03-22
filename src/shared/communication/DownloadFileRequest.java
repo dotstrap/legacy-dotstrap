@@ -1,5 +1,5 @@
 /**
- * DownloadFileParameters.java
+ * DownloadFileRequest.java
  * JRE v1.8.0_40
  * 
  * Created by William Myers on Mar 22, 2015.
@@ -9,36 +9,36 @@ package shared.communication;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Class DownloadFileParameters.
+ * The Class DownloadFileRequest.
  */
-public class DownloadFileParameters {
+public class DownloadFileRequest {
     private String url;
     private String username;
     private String password;
 
     /**
-     * Instantiates a new DownloadFileParameters.
+     * Instantiates a new DownloadFileRequest.
      *
      */
-    public DownloadFileParameters() {}
+    public DownloadFileRequest() {}
 
     /**
-     * Instantiates a new DownloadFileParameters.
+     * Instantiates a new DownloadFileRequest.
      *
      * @param url
      */
-    public DownloadFileParameters(String url) {
+    public DownloadFileRequest(String url) {
         this.url = url;
     }
 
     /**
-     * Instantiates a new DownloadFileParameters.
+     * Instantiates a new DownloadFileRequest.
      *
      * @param url
      * @param username
      * @param password
      */
-    public DownloadFileParameters(String url, String username, String password) {
+    public DownloadFileRequest(String url, String username, String password) {
         this.url = url;
         this.username = username;
         this.password = password;

@@ -1,5 +1,5 @@
 /**
- * ValidateUserResult.java
+ * ValidateUserResponse.java
  * JRE v1.8.0_40
  * 
  * Created by William Myers on Mar 22, 2015.
@@ -11,26 +11,26 @@ import shared.model.User;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Class ValidateUserResult.
+ * The Class ValidateUserResponse.
  */
-public class ValidateUserResult {
+public class ValidateUserResponse {
     private User    user;
     private boolean isValid;
 
     /**
      * Instantiates a new validate user result.
      */
-    public ValidateUserResult() {
+    public ValidateUserResponse() {
         isValid = false;
     }
 
     /**
-     * Instantiates a new ValidateUserResult.
+     * Instantiates a new ValidateUserResponse.
      *
      * @param user
      * @param isValid
      */
-    public ValidateUserResult(User user, boolean isValid) {
+    public ValidateUserResponse(User user, boolean isValid) {
         this.user = user;
         this.isValid = isValid;
     }

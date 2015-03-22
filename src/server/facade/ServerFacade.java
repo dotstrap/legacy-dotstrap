@@ -42,7 +42,7 @@ public class ServerFacade {
      *
      * @throws ServerException
      */
-    public static ValidateUserResult validateUser(ValidateUserParameters params)
+    public static ValidateUserResponse validateUser(ValidateUserRequest params)
             throws ServerException {
         Database db = new Database();
         boolean isValid = false;
@@ -66,7 +66,7 @@ public class ServerFacade {
             user = new User();
         }
 
-        ValidateUserResult result = new ValidateUserResult(user, isValid);
+        ValidateUserResponse result = new ValidateUserResponse(user, isValid);
 
         return result;
     }
@@ -74,9 +74,9 @@ public class ServerFacade {
     /**
      * Gets all the projects in the database
      */
-    public static GetProjectsResult getProjects(GetProjectsParameters params)
+    public static GetProjectsResponse getProjects(GetProjectsRequest params)
             throws ServerException {
-        ValidateUserParameters validate = new ValidateUserParameters();
+        ValidateUserRequest validate = new ValidateUserRequest();
         validate.setUsername(params.getUsername());
         validate.setPassword(params.getPassword());
         boolean isValid = validateUser(validate).isValid();
@@ -96,7 +96,7 @@ public class ServerFacade {
             throw new ServerException("FAILED\n");
         }
 
-        GetProjectsResult result = new GetProjectsResult();
+        GetProjectsResponse result = new GetProjectsResponse();
         result.setProjects(projects);
 
         return result;
@@ -105,9 +105,9 @@ public class ServerFacade {
     /**
      * Gets a sample batch from a project
      */
-    public static GetSampleBatchResult getSampleBatch(GetSampleBatchParameters params)
+    public static GetSampleBatchResponse getSampleBatch(GetSampleBatchRequest params)
             throws ServerException {
-        ValidateUserParameters validate = new ValidateUserParameters();
+        ValidateUserRequest validate = new ValidateUserRequest();
         validate.setUsername(params.getUsername());
         validate.setPassword(params.getPassword());
         boolean isValid = validateUser(validate).isValid();
@@ -120,7 +120,7 @@ public class ServerFacade {
 
         try {
             db.startTransaction();
-            sampleBatch = db.getBatchDAO().getSampleBatch(params.getProjectID());
+            sampleBatch = db.getBatchDAO().getSampleBatch(params.getProjectId());
             db.endTransaction(true);
         } catch (DatabaseException e) {
             logger.log(Level.SEVERE, e.toString());
@@ -128,7 +128,7 @@ public class ServerFacade {
             throw new ServerException(e.toString());
         }
 
-        GetSampleBatchResult result = new GetSampleBatchResult();
+        GetSampleBatchResponse result = new GetSampleBatchResponse();
         result.setSampleBatch(sampleBatch);
 
         return result;
@@ -138,9 +138,9 @@ public class ServerFacade {
      * Downloads an incomplete batch from a project. This includes information from batchs,
      * projects, and fields
      */
-    public static DownloadBatchResult downloadBatch(DownloadBatchParameters params)
+    public static DownloadBatchResponse downloadBatch(DownloadBatchRequest params)
             throws ServerException {
-        ValidateUserParameters validate = new ValidateUserParameters();
+        ValidateUserRequest validate = new ValidateUserRequest();
         validate.setUsername(params.getUsername());
         validate.setPassword(params.getPassword());
         boolean isValid = validateUser(validate).isValid();
@@ -149,7 +149,7 @@ public class ServerFacade {
         }
 
         Database db = new Database();
-        int projectId = params.getProjectID();
+        int projectId = params.getProjectId();
         Batch batchToDownload = null;
         Project project = null;
         List<Field> fields = null;
@@ -165,7 +165,7 @@ public class ServerFacade {
             throw new ServerException(e.toString());
         }
 
-        DownloadBatchResult result = new DownloadBatchResult();
+        DownloadBatchResponse result = new DownloadBatchResponse();
         result.setBatch(batchToDownload);
         result.setProject(project);
         result.setFields(fields);
@@ -176,8 +176,8 @@ public class ServerFacade {
     /**
      * Submits values from a batch into the database
      */
-    public static void submitBatch(SubmitBatchParameters params) throws ServerException {
-        ValidateUserParameters validate = new ValidateUserParameters();
+    public static void submitBatch(SubmitBatchRequest params) throws ServerException {
+        ValidateUserRequest validate = new ValidateUserRequest();
         validate.setUsername(params.getUsername());
         validate.setPassword(params.getPassword());
         boolean isValid = validateUser(validate).isValid();
@@ -186,7 +186,7 @@ public class ServerFacade {
         }
 
         Database db = new Database();
-        int batchId = params.getBatchID();
+        int batchId = params.getBatchId();
         List<Record> records = params.getFieldValues();
         Batch batch = null;
         String batchUrl = null;
@@ -196,11 +196,11 @@ public class ServerFacade {
             db.startTransaction();
             batch = db.getBatchDAO().read(batchId);
             batchUrl = batch.getFilePath();
-            projectId = batch.getProjectID();
+            projectId = batch.getProjectId();
 
             for (Record curr : records) {
-                int fieldId = db.getFieldDAO().getFieldID(projectId, curr.getColNum());
-                curr.setFieldID(fieldId);
+                int fieldId = db.getFieldDAO().getFieldId(projectId, curr.getColNum());
+                curr.setFieldId(fieldId);
                 curr.setBatchURL(batchUrl);
                 db.getRecordDAO().create(curr);
             }
@@ -214,8 +214,8 @@ public class ServerFacade {
     /**
      * Gets the fields for a project
      */
-    public static GetFieldsResult getFields(GetFieldsParameters params) throws ServerException {
-        ValidateUserParameters validate = new ValidateUserParameters();
+    public static GetFieldsResponse getFields(GetFieldsRequest params) throws ServerException {
+        ValidateUserRequest validate = new ValidateUserRequest();
         validate.setUsername(params.getUsername());
         validate.setPassword(params.getPassword());
         boolean isValid = validateUser(validate).isValid();
@@ -224,7 +224,7 @@ public class ServerFacade {
         }
 
         Database db = new Database();
-        int projectId = params.getProjectID();
+        int projectId = params.getProjectId();
         List<Field> fields = null;
 
         try {
@@ -237,7 +237,7 @@ public class ServerFacade {
             throw new ServerException(e.toString());
         }
 
-        GetFieldsResult result = new GetFieldsResult();
+        GetFieldsResponse result = new GetFieldsResponse();
         result.setFields(fields);
         return result;
     }
@@ -245,8 +245,8 @@ public class ServerFacade {
     /**
      * Searches certain fields for certain values
      */
-    public static SearchResult search(SearchParameters params) throws ServerException {
-        ValidateUserParameters validate = new ValidateUserParameters();
+    public static SearchResponse search(SearchRequest params) throws ServerException {
+        ValidateUserRequest validate = new ValidateUserRequest();
         validate.setUsername(params.getUsername());
         validate.setPassword(params.getPassword());
         boolean isValid = validateUser(validate).isValid();
@@ -266,7 +266,7 @@ public class ServerFacade {
             throw new ServerException(e.toString());
         }
 
-        SearchResult result = new SearchResult();
+        SearchResponse result = new SearchResponse();
         result.setFoundRecords(records);
 
         return result;
@@ -279,9 +279,9 @@ public class ServerFacade {
      * @return
      * @throws ServerException
      */
-    public static DownloadFileResult downloadFile(DownloadFileParameters params)
+    public static DownloadFileResponse downloadFile(DownloadFileRequest params)
             throws ServerException {
-        ValidateUserParameters validate = new ValidateUserParameters();
+        ValidateUserRequest validate = new ValidateUserRequest();
         validate.setUsername(params.getUsername());
         validate.setPassword(params.getPassword());
         boolean isValid = validateUser(validate).isValid();
@@ -300,6 +300,6 @@ public class ServerFacade {
             logger.log(Level.FINE, "STACKTRACE: ", e);
             throw new ServerException(e.toString());
         }
-        return new DownloadFileResult(data);
+        return new DownloadFileResponse(data);
     }
 }
