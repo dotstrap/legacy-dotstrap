@@ -6,15 +6,16 @@
 
 package server;
 
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.logging.*;
+
+import com.sun.net.httpserver.HttpServer;
 
 import server.facade.ServerFacade;
 // import server.facade.ServerFacade;
 import server.httphandler.*;
-
-import com.sun.net.httpserver.HttpServer;
 
 /**
  * The Class Server. Initializes the server's logs (used in all non-testing classes) Creates
@@ -29,6 +30,7 @@ public class Server {
     private static int       SERVER_PORT_NUMBER      = 8080;
 
     private static Logger    logger;
+    private static String    logName                 = "server";
 
     /**
      * The main method.
@@ -39,11 +41,12 @@ public class Server {
         try {
             final FileInputStream is = new FileInputStream("logging.properties");
             LogManager.getLogManager().readConfiguration(is);
-            logger = Logger.getLogger("server");
+            logger = Logger.getLogger(logName);
         } catch (final IOException e) {
             Logger.getAnonymousLogger().severe("ERROR: unable to load logging propeties file...");
             Logger.getAnonymousLogger().severe(e.getMessage());
         }
+        logger.info("Initialized " + logName + " log...");
 
         if (args == null) {
             SERVER_PORT_NUMBER = 8080;
@@ -61,8 +64,7 @@ public class Server {
             logger.log(Level.FINE, "STACKTRACE: ", e);
         }
     }
-
-
+    
     //@formatter:off
     // The server
     private HttpServer            server;
@@ -106,7 +108,7 @@ public class Server {
             throw new ServerException(e.toString());
         }
 
-    //@formatter:off
+        //@formatter:off
         logger.info("Initializing HTTP Server...");
         try {
             server = HttpServer.create(new InetSocketAddress(SERVER_PORT_NUMBER),
@@ -127,9 +129,17 @@ public class Server {
         server.createContext("/GetSampleImage", getSampleBatchHandler);
         server.createContext("/SubmitBatch", submitBatchHandler);
         server.createContext("/DownloadBatch", downloadBatchHandler);
-        server.createContext("/Records", downloadFileHandler);
+        // server.createContext("/Records", downloadFileHandler);
+        server.createContext("/", downloadFileHandler);
 
         logger.info("Starting HTTP Server...");
         server.start();
+    }
+
+    /**
+     * Stops the server and frees the port
+     */
+    public void stop() {
+        server.stop(0);
     }
 }

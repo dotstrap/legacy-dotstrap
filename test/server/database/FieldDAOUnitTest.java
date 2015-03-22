@@ -1,16 +1,21 @@
 /**
- * FieldDAOUnitTest.java JRE v1.7.0_76
- *
- * Created by William Myers on Mar 15, 2015. Copyright (c) 2015 William Myers. All Rights reserved.
+ * FieldDAOUnitTest.java
+ * JRE v1.8.0_40
+ * 
+ * Created by William Myers on Mar 22, 2015.
+ * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package server.database;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 import java.util.List;
 import java.util.logging.Logger;
 
 import org.junit.*;
+
+import server.database.dao.FieldDAO;
 
 import shared.model.Field;
 

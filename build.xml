@@ -9,7 +9,7 @@
     
     <property name="server-class" value="server/Server"/>
 
-    <property name="import-class" value="server/Importer"/>
+    <property name="import-class" value="server/importer/Importer"/>
     
     <!-- Directory containing testing source code -->
     <property name="test" location="test"/>

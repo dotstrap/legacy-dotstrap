@@ -1,8 +1,8 @@
 /**
  * SettingsPanel.java
- * JRE v1.7.0_76
+ * JRE v1.8.0_40
  * 
- * Created by William Myers on Mar 15, 2015.
+ * Created by William Myers on Mar 22, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package servertester.views;

@@ -1,7 +1,9 @@
 /**
- * Database.java JRE v1.7.0_76
- *
- * Created by William Myers on Mar 15, 2015. Copyright (c) 2015 William Myers. All Rights reserved.
+ * Database.java
+ * JRE v1.8.0_40
+ * 
+ * Created by William Myers on Mar 22, 2015.
+ * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package server.database;
 
@@ -10,25 +12,30 @@ import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import server.database.dao.*;
+
 // TODO: Auto-generated Javadoc
 /**
  * The Class Database.
  */
 public class Database {
-    final public static String DB_NAME           = "IndexerServer.sqlite";
-    final public static String DB_DIRECTORY      = "database";
-    final public static String DB_FILE           = DB_DIRECTORY + File.separator + DB_NAME;
-    final public static String DB_TEMPLATE       = DB_DIRECTORY + File.separator + "template"
-                                                         + File.separator + DB_NAME;
-    final static String        DB_CONNECTION_URL = "jdbc:sqlite:" + DB_DIRECTORY + File.separator
-                                                         + DB_NAME;
 
+    // @formatter:off
+    final public static String DB_NAME            = "IndexerServer.sqlite";
+    final public static String DB_DIRECTORY       = "database";
+    final public static String DB_FILE            = DB_DIRECTORY + File.separator + DB_NAME;
+    final public static String DB_TEMPLATE        = DB_DIRECTORY + File.separator + "template"
+                                                         + File.separator + DB_NAME;
+    final private static String DB_CONNECTION_URL = "jdbc:sqlite:" + DB_DIRECTORY + File.separator
+                                                         + DB_NAME;
+   
     /** The logger used throughout the project. */
     private static Logger      logger;
+    public final static String logName = "server";
     static {
-        logger = Logger.getLogger("server");
+        logger = Logger.getLogger(logName);
     }
-
+    // @formatter:on
     // DataBase Access /////////////
     /** The database driver connection. */
     private Connection         connection;
@@ -177,7 +184,7 @@ public class Database {
 
         logger.exiting("server.database.Database", "endTransaction");
     }
-
+    
     /**
      * Initializes the database by sequentially dropping each table and then creating it.
      *
