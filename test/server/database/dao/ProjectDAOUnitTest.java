@@ -1,7 +1,7 @@
 /**
  * ProjectDAOUnitTest.java
  * JRE v1.8.0_40
- * 
+ *
  * Created by William Myers on Mar 23, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
@@ -90,9 +90,6 @@ public class ProjectDAOUnitTest {
         testProjectDAO.create(projectTest2);
         testProjectDAO.create(projectTest3);
 
-        List<Project> allProjectes = testProjectDAO.getAll();
-        assertEquals(3, allProjectes.size());
-
         logger.exiting("server.database.ProjectDAOUnitTest", "setUp");
     }
 
@@ -160,7 +157,7 @@ public class ProjectDAOUnitTest {
         logger.entering("server.database.ProjectDAOUnitTest", "testGetAll");
 
         List<Project> allProjectes = testProjectDAO.getAll();
-        assertEquals(0, allProjectes.size());
+        assertEquals(3, allProjectes.size());
 
         logger.exiting("server.database.ProjectDAOUnitTest", "testGetAll");
     }

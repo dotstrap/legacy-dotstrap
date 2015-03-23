@@ -1,7 +1,7 @@
 /**
  * FieldDAOUnitTest.java
  * JRE v1.8.0_40
- * 
+ *
  * Created by William Myers on Mar 23, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
@@ -105,12 +105,12 @@ public class FieldDAOUnitTest {
         // Roll back this transaction so changes are undone
         db.endTransaction(false);
         db = null;
-        
+
         testFieldDAO = null;
         fieldTest1 = null;
         fieldTest2 = null;
         fieldTest3 = null;
-        
+
         logger.exiting("server.database.FieldDAOUnitTest", "tearDown");
     }
 
@@ -140,7 +140,7 @@ public class FieldDAOUnitTest {
                 && safeEquals(a.getTitle(), b.getTitle())
                 && safeEquals(a.getKnownData(), b.getKnownData())
                 && safeEquals(a.getHelpURL(), b.getHelpURL())
-                && safeEquals(a.getXCoord(), b.getXCoord()) 
+                && safeEquals(a.getXCoord(), b.getXCoord())
                 && safeEquals(a.getWidth(), b.getWidth()));
     }
 // @formatter:on
@@ -155,7 +155,7 @@ public class FieldDAOUnitTest {
         logger.entering("server.database.FieldDAOUnitTest", "testGetAll");
 
         List<Field> allFields = testFieldDAO.getAll();
-        assertEquals(0, allFields.size());
+        assertEquals(3, allFields.size());
 
         logger.exiting("server.database.FieldDAOUnitTest", "testGetAll");
     }
@@ -168,10 +168,6 @@ public class FieldDAOUnitTest {
     @Test
     public void testCreate() throws DatabaseException {
         logger.entering("server.database.FieldDAOUnitTest", "testCreate");
-
-        testFieldDAO.create(fieldTest1);
-        testFieldDAO.create(fieldTest2);
-        testFieldDAO.create(fieldTest3);
 
         List<Field> all = testFieldDAO.getAll();
         assertEquals(3, all.size());

@@ -77,6 +77,7 @@ public class Server {
     }
 
 
+
     //@formatter:off
     // The server
     private HttpServer            server;
@@ -142,8 +143,8 @@ public class Server {
         server.createContext("/GetSampleImage", getSampleBatchHandler);
         server.createContext("/SubmitBatch", submitBatchHandler);
         server.createContext("/DownloadBatch", downloadBatchHandler);
-        // server.createContext("/Records", downloadFileHandler);
-        server.createContext("/", downloadFileHandler);
+        server.createContext("/Records", downloadFileHandler);
+        // server.createContext("/", downloadFileHandler);
 
         logger.info("Starting HTTP Server...");
         server.start();
