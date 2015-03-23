@@ -2,7 +2,7 @@
  * FieldDAO.java
  * JRE v1.8.0_40
  * 
- * Created by William Myers on Mar 22, 2015.
+ * Created by William Myers on Mar 23, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package server.database.dao;
@@ -92,7 +92,7 @@ public class FieldDAO {
                 resultField.setKnownData(resultset.getString("KnownData"));
                 resultField.setHelpURL(resultset.getString("HelpURL"));
 
-                resultField.setxCoord(resultset.getInt("XCoordinate"));
+                resultField.setXCoord(resultset.getInt("XCoordinate"));
                 resultField.setWidth(resultset.getInt("Width"));
                 resultField.setWidth(resultset.getInt("ColumnNumber"));
 
@@ -131,7 +131,7 @@ public class FieldDAO {
                 resultField.setKnownData(resultset.getString("KnownData"));
                 resultField.setHelpURL(resultset.getString("HelpURL"));
 
-                resultField.setxCoord(resultset.getInt("XCoordinate"));
+                resultField.setXCoord(resultset.getInt("XCoordinate"));
                 resultField.setWidth(resultset.getInt("Width"));
                 resultField.setWidth(resultset.getInt("ColumnNumber"));
 
@@ -213,7 +213,7 @@ public class FieldDAO {
             pstmt.setString(2, newField.getTitle());
             pstmt.setString(3, newField.getKnownData());
             pstmt.setString(4, newField.getHelpURL());
-            pstmt.setInt(5, newField.getxCoord());
+            pstmt.setInt(5, newField.getXCoord());
             pstmt.setInt(6, newField.getWidth());
             pstmt.setInt(7, newField.getColNum());
 
@@ -268,7 +268,7 @@ public class FieldDAO {
             returnField.setTitle(title);
             returnField.setKnownData(resultset.getString(4));
             returnField.setHelpURL(resultset.getString(5));
-            returnField.setxCoord(resultset.getInt(6));
+            returnField.setXCoord(resultset.getInt(6));
             returnField.setWidth(resultset.getInt(7));
             returnField.setColNum(resultset.getInt(8));
         } catch (Exception e) {
@@ -304,7 +304,7 @@ public class FieldDAO {
 
             pstmt.setString(1, field.getKnownData());
             pstmt.setString(2, field.getHelpURL());
-            pstmt.setInt(3, field.getxCoord());
+            pstmt.setInt(3, field.getXCoord());
             pstmt.setInt(4, field.getWidth());
 
             pstmt.setString(5, field.getTitle());

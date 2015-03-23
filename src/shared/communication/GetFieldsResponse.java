@@ -1,8 +1,8 @@
 /**
  * GetFieldsResponse.java
  * JRE v1.8.0_40
- * 
- * Created by William Myers on Mar 22, 2015.
+ *
+ * Created by William Myers on Mar 23, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package shared.communication;
@@ -10,12 +10,14 @@ package shared.communication;
 import java.util.List;
 
 import shared.model.Field;
+import shared.model.User;
 
 // TODO: Auto-generated Javadoc
 /**
  * The Class GetFieldsResponse.
  */
-public class GetFieldsResponse {
+public class GetFieldsResponse implements Response{
+    private User user;
     private List<Field> fields;
 
     /**
@@ -32,16 +34,19 @@ public class GetFieldsResponse {
         this.fields = fields;
     }
 
-    /**
-     * @return the fields
-     */
+    public User getUser() {
+        return this.user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+
     public List<Field> getFields() {
         return fields;
     }
 
-    /**
-     * @param fields the fields to set
-     */
     public void setFields(List<Field> fields) {
         this.fields = fields;
     }

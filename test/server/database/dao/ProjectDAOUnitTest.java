@@ -2,7 +2,7 @@
  * ProjectDAOUnitTest.java
  * JRE v1.8.0_40
  * 
- * Created by William Myers on Mar 22, 2015.
+ * Created by William Myers on Mar 23, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package server.database.dao;
@@ -34,8 +34,7 @@ public class ProjectDAOUnitTest {
     /**
      * Sets the up before class.
      *
-     * @throws Exception
-     *             the exception
+     * @throws Exception the exception
      */
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
@@ -50,25 +49,28 @@ public class ProjectDAOUnitTest {
     /**
      * Tear down after class.
      *
-     * @throws Exception
-     *             the exception
+     * @throws Exception the exception
      */
     @AfterClass
     public static void tearDownAfterClass() throws Exception {
-        logger.entering("server.database.ProjectDAOUnitTest",
-                "tearDownAfterClass");
+        logger.entering("server.database.ProjectDAOUnitTest", "tearDownAfterClass");
         logger.exiting("server.database.ProjectDAOUnitTest", "tearDownAfterClass");
         return;
     }
 
+// @formatter:off
     private Database   db;
     private ProjectDAO testProjectDAO;
+
+    private Project projectTest1 = null;
+    private Project projectTest2 = null;
+    private Project projectTest3 = null;
+// @formatter:on
 
     /**
      * Sets the database up.
      *
-     * @throws Exception
-     *             the exception
+     * @throws Exception the exception
      */
     @Before
     public void setUp() throws Exception {
@@ -80,14 +82,24 @@ public class ProjectDAOUnitTest {
         testProjectDAO = db.getProjectDAO();
         testProjectDAO.initTable();
 
+        projectTest1 = new Project("projectTest1", 10, 11, 12);
+        projectTest2 = new Project("projectTest2", 20, 21, 22);
+        projectTest3 = new Project("projectTest3", 30, 31, 32);
+
+        testProjectDAO.create(projectTest1);
+        testProjectDAO.create(projectTest2);
+        testProjectDAO.create(projectTest3);
+
+        List<Project> allProjectes = testProjectDAO.getAll();
+        assertEquals(3, allProjectes.size());
+
         logger.exiting("server.database.ProjectDAOUnitTest", "setUp");
     }
 
     /**
      * Tear down.
      *
-     * @throws Exception
-     *             the exception
+     * @throws Exception the exception
      */
     @After
     public void tearDown() throws Exception {
@@ -101,15 +113,13 @@ public class ProjectDAOUnitTest {
         logger.exiting("server.database.ProjectDAOUnitTest", "tearDown");
     }
 
+    // @formatter:off
     /**
      * Are equal.
      *
-     * @param a
-     *            the first project to compare
-     * @param b
-     *            the second project to compare
-     * @param compareIds
-     *            compare by Ids?
+     * @param a the first project to compare
+     * @param b the second project to compare
+     * @param compareIds compare by Ids?
      * @return true, if successful
      */
     private boolean areEqual(Project a, Project b, boolean compareIds) {
@@ -119,18 +129,17 @@ public class ProjectDAOUnitTest {
             }
         }
         return (safeEquals(a.getFirstYCoord(), b.getFirstYCoord())
-                && safeEquals(a.getTitle(), b.getTitle())
-                && safeEquals(a.getRecordHeight(), b.getRecordHeight()) && safeEquals(
-                    a.getRecordsPerBatch(), b.getRecordsPerBatch()));
+                        && safeEquals(a.getTitle(), b.getTitle())
+                        && safeEquals(a.getRecordHeight(), b.getRecordHeight())
+                        && safeEquals(a.getRecordsPerBatch(), b.getRecordsPerBatch()));
     }
+    // @formatter:on
 
     /**
      * Safe equals.
      *
-     * @param a
-     *            the first project to compare
-     * @param b
-     *            the second project to compare
+     * @param a the first project to compare
+     * @param b the second project to compare
      * @return true, if successful
      */
     private boolean safeEquals(Object a, Object b) {
@@ -144,8 +153,7 @@ public class ProjectDAOUnitTest {
     /**
      * Test get allProjects.
      *
-     * @throws DatabaseException
-     *             the database exception
+     * @throws DatabaseException the database exception
      */
     @Test
     public void testGetAll() throws DatabaseException {
@@ -160,20 +168,11 @@ public class ProjectDAOUnitTest {
     /**
      * Test create.
      *
-     * @throws DatabaseException
-     *             the database exception
+     * @throws DatabaseException the database exception
      */
     @Test
     public void testCreate() throws DatabaseException {
         logger.entering("server.database.ProjectDAOUnitTest", "testCreate");
-
-        Project projectTest1 = new Project("projectTestCreate1", 10, 11, 12);
-        Project projectTest2 = new Project("projectTestCreate2", 20, 21, 22);
-        Project projectTest3 = new Project("projectTestCreate3", 30, 31, 32);
-
-        testProjectDAO.create(projectTest1);
-        testProjectDAO.create(projectTest2);
-        testProjectDAO.create(projectTest3);
 
         List<Project> allProjectes = testProjectDAO.getAll();
         assertEquals(3, allProjectes.size());
@@ -201,8 +200,7 @@ public class ProjectDAOUnitTest {
     /**
      * Test update.
      *
-     * @throws DatabaseException
-     *             the database exception
+     * @throws DatabaseException the database exception
      */
     // @Test
     // public void testUpdate() throws DatabaseException {
@@ -250,20 +248,11 @@ public class ProjectDAOUnitTest {
     /**
      * Test delete.
      *
-     * @throws DatabaseException
-     *             the database exception
+     * @throws DatabaseException the database exception
      */
     @Test
     public void testDelete() throws DatabaseException {
         logger.entering("server.database.ProjectDAOUnitTest", "testDelete");
-
-        Project projectTest1 = new Project("projectTestCreate1", 10, 11, 12);
-        Project projectTest2 = new Project("projectTestCreate2", 20, 21, 22);
-        Project projectTest3 = new Project("projectTestCreate3", 30, 31, 32);
-
-        testProjectDAO.create(projectTest1);
-        testProjectDAO.create(projectTest2);
-        testProjectDAO.create(projectTest3);
 
         List<Project> allProjectes = testProjectDAO.getAll();
         assertEquals(3, allProjectes.size());

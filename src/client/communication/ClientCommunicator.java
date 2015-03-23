@@ -1,15 +1,16 @@
 /**
  * ClientCommunicator.java
  * JRE v1.8.0_40
- * 
- * Created by William Myers on Mar 22, 2015.
+ *
+ * Created by William Myers on Mar 23, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package client.communication;
 
 import java.io.File;
 import java.io.InputStream;
-import java.net.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -26,31 +27,30 @@ import shared.communication.*;
 import shared.model.Record;
 
 public class ClientCommunicator {
-
     /** The logger used throughout the project. */
-    private static Logger       logger;
+    private static Logger logger;
+    static {
+        logger = Logger.getLogger("client");
+    }
 
-    //@formatter:off
-    private String       SERVER_HOST = "localhost";
-    private int          SERVER_PORT = 50080;
-    private String       URL_PREFIX  = "http://" + SERVER_HOST + ":" + SERVER_PORT;
-    private final String HTTP_GET    = "GET";
-    private final String HTTP_POST   = "POST";
-    //@formatter:on
+    private String        host       = "localhost";
+    private int           port       = 50080;
+    private String        URL_PREFIX = "http://" + host + ":" + port;
+
     public String getHost() {
-        return SERVER_HOST;
+        return host;
     }
 
     public void setHost(String host) {
-        this.SERVER_HOST = host;
+        this.host = host;
     }
 
     public int getPort() {
-        return SERVER_PORT;
+        return port;
     }
 
     public void setPort(int port) {
-        this.SERVER_PORT = port;
+        this.port = port;
     }
 
     /**
@@ -58,21 +58,22 @@ public class ClientCommunicator {
      *
      */
     public ClientCommunicator() {
-        logger = Logger.getLogger("client");
+      host       = "localhost";
+       port       = 50080;
+        this.URL_PREFIX = String.format("http://%s:%d", host, port);
     }
 
     public ClientCommunicator(String port, String host) {
-        logger = Logger.getLogger("client");
-        this.SERVER_PORT = Integer.parseInt(port);
-        this.SERVER_HOST = host;
-        this.URL_PREFIX = "http://" + SERVER_HOST + ":" + SERVER_PORT;
+        this.port = Integer.parseInt(port);
+        this.host = host;
+        this.URL_PREFIX = String.format("http://%s:%d", host, port);
     }
 
     public ValidateUserResponse validateUser(ValidateUserRequest params) {
         ValidateUserResponse result = null;
         try {
             result = (ValidateUserResponse) doPost("/ValidateUser", params);
-        } catch (ClientException e) {
+        } catch (Exception e) {
             logger.log(Level.SEVERE, e.toString());
             logger.log(Level.FINE, "STACKTRACE: ", e);
         }
@@ -83,7 +84,7 @@ public class ClientCommunicator {
         GetProjectsResponse result = null;
         try {
             result = (GetProjectsResponse) doPost("/GetProjects", creds);
-        } catch (ClientException e) {
+        } catch (Exception e) {
             logger.log(Level.SEVERE, e.toString());
             logger.log(Level.FINE, "STACKTRACE: ", e);
         }
@@ -97,7 +98,7 @@ public class ClientCommunicator {
             result = (GetSampleBatchResponse) doPost("/GetSampleImage", params);
             URL url = new URL(URL_PREFIX + "/" + result.getSampleBatch().getFilePath());
             result.setUrl(url);
-        } catch (MalformedURLException e) {
+        } catch (Exception e) {
             logger.log(Level.SEVERE, e.toString());
             logger.log(Level.FINE, "STACKTRACE: ", e);
             throw new ClientException(e);
@@ -111,7 +112,7 @@ public class ClientCommunicator {
             result = (DownloadBatchResponse) doPost("/DownloadBatch", params);
             URL url = new URL(URL_PREFIX + "/" + result.getBatch().getFilePath());
             result.setUrl(url);
-        } catch (MalformedURLException e) {
+        } catch (Exception e) {
             logger.log(Level.SEVERE, e.toString());
             logger.log(Level.FINE, "STACKTRACE: ", e);
             throw new ClientException(e);
@@ -123,7 +124,7 @@ public class ClientCommunicator {
         SubmitBatchResponse result = null;
         try {
             result = (SubmitBatchResponse) doPost("/SubmitBatch", params);
-        } catch (ClientException e) {
+        } catch (Exception e) {
             logger.log(Level.SEVERE, e.toString());
             logger.log(Level.FINE, "STACKTRACE: ", e);
         }
@@ -134,7 +135,7 @@ public class ClientCommunicator {
         GetFieldsResponse result = null;
         try {
             result = (GetFieldsResponse) doPost("/GetFields", params);
-        } catch (ClientException e) {
+        } catch (Exception e) {
             logger.log(Level.SEVERE, e.toString());
             logger.log(Level.FINE, "STACKTRACE: ", e);
         }
@@ -151,7 +152,7 @@ public class ClientCommunicator {
                 urls.add(url);
             }
             result.setUrls(urls);
-        } catch (ClientException | MalformedURLException e) {
+        } catch (Exception e) {
             logger.log(Level.SEVERE, e.toString());
             logger.log(Level.FINE, "STACKTRACE: ", e);
             throw new ClientException(e);
@@ -168,7 +169,7 @@ public class ClientCommunicator {
         try {
             URL url = new URL(urlPath);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod(HTTP_GET);
+            connection.setRequestMethod("GET");
             connection.setDoOutput(true);
             connection.connect();
 
@@ -185,29 +186,29 @@ public class ClientCommunicator {
         return result;
     }
 
-    public Object doPost(String commandName, Object postData) throws ClientException {
-        assert commandName != null;
+    public Object doPost(String postCommand, Object postData) throws ClientException {
+        assert postCommand != null;
         assert postData != null;
 
         URL url;
         try {
-            url = new URL(URL_PREFIX + commandName);
+            url = new URL(URL_PREFIX + postCommand);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod(HTTP_POST);
+            connection.setRequestMethod("POST");
             connection.setDoInput(true);
             connection.setDoOutput(true);
             connection.setRequestProperty("Accept", "html/text");
             connection.connect();
-            XStream x = new XStream(new DomDriver());
-            x.toXML(postData, connection.getOutputStream());
+            XStream xs = new XStream(new DomDriver());
+            xs.toXML(postData, connection.getOutputStream());
 
             if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                Object o = (Object) x.fromXML(connection.getInputStream());
+                Object o = (Object) xs.fromXML(connection.getInputStream());
                 return o;
             } else {
                 // return null;
-                throw new ClientException(String.format("doPost FAILED: %s HTTP code: %d",
-                                commandName, connection.getResponseCode()));
+                throw new ClientException(String.format("POST FAILED: %s HTTP code: %d",
+                                postCommand, connection.getResponseCode()));
             }
         } catch (Exception e) {
             logger.log(Level.SEVERE, e.toString());

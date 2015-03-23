@@ -1,8 +1,8 @@
 /**
  * ServerUnitTests.java
  * JRE v1.8.0_40
- * 
- * Created by William Myers on Mar 22, 2015.
+ *
+ * Created by William Myers on Mar 23, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package server;
@@ -23,8 +23,9 @@ import org.junit.Test;
  */
 public class ServerUnitTests {
     /** The logger. */
-    private static Logger logger;
-public final static String LOG_NAME = "serverTest";
+    private static Logger      logger;
+    public final static String LOG_NAME = "serverTest";
+
     /**
      * Teardown.
      */
@@ -57,13 +58,16 @@ public final static String LOG_NAME = "serverTest";
             Logger.getAnonymousLogger().severe("ERROR: unable to load logging properties file...");
             Logger.getAnonymousLogger().severe(e.getMessage());
         }
-
+// @formatter:off
         logger.info("Running all server tests...");
-        String[] testClasses =
-                new String[] {"server.ServerUnitTests", "server.database.BatchDAOUnitTest",
-                        "server.database.FieldDAOUnitTest", "server.database.ProjectDAOUnitTest",
-                        "server.database.RecordDAOUnitTest", "server.database.UserDAOUnitTest",
-                        "server.ImporterUnitTest"};
+        String[] testClasses = new String[] {"server.ServerUnitTests",
+                                "server.database.dao.BatchDAOUnitTest",
+                                "server.database.dao.FieldDAOUnitTest",
+                                "server.database.dao.ProjectDAOUnitTest",
+                                "server.database.dao.RecordDAOUnitTest",
+                                "server.database.dao.UserDAOUnitTest",
+                                "server.ImporterUnitTest"};
+// @formatter:on
         org.junit.runner.JUnitCore.main(testClasses);
     }
 }

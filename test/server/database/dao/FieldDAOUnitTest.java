@@ -2,7 +2,7 @@
  * FieldDAOUnitTest.java
  * JRE v1.8.0_40
  * 
- * Created by William Myers on Mar 22, 2015.
+ * Created by William Myers on Mar 23, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package server.database.dao;
@@ -60,6 +60,9 @@ public class FieldDAOUnitTest {
 
     private Database db;
     private FieldDAO testFieldDAO;
+    private Field    fieldTest1 = null;
+    private Field    fieldTest2 = null;
+    private Field    fieldTest3 = null;
 
     /**
      * Sets the database up.
@@ -76,6 +79,17 @@ public class FieldDAOUnitTest {
         testFieldDAO = db.getFieldDAO();
         testFieldDAO.initTable();
 
+        fieldTest1 = new Field(100, 111, "fieldTest1", "KnownData1", "helpURL1", 1, 1, 1);
+        fieldTest2 = new Field(200, 222, "fieldTest2", "KnownData2", "helpURL2", 2, 2, 2);
+        fieldTest3 = new Field(300, 333, "fieldTest3", "KnownData3", "helpURL3", 3, 3, 3);
+
+        testFieldDAO.create(fieldTest1);
+        testFieldDAO.create(fieldTest2);
+        testFieldDAO.create(fieldTest3);
+
+        List<Field> allFieldes = testFieldDAO.getAll();
+        assertEquals(3, allFieldes.size());
+
         logger.exiting("server.database.FieldDAOUnitTest", "setUp");
     }
 
@@ -91,8 +105,12 @@ public class FieldDAOUnitTest {
         // Roll back this transaction so changes are undone
         db.endTransaction(false);
         db = null;
+        
         testFieldDAO = null;
-
+        fieldTest1 = null;
+        fieldTest2 = null;
+        fieldTest3 = null;
+        
         logger.exiting("server.database.FieldDAOUnitTest", "tearDown");
     }
 
@@ -111,6 +129,7 @@ public class FieldDAOUnitTest {
         }
     }
 
+// @formatter:off
     private boolean areEqual(Field a, Field b, boolean shouldCompareIds) {
         if (shouldCompareIds) {
             if (a.getFieldId() != b.getFieldId()) {
@@ -121,9 +140,10 @@ public class FieldDAOUnitTest {
                 && safeEquals(a.getTitle(), b.getTitle())
                 && safeEquals(a.getKnownData(), b.getKnownData())
                 && safeEquals(a.getHelpURL(), b.getHelpURL())
-                && safeEquals(a.getxCoord(), b.getxCoord()) && safeEquals(a.getWidth(),
-                    b.getWidth()));
+                && safeEquals(a.getXCoord(), b.getXCoord()) 
+                && safeEquals(a.getWidth(), b.getWidth()));
     }
+// @formatter:on
 
     /**
      * Test get all.
@@ -148,13 +168,6 @@ public class FieldDAOUnitTest {
     @Test
     public void testCreate() throws DatabaseException {
         logger.entering("server.database.FieldDAOUnitTest", "testCreate");
-
-        Field fieldTest1 =
-                new Field(100, 111, "fieldTestDelete1", "KnownData1", "helpURL1", 1, 1, 1);
-        Field fieldTest2 =
-                new Field(200, 222, "fieldTestDelete2", "KnownData2", "helpURL2", 2, 2, 2);
-        Field fieldTest3 =
-                new Field(300, 333, "fieldTestDelete3", "KnownData3", "helpURL3", 3, 3, 3);
 
         testFieldDAO.create(fieldTest1);
         testFieldDAO.create(fieldTest2);
@@ -189,17 +202,6 @@ public class FieldDAOUnitTest {
     public void testDelete() throws DatabaseException {
         logger.entering("server.database.FieldDAOUnitTest", "testDelete");
 
-        Field fieldTest1 =
-                new Field(100, 111, "fieldTestDelete1", "KnownData1", "helpURL1", 1, 1, 1);
-        Field fieldTest2 =
-                new Field(200, 222, "fieldTestDelete2", "KnownData2", "helpURL2", 2, 2, 2);
-        Field fieldTest3 =
-                new Field(300, 333, "fieldTestDelete3", "KnownData3", "helpURL3", 3, 3, 3);
-
-        testFieldDAO.create(fieldTest1);
-        testFieldDAO.create(fieldTest2);
-        testFieldDAO.create(fieldTest3);
-
         List<Field> allFieldes = testFieldDAO.getAll();
         assertEquals(3, allFieldes.size());
 
@@ -217,27 +219,4 @@ public class FieldDAOUnitTest {
 
         logger.exiting("server.database.FieldDAOUnitTest", "testDelete");
     }
-
-    // @Test
-    // public void testValidateField() throws DatabaseException {
-    // Field fieldTest1 = new Field("fieldTestCreate1", "ProjectId1",
-    // "KnownData1", "helpURL1",
-    // 1, 1);
-    // Field fieldTest2 = new Field("fieldTestCreate2", "ProjectId2",
-    // "KnownData2", "helpURL2",
-    // 2, 2);
-    // Field fieldTest3 = new Field("fieldTestCreate3", "ProjectId3",
-    // "KnownData3", "helpURL3",
-    // 3, 3);
-
-    // dbfieldTest.create(fieldTest1);
-    // dbfieldTest.create(fieldTest2);
-    // dbfieldTest.create(fieldTest3);
-
-    // List<Field> all = dbfieldTest.getAll();
-
-    // assertEquals(3, all.size());
-    // assertTrue(dbfieldTest.validateField(fieldTest1) &&
-    // dbfieldTest.validateField(fieldTest2));
-    // }
 }

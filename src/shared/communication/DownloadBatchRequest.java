@@ -1,8 +1,8 @@
 /**
- * DownloadBatchParameters.java
+ * DownloadBatchRequest.java
  * JRE v1.8.0_40
- * 
- * Created by William Myers on Mar 22, 2015.
+ *
+ * Created by William Myers on Mar 23, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package shared.communication;
@@ -11,15 +11,9 @@ package shared.communication;
 /**
  * The Class DownloadBatchParameters.
  */
-public class DownloadBatchRequest {
-
-    /** The name. */
+public class DownloadBatchRequest implements Request {
     private String username;
-
-    /** The password. */
     private String password;
-
-    /** The project id. */
     private int    projectId;
 
     /**
@@ -32,12 +26,9 @@ public class DownloadBatchRequest {
     /**
      * Instantiates a new download batch parameters.
      *
-     * @param name
-     *            the name
-     * @param password
-     *            the password
-     * @param projectId
-     *            the project id
+     * @param name the name
+     * @param password the password
+     * @param projectId the project id
      */
     public DownloadBatchRequest(String name, String password, int projectId) {
         this.username = name;
@@ -57,8 +48,7 @@ public class DownloadBatchRequest {
     /**
      * Sets the name.
      *
-     * @param name
-     *            the new name
+     * @param name the new name
      */
     public void setUsername(String name) {
         this.username = name;
@@ -76,8 +66,7 @@ public class DownloadBatchRequest {
     /**
      * Sets the password.
      *
-     * @param password
-     *            the new password
+     * @param password the new password
      */
     public void setPassword(String password) {
         this.password = password;
@@ -95,8 +84,7 @@ public class DownloadBatchRequest {
     /**
      * Sets the project id.
      *
-     * @param projectId
-     *            the new project id
+     * @param projectId the new project id
      */
     public void setProjectId(int projectId) {
         this.projectId = projectId;

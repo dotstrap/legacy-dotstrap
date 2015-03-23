@@ -2,21 +2,72 @@
  * Record.java
  * JRE v1.8.0_40
  * 
- * Created by William Myers on Mar 22, 2015.
+ * Created by William Myers on Mar 23, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package shared.model;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Record.
  */
 public class Record {
+    public static class Value {
+
+        private String data;
+
+        private int    valueId;
+
+        /**
+         * Default constructor
+         */
+        public Value() {
+            valueId = -1;
+            data = null;
+        }
+
+        /**
+         * Initializes the value model with the specified data
+         * 
+         * @param value The literal value or "cell" contents in db
+         */
+        public Value(String value) {
+            this(-1, value);
+        }
+
+        /**
+         * Initializes the value model with the specified data
+         * 
+         * @param valueId The field definition this value is associated with
+         * @param value The literal value or "cell" contents in db
+         */
+        public Value(int id, String value) {
+            this.valueId = id;
+            this.data = value;
+        }
+
+        public String getData() {
+            return this.data;
+        }
+
+        public void setData(String data) {
+            this.data = data;
+        }
+
+        public int getValueId() {
+            return this.valueId;
+        }
+
+        public void setValueId(int valueId) {
+            this.valueId = valueId;
+        }
+
+    }
+
     private int    recordId;
     private int    fieldId;
     private int    batchId;
     private String batchURL;
-    private String data;
+    private Value  data = new Value();
     private int    RowNum;
     private int    ColNum;
 
@@ -29,7 +80,7 @@ public class Record {
         fieldId  = -1;
         batchId  = -1;
         batchURL = "batchURL"; 
-        data     = "data";
+        data.setData("data");
         RowNum   = -1;
         ColNum   = -1;
     }
@@ -50,7 +101,7 @@ public class Record {
         this.fieldId  = fieldId;
         this.batchId  = batchId;
         this.batchURL = batchURL;
-        this.data     = data;
+        this.data.setData(data);
         this.RowNum   = rowNum;
         this.ColNum   = colNum;
     }
@@ -72,7 +123,7 @@ public class Record {
         this.fieldId  = fieldId;
         this.batchId  = batchId;
         this.batchURL = batchURL;
-        this.data     = data;
+        this.data.setData(data);
         this.RowNum   = rowNum;
         this.ColNum   = colNum;
     }
@@ -111,11 +162,11 @@ public class Record {
     }
 
     public String getData() {
-        return this.data;
+        return this.data.getData();
     }
 
     public void setData(String data) {
-        this.data = data;
+        this.data.setData(data);
     }
 
     public int getRowNum() {

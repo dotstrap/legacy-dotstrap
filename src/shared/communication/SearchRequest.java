@@ -1,8 +1,8 @@
 /**
  * SearchRequest.java
  * JRE v1.8.0_40
- * 
- * Created by William Myers on Mar 22, 2015.
+ *
+ * Created by William Myers on Mar 23, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package shared.communication;
@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * The Class SearchRequest.
  */
-public class SearchRequest {
+public class SearchRequest implements Request {
     private String            username;
     private String            password;
     private List<Integer>     fieldIds;

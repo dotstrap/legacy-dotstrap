@@ -2,7 +2,7 @@
  * User.java
  * JRE v1.8.0_40
  * 
- * Created by William Myers on Mar 22, 2015.
+ * Created by William Myers on Mar 23, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 
@@ -22,21 +22,21 @@ public class User {
     private String email;
     // Current project info
     private int    recordCount;
-    private int    currBatch;
+    private int    currentBatchId;
 
     //@formatter:off
     /**
      * Instantiates a new User.
      */
     public User() {
-        this.userId      = -1;
-        this.username    = "username";
-        this.password    = "password";
-        this.first       = "first";
-        this.last        = "last";
-        this.email       = "email";
-        this.recordCount = -1;
-        this.currBatch   = -1;
+        this.userId         = -1;
+        this.username       = "username";
+        this.password       = "password";
+        this.first          = "first";
+        this.last           = "last";
+        this.email          = "email";
+        this.recordCount    = -1;
+        this.currentBatchId = -1;
     }
 
     /**
@@ -52,13 +52,13 @@ public class User {
      */
     public User(String username, String password, String first, String last, String email,
             int recordCount, int currBatch) {
-        this.username    = username;
-        this.password    = password;
-        this.first       = first;
-        this.last        = last;
-        this.email       = email;
-        this.recordCount = recordCount;
-        this.currBatch   = currBatch;
+        this.username       = username;
+        this.password       = password;
+        this.first          = first;
+        this.last           = last;
+        this.email          = email;
+        this.recordCount    = recordCount;
+        this.currentBatchId = currBatch;
     }
 
     /**
@@ -75,14 +75,14 @@ public class User {
      */
     public User(int id, String username, String password, String first,
             String last, String email, int recordCount, int currBatch) {
-        this.userId      = id;
-        this.username    = username;
-        this.password    = password;
-        this.first       = first;
-        this.last        = last;
-        this.email       = email;
-        this.recordCount = recordCount;
-        this.currBatch   = currBatch;
+        this.userId         = id;
+        this.username       = username;
+        this.password       = password;
+        this.first          = first;
+        this.last           = last;
+        this.email          = email;
+        this.recordCount    = recordCount;
+        this.currentBatchId = currBatch;
     }
     //@formatter:on
 
@@ -143,10 +143,46 @@ public class User {
     }
 
     public int getCurrBatch() {
-        return this.currBatch;
+        return this.currentBatchId;
     }
 
     public void setCurrBatch(int currBatch) {
-        this.currBatch = currBatch;
+        this.currentBatchId = currBatch;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null)
+            return false;
+        if (o.getClass() != this.getClass())
+            return false;
+        if (o == this)
+            return true;
+
+        User other = (User) o;
+// @formatter:off
+        return (userId == other.getUserId()
+                && username.equals(other.getUsername())
+                && password.equals(other.getPassword())
+                && first.equals(other.getFirst())
+                && last.equals(other.getLast())
+                && email.equals(other.getEmail()));
+        // @formatter:on
+    }
+
+    public String toString() {
+        StringBuilder output = new StringBuilder();
+
+        output.append("User ID: " + userId + "\n");
+        output.append("Username: " + username + "\n");
+        output.append("Password: " + password + "\n");
+        output.append("First Name: " + first + "\n");
+        output.append("Last Name: " + last + "\n");
+        output.append("Email: " + email + "\n");
+        output.append("Indexed Records: " + recordCount + "\n");
+        output.append("Current Image ID: " + currentBatchId + "\n");
+
+        return output.toString();
+    }
+
 }

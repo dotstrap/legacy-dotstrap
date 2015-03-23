@@ -2,7 +2,7 @@
  * Field.java
  * JRE v1.8.0_40
  * 
- * Created by William Myers on Mar 22, 2015.
+ * Created by William Myers on Mar 23, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package shared.model;
@@ -26,14 +26,14 @@ public class Field {
      *
      */
     public Field() {
-        this.fieldId   = -1;
+        this.fieldId = -1;
         this.projectId = -1;
-        this.title     = "title";
+        this.title = "title";
         this.knownData = "knownData";
-        this.helpURL   = "helpURL";
-        this.xCoord    = -1;
-        this.width     = -1;
-        this.colNum    = -1;
+        this.helpURL = "helpURL";
+        this.xCoord = -1;
+        this.width = -1;
+        this.colNum = -1;
     }
 
     /**
@@ -48,15 +48,15 @@ public class Field {
      * @param width
      * @param colNum
      */
-    public Field(int projectId, String title, String knownData, String helpURL,
-             int xCoord, int width, int colNum) {
+    public Field(int projectId, String title, String knownData, String helpURL, int xCoord,
+                    int width, int colNum) {
         this.projectId = projectId;
-        this.title     = title;
+        this.title = title;
         this.knownData = knownData;
-        this.helpURL   = helpURL;
-        this.xCoord    = xCoord;
-        this.width     = width;
-        this.colNum    = colNum;
+        this.helpURL = helpURL;
+        this.xCoord = xCoord;
+        this.width = width;
+        this.colNum = colNum;
     }
 
     /**
@@ -72,16 +72,16 @@ public class Field {
      * @param width
      * @param colNum
      */
-    public Field(int fieldId, int projectId, String title, String knownData,
-            String helpURL, int xCoord, int width, int colNum) {
-        this.fieldId   = fieldId;
+    public Field(int fieldId, int projectId, String title, String knownData, String helpURL,
+                    int xCoord, int width, int colNum) {
+        this.fieldId = fieldId;
         this.projectId = projectId;
-        this.title     = title;
+        this.title = title;
         this.knownData = knownData;
-        this.helpURL   = helpURL;
-        this.xCoord    = xCoord;
-        this.width     = width;
-        this.colNum    = colNum;
+        this.helpURL = helpURL;
+        this.xCoord = xCoord;
+        this.width = width;
+        this.colNum = colNum;
     }
 
     public int getFieldId() {
@@ -124,11 +124,11 @@ public class Field {
         this.helpURL = helpURL;
     }
 
-    public int getxCoord() {
+    public int getXCoord() {
         return this.xCoord;
     }
 
-    public void setxCoord(int xCoord) {
+    public void setXCoord(int xCoord) {
         this.xCoord = xCoord;
     }
 
@@ -146,6 +146,32 @@ public class Field {
 
     public void setColNum(int colNum) {
         this.colNum = colNum;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null) {
+            return false;
+        }
+        if (o.getClass() != this.getClass()) {
+            return false;
+        }
+        if (o == this) {
+            return true;
+        }
+
+        final Field other = (Field) o;
+        // @formatter:off
+
+        return (this.fieldId == other.getFieldId() 
+                        && this.projectId == other.getProjectId()
+                        && this.title.equals(other.getTitle()) 
+                        && this.xCoord == other.getXCoord()
+                        && this.width == other.getWidth() 
+                        && this.helpURL.equals(other.getHelpURL())
+                        && this.knownData.equals(other.getKnownData()) 
+                        && this.colNum == other.getColNum());
+        // @formatter:on
     }
 
 }

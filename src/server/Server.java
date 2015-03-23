@@ -1,7 +1,9 @@
 /**
- * Server.java JRE v1.7.0_76
+ * Server.java
+ * JRE v1.8.0_40
  *
- * Created by William Myers on Mar 15, 2015. Copyright (c) 2015 William Myers. All Rights reserved.
+ * Created by William Myers on Mar 23, 2015.
+ * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 
 package server;
@@ -14,8 +16,7 @@ import java.util.logging.*;
 import com.sun.net.httpserver.HttpServer;
 
 import server.facade.ServerFacade;
-// import server.facade.ServerFacade;
-import server.httphandler.*;
+import server.httphandler.indexerserverhandler.*;
 
 /**
  * The Class Server. Initializes the server's logs (used in all non-testing classes) Creates
@@ -24,13 +25,14 @@ import server.httphandler.*;
 public class Server {
 
     /** The Constant MAX_WAITING_CONNECTIONS to the server. */
-    private static final int MAX_WAITING_CONNECTIONS = 10;
+    private static final int    MAX_WAITING_CONNECTIONS = 10;
 
     /** Default port number the server runs on (can be overridden via CLI args. */
-    private static int       DEFAULT_PORT            = 8080;
+    private static int          DEFAULT_PORT            = 8080;
 
-    private static Logger    logger;
-    private static String    LOG_NAME                = "server";
+    /** The logger used throughout the project. */
+    private static Logger       logger;
+    private final static String LOG_NAME                = "server";
 
     /**
      * Entry point for the Indexer Server program
@@ -60,7 +62,6 @@ public class Server {
                 logger.severe("Invalid port number argument...");
                 return;
             }
-
         } else {
             logger.severe("Too many input arguments...");
             return;
@@ -74,6 +75,7 @@ public class Server {
             logger.log(Level.FINE, "STACKTRACE: ", e);
         }
     }
+
 
     //@formatter:off
     // The server
@@ -107,10 +109,10 @@ public class Server {
     /**
      * Bootstraps the server: Initializes the models Starts the HTTP server Creates contexts Starts
      * the server
-     * 
+     *
      * @param portNum
      */
-    private void bootstrap(int portNum) throws ServerException {
+    public void bootstrap(int portNum) throws ServerException {
         logger.info("Initializing Model...");
         try {
             ServerFacade.initialize();

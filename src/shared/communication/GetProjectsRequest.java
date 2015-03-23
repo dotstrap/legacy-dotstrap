@@ -1,8 +1,8 @@
 /**
  * GetProjectsRequest.java
  * JRE v1.8.0_40
- * 
- * Created by William Myers on Mar 22, 2015.
+ *
+ * Created by William Myers on Mar 23, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package shared.communication;
@@ -11,7 +11,7 @@ package shared.communication;
 /**
  * The Class GetProjectsRequest.
  */
-public class GetProjectsRequest {
+public class GetProjectsRequest implements Request{
     /** The name. */
     private String username;
 
