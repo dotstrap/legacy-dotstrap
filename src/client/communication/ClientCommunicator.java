@@ -17,15 +17,16 @@ import java.util.logging.Logger;
 
 import org.apache.commons.io.IOUtils;
 
-import shared.communication.*;
-import shared.model.Record;
-
-import client.ClientException;
-
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 
+import client.ClientException;
+
+import shared.communication.*;
+import shared.model.Record;
+
 public class ClientCommunicator {
+
     /** The logger used throughout the project. */
     private static Logger       logger;
 
@@ -36,6 +37,21 @@ public class ClientCommunicator {
     private final String HTTP_GET    = "GET";
     private final String HTTP_POST   = "POST";
     //@formatter:on
+    public String getHost() {
+        return SERVER_HOST;
+    }
+
+    public void setHost(String host) {
+        this.SERVER_HOST = host;
+    }
+
+    public int getPort() {
+        return SERVER_PORT;
+    }
+
+    public void setPort(int port) {
+        this.SERVER_PORT = port;
+    }
 
     /**
      * Instantiates a new ClientCommunicator.
@@ -76,7 +92,7 @@ public class ClientCommunicator {
 
     public GetSampleBatchResponse getSampleBatch(GetSampleBatchRequest params)
                     throws ClientException {
-                    GetSampleBatchResponse result = null;
+        GetSampleBatchResponse result = null;
         try {
             result = (GetSampleBatchResponse) doPost("/GetSampleImage", params);
             URL url = new URL(URL_PREFIX + "/" + result.getSampleBatch().getFilePath());

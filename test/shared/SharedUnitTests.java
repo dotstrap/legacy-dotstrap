@@ -32,7 +32,7 @@ public class SharedUnitTests {
             LogManager.getLogManager().readConfiguration(is);
             logger = Logger.getLogger("clientTest");
         } catch (final IOException e) {
-            Logger.getAnonymousLogger().severe("ERROR: unable to load logging propeties file...");
+            Logger.getAnonymousLogger().severe("ERROR: unable to load logging properties file...");
             Logger.getAnonymousLogger().severe(e.getMessage());
         }
 

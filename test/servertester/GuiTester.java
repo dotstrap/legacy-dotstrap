@@ -33,7 +33,7 @@ public class GuiTester {
             LogManager.getLogManager().readConfiguration(is);
             logger = Logger.getLogger("guiTester");
         } catch (final IOException e) {
-            Logger.getAnonymousLogger().severe("ERROR: unable to load logging propeties file...");
+            Logger.getAnonymousLogger().severe("ERROR: unable to load logging properties file...");
             Logger.getAnonymousLogger().severe(e.getMessage());
         }
 

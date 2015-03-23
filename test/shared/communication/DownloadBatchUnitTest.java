@@ -17,10 +17,11 @@ import org.junit.*;
 import client.ClientException;
 import client.communication.ClientCommunicator;
 
-import server.database.*;
+import server.database.Database;
+import server.database.DatabaseException;
+import server.database.dao.BatchDAO;
+import server.database.dao.UserDAO;
 
-import shared.communication.DownloadBatchRequest;
-import shared.communication.DownloadBatchResponse;
 import shared.model.Batch;
 import shared.model.User;
 

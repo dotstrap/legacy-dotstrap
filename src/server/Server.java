@@ -27,44 +27,54 @@ public class Server {
     private static final int MAX_WAITING_CONNECTIONS = 10;
 
     /** Default port number the server runs on (can be overridden via CLI args. */
-    private static int       SERVER_PORT_NUMBER      = 8080;
+    private static int       DEFAULT_PORT            = 8080;
 
     private static Logger    logger;
-    private static String    LOG_NAME                 = "server";
+    private static String    LOG_NAME                = "server";
 
     /**
-     * The main method.
+     * Entry point for the Indexer Server program
      *
      * @param args the port to run the indexer server on
      */
     public static void main(String[] args) {
+        int portNum = 8080;
         try {
             final FileInputStream is = new FileInputStream("logging.properties");
             LogManager.getLogManager().readConfiguration(is);
             logger = Logger.getLogger(LOG_NAME);
         } catch (final IOException e) {
-            Logger.getAnonymousLogger().severe("ERROR: unable to load logging propeties file...");
+            Logger.getAnonymousLogger().severe("ERROR: unable to load logging properties file...");
             Logger.getAnonymousLogger().severe(e.getMessage());
         }
+
         logger.info("Initialized " + LOG_NAME + " log...");
 
         if (args == null) {
-            SERVER_PORT_NUMBER = 8080;
-        } else if (args.length > 0) {
-            SERVER_PORT_NUMBER = Integer.parseInt(args[0]);
+            logger.info("No port number specified; using default port");
+            portNum = DEFAULT_PORT;
+        } else if (args.length == 1) {
+            try {
+                portNum = Integer.parseInt(args[0]);
+            } catch (NumberFormatException e) {
+                logger.severe("Invalid port number argument...");
+                return;
+            }
+
         } else {
-            SERVER_PORT_NUMBER = 25565; // else use default minecraft server port number
+            logger.severe("Too many input arguments...");
+            return;
         }
 
-        logger.info("Bootstrapping server on port: " + SERVER_PORT_NUMBER + "...");
+        logger.info("Bootstrapping server...");
         try {
-            new Server().bootstrap();
+            new Server().bootstrap(portNum);
         } catch (ServerException e) {
             logger.log(Level.SEVERE, e.toString());
             logger.log(Level.FINE, "STACKTRACE: ", e);
         }
     }
-    
+
     //@formatter:off
     // The server
     private HttpServer            server;
@@ -97,8 +107,10 @@ public class Server {
     /**
      * Bootstraps the server: Initializes the models Starts the HTTP server Creates contexts Starts
      * the server
+     * 
+     * @param portNum
      */
-    private void bootstrap() throws ServerException {
+    private void bootstrap(int portNum) throws ServerException {
         logger.info("Initializing Model...");
         try {
             ServerFacade.initialize();
@@ -108,17 +120,16 @@ public class Server {
             throw new ServerException(e.toString());
         }
 
-        //@formatter:off
-        logger.info("Initializing HTTP Server...");
+        logger.info("Initializing HTTP server on port: " + portNum + "...");
         try {
-            server = HttpServer.create(new InetSocketAddress(SERVER_PORT_NUMBER),
-                                                             MAX_WAITING_CONNECTIONS);
+            server = HttpServer.create(new InetSocketAddress(portNum), MAX_WAITING_CONNECTIONS);
         } catch (IOException e) {
+            logger.log(Level.SEVERE, "Failed to initialize server on port: " + portNum + "...");
             logger.log(Level.SEVERE, e.toString());
             logger.log(Level.FINE, "STACKTRACE: ", e);
             throw new ServerException(e.toString());
         }
-    //@formatter:on
+
         server.setExecutor(null); // use the default executor
 
         logger.info("Creating contexts...");
