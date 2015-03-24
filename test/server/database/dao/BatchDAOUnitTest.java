@@ -56,6 +56,9 @@ public class BatchDAOUnitTest {
 
   private Database db;
   private BatchDAO testBatchDAO;
+  private Batch    batchTest1;
+  private Batch    batchTest2;
+  private Batch    batchTest3;
 
   /**
    * Sets the database up.
@@ -69,6 +72,14 @@ public class BatchDAOUnitTest {
     db.startTransaction();
     testBatchDAO = db.getBatchDAO();
     testBatchDAO.initTable();
+
+    batchTest1 = new Batch("batchTest1", 10, 10);
+    batchTest2 = new Batch("batchTest2", 1, 1);
+    batchTest3 = new Batch("batchTest3", 15, 15);
+
+    testBatchDAO.create(batchTest1);
+    testBatchDAO.create(batchTest2);
+    testBatchDAO.create(batchTest3);
   }
 
   /**
@@ -126,9 +137,8 @@ public class BatchDAOUnitTest {
    */
   @Test
   public void testGetAll() throws DatabaseException {
-
     final List<Batch> allBatches = testBatchDAO.getAll();
-    assertEquals(0, allBatches.size());
+    assertEquals(3, allBatches.size());
   }
 
   /**
@@ -139,15 +149,6 @@ public class BatchDAOUnitTest {
   @Test
   public void testCreate() throws DatabaseException {
     // TODO:refractor these for all unit test cases into the setup method
-
-    final Batch batchTest1 = new Batch("batchTestCreate1", 10, 10);
-    final Batch batchTest2 = new Batch("batchTestCreate2", 10, 10);
-    final Batch batchTest3 = new Batch("batchTestCreate3", 10, 10);
-
-    testBatchDAO.create(batchTest1);
-    testBatchDAO.create(batchTest2);
-    testBatchDAO.create(batchTest3);
-
     final List<Batch> allBatches = testBatchDAO.getAll();
     assertEquals(3, allBatches.size());
 
@@ -176,18 +177,9 @@ public class BatchDAOUnitTest {
    */
   @Test
   public void testUpdate() throws DatabaseException {
-
-    final Batch batchTest1 = new Batch("batchUdateTest1", 10, 10);
-    final Batch batchTest2 = new Batch("batchUdateTest2", 1, 1);
-    final Batch batchTest3 = new Batch("batchUdateTest3", 15, 15);
-
-    testBatchDAO.create(batchTest1);
-    testBatchDAO.create(batchTest2);
-    testBatchDAO.create(batchTest3);
-
-    batchTest1.setStatus(0);
-    batchTest2.setStatus(1);
-    batchTest3.setStatus(2);
+    batchTest1.setStatus(Batch.INCOMPLETE);
+    batchTest2.setStatus(Batch.ACTIVE);
+    batchTest3.setStatus(Batch.COMPLETE);
 
     testBatchDAO.update(batchTest1);
     testBatchDAO.update(batchTest2);
@@ -221,15 +213,6 @@ public class BatchDAOUnitTest {
    */
   @Test
   public void testDelete() throws DatabaseException {
-
-    final Batch batchTest1 = new Batch("batchDeleteTest1", 10, 10);
-    final Batch batchTest2 = new Batch("batchDeleteTest2", 5, 5);
-    final Batch batchTest3 = new Batch("batchDeleteTest3", 1, 0);
-
-    testBatchDAO.create(batchTest1);
-    testBatchDAO.create(batchTest2);
-    testBatchDAO.create(batchTest3);
-
     List<Batch> allBatches = testBatchDAO.getAll();
     assertEquals(3, allBatches.size());
 

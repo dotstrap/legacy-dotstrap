@@ -19,7 +19,6 @@ import shared.communication.GetSampleBatchRequest;
 import shared.communication.GetSampleBatchResponse;
 
 public class GetSampleBatchHandler extends IndexerServerHandler {
-
   /*
    * (non-Javadoc)
    *
@@ -36,7 +35,7 @@ public class GetSampleBatchHandler extends IndexerServerHandler {
 
       response = ServerFacade.getSampleBatch(request);
 
-      this.setResponse(response);
+      setResponse(response);
     } else {
       statusCode = HttpURLConnection.HTTP_UNAUTHORIZED;
       this.setResponse(null); // TODO: should I do this?

@@ -28,9 +28,10 @@ import shared.model.Record;
 
 public class ClientCommunicator {
   /** The logger used throughout the project. */
-  private static Logger logger; // @formatter:off
+  private static Logger logger;
+  public final static String LOG_NAME = "client";
   static {
-    logger = Logger.getLogger("client");
+    logger = Logger.getLogger(LOG_NAME);
   }
 
   private final  XStream xs = new XStream(new DomDriver());
@@ -96,7 +97,8 @@ public class ClientCommunicator {
     return result;
   }
 
-  public GetSampleBatchResponse getSampleBatch(GetSampleBatchRequest params) throws ClientException {
+  public GetSampleBatchResponse getSampleBatch(GetSampleBatchRequest params)
+      throws ClientException {
     GetSampleBatchResponse result = null;
     try {
       result = (GetSampleBatchResponse) doPost("/GetSampleImage", params);

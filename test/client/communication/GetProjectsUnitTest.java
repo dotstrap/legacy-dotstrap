@@ -16,7 +16,6 @@ import java.util.logging.Logger;
 import org.junit.*;
 
 import client.ClientException;
-import client.ClientUnitTests;
 
 import server.database.Database;
 import server.database.dao.ProjectDAO;
@@ -32,7 +31,7 @@ public class GetProjectsUnitTest {
   /** The logger used throughout the project. */
   private static Logger logger; // @formatter:off
   static {
-    logger = Logger.getLogger(ClientUnitTests.LOG_NAME);
+    logger = Logger.getLogger(ClientCommunicator.LOG_NAME);
   }
 
   static private ClientCommunicator clientComm;
@@ -52,7 +51,10 @@ public class GetProjectsUnitTest {
     // Load database driver
     Database.initDriver();
 
-    // create these once per class for speed
+    /*
+     * Populate the database once per test-suite instead of per test-case because it is faster and
+     * we wont be modifying it each test-case; just reading from it
+     */
     db = new Database();
     db.startTransaction();
 
@@ -110,7 +112,7 @@ public class GetProjectsUnitTest {
 
   @Before
   public void setUp() throws Exception {
-    // quick check to ensure size hasnt changed for some reason
+    // quick checks to ensure size hasn't changed for some reason
     final List<User> allUseres = testUserDAO.getAll();
     assertEquals(3, allUseres.size());
 
@@ -120,7 +122,7 @@ public class GetProjectsUnitTest {
 
   @After
   public void tearDown() throws Exception {
-    // quick check to ensure size hasnt changed for some reason
+    // quick checks to ensure size hasn't changed for some reason
     final List<User> allUseres = testUserDAO.getAll();
     assertEquals(3, allUseres.size());
 
@@ -184,7 +186,6 @@ public class GetProjectsUnitTest {
 
   @Test
   public void invalidCredsTest() {
-    // invalid credentials test
     boolean isValidCreds = true;
     try {
       clientComm.getProjects(new GetProjectsRequest("userTest2", "userTest2"));
@@ -196,4 +197,6 @@ public class GetProjectsUnitTest {
     }
     assertEquals(false, isValidCreds);
   }
+
+
 }

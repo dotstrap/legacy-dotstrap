@@ -56,7 +56,7 @@ public class ServerFacade {
     try {
       db.startTransaction();
       user = db.getUserDAO().read(username, password);
-      // TODO: should I Preform an additional check on password...
+      // TODO: should I Perform this additional check on password...
       isValid = user.getPassword().equals(password);
     } catch (final DatabaseException e) {
       logger.log(Level.SEVERE, e.toString());

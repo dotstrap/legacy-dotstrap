@@ -43,7 +43,7 @@ public class SearchRequest implements Request {
   public SearchRequest(String name, String password,
       ArrayList<Integer> fieldId, ArrayList<String> search) {
     username      = name;
-    this.password      = password;
+    this.password = password;
     searchQueries = search;
   }
 
@@ -56,8 +56,8 @@ public class SearchRequest implements Request {
   public SearchRequest(String name, String password,
       List<Integer> fieldIds, ArrayList<String> searchQuery) {
     username      = name;
-    this.password      = password;
-    this.fieldIds      = fieldIds;
+    this.password = password;
+    this.fieldIds = fieldIds;
     searchQueries = searchQuery;
   }
   //@formatter:on

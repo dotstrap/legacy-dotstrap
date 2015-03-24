@@ -12,14 +12,14 @@ package shared.model;
  * The Class Field.
  */
 public class Field {
-  private int fieldId;
-  private int projectId;
+  private int    fieldId;
+  private int    projectId;
   private String title;
   private String knownData;
   private String helpURL;
-  private int xCoord;
-  private int width;
-  private int colNum;
+  private int    xCoord;
+  private int    width;
+  private int    colNum;
 
   /**
    * Instantiates a new Field.
@@ -162,17 +162,16 @@ public class Field {
     }
 
     final Field other = (Field) o;
-    // @formatter:off
 
-    return ((fieldId == other.getFieldId())
+    return ((fieldId == other.getFieldId()) // @formatter:off
         && (projectId == other.getProjectId())
         && title.equals(other.getTitle())
         && (xCoord == other.getXCoord())
         && (width == other.getWidth())
         && helpURL.equals(other.getHelpURL())
         && knownData.equals(other.getKnownData())
-        && (colNum == other.getColNum()));
-    // @formatter:on
+        && (colNum == other.getColNum()));  // @formatter:on
+
   }
 
 }

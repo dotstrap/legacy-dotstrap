@@ -31,7 +31,6 @@ import shared.communication.*;
  * of operation.
  */
 public abstract class IndexerServerHandler implements HttpHandler {
-
   protected static Logger logger = Logger.getLogger(ServerFacade.LOG_NAME); // @formatter:off
 
   protected static final String SERVER = HttpServer.class.getName() + " ("
@@ -63,35 +62,28 @@ public abstract class IndexerServerHandler implements HttpHandler {
       exchange.sendResponseHeaders(statusCode, 0);
       xStream.toXML(response, exchange.getResponseBody());
 
-    } catch (final InvalidCredentialsException e) {
+    } catch (InvalidCredentialsException e) {
       statusCode = HttpURLConnection.HTTP_UNAUTHORIZED;
       exchange.sendResponseHeaders(statusCode, -1);
       logger.log(Level.SEVERE, e.toString());
       logger.log(Level.FINE, "STACKTRACE: ", e);
 
-    } catch (final XStreamException e) {
+    } catch (XStreamException e) {
       statusCode = HttpURLConnection.HTTP_BAD_REQUEST;
       exchange.sendResponseHeaders(statusCode, -1);
       logger.log(Level.SEVERE, e.toString());
       logger.log(Level.FINE, "STACKTRACE: ", e);
 
-    } catch (ClassCastException | NullPointerException | DatabaseException e) {
+    } catch (Exception e) {
       statusCode = HttpURLConnection.HTTP_INTERNAL_ERROR;
       exchange.sendResponseHeaders(statusCode, -1);
       logger.log(Level.SEVERE, e.toString());
       logger.log(Level.FINE, "STACKTRACE: ", e);
 
-    } catch (final Exception e) {
-      statusCode = HttpURLConnection.HTTP_INTERNAL_ERROR;
-      exchange.sendResponseHeaders(statusCode, -1);
-      logger.log(Level.SEVERE, "UNKOWN EXCEPTION: " + e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
-
     } finally {
       exchange.close();
     }
-
-    logger.info(this.getClass().getSimpleName() + " returned status code " + statusCode);
+    logger.info("HTTP status code: " + statusCode + " @ " + this.getClass().getSimpleName());
   }
 
   /**

@@ -17,7 +17,7 @@ import shared.model.Record;
  */
 public class SearchResponse implements Response {
   private List<Record> foundRecords;
-  private List<URL> urls;
+  private List<URL>    urls;
 
   /**
    * Instantiates a new SearchResponse.

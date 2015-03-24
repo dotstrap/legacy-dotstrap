@@ -12,11 +12,8 @@ package shared.communication;
  * The Class GetSampleBatchRequest.
  */
 public class GetSampleBatchRequest implements Request {
-
   private String username;
-
   private String password;
-
   private int projectId;
 
   /**
@@ -29,14 +26,14 @@ public class GetSampleBatchRequest implements Request {
   /**
    * Instantiates a new gets the sample image parameters.
    *
-   * @param name the name
-   * @param password the password
-   * @param projectId the project id
+   * @param usrname the name
+   * @param passwd the password
+   * @param projId the project id
    */
-  public GetSampleBatchRequest(String name, String password, int projectId) {
-    username = name;
-    this.password = password;
-    this.projectId = projectId;
+  public GetSampleBatchRequest(String usrname, String passwd, int projId) {
+    this.username = usrname;
+    this.password = passwd;
+    this.projectId = projId;
   }
 
   /**

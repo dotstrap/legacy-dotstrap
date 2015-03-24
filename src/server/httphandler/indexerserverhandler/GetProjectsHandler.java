@@ -19,7 +19,6 @@ import shared.communication.GetProjectsRequest;
 import shared.communication.GetProjectsResponse;
 
 public class GetProjectsHandler extends IndexerServerHandler {
-
   /*
    * (non-Javadoc)
    *

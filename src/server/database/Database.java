@@ -19,6 +19,7 @@ import server.database.dao.*;
  * The Class Database.
  */
 public class Database {
+
   // @formatter:off
   final public static String DB_NAME            = "IndexerServer.sqlite";
   final public static String DB_DIRECTORY       = "database";
@@ -37,28 +38,28 @@ public class Database {
   // @formatter:on
   // DataBase Access //////////////////
   /** The database driver connection. */
-  private Connection connection;
+  private Connection          connection;
 
   /**
    * The batch DataBaseAccess. interfaces with the database to modify the batch (image) table
    */
-  private final BatchDAO batchDAO;
+  private final BatchDAO      batchDAO;
   /**
    * The field DataBaseAccess. interfaces with the database to modify the field table
    */
-  private final FieldDAO fieldDAO;
+  private final FieldDAO      fieldDAO;
   /**
    * The project DataBaseAccess. interfaces with the database to modify the project table
    */
-  private final ProjectDAO projectDAO;
+  private final ProjectDAO    projectDAO;
   /*
    * * The record DataBaseAccess. interfaces with the database to modify the record table
    */
-  private final RecordDAO recordDAO;
+  private final RecordDAO     recordDAO;
   /**
    * The user DataBaseAccess. interfaces with the database to modify the user table
    */
-  private UserDAO userDAO;
+  private UserDAO             userDAO;
 
   //@formatter:off
   /**
@@ -77,18 +78,18 @@ public class Database {
   /**
    * Instantiates a new Database.
    *
-   * @param batchDAO
-   * @param fieldDAO
-   * @param projectDAO
-   * @param recordDAO
+   * @param bDao
+   * @param fDao
+   * @param pDao
+   * @param rDao
    */
-  public Database(BatchDAO batchDAO, FieldDAO fieldDAO, ProjectDAO projectDAO, RecordDAO recordDAO) {
+  public Database(BatchDAO bDao, FieldDAO fDao, ProjectDAO pDao, RecordDAO rDao) {
     connection      = null;
 
-    this.batchDAO   = batchDAO;
-    this.fieldDAO   = fieldDAO;
-    this.projectDAO = projectDAO;
-    this.recordDAO  = recordDAO;
+    this.batchDAO   = bDao;
+    this.fieldDAO   = fDao;
+    this.projectDAO = pDao;
+    this.recordDAO  = rDao;
   }
 
   public Connection getConnection() {

@@ -15,8 +15,6 @@ import java.util.logging.Logger;
 
 import org.junit.*;
 
-import client.ClientUnitTests;
-
 import server.database.Database;
 import server.database.dao.UserDAO;
 
@@ -28,7 +26,7 @@ public class ValidateUserUnitTest {
   /** The logger used throughout the project. */
   private static Logger   logger;
   static {
-    logger = Logger.getLogger(ClientUnitTests.LOG_NAME);
+    logger = Logger.getLogger(ClientCommunicator.LOG_NAME);
   }
 
   static private ClientCommunicator clientComm; // @formatter:off
@@ -46,7 +44,10 @@ public class ValidateUserUnitTest {
     // Load database driver
     Database.initDriver();
 
-    // create these once per class for speed
+    /*
+     * Populate the database once per test-suite instead of per test-case because it is faster and
+     * we wont be modifying it each test-case; just reading from it
+     */
     db = new Database();
     db.startTransaction();
 
@@ -89,14 +90,14 @@ public class ValidateUserUnitTest {
 
   @Before
   public void setUp() throws Exception {
-    // quick check to ensure size hasnt changed for some reason
+    // quick check to ensure size hasn't changed for some reason
     final List<User> allUseres = testUserDAO.getAll();
     assertEquals(3, allUseres.size());
   }
 
   @After
   public void tearDown() throws Exception {
-    // quick check to ensure size hasnt changed for some reason
+    // quick check to ensure size hasn't changed for some reason
     final List<User> allUseres = testUserDAO.getAll();
     assertEquals(3, allUseres.size());
   }
@@ -149,6 +150,48 @@ public class ValidateUserUnitTest {
     boolean isValidCreds = false;
     try {
       clientComm.validateUser(new ValidateUserRequest("userTest2", "userTest2"));
+      isValidCreds = true;
+    } catch (final Exception e) {
+      isValidCreds = false;
+      logger.log(Level.SEVERE, e.toString());
+      logger.log(Level.FINE, "STACKTRACE: ", e);
+    }
+    assertEquals(false, isValidCreds);
+  }
+
+  @Test
+  public void nullPasswordTest() {
+    boolean isValidCreds = true;
+    try {
+      clientComm.validateUser(new ValidateUserRequest("userTest2", ""));
+      isValidCreds = true;
+    } catch (final Exception e) {
+      isValidCreds = false;
+      logger.log(Level.SEVERE, e.toString());
+      logger.log(Level.FINE, "STACKTRACE: ", e);
+    }
+    assertEquals(false, isValidCreds);
+  }
+
+  @Test
+  public void nullUsernameTest() {
+    boolean isValidCreds = true;
+    try {
+      clientComm.validateUser(new ValidateUserRequest("", "pass3"));
+      isValidCreds = true;
+    } catch (final Exception e) {
+      isValidCreds = false;
+      logger.log(Level.SEVERE, e.toString());
+      logger.log(Level.FINE, "STACKTRACE: ", e);
+    }
+    assertEquals(false, isValidCreds);
+  }
+
+  @Test
+  public void nullCredsTest() {
+    boolean isValidCreds = true;
+    try {
+      clientComm.validateUser(new ValidateUserRequest("", ""));
       isValidCreds = true;
     } catch (final Exception e) {
       isValidCreds = false;

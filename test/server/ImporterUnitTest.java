@@ -10,7 +10,6 @@ package server;
 import static org.junit.Assert.assertEquals;
 
 import java.util.List;
-import java.util.logging.Logger;
 
 import org.junit.*;
 
@@ -23,12 +22,6 @@ import shared.model.*;
  *
  */
 public class ImporterUnitTest {
-  /** The logger used throughout the project. */
-  private static Logger logger;
-  static {
-    logger = Logger.getLogger(ServerUnitTests.LOG_NAME);
-  }
-
   /**
    * Sets up before class.
    *
@@ -36,7 +29,6 @@ public class ImporterUnitTest {
    */
   @BeforeClass
   public static void setUpBeforeClass() throws Exception {
-
     // Load database driver
     Database.initDriver();
   }
@@ -50,8 +42,7 @@ public class ImporterUnitTest {
    */
   @Before
   public void setUp() throws Exception {
-
-    // Prepare database for test case
+    // Prepare database for test case(s)
     final String[] args = {"Records/Records.xml"};
     Importer.main(args);
 
@@ -66,7 +57,6 @@ public class ImporterUnitTest {
    */
   @After
   public void tearDown() throws Exception {
-
     // Roll back this transaction so changes are undone
     db.endTransaction(false);
     db = null;
@@ -74,8 +64,7 @@ public class ImporterUnitTest {
 
   @Test
   public void importTest() throws Exception {
-
-    // Be double sure we start with empty lists...
+    // Extra precaution that lists are empty to start with...
     List<User> users = null;
     List<Project> projects = null;
     List<Batch> batches = null;

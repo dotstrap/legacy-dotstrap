@@ -20,7 +20,7 @@ import shared.communication.*;
 public class Controller implements IController {
   /** The logger used throughout the project. */
   private static Logger logger;
-  private IView _view;
+  private IView         _view;
 
   public Controller() {
     return;
@@ -232,7 +232,7 @@ public class Controller implements IController {
     // new SubmitBatchRequest(args[0], args[1],
     // Integer.parseInt(args[2]), args[3]);
     // SubmitBatchResponse result = client.submitBatch(params);
-    // getView().setResponse(result.toString());
+    // getView().setResponse(result.to String());
     // } catch (Exception e) {
     // getView().setResponse("FAILED\n");
     // }
@@ -245,12 +245,14 @@ public class Controller implements IController {
 
     final String fieldId = args[2];
     try {
-      final List<String> tempFieldId = Arrays.asList(fieldId.split(",", -1));
-      for (final String s : tempFieldId) {
+
+      final List<String> tmpFieldIds = Arrays.asList(fieldId.split(",", -1));
+      for (final String s : tmpFieldIds) {
         if (!fieldList.contains(Integer.parseInt(s))) {
           fieldList.add(Integer.parseInt(s));
         }
       }
+
       final String search = args[3];
       final List<String> searchQuery = Arrays.asList(search.split(",", -1));
       for (String s : searchQuery) {
@@ -259,6 +261,7 @@ public class Controller implements IController {
           searchList.add(s);
         }
       }
+
       final String port = getView().getPort();
       final String host = getView().getHost();
 

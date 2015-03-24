@@ -19,7 +19,6 @@ import shared.communication.SearchRequest;
 import shared.communication.SearchResponse;
 
 public class SearchHandler extends IndexerServerHandler {
-
   /*
    * (non-Javadoc)
    *

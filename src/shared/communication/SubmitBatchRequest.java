@@ -22,16 +22,16 @@ public class SubmitBatchRequest implements Request {
   private List<Record> fieldValues;
 
   /**
-   * @param username
-   * @param password
+   * @param usrname
+   * @param passwrd
    * @param batchId
-   * @param fieldValues
+   * @param fieldVals
    */
-  public SubmitBatchRequest(String username, String password, int batchId, List<Record> fieldValues) {
-    this.username = username;
-    this.password = password;
+  public SubmitBatchRequest(String usrname, String passwrd, int batchId, List<Record> fieldVals) {
+    this.username = usrname;
+    this.password = passwrd;
     this.batchId = batchId;
-    this.fieldValues = fieldValues;
+    this.fieldValues = fieldVals;
   }
 
   /**
