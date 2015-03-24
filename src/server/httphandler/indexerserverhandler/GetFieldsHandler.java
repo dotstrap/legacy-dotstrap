@@ -19,27 +19,27 @@ import shared.communication.GetFieldsRequest;
 import shared.communication.GetFieldsResponse;
 
 public class GetFieldsHandler extends IndexerServerHandler {
+  /*
+   * (non-Javadoc)
+   *
+   * @see server.httphandler.IndexerServerHandler#doRequest()
+   */
+  @Override
+  protected int doRequest() throws ServerException, DatabaseException, InvalidCredentialsException {
+    final GetFieldsRequest request = (GetFieldsRequest) getRequest();
+    GetFieldsResponse response;
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see server.httphandler.IndexerServerHandler#doRequest()
-     */
-    @Override
-    protected int doRequest() throws ServerException, DatabaseException,
-                    InvalidCredentialsException {
-        GetFieldsRequest request = (GetFieldsRequest) getRequest();
-        GetFieldsResponse response;
+    int statusCode;
+    if (IndexerServerHandler.authenticate(request.getUsername(), request.getPassword())) {
+      statusCode = HttpURLConnection.HTTP_OK;
 
-        int statusCode;
-        if (IndexerServerHandler.authenticate(request.getUsername(), request.getPassword())) {
-            statusCode = HttpURLConnection.HTTP_OK;
-            response = ServerFacade.getFields(request);
-            this.setResponse(response);
-        } else {
-            statusCode = HttpURLConnection.HTTP_UNAUTHORIZED;
-            this.setResponse(null); // TODO: should I do this?
-        }
-        return statusCode;
+      response = ServerFacade.getFields(request);
+
+      this.setResponse(response);
+    } else {
+      statusCode = HttpURLConnection.HTTP_UNAUTHORIZED;
+      this.setResponse(null); // TODO: should I do this?
     }
+    return statusCode;
+  }
 }

@@ -20,26 +20,27 @@ import shared.communication.GetProjectsResponse;
 
 public class GetProjectsHandler extends IndexerServerHandler {
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see server.httphandler.IndexerServerHandler#doRequest()
-     */
-    @Override
-    protected int doRequest() throws ServerException, DatabaseException,
-                    InvalidCredentialsException {
-        GetProjectsRequest request = (GetProjectsRequest) getRequest();
-        GetProjectsResponse response;
+  /*
+   * (non-Javadoc)
+   *
+   * @see server.httphandler.IndexerServerHandler#doRequest()
+   */
+  @Override
+  protected int doRequest() throws ServerException, DatabaseException, InvalidCredentialsException {
+    final GetProjectsRequest request = (GetProjectsRequest) getRequest();
+    GetProjectsResponse response;
 
-        int statusCode;
-        if (IndexerServerHandler.authenticate(request.getUsername(), request.getPassword())) {
-            statusCode = HttpURLConnection.HTTP_OK;
-            response = ServerFacade.getProjects(request);
-            this.setResponse(response);
-        } else {
-            statusCode = HttpURLConnection.HTTP_UNAUTHORIZED;
-            this.setResponse(null); // TODO: should I do this?
-        }
-        return statusCode;
+    int statusCode;
+    if (IndexerServerHandler.authenticate(request.getUsername(), request.getPassword())) {
+      statusCode = HttpURLConnection.HTTP_OK;
+
+      response = ServerFacade.getProjects(request);
+
+      this.setResponse(response);
+    } else {
+      statusCode = HttpURLConnection.HTTP_UNAUTHORIZED;
+      this.setResponse(null); // TODO: should I do this?
     }
+    return statusCode;
+  }
 }

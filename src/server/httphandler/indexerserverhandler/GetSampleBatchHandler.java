@@ -20,26 +20,27 @@ import shared.communication.GetSampleBatchResponse;
 
 public class GetSampleBatchHandler extends IndexerServerHandler {
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see server.httphandler.IndexerServerHandler#doRequest()
-     */
-    @Override
-    protected int doRequest() throws ServerException, DatabaseException,
-                    InvalidCredentialsException {
-        GetSampleBatchRequest request = (GetSampleBatchRequest) getRequest();
-        GetSampleBatchResponse response = new GetSampleBatchResponse();
+  /*
+   * (non-Javadoc)
+   *
+   * @see server.httphandler.IndexerServerHandler#doRequest()
+   */
+  @Override
+  protected int doRequest() throws ServerException, DatabaseException, InvalidCredentialsException {
+    final GetSampleBatchRequest request = (GetSampleBatchRequest) getRequest();
+    GetSampleBatchResponse response = new GetSampleBatchResponse();
 
-        int statusCode;
-        if (IndexerServerHandler.authenticate(request.getUsername(), request.getPassword())) {
-            statusCode = HttpURLConnection.HTTP_OK;
-            response = ServerFacade.getSampleBatch(request);
-            this.setResponse(response);
-        } else {
-            statusCode = HttpURLConnection.HTTP_UNAUTHORIZED;
-            this.setResponse(null); // TODO: should I do this?
-        }
-        return statusCode;
+    int statusCode;
+    if (IndexerServerHandler.authenticate(request.getUsername(), request.getPassword())) {
+      statusCode = HttpURLConnection.HTTP_OK;
+
+      response = ServerFacade.getSampleBatch(request);
+
+      this.setResponse(response);
+    } else {
+      statusCode = HttpURLConnection.HTTP_UNAUTHORIZED;
+      this.setResponse(null); // TODO: should I do this?
     }
+    return statusCode;
+  }
 }

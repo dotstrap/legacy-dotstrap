@@ -22,52 +22,52 @@ import org.junit.Test;
  * The Class ServerUnitTests.
  */
 public class ServerUnitTests {
-    /** The logger. */
-    private static Logger      logger;
-    public final static String LOG_NAME = "serverTest";
+  /** The logger. */
+  private static Logger logger;
+  public final static String LOG_NAME = "serverTest";
 
-    /**
-     * Teardown.
-     */
-    @After
-    public void teardown() {
+  /**
+   * Teardown.
+   */
+  @After
+  public void teardown() {
 
+  }
+
+  /**
+   * Test_1.
+   */
+  @Test
+  public void test_1() {
+    assertEquals("OK", "OK");
+    assertTrue(true);
+    assertFalse(false);
+  }
+
+  /**
+   * The main method.
+   *
+   * @param args the arguments
+   */
+  public static void main(String[] args) {
+    try {
+      final FileInputStream is = new FileInputStream("logging.properties");
+      LogManager.getLogManager().readConfiguration(is);
+      logger = Logger.getLogger(LOG_NAME);
+    } catch (final IOException e) {
+      Logger.getAnonymousLogger().severe("ERROR: unable to load logging properties file...");
+      Logger.getAnonymousLogger().severe(e.getMessage());
     }
-
-    /**
-     * Test_1.
-     */
-    @Test
-    public void test_1() {
-        assertEquals("OK", "OK");
-        assertTrue(true);
-        assertFalse(false);
-    }
-
-    /**
-     * The main method.
-     *
-     * @param args the arguments
-     */
-    public static void main(String[] args) {
-        try {
-            final FileInputStream is = new FileInputStream("logging.properties");
-            LogManager.getLogManager().readConfiguration(is);
-            logger = Logger.getLogger(LOG_NAME);
-        } catch (final IOException e) {
-            Logger.getAnonymousLogger().severe("ERROR: unable to load logging properties file...");
-            Logger.getAnonymousLogger().severe(e.getMessage());
-        }
-// @formatter:off
-        logger.info("Running all server tests...");
-        String[] testClasses = new String[] {"server.ServerUnitTests",
-                                "server.database.dao.BatchDAOUnitTest",
-                                "server.database.dao.FieldDAOUnitTest",
-                                "server.database.dao.ProjectDAOUnitTest",
-                                "server.database.dao.RecordDAOUnitTest",
-                                "server.database.dao.UserDAOUnitTest",
-                                "server.ImporterUnitTest"};
-// @formatter:on
-        org.junit.runner.JUnitCore.main(testClasses);
-    }
+    // @formatter:off
+    logger.info("Running all server tests...");
+    final String[] testClasses = new String[] {"server.ServerUnitTests",
+        "server.database.dao.BatchDAOUnitTest",
+        "server.database.dao.FieldDAOUnitTest",
+        "server.database.dao.ProjectDAOUnitTest",
+        "server.database.dao.RecordDAOUnitTest",
+        "server.database.dao.UserDAOUnitTest",
+    "server.ImporterUnitTest"};
+    // @formatter:on
+    org.junit.runner.JUnitCore.main(testClasses);
+  }
 }

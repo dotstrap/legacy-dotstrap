@@ -1,15 +1,17 @@
 /**
  * BasePanel.java
  * JRE v1.8.0_40
- * 
+ *
  * Created by William Myers on Mar 23, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package servertester.views;
 
-import java.awt.*;
-import javax.swing.*;
-import servertester.controllers.*;
+import java.awt.LayoutManager;
+
+import javax.swing.JPanel;
+
+import servertester.controllers.IController;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -18,58 +20,52 @@ import servertester.controllers.*;
 @SuppressWarnings("serial")
 public class BasePanel extends JPanel {
 
-    /** The _controller. */
-    private IController _controller;
+  /** The _controller. */
+  private IController _controller;
 
-    /**
-     * Instantiates a new base panel.
-     */
-    public BasePanel() {
-        super();
-    }
+  /**
+   * Instantiates a new base panel.
+   */
+  public BasePanel() {
+    super();
+  }
 
-    /**
-     * Instantiates a new base panel.
-     *
-     * @param layout
-     *            the layout
-     */
-    public BasePanel(LayoutManager layout) {
-        super(layout);
-    }
+  /**
+   * Instantiates a new base panel.
+   *
+   * @param layout the layout
+   */
+  public BasePanel(LayoutManager layout) {
+    super(layout);
+  }
 
-    /**
-     * Instantiates a new base panel.
-     *
-     * @param isDoubleBuffered
-     *            the is double buffered
-     */
-    public BasePanel(boolean isDoubleBuffered) {
-        super(isDoubleBuffered);
-    }
+  /**
+   * Instantiates a new base panel.
+   *
+   * @param isDoubleBuffered the is double buffered
+   */
+  public BasePanel(boolean isDoubleBuffered) {
+    super(isDoubleBuffered);
+  }
 
-    /**
-     * Instantiates a new base panel.
-     *
-     * @param layout
-     *            the layout
-     * @param isDoubleBuffered
-     *            the is double buffered
-     * @param controller
-     *            the controller
-     */
-    public BasePanel(LayoutManager layout, boolean isDoubleBuffered,
-            IController controller) {
-        super(layout, isDoubleBuffered);
-        setController(controller);
-    }
+  /**
+   * Instantiates a new base panel.
+   *
+   * @param layout the layout
+   * @param isDoubleBuffered the is double buffered
+   * @param controller the controller
+   */
+  public BasePanel(LayoutManager layout, boolean isDoubleBuffered, IController controller) {
+    super(layout, isDoubleBuffered);
+    setController(controller);
+  }
 
-    public IController getController() {
-        return _controller;
-    }
+  public IController getController() {
+    return _controller;
+  }
 
-    public void setController(IController value) {
-        _controller = value;
-    }
+  public void setController(IController value) {
+    _controller = value;
+  }
 
 }

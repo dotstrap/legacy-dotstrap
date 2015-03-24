@@ -11,37 +11,35 @@ package shared.communication;
 /**
  * The Class DownloadFileResponse.
  */
-public class DownloadFileResponse implements Response{
+public class DownloadFileResponse implements Response {
 
-    /** The file bytes. */
-    private byte[] fileBytes;
+  /** The file bytes. */
+  private byte[] fileBytes;
 
-    /**
-     * Bytes returned by file referenced by URL.
-     *
-     * @param fileBytes
-     *            the file bytes
-     */
-    public DownloadFileResponse(byte[] fileBytes) {
-        this.fileBytes = fileBytes;
-    }
+  /**
+   * Bytes returned by file referenced by URL.
+   *
+   * @param fileBytes the file bytes
+   */
+  public DownloadFileResponse(byte[] fileBytes) {
+    this.fileBytes = fileBytes;
+  }
 
-    /**
-     * Gets the file bytes.
-     *
-     * @return the fileBytes
-     */
-    public byte[] getFileBytes() {
-        return fileBytes;
-    }
+  /**
+   * Gets the file bytes.
+   *
+   * @return the fileBytes
+   */
+  public byte[] getFileBytes() {
+    return fileBytes;
+  }
 
-    /**
-     * Sets the file bytes.
-     *
-     * @param fileBytes
-     *            the fileBytes to set
-     */
-    public void setFileBytes(byte[] fileBytes) {
-        this.fileBytes = fileBytes;
-    }
+  /**
+   * Sets the file bytes.
+   *
+   * @param fileBytes the fileBytes to set
+   */
+  public void setFileBytes(byte[] fileBytes) {
+    this.fileBytes = fileBytes;
+  }
 }

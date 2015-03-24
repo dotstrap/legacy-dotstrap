@@ -16,59 +16,60 @@ import shared.model.Record;
  * The Class SearchResponse.
  */
 public class SearchResponse implements Response {
-    private List<Record> foundRecords;
-    private List<URL> urls;
+  private List<Record> foundRecords;
+  private List<URL> urls;
 
-    /**
-     * Instantiates a new SearchResponse.
-     *
-     */
-    public SearchResponse() {
-        this.foundRecords = null;
-    }
+  /**
+   * Instantiates a new SearchResponse.
+   *
+   */
+  public SearchResponse() {
+    foundRecords = null;
+  }
 
-    /**
-     * @param foundRecords
-     */
-    public SearchResponse(List<Record> foundRecords) {
-        this.foundRecords = foundRecords;
-    }
+  /**
+   * @param foundRecords
+   */
+  public SearchResponse(List<Record> foundRecords) {
+    this.foundRecords = foundRecords;
+  }
 
-    /**
-     * @return the foundRecords
-     */
-    public List<Record> getFoundRecords() {
-        return foundRecords;
-    }
+  /**
+   * @return the foundRecords
+   */
+  public List<Record> getFoundRecords() {
+    return foundRecords;
+  }
 
-    /**
-     * @param foundRecords the foundRecords to set
-     */
-    public void setFoundRecords(List<Record> foundRecords) {
-        this.foundRecords = foundRecords;
-    }
+  /**
+   * @param foundRecords the foundRecords to set
+   */
+  public void setFoundRecords(List<Record> foundRecords) {
+    this.foundRecords = foundRecords;
+  }
 
-    public List<URL> getUrls() {
-        return this.urls;
-    }
+  public List<URL> getUrls() {
+    return urls;
+  }
 
-    public void setUrls(List<URL> urls) {
-        this.urls = urls;
-    }
+  public void setUrls(List<URL> urls) {
+    this.urls = urls;
+  }
 
-    /**
-     * @return the string
-     * @see java.lang.Object#toString()
-     */
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < foundRecords.size(); ++i) {
-            sb.append(this.foundRecords.get(i).getBatchId() + "\n");
-            sb.append(urls.get(i) + "\n");
-            sb.append(foundRecords.get(i).getRowNum() + "\n");
-            sb.append(foundRecords.get(i).getFieldId() + "\n");
-        }
-        return sb.toString();
+  /**
+   * @return the string
+   * @see java.lang.Object#toString()
+   */
+  @Override
+  public String toString() {
+    final StringBuilder sb = new StringBuilder();
+    for (int i = 0; i < foundRecords.size(); ++i) {
+      sb.append(foundRecords.get(i).getBatchId() + "\n");
+      sb.append(urls.get(i) + "\n");
+      sb.append(foundRecords.get(i).getRowNum() + "\n");
+      sb.append(foundRecords.get(i).getFieldId() + "\n");
     }
+    return sb.toString();
+  }
 
 }

@@ -21,57 +21,56 @@ import org.junit.*;
  * The Class ClientUnitTests.
  */
 public class ClientUnitTests {
-    /** The logger. */
-    private static Logger      logger;
-    public final static String LOG_NAME = "clientTest";
+  /** The logger. */
+  private static Logger logger;
+  public final static String LOG_NAME = "clientTest";
 
-    /**
-     * The main method.
-     *
-     * @param args the arguments
-     */
-    public static void main(String[] args) {
-        try {
-            final FileInputStream is = new FileInputStream("logging.properties");
-            LogManager.getLogManager().readConfiguration(is);
-            logger = Logger.getLogger(LOG_NAME);
-        } catch (final IOException e) {
-            Logger.getAnonymousLogger().severe("ERROR: unable to load logging properties file...");
-            Logger.getAnonymousLogger().severe(e.getMessage());
-        }
-        logger.info("Initialized " + LOG_NAME + " log...");
-// @formatter:off
-        String[] testClasses = new String[] {"client.ClientUnitTests",
-                                "client.communication.DownloadBatchUnitTest",
-                                "client.communication.GetFieldsUnitTest",
-                                "client.communication.GetProjectsUnitTest",
-                                "client.communication.ValidateUserUnitTest",
-                               };
-// @formatter:on
-
-        logger.info("Running all client tests...");
-        org.junit.runner.JUnitCore.main(testClasses);
+  /**
+   * The main method.
+   *
+   * @param args the arguments
+   */
+  public static void main(String[] args) {
+    try {
+      final FileInputStream is = new FileInputStream("logging.properties");
+      LogManager.getLogManager().readConfiguration(is);
+      logger = Logger.getLogger(LOG_NAME);
+    } catch (final IOException e) {
+      Logger.getAnonymousLogger().severe("ERROR: unable to load logging properties file...");
+      Logger.getAnonymousLogger().severe(e.getMessage());
     }
+    logger.info("Initialized " + LOG_NAME + " log...");
+    // @formatter:off
+    final String[] testClasses = new String[] {"client.ClientUnitTests",
+        "client.communication.DownloadBatchUnitTest",
+        "client.communication.GetFieldsUnitTest",
+    };
+    // @formatter:on
+    // "client.communication.GetProjectsUnitTest",
+    // "client.communication.ValidateUserUnitTest",
+    logger.info("Running all client tests...");
+    org.junit.runner.JUnitCore.main(testClasses);
+  }
 
-    /**
-     * Setup.
-     */
-    @Before
-    public void setup() {}
+  /**
+   * Setup.
+   */
+  @Before
+  public void setup() {}
 
-    /**
-     * Teardown.
-     */
-    @After
-    public void teardown() {}
+  /**
+   * Teardown.
+   */
+  @After
+  public void teardown() {}
 
-    /**
-     * Test_1.
-     */
-    @Test
-    public void test_1() {
-        assertEquals("OK", "OK");
-        assertTrue(true);
-        assertFalse(false);
-    }
+  /**
+   * Test_1.
+   */
+  @Test
+  public void test_1() {
+    assertEquals("OK", "OK");
+    assertTrue(true);
+    assertFalse(false);
+  }
 }

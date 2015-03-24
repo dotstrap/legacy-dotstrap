@@ -16,35 +16,34 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
 import server.facade.ServerFacade;
-import server.httphandler.IndexerServerHandler;
 
 import shared.communication.DownloadFileRequest;
 import shared.communication.DownloadFileResponse;
 
 public class DownloadFileHandler implements HttpHandler {
-    /** The logger used throughout the project. */
-    private static Logger logger;
-    static {
-        logger = Logger.getLogger(ServerFacade.LOG_NAME);
-    }
+  /** The logger used throughout the project. */
+  private static Logger logger;
+  static {
+    logger = Logger.getLogger(ServerFacade.LOG_NAME);
+  }
 
-    @Override
-    public void handle(HttpExchange exchange) throws IOException {
-        String url = new File("").getAbsolutePath() + exchange.getRequestURI().getPath();
-        DownloadFileRequest request = new DownloadFileRequest(url);
-        if (IndexerServerHandler.authenticate(request.getUsername(), request.getPassword())) {
-            try {
-                DownloadFileResponse result = null;
-                result = ServerFacade.downloadFile(request);
-                OutputStream response = exchange.getResponseBody();
-                exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
-                response.write(result.getFileBytes());
-            } catch (Exception e) {
-                logger.log(Level.SEVERE, e.toString());
-                logger.log(Level.FINE, "STACKTRACE: ", e);
-            } finally {
-                exchange.close();
-            }
-        }
+  @Override
+  public void handle(HttpExchange exchange) throws IOException {
+    final String url = new File("").getAbsolutePath() + exchange.getRequestURI().getPath();
+    final DownloadFileRequest request = new DownloadFileRequest(url);
+
+    try {
+      DownloadFileResponse result = ServerFacade.downloadFile(request);
+
+      final OutputStream response = exchange.getResponseBody();
+      exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
+
+      response.write(result.getFileBytes());
+    } catch (final Exception e) {
+      logger.log(Level.SEVERE, e.toString());
+      logger.log(Level.FINE, "STACKTRACE: ", e);
+    } finally {
+      exchange.close();
     }
+  }
 }

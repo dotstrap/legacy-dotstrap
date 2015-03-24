@@ -16,47 +16,46 @@ import shared.model.Project;
  * The Class GetProjectsResponse.
  */
 public class GetProjectsResponse implements Response {
-    /** The projects. */
-    private List<Project> projects;
+  /** The projects. */
+  private List<Project> projects;
 
-    /**
-     * Instantiates a new gets the projects result.
-     */
-    public GetProjectsResponse() {
-    }
+  /**
+   * Instantiates a new gets the projects result.
+   */
+  public GetProjectsResponse() {}
 
-    /**
-     * gets all projects.
-     *
-     * @return -> array of projectinfo if found, else return null
-     */
-    public List<Project> getProjects() {
-        return projects;
-    }
+  /**
+   * gets all projects.
+   *
+   * @return -> array of projectinfo if found, else return null
+   */
+  public List<Project> getProjects() {
+    return projects;
+  }
 
-    /**
-     * replaces projects with new projects.
-     *
-     * @param projects
-     *            -> array of new projects with which to replace
-     */
-    public void setProjects(List<Project> projects) {
-        this.projects = projects;
-    }
+  /**
+   * replaces projects with new projects.
+   *
+   * @param projects -> array of new projects with which to replace
+   */
+  public void setProjects(List<Project> projects) {
+    this.projects = projects;
+  }
 
-    /**
-     *
-     * (non-Javadoc).
-     *
-     * @return the string
-     * @see java.lang.Object#toString()
-     */
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        for (Project p : projects) {
-            sb.append(p.getProjectId() + "\n");
-            sb.append(p.getTitle() + "\n");
-        }
-        return sb.toString();
+  /**
+   *
+   * (non-Javadoc).
+   *
+   * @return the string
+   * @see java.lang.Object#toString()
+   */
+  @Override
+  public String toString() {
+    final StringBuilder sb = new StringBuilder();
+    for (final Project p : projects) {
+      sb.append(p.getProjectId() + "\n");
+      sb.append(p.getTitle() + "\n");
     }
+    return sb.toString();
+  }
 }

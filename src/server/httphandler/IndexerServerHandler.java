@@ -1,5 +1,5 @@
 /**
- * IndexerServerHandler.java
+q * IndexerServerHandler.java
  * JRE v1.8.0_40
  *
  * Created by William Myers on Mar 23, 2015.
@@ -32,104 +32,108 @@ import shared.communication.*;
  */
 public abstract class IndexerServerHandler implements HttpHandler {
 
-    protected static final String SERVER       = HttpServer.class.getName() + " ("
-                                                               + System.getProperty("os.name")
-                                                               + ")";
-    protected static final String CONTENT_TYPE = "text/xml";
+  protected static Logger logger = Logger.getLogger(ServerFacade.LOG_NAME); // @formatter:off
 
-    protected XStream             xStream      = new XStream(new DomDriver());
+  protected static final String SERVER = HttpServer.class.getName() + " ("
+      + System.getProperty("os.name") + ")";
+  protected static final String CONTENT_TYPE = "text/xml";
 
-    protected static Logger              logger       = Logger.getLogger(ServerFacade.LOG_NAME);
+  protected XStream xStream = new XStream(new DomDriver());
 
-    private Request               request;
-    private Response              response;
+  private Request  request;
+  private Response response;
 
-    private String                urlPrefix;
+  private String   urlPrefix; // @formatter:on
 
-    @Override
-    public void handle(HttpExchange exchange) throws IOException {
-        Headers headers = exchange.getResponseHeaders();
-        headers.add("Server", SERVER);
-        headers.add("Content-Type", CONTENT_TYPE);
-// @formatter:off
-        urlPrefix = String.format("http://%s:%d/", exchange.getLocalAddress().getHostString(),
-                                 exchange.getLocalAddress().getPort());
-// @formatter:on
-        int statusCode;
-        try {
-            request = (Request) xStream.fromXML(exchange.getRequestBody());
+  @Override
+  public void handle(HttpExchange exchange) throws IOException {
+    final Headers headers = exchange.getResponseHeaders();
+    headers.add("Server", SERVER);
+    headers.add("Content-Type", CONTENT_TYPE);
 
-            statusCode = doRequest();
-            exchange.sendResponseHeaders(statusCode, 0);
-            // response.filesToURLs(urlPrefix);
-            xStream.toXML(response, exchange.getResponseBody());
-        } catch (InvalidCredentialsException e) {
-            statusCode = HttpURLConnection.HTTP_UNAUTHORIZED;
-            exchange.sendResponseHeaders(statusCode, -1);
-            logger.log(Level.SEVERE, e.toString());
-            logger.log(Level.FINE, "STACKTRACE: ", e);
-        } catch (XStreamException e) {
-            statusCode = HttpURLConnection.HTTP_BAD_REQUEST;
-            exchange.sendResponseHeaders(statusCode, -1);
-            logger.log(Level.SEVERE, e.toString());
-            logger.log(Level.FINE, "STACKTRACE: ", e);
-        } catch (ClassCastException | NullPointerException | DatabaseException e) {
-            statusCode = HttpURLConnection.HTTP_INTERNAL_ERROR;
-            exchange.sendResponseHeaders(statusCode, -1);
-            logger.log(Level.SEVERE, e.toString());
-            logger.log(Level.FINE, "STACKTRACE: ", e);
-        } catch (Exception e) {
-            statusCode = HttpURLConnection.HTTP_INTERNAL_ERROR;
-            exchange.sendResponseHeaders(statusCode, -1);
-            logger.log(Level.SEVERE, "UNKOWN EXCEPTION: " + e.toString());
-            logger.log(Level.FINE, "STACKTRACE: ", e);
-        } finally {
-            exchange.close();
-        }
+    urlPrefix = String.format("http://%s:%d/",// @formatter:off
+        exchange.getLocalAddress().getHostString(),
+        exchange.getLocalAddress().getPort()); // @formatter:on
 
-        logger.info(this.getClass().getSimpleName() + " returned status code " + statusCode);
+    int statusCode;
+    try {
+      request = (Request) xStream.fromXML(exchange.getRequestBody());
+      statusCode = doRequest();
+
+      exchange.sendResponseHeaders(statusCode, 0);
+      xStream.toXML(response, exchange.getResponseBody());
+
+    } catch (final InvalidCredentialsException e) {
+      statusCode = HttpURLConnection.HTTP_UNAUTHORIZED;
+      exchange.sendResponseHeaders(statusCode, -1);
+      logger.log(Level.SEVERE, e.toString());
+      logger.log(Level.FINE, "STACKTRACE: ", e);
+
+    } catch (final XStreamException e) {
+      statusCode = HttpURLConnection.HTTP_BAD_REQUEST;
+      exchange.sendResponseHeaders(statusCode, -1);
+      logger.log(Level.SEVERE, e.toString());
+      logger.log(Level.FINE, "STACKTRACE: ", e);
+
+    } catch (ClassCastException | NullPointerException | DatabaseException e) {
+      statusCode = HttpURLConnection.HTTP_INTERNAL_ERROR;
+      exchange.sendResponseHeaders(statusCode, -1);
+      logger.log(Level.SEVERE, e.toString());
+      logger.log(Level.FINE, "STACKTRACE: ", e);
+
+    } catch (final Exception e) {
+      statusCode = HttpURLConnection.HTTP_INTERNAL_ERROR;
+      exchange.sendResponseHeaders(statusCode, -1);
+      logger.log(Level.SEVERE, "UNKOWN EXCEPTION: " + e.toString());
+      logger.log(Level.FINE, "STACKTRACE: ", e);
+
+    } finally {
+      exchange.close();
     }
 
-    /**
-     * Processes the request and returns a response and status code.
-     *
-     * @param request The request object received in the HTTP request
-     * @param response The response object to return
-     * @return The HTTP status code to return
-     * @throws DatabaseException
-     * @throws IOException
-     */
-    protected abstract int doRequest() throws ServerException, DatabaseException,
-                    InvalidCredentialsException;
+    logger.info(this.getClass().getSimpleName() + " returned status code " + statusCode);
+  }
 
-    /**
-     * Validates user credentials.
-     *
-     * @param user The user credentials to validate
-     * @return True if credentials are valid, false otherwise
-     * @throws InvalidCredentialsException if the credentials are invalid
-     */
-    public static boolean authenticate(String username, String password) {
-        ValidateUserRequest auth = new ValidateUserRequest();
-        auth.setUsername(username);
-        auth.setPassword(password);
-        boolean isValid = true; // FIXME: this should default to false...
-        try {
-            ServerFacade.validateUser(auth);
-        } catch (InvalidCredentialsException e) {
-            logger.log(Level.SEVERE, String.format(
-                            "ERROR: username: %s & password: %s are invalid", username, password));
-            logger.log(Level.FINE, "STACKTRACE: ", e);
-            isValid = false;
-        }
-        return isValid;
-    }
+  /**
+   * Processes the request and returns a response and status code.
+   *
+   * @param request The request object received in the HTTP request
+   * @param response The response object to return
+   * @return The HTTP status code to return
+   * @throws DatabaseException
+   * @throws IOException
+   */
+  protected abstract int doRequest() throws ServerException, DatabaseException,
+      InvalidCredentialsException;
 
-    protected Request getRequest() {
-        return request;
+  /**
+   * Validates user credentials.
+   *
+   * @param user The user credentials to validate
+   * @return True if credentials are valid, false otherwise
+   * @throws InvalidCredentialsException if the credentials are invalid
+   */
+  public static boolean authenticate(String username, String password) {
+    final ValidateUserRequest auth = new ValidateUserRequest();
+    auth.setUsername(username);
+    auth.setPassword(password);
+    boolean isValid = true; // FIXME: this should default to false...
+    try {
+      ServerFacade.validateUser(auth);
+    } catch (final InvalidCredentialsException e) {
+      logger.log(Level.SEVERE,
+          String.format("ERROR: username: %s & password: %s are invalid", username, password));
+      logger.log(Level.FINE, "STACKTRACE: ", e);
+      isValid = false;
     }
+    return isValid;
+  }
 
-    protected void setResponse(Response response) {
-        this.response = response;
-    }
+  protected Request getRequest() {
+    return request;
+  }
+
+  protected void setResponse(Response response) {
+    this.response = response;
+  }
 }

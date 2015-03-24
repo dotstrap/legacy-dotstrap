@@ -11,66 +11,66 @@ package shared.communication;
 /**
  * The Class GetProjectsRequest.
  */
-public class GetProjectsRequest implements Request{
-    /** The name. */
-    private String username;
+public class GetProjectsRequest implements Request {
+  /** The name. */
+  private String username;
 
-    /** The password. */
-    private String password;
+  /** The password. */
+  private String password;
 
-    /**
-     * Instantiates a new gets the projects parameters.
-     */
-    public GetProjectsRequest() {
-            username = "newuser";
-            password = "changeme";
-    }
+  /**
+   * Instantiates a new gets the projects parameters.
+   */
+  public GetProjectsRequest() {
+    username = "newuser";
+    password = "changeme";
+  }
 
-    /**
-     * Instantiates a new gets the projects parameters.
-     *
-     * @param name the name
-     * @param password the password
-     */
-    public GetProjectsRequest(String name, String password) {
-        this.username = name;
-        this.password = password;
-    }
+  /**
+   * Instantiates a new gets the projects parameters.
+   *
+   * @param name the name
+   * @param password the password
+   */
+  public GetProjectsRequest(String name, String password) {
+    username = name;
+    this.password = password;
+  }
 
-    /**
-     * Gets the name.
-     *
-     * @return the name
-     */
-    public String getUsername() {
-        return username;
-    }
+  /**
+   * Gets the name.
+   *
+   * @return the name
+   */
+  public String getUsername() {
+    return username;
+  }
 
-    /**
-     * Sets the name.
-     *
-     * @param name the new name
-     */
-    public void setUsername(String name) {
-        this.username = name;
-    }
+  /**
+   * Sets the name.
+   *
+   * @param name the new name
+   */
+  public void setUsername(String name) {
+    username = name;
+  }
 
-    /**
-     * Gets the password.
-     *
-     * @return the password
-     */
-    public String getPassword() {
-        return password;
-    }
+  /**
+   * Gets the password.
+   *
+   * @return the password
+   */
+  public String getPassword() {
+    return password;
+  }
 
-    /**
-     * Sets the password.
-     *
-     * @param password the new password
-     */
-    public void setPassword(String password) {
-        this.password = password;
-    }
+  /**
+   * Sets the password.
+   *
+   * @param password the new password
+   */
+  public void setPassword(String password) {
+    this.password = password;
+  }
 
 }

@@ -8,10 +8,10 @@
 package shared.communication;
 
 public interface Response {
-//    /**
-//     * Converts all local file names retrieved by the database to URLs
-//     *
-//     * @param UrlPrefix The URL prefix to prepend to the file names
-//     */
-//    public void filesToURLs(String UrlPrefix);
+  // /**
+  // * Converts all local file names retrieved by the database to URLs
+  // *
+  // * @param UrlPrefix The URL prefix to prepend to the file names
+  // */
+  // public void filesToURLs(String UrlPrefix);
 }

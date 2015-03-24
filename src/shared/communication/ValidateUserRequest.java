@@ -7,73 +7,71 @@
  */
 package shared.communication;
 
-
 // TODO: Auto-generated Javadoc
 /**
  * The Class ValidateUserRequest.
  */
 public class ValidateUserRequest implements Request {
 
-    /** The username. */
-    private String username;
+  /** The username. */
+  private String username;
 
-    /** The password. */
-    private String password;
+  /** The password. */
+  private String password;
 
-    /**
-     * Instantiates a new ValidateUserRequest.
-     *
-     */
-    public ValidateUserRequest() {
-        this.username = "";
-        this.password = "";
-    }
+  /**
+   * Instantiates a new ValidateUserRequest.
+   *
+   */
+  public ValidateUserRequest() {
+    username = "";
+    password = "";
+  }
 
-    /**
-     * Instantiates a new validate user credentials.
-     *
-     * @param u the u
-     * @param p the p
-     */
-    public ValidateUserRequest(String u, String p) {
-        username = u;
-        password = p;
-    }
+  /**
+   * Instantiates a new validate user credentials.
+   *
+   * @param u the u
+   * @param p the p
+   */
+  public ValidateUserRequest(String u, String p) {
+    username = u;
+    password = p;
+  }
 
-    /**
-     * gets username.
-     *
-     * @return -> returns the username
-     */
-    public String getUsername() {
-        return username;
-    }
+  /**
+   * gets username.
+   *
+   * @return -> returns the username
+   */
+  public String getUsername() {
+    return username;
+  }
 
-    /**
-     * sets username.
-     *
-     * @param s            -> new username
-     */
-    public void setUsername(String s) {
-        username = s;
-    }
+  /**
+   * sets username.
+   *
+   * @param s -> new username
+   */
+  public void setUsername(String s) {
+    username = s;
+  }
 
-    /**
-     * gets password.
-     *
-     * @return -> returns the password
-     */
-    public String getPassword() {
-        return password;
-    }
+  /**
+   * gets password.
+   *
+   * @return -> returns the password
+   */
+  public String getPassword() {
+    return password;
+  }
 
-    /**
-     * sets password.
-     *
-     * @param s            -> new password
-     */
-    public void setPassword(String s) {
-        password = s;
-    }
-
- }
+  /**
+   * sets password.
+   *
+   * @param s -> new password
+   */
+  public void setPassword(String s) {
+    password = s;
+  }
+}

@@ -19,21 +19,21 @@ import shared.communication.ValidateUserRequest;
 import shared.communication.ValidateUserResponse;
 
 public class ValidateUserHandler extends IndexerServerHandler {
-    // TODO: try to use the authentication method for this??
-    /*
-     * (non-Javadoc)
-     *
-     * @see server.httphandler.IndexerServerHandler#doRequest()
-     */
-    @Override
-    protected int doRequest() throws ServerException, DatabaseException,
-                    InvalidCredentialsException {
-        ValidateUserRequest request = (ValidateUserRequest) getRequest();
-        ValidateUserResponse response;
+  // TODO: try to use the authentication method for this??
+  /*
+   * (non-Javadoc)
+   *
+   * @see server.httphandler.IndexerServerHandler#doRequest()
+   */
+  @Override
+  protected int doRequest() throws ServerException, DatabaseException, InvalidCredentialsException {
+    final ValidateUserRequest request = (ValidateUserRequest) getRequest();
 
-        response = ServerFacade.validateUser(request);
-        this.setResponse(response);
+    ValidateUserResponse response;
+    response = ServerFacade.validateUser(request);
 
-        return HttpURLConnection.HTTP_OK;
-    }
+    this.setResponse(response);
+
+    return HttpURLConnection.HTTP_OK;
+  }
 }

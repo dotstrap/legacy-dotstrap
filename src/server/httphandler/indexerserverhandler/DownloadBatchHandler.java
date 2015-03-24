@@ -19,27 +19,27 @@ import shared.communication.DownloadBatchRequest;
 import shared.communication.DownloadBatchResponse;
 
 public class DownloadBatchHandler extends IndexerServerHandler {
+  /*
+   * (non-Javadoc)
+   *
+   * @see server.httphandler.IndexerServerHandler#doRequest()
+   */
+  @Override
+  protected int doRequest() throws ServerException, DatabaseException, InvalidCredentialsException {
+    final DownloadBatchRequest request = (DownloadBatchRequest) getRequest();
+    DownloadBatchResponse response;
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see server.httphandler.IndexerServerHandler#doRequest()
-     */
-    @Override
-    protected int doRequest() throws ServerException, DatabaseException,
-                    InvalidCredentialsException {
-        DownloadBatchRequest request = (DownloadBatchRequest) getRequest();
-        DownloadBatchResponse response;
+    int statusCode;
+    if (IndexerServerHandler.authenticate(request.getUsername(), request.getPassword())) {
+      statusCode = HttpURLConnection.HTTP_OK;
 
-        int statusCode;
-        if (IndexerServerHandler.authenticate(request.getUsername(), request.getPassword())) {
-            statusCode = HttpURLConnection.HTTP_OK;
-            response = ServerFacade.downloadBatch(request);
-            this.setResponse(response);
-        } else {
-            statusCode = HttpURLConnection.HTTP_UNAUTHORIZED;
-            this.setResponse(null); // TODO: should I do this?
-        }
-        return statusCode;
+      response = ServerFacade.downloadBatch(request);
+
+      this.setResponse(response);
+    } else {
+      statusCode = HttpURLConnection.HTTP_UNAUTHORIZED;
+      this.setResponse(null); // TODO: should I do this?
     }
+    return statusCode;
+  }
 }

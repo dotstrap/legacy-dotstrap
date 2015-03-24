@@ -1,7 +1,7 @@
 /**
  * Importer.java
  * JRE v1.8.0_40
- * 
+ *
  * Created by William Myers on Mar 23, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
@@ -14,10 +14,12 @@ import java.util.logging.*;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+//import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.FileUtils;
 import org.w3c.dom.*;
 
-import server.database.*;
+import server.database.Database;
+import server.database.DatabaseException;
 
 import shared.model.*;
 
@@ -25,320 +27,314 @@ import shared.model.*;
  * Imports data from an XML file to database
  */
 public class Importer {
-    private static Logger logger;
+  private static Logger logger;
+  private static String importDir;
+  private static String importFileName;
 
-    /**
-     * The main method
-     *
-     * @param args the xml file to import into the database
-     */
-    public static void main(String[] args) {
-        File xmlImportFile = new File(args[0]);
-        File destImportDir = new File("Records");
-
-        try {
-            final FileInputStream is = new FileInputStream("logging.properties");
-            LogManager.getLogManager().readConfiguration(is);
-            logger = Logger.getLogger("importer");
-        } catch (final IOException e) {
-            Logger.getAnonymousLogger().severe("ERROR: unable to load logging properties file...");
-            Logger.getAnonymousLogger().severe(e.getMessage());
-        }
-
-        try {
-            if (!xmlImportFile.getParentFile().getCanonicalPath()
-                    .equals(destImportDir.getCanonicalPath())) {
-                FileUtils.deleteDirectory(destImportDir);
-            }
-            FileUtils.copyDirectory(xmlImportFile.getParentFile(), destImportDir);
-
-            Database.initDriver();
-
-            Database db = new Database();
-            db.startTransaction();
-            db.initTables();
-            db.endTransaction(true);
-
-            File activeDB = new File(Database.DB_FILE);
-            File templateDB = new File(Database.DB_TEMPLATE);
-            FileUtils.copyFile(activeDB, templateDB);
-
-            DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-            Document doc = docBuilder.parse(xmlImportFile);
-            doc.getDocumentElement().normalize();
-            Element root = doc.getDocumentElement();
-            new Importer().importData(root);
-
-        } catch (Exception e) {
-            logger.log(Level.SEVERE, e.toString());
-            logger.log(Level.FINE, "STACKTRACE: ", e);
-        }
-        return;
+  /**
+   * The main method
+   *
+   * @param args the xml file to import into the database
+   */
+  public static void main(String[] args) {
+    try {
+      final FileInputStream is = new FileInputStream("logging.properties");
+      LogManager.getLogManager().readConfiguration(is);
+      logger = Logger.getLogger("importer");
+    } catch (final IOException e) {
+      Logger.getAnonymousLogger().severe("ERROR: unable to load logging properties file...");
+      Logger.getAnonymousLogger().severe(e.getMessage());
     }
 
-    private String getValue(Element elem) {
-        String result = "";
-        Node child = elem.getFirstChild();
-
-        result = child.getNodeValue();
-
-        return result;
+    if (args.length != 1) {
+      logger.log(Level.SEVERE, "ERROR: Invalid arguements specified...");
+      return;
     }
 
-    /**
-     * Checks if an Element contains a certain attribute
-     *
-     * @param elem the element to check for the attr
-     * @param attr the attribute to check
-     * @return true if elem > 0
-     */
-    private boolean contains(Element elem, String attr) {
-        return elem.getElementsByTagName(attr).getLength() > 0;
+    // try opening file
+    final File xmlImportFile = new File(args[0]);
+    if (!xmlImportFile.exists()) {
+      logger.log(Level.SEVERE, "ERROR: specified import file does not exist...");
+      return;
+    } else {
+      importFileName = xmlImportFile.getAbsolutePath();
+      importDir = xmlImportFile.getParentFile().getName();
     }
 
-    /**
-     * Gets the children elements of a Node
-     */
-    private ArrayList<Element> getChildElements(Node node) {
-        ArrayList<Element> result = new ArrayList<Element>();
-        NodeList children = node.getChildNodes();
+    try {// @formatter:off
+//      if (!xmlImportFile.getParentFile().getCanonicalPath()
+//          .equals(destImportDir.getCanonicalPath())) {
+//        FileUtils.deleteDirectory(destImportDir);
+//      }
+//      FileUtils.copyDirectory(xmlImportFile.getParentFile(), destImportDir); // @formatter:on
+      Database.initDriver();
 
-        for (int i = 0; i < children.getLength(); i++) {
-            Node child = children.item(i);
-            if (child.getNodeType() == Node.ELEMENT_NODE) {
-                result.add((Element) child);
-            }
-        }
+      final Database db = new Database();
+      db.startTransaction();
+      db.initTables();
+      db.endTransaction(true);
 
-        return result;
+      logger.info("Creating new database from template: " + Database.DB_TEMPLATE);
+      final File activeDB = new File(Database.DB_FILE);
+      final File templateDB = new File(Database.DB_TEMPLATE);
+      FileUtils.copyFile(activeDB, templateDB);
+
+      final DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+      final DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+      final Document doc = docBuilder.parse(xmlImportFile);
+      doc.getDocumentElement().normalize();
+      final Element root = doc.getDocumentElement();
+
+      logger.info("Importing: " + importFileName + "...");
+      new Importer().importData(root);
+
+    } catch (final Exception e) {
+      logger.log(Level.SEVERE, e.toString());
+      logger.log(Level.FINE, "STACKTRACE: ", e);
+    }
+    logger.info("Importing complete.");
+    return;
+  }
+
+  private String getValue(Element elem) {
+    String result = "";
+    final Node child = elem.getFirstChild();
+    result = child.getNodeValue();
+    return result;
+  }
+
+  /**
+   * Checks if an Element contains a certain attribute
+   *
+   * @param elem the element to check for the attr
+   * @param attr the attribute to check
+   * @return true if elem > 0
+   */
+  private boolean contains(Element elem, String attr) {
+    return elem.getElementsByTagName(attr).getLength() > 0;
+  }
+
+  /**
+   * Gets the children elements of a Node
+   */
+  private ArrayList<Element> getChildElements(Node node) {
+    final ArrayList<Element> result = new ArrayList<Element>();
+    final NodeList children = node.getChildNodes();
+
+    for (int i = 0; i < children.getLength(); i++) {
+      final Node child = children.item(i);
+      if (child.getNodeType() == Node.ELEMENT_NODE) {
+        result.add((Element) child);
+      }
+    }
+    return result;
+  }
+
+  /**
+   * Loads record indexer data into memory and the database
+   *
+   * @param root
+   */
+  private void importData(Element root) {
+    final ArrayList<Element> rootElems = getChildElements(root);
+
+    logger.info("Parsing and importing all users etc. to: " + Database.DB_FILE + "...");
+    for (final Element curr : getChildElements(rootElems.get(0))) {
+      loadUsers(curr);
+    }
+    logger.info("Parsing and importing all projects etc. to: " + Database.DB_FILE + "...");
+    for (final Element curr : getChildElements(rootElems.get(1))) {
+      loadProjects(curr);
+    }
+  }
+
+  /**
+   * Inserts User element into database
+   *
+   * @param userElem
+   */
+  private void loadUsers(Element userElem) {
+    // Get all User elements
+    final Element usernameElem = (Element) userElem.getElementsByTagName("username").item(0);
+    final Element passElem = (Element) userElem.getElementsByTagName("password").item(0);
+    final Element firstElem = (Element) userElem.getElementsByTagName("firstname").item(0);
+    final Element lastElem = (Element) userElem.getElementsByTagName("lastname").item(0);
+    final Element emailElem = (Element) userElem.getElementsByTagName("email").item(0);
+    final Element indexedElem = (Element) userElem.getElementsByTagName("indexedrecords").item(0);
+
+    // Get all User primitives from User Elements
+    final String username = usernameElem.getTextContent();
+    final String password = passElem.getTextContent();
+    final String firstName = firstElem.getTextContent();
+    final String lastName = lastElem.getTextContent();
+    final String email = emailElem.getTextContent();
+    final int indexedRecords = Integer.parseInt(indexedElem.getTextContent());
+
+    // Create new User and add it to the database
+    final Database db = new Database();
+    try {
+      db.startTransaction();
+
+      final User newUser =
+          new User(username, password, firstName, lastName, email, indexedRecords, 0);
+      db.getUserDAO().create(newUser);
+
+      db.endTransaction(true);
+    } catch (final DatabaseException e) {
+      logger.log(Level.SEVERE, e.toString());
+      logger.log(Level.FINE, "STACKTRACE: ", e);
+    }
+  }
+
+  /**
+   * Inserts a Project element into database
+   */
+  private void loadProjects(Element projectElem) {
+    // Get Project Elements
+    final Element titleElem = (Element) projectElem.getElementsByTagName("title").item(0);
+    final Element recPerImgElem =
+        (Element) projectElem.getElementsByTagName("recordsperimage").item(0);
+    final Element firstYElem = (Element) projectElem.getElementsByTagName("firstycoord").item(0);
+    final Element recordElem = (Element) projectElem.getElementsByTagName("recordheight").item(0);
+
+    // Get Project primitives from Project elements
+    final String title = titleElem.getTextContent();
+    final int recordsPerImage = Integer.parseInt(recPerImgElem.getTextContent());
+    final int firstYCoord = Integer.parseInt(firstYElem.getTextContent());
+    final int recordHeight = Integer.parseInt(recordElem.getTextContent());
+
+    int projectId = -1;
+    final Database db = new Database();
+    // Create new project and add it to the database
+    try {
+      db.startTransaction();
+
+      final Project newProject = new Project(title, recordsPerImage, firstYCoord, recordHeight);
+      projectId = db.getProjectDAO().create(newProject);
+      assert (projectId > 0);
+
+      db.endTransaction(true);
+    } catch (final DatabaseException e) {
+      logger.log(Level.SEVERE, e.toString());
+      logger.log(Level.FINE, "STACKTRACE: ", e);
     }
 
-    /**
-     * Loads record indexer data into memory and the database
-     *
-     * @param root
-     */
-    private void importData(Element root) {
-        logger.entering("server.Importer", "importData");
+    // Get project fields and images
+    final ArrayList<Element> children = getChildElements(projectElem);
+    final ArrayList<Element> fields = getChildElements(children.get(4));
+    final ArrayList<Element> images = getChildElements(children.get(5));
 
-        ArrayList<Element> rootElems = getChildElements(root);
+    // Add fields to database
+    int colNum = 1;
+    for (final Element curr : fields) {
+      loadFields(curr, projectId, colNum++);
+    }
+    // Add images to database
+    for (final Element curr : images) {
+      loadBatches(curr, projectId);
+    }
+  }
 
-        for (Element curr : getChildElements(rootElems.get(0))) {
-            loadUsers(curr);
-        }
+  /**
+   * Inserts a Field element into database
+   */
+  private void loadFields(Element fieldElem, int projectId, int colNum) {
+    // Get Field elements
+    final Element titleElem = (Element) fieldElem.getElementsByTagName("title").item(0);
+    final Element xCoordElem = (Element) fieldElem.getElementsByTagName("xcoord").item(0);
+    final Element knownDataElem = (Element) fieldElem.getElementsByTagName("knowndata").item(0);
+    final Element helpElem = (Element) fieldElem.getElementsByTagName("helphtml").item(0);
+    final Element widthElem = (Element) fieldElem.getElementsByTagName("width").item(0);
 
-        for (Element curr : getChildElements(rootElems.get(1))) {
-            loadProjects(curr);
-        }
+    // Get Field primitives from Field elements
+    final String title = titleElem.getTextContent();
+    final int xCoord = Integer.parseInt(xCoordElem.getTextContent());
+    String knownData = "";
+    final String helpHtml = importDir + "/" + helpElem.getTextContent();
+    final int width = Integer.parseInt(widthElem.getTextContent());
 
-        logger.exiting("server.Importer", "importData");
+    if (knownDataElem != null) {
+      knownData = importDir + "/" + knownDataElem.getTextContent();
     }
 
-    /**
-     * Inserts User element into database
-     *
-     * @param userElem
-     */
-    private void loadUsers(Element userElem) {
-        logger.entering("server.Importer", "loadUsers");
+    final Database db = new Database();
+    try {
+      db.startTransaction();
 
-        // Get all User elements
-        Element usernameElem = (Element) userElem.getElementsByTagName("username").item(0);
-        Element passElem = (Element) userElem.getElementsByTagName("password").item(0);
-        Element firstElem = (Element) userElem.getElementsByTagName("firstname").item(0);
-        Element lastElem = (Element) userElem.getElementsByTagName("lastname").item(0);
-        Element emailElem = (Element) userElem.getElementsByTagName("email").item(0);
-        Element indexedElem = (Element) userElem.getElementsByTagName("indexedrecords").item(0);
+      final Field newField =
+          new Field(projectId, title, knownData, helpHtml, xCoord, width, colNum);
+      db.getFieldDAO().create(newField);
 
-        // Get all User primitives from User Elements
-        String username = usernameElem.getTextContent();
-        String password = passElem.getTextContent();
-        String firstName = firstElem.getTextContent();
-        String lastName = lastElem.getTextContent();
-        String email = emailElem.getTextContent();
-        int indexedRecords = Integer.parseInt(indexedElem.getTextContent());
+      db.endTransaction(true);
+    } catch (final DatabaseException e) {
+      logger.log(Level.SEVERE, e.toString());
+      logger.log(Level.FINE, "STACKTRACE: ", e);
+    }
+  }
 
-        // Create new User and add it to the database
-        Database db = new Database();
-        try {
-            db.startTransaction();
+  /**
+   * Inserts an Image element into database
+   */
+  private void loadBatches(Element batchElem, int projectId) {
+    // get file element
+    final Element batchFileElem = (Element) batchElem.getElementsByTagName("file").item(0);
 
-            User newUser =
-                    new User(username, password, firstName, lastName, email, indexedRecords, 0);
-            db.getUserDAO().create(newUser);
+    // get Batch primitive from batch file element
+    final String batchUrl = importDir + "/" + batchFileElem.getTextContent();
 
-            db.endTransaction(true);
-        } catch (DatabaseException e) {
-            logger.log(Level.SEVERE, e.toString());
-            logger.log(Level.FINE, "STACKTRACE: ", e);
-        }
+    int batchId = -1;
+    ArrayList<Element> records = null;
+    final Database db = new Database();
+    try {
+      db.startTransaction();
 
-        logger.exiting("server.Importer", "loadUsers");
+      final Batch newBatch = new Batch(batchUrl, projectId, Batch.INCOMPLETE, -1);
+      batchId = db.getBatchDAO().create(newBatch);
+      assert (batchId > 0);
+
+      db.endTransaction(true);
+    } catch (final DatabaseException e) {
+      logger.log(Level.SEVERE, e.toString());
+      logger.log(Level.FINE, "STACKTRACE: ", e);
     }
 
-    /**
-     * Inserts a Project element into database
-     */
-    private void loadProjects(Element projectElem) {
-        logger.entering("server.Importer", "loadProjects");
+    if (contains(batchElem, "records")) {
+      final ArrayList<Element> children = getChildElements(batchElem);
+      records = getChildElements(children.get(1));
 
-        // Get Project Elements
-        Element titleElem = (Element) projectElem.getElementsByTagName("title").item(0);
-        Element recPerImgElem =
-                (Element) projectElem.getElementsByTagName("recordsperimage").item(0);
-        Element firstYElem = (Element) projectElem.getElementsByTagName("firstycoord").item(0);
-        Element recordElem = (Element) projectElem.getElementsByTagName("recordheight").item(0);
-
-        // Get Project primitives from Project elements
-        String title = titleElem.getTextContent();
-        int recordsPerImage = Integer.parseInt(recPerImgElem.getTextContent());
-        int firstYCoord = Integer.parseInt(firstYElem.getTextContent());
-        int recordHeight = Integer.parseInt(recordElem.getTextContent());
-
-        int projectId = -1;
-        Database db = new Database();
-        // Create new project and add it to the database
-        try {
-            db.startTransaction();
-
-            Project newProject = new Project(title, recordsPerImage, firstYCoord, recordHeight);
-            projectId = db.getProjectDAO().create(newProject);
-            assert (projectId > 0);
-
-            db.endTransaction(true);
-        } catch (DatabaseException e) {
-            logger.log(Level.SEVERE, e.toString());
-            logger.log(Level.FINE, "STACKTRACE: ", e);
-        }
-
-        // Get project fields and images
-        ArrayList<Element> children = getChildElements(projectElem);
-        ArrayList<Element> fields = getChildElements(children.get(4));
-        ArrayList<Element> images = getChildElements(children.get(5));
-
-        // Add fields to database
-        int colNum = 1;
-        for (Element curr : fields) {
-            loadFields(curr, projectId, colNum++);
-        }
-        // Add images to database
-        for (Element curr : images) {
-            loadBatches(curr, projectId);
-        }
-
-        logger.exiting("server.Importer", "loadProjects");
+      int rowNum = 1;
+      for (final Element curr : records) {
+        loadRecords(curr, projectId, batchId, batchUrl, rowNum++);
+      }
     }
+  }
 
-    /**
-     * Inserts a Field element into database
-     */
-    private void loadFields(Element fieldElem, int projectId, int colNum) {
-        logger.entering("server.Importer", "loadFields");
+  /**
+   * Inserts a Record element into the database
+   */
+  private void loadRecords(Element recordElem, int projectId, int batchId, String batchUrl,
+      int rowNum) {
+    final ArrayList<Element> children = getChildElements(recordElem);
+    final ArrayList<Element> records = getChildElements(children.get(0));
 
-        // Get Field elements
-        Element titleElem = (Element) fieldElem.getElementsByTagName("title").item(0);
-        Element xCoordElem = (Element) fieldElem.getElementsByTagName("xcoord").item(0);
-        Element knownDataElem = (Element) fieldElem.getElementsByTagName("knowndata").item(0);
-        Element helpElem = (Element) fieldElem.getElementsByTagName("helphtml").item(0);
-        Element widthElem = (Element) fieldElem.getElementsByTagName("width").item(0);
+    final int colNum = 1;
+    for (final Element curr : records) {
+      final String recordData = getValue(curr);
+      final Database db = new Database();
+      int fieldId = -1;
+      try {
+        db.startTransaction();
 
-        // Get Field primitives from Field elements
-        String title = titleElem.getTextContent();
-        int xCoord = Integer.parseInt(xCoordElem.getTextContent());
-        String knownData = "";
-        String helpHtml = helpElem.getTextContent();
-        int width = Integer.parseInt(widthElem.getTextContent());
+        fieldId = db.getFieldDAO().getFieldId(projectId, colNum);
+        assert (fieldId > 0);
+        final Record newRecord = new Record(fieldId, batchId, batchUrl, recordData, rowNum, colNum);
+        db.getRecordDAO().create(newRecord);
 
-        if (knownDataElem != null) {
-            knownData = "Records/" + knownDataElem.getTextContent();
-        }
-
-        Database db = new Database();
-        try {
-            db.startTransaction();
-
-            Field newField =
-                    new Field(-1, projectId, title, knownData, helpHtml, xCoord, width, colNum);
-            db.getFieldDAO().create(newField);
-
-            db.endTransaction(true);
-        } catch (DatabaseException e) {
-            logger.log(Level.SEVERE, e.toString());
-            logger.log(Level.FINE, "STACKTRACE: ", e);
-        }
-
-        logger.exiting("server.Importer", "loadFields");
+        db.endTransaction(true);
+      } catch (final DatabaseException e) {
+        logger.log(Level.SEVERE, e.toString());
+        logger.log(Level.FINE, "STACKTRACE: ", e);
+      }
     }
-
-    /**
-     * Inserts an Image element into database
-     */
-    private void loadBatches(Element batchElem, int projectId) {
-        logger.entering("server.Importer", "loadBatches");
-
-        // get file element
-        Element batchFileElem = (Element) batchElem.getElementsByTagName("file").item(0);
-
-        // get Batch primitive from batch file element
-        String batchUrl = batchFileElem.getTextContent();
-
-        int batchId = -1;
-        ArrayList<Element> records = null;
-        Database db = new Database();
-        try {
-            db.startTransaction();
-            Batch newBatch = new Batch(batchUrl, projectId, Batch.INCOMPLETE, -1);
-            batchId = db.getBatchDAO().create(newBatch);
-            assert (batchId > 0);
-            db.endTransaction(true);
-        } catch (DatabaseException e) {
-            logger.log(Level.SEVERE, e.toString());
-            logger.log(Level.FINE, "STACKTRACE: ", e);
-        }
-
-        if (contains(batchElem, "records")) {
-            ArrayList<Element> children = getChildElements(batchElem);
-            records = getChildElements(children.get(1));
-
-            int rowNum = 1;
-            for (Element curr : records) {
-                loadRecords(curr, projectId, batchId, batchUrl, rowNum++);
-            }
-        }
-
-        logger.exiting("server.Importer", "importBatches");
-    }
-
-    /**
-     * Inserts a Record element into the database
-     */
-    private void loadRecords(Element recordElem, int projectId, int batchId, String batchUrl,
-            int rowNum) {
-        logger.entering("server.Importer", "loadRecords");
-
-        ArrayList<Element> children = getChildElements(recordElem);
-        ArrayList<Element> records = getChildElements(children.get(0));
-
-        int colNum = 1;
-        for (Element curr : records) {
-            String recordData = getValue(curr);
-            Database db = new Database();
-            int fieldId = -1;
-            try {
-                db.startTransaction();
-                fieldId = db.getFieldDAO().getFieldId(projectId, colNum);
-                assert (fieldId > 0);
-                Record newRecord =
-                        new Record(fieldId, batchId, batchUrl, recordData, rowNum, colNum);
-                db.getRecordDAO().create(newRecord);
-                db.endTransaction(true);
-            } catch (DatabaseException e) {
-                logger.log(Level.SEVERE, e.toString());
-                logger.log(Level.FINE, "STACKTRACE: ", e);
-            }
-        }
-
-        logger.exiting("server.Importer", "loadRecords");
-    }
+  }
 }

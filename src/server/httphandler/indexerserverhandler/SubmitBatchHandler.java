@@ -19,24 +19,25 @@ import shared.communication.SubmitBatchRequest;
 
 public class SubmitBatchHandler extends IndexerServerHandler {
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see server.httphandler.IndexerServerHandler#doRequest()
-     */
-    @Override
-    protected int doRequest() throws ServerException, DatabaseException,
-                    InvalidCredentialsException {
-        SubmitBatchRequest request = (SubmitBatchRequest) getRequest();
+  /*
+   * (non-Javadoc)
+   *
+   * @see server.httphandler.IndexerServerHandler#doRequest()
+   */
+  @Override
+  protected int doRequest() throws ServerException, DatabaseException, InvalidCredentialsException {
+    final SubmitBatchRequest request = (SubmitBatchRequest) getRequest();
 
-        int statusCode;
-        if (IndexerServerHandler.authenticate(request.getUsername(), request.getPassword())) {
-            statusCode = HttpURLConnection.HTTP_OK;
-            ServerFacade.submitBatch(request);
-        } else {
-            statusCode = HttpURLConnection.HTTP_UNAUTHORIZED;
-            this.setResponse(null); // TODO: should I do this?
-        }
-        return statusCode;
+    int statusCode;
+    if (IndexerServerHandler.authenticate(request.getUsername(), request.getPassword())) {
+      statusCode = HttpURLConnection.HTTP_OK;
+
+      ServerFacade.submitBatch(request);
+
+    } else {
+      statusCode = HttpURLConnection.HTTP_UNAUTHORIZED;
+      this.setResponse(null); // TODO: should I do this?
     }
+    return statusCode;
+  }
 }

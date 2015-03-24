@@ -13,49 +13,50 @@ package shared.communication;
  */
 public class SubmitBatchResponse implements Response {
 
-    /** The success. */
-    private boolean success;
+  /** The success. */
+  private boolean success;
 
-    /**
-     * Instantiates a new submit batch result.
-     */
-    public SubmitBatchResponse() {
-        success = false;
+  /**
+   * Instantiates a new submit batch result.
+   */
+  public SubmitBatchResponse() {
+    success = false;
+  }
+
+  /**
+   * Checks if is success.
+   *
+   * @return true, if is success
+   */
+  public boolean isSuccess() {
+    return success;
+  }
+
+  /**
+   * Sets the success.
+   *
+   * @param success the new success
+   */
+  public void setSuccess(boolean success) {
+    this.success = success;
+  }
+
+  /**
+   *
+   * (non-Javadoc).
+   *
+   * @return the string
+   * @see java.lang.Object#toString()
+   */
+  @Override
+  public String toString() {
+    final StringBuilder sb = new StringBuilder();
+
+    if (success) {
+      sb.append("TRUE\n");
+    } else {
+      sb.append("FAILED\n");
     }
-
-    /**
-     * Checks if is success.
-     *
-     * @return true, if is success
-     */
-    public boolean isSuccess() {
-        return success;
-    }
-
-    /**
-     * Sets the success.
-     *
-     * @param success the new success
-     */
-    public void setSuccess(boolean success) {
-        this.success = success;
-    }
-
-    /**
-     *
-     * (non-Javadoc).
-     *
-     * @return the string
-     * @see java.lang.Object#toString()
-     */
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-
-        if (success) {
-            sb.append("TRUE\n");
-        } else {
-            sb.append("FAILED\n");
-        }
-        return sb.toString();
-    }
+    return sb.toString();
+  }
 }

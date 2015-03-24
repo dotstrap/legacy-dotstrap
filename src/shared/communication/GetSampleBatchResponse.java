@@ -16,100 +16,78 @@ import shared.model.Batch;
  * The Class GetSampleBatchResponse.
  */
 public class GetSampleBatchResponse implements Response {
-    private URL url;
-    private String link;
-    private Batch sampleBatch;
-    private boolean validUser;
+  private URL urlPrefix;
+  private Batch sampleBatch;
+  private boolean validUser;
 
-    /**
-     * Gets the link.
-     *
-     * @return the link
-     */
-    public String getLink() {
-        return link;
-    }
+  /**
+   * Instantiates a new gets the sample image result.
+   */
+  public GetSampleBatchResponse() {
+    validUser = false;
+  }
 
-    /**
-     * Sets the link.
-     *
-     * @param link
-     *            the new link
-     */
-    public void setLink(String link) {
-        this.link = link;
-    }
+  /**
+   * Sets the urlPrefix.
+   *
+   * @param urlPrefix the new urlPrefix
+   */
+  public void setUrlPrefix(URL url) {
+    urlPrefix = url;
+  }
 
-    /**
-     * Instantiates a new gets the sample image result.
-     */
-    public GetSampleBatchResponse() {
-        validUser = false;
-    }
+  /**
+   * Gets the urlPrefix.
+   *
+   * @return the urlPrefix
+   */
+  public URL getURL() {
+    return urlPrefix;
+  }
 
-    /**
-     * Sets the url.
-     *
-     * @param url
-     *            the new url
-     */
-    public void setUrl(URL url) {
-        this.url = url;
-    }
+  /**
+   * @return the sampleBatch
+   */
+  public Batch getSampleBatch() {
+    return sampleBatch;
+  }
 
-    /**
-     * Gets the url.
-     *
-     * @return the url
-     */
-    public URL getURL() {
-        return url;
-    }
+  /**
+   * @param sampleBatch the sampleBatch to set
+   */
+  public void setSampleBatch(Batch sampleBatch) {
+    this.sampleBatch = sampleBatch;
+  }
 
-    /**
-     * @return the sampleBatch
-     */
-    public Batch getSampleBatch() {
-        return sampleBatch;
-    }
+  /**
+   * Checks if is valid user.
+   *
+   * @return true, if is valid user
+   */
+  public boolean isValidUser() {
+    return validUser;
+  }
 
-    /**
-     * @param sampleBatch
-     *            the sampleBatch to set
-     */
-    public void setSampleBatch(Batch sampleBatch) {
-        this.sampleBatch = sampleBatch;
-    }
+  /**
+   * Sets the valid user.
+   *
+   * @param validUser the new valid user
+   */
+  public void setValidUser(boolean validUser) {
+    this.validUser = validUser;
+  }
 
-    /**
-     * Checks if is valid user.
-     *
-     * @return true, if is valid user
-     */
-    public boolean isValidUser() {
-        return validUser;
-    }
-
-    /**
-     * Sets the valid user.
-     *
-     * @param validUser
-     *            the new valid user
-     */
-    public void setValidUser(boolean validUser) {
-        this.validUser = validUser;
-    }
-
-    /**
-     *
-     * (non-Javadoc).
-     *
-     * @return the string
-     * @see java.lang.Object#toString()
-     */
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(url + "\n");
-        return sb.toString();
-    }
+  /**
+   *
+   * (non-Javadoc).
+   *
+   * @return the string
+   * @see java.lang.Object#toString()
+   */
+  @Override
+  public String toString() {
+    final StringBuilder sb = new StringBuilder();
+    sb.append(urlPrefix + "/" + sampleBatch.getFilePath() + "\n");
+    return sb.toString();
+  }
 }

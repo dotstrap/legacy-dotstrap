@@ -16,55 +16,56 @@ import shared.model.User;
 /**
  * The Class GetFieldsResponse.
  */
-public class GetFieldsResponse implements Response{
-    private User user;
-    private List<Field> fields;
+public class GetFieldsResponse implements Response {
+  private User user;
+  private List<Field> fields;
 
-    /**
-     * Instantiates a new gets the fields result.
-     */
-    public GetFieldsResponse() {
-        this.fields = null;
+  /**
+   * Instantiates a new gets the fields result.
+   */
+  public GetFieldsResponse() {
+    fields = null;
+  }
+
+  /**
+   * @param fields
+   */
+  public GetFieldsResponse(List<Field> fields) {
+    this.fields = fields;
+  }
+
+  public User getUser() {
+    return user;
+  }
+
+  public void setUser(User user) {
+    this.user = user;
+  }
+
+
+  public List<Field> getFields() {
+    return fields;
+  }
+
+  public void setFields(List<Field> fields) {
+    this.fields = fields;
+  }
+
+  /**
+   *
+   * (non-Javadoc).
+   *
+   * @return the string
+   * @see java.lang.Object#toString()
+   */
+  @Override
+  public String toString() {
+    final StringBuilder sb = new StringBuilder();
+    for (final Field f : fields) {
+      sb.append(f.getProjectId() + "\n");
+      sb.append(f.getFieldId() + "\n");
+      sb.append(f.getTitle() + "\n");
     }
-
-    /**
-     * @param fields
-     */
-    public GetFieldsResponse(List<Field> fields) {
-        this.fields = fields;
-    }
-
-    public User getUser() {
-        return this.user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-
-    public List<Field> getFields() {
-        return fields;
-    }
-
-    public void setFields(List<Field> fields) {
-        this.fields = fields;
-    }
-
-    /**
-     *
-     * (non-Javadoc).
-     *
-     * @return the string
-     * @see java.lang.Object#toString()
-     */
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        for (Field f : fields) {
-            sb.append(f.getProjectId() + "\n");
-            sb.append(f.getFieldId() + "\n");
-            sb.append(f.getTitle() + "\n");
-        }
-        return sb.toString();
-    }
+    return sb.toString();
+  }
 }

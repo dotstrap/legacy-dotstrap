@@ -13,84 +13,84 @@ package shared.communication;
  */
 public class GetSampleBatchRequest implements Request {
 
-    private String username;
+  private String username;
 
-    private String password;
+  private String password;
 
-    private int    projectId;
+  private int projectId;
 
-    /**
-     * Instantiates a new gets the sample image parameters.
-     */
-    public GetSampleBatchRequest() {
+  /**
+   * Instantiates a new gets the sample image parameters.
+   */
+  public GetSampleBatchRequest() {
 
-    }
+  }
 
-    /**
-     * Instantiates a new gets the sample image parameters.
-     *
-     * @param name the name
-     * @param password the password
-     * @param projectId the project id
-     */
-    public GetSampleBatchRequest(String name, String password, int projectId) {
-        this.username = name;
-        this.password = password;
-        this.projectId = projectId;
-    }
+  /**
+   * Instantiates a new gets the sample image parameters.
+   *
+   * @param name the name
+   * @param password the password
+   * @param projectId the project id
+   */
+  public GetSampleBatchRequest(String name, String password, int projectId) {
+    username = name;
+    this.password = password;
+    this.projectId = projectId;
+  }
 
-    /**
-     * Gets the name.
-     *
-     * @return the name
-     */
-    public String getUsername() {
-        return username;
-    }
+  /**
+   * Gets the name.
+   *
+   * @return the name
+   */
+  public String getUsername() {
+    return username;
+  }
 
-    /**
-     * Sets the name.
-     *
-     * @param name the new name
-     */
-    public void setUsername(String name) {
-        this.username = name;
-    }
+  /**
+   * Sets the name.
+   *
+   * @param name the new name
+   */
+  public void setUsername(String name) {
+    username = name;
+  }
 
-    /**
-     * Gets the password.
-     *
-     * @return the password
-     */
-    public String getPassword() {
-        return password;
-    }
+  /**
+   * Gets the password.
+   *
+   * @return the password
+   */
+  public String getPassword() {
+    return password;
+  }
 
-    /**
-     * Sets the password.
-     *
-     * @param password the new password
-     */
-    public void setPassword(String password) {
-        this.password = password;
-    }
+  /**
+   * Sets the password.
+   *
+   * @param password the new password
+   */
+  public void setPassword(String password) {
+    this.password = password;
+  }
 
-    /**
-     * Gets the project id.
-     *
-     * @return the project id
-     */
-    public int getProjectId() {
-        return projectId;
-    }
+  /**
+   * Gets the project id.
+   *
+   * @return the project id
+   */
+  public int getProjectId() {
+    return projectId;
+  }
 
-    /**
-     * Sets the project id.
-     *
-     * @param projectId the new project id
-     */
-    public void setProjectId(int projectId) {
-        this.projectId = projectId;
-    }
+  /**
+   * Sets the project id.
+   *
+   * @param projectId the new project id
+   */
+  public void setProjectId(int projectId) {
+    this.projectId = projectId;
+  }
 
 }

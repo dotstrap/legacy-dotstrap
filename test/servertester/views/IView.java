@@ -1,7 +1,7 @@
 /**
  * IView.java
  * JRE v1.8.0_40
- * 
+ *
  * Created by William Myers on Mar 23, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
@@ -12,31 +12,31 @@ package servertester.views;
  */
 public interface IView {
 
-    void setHost(String value);
+  void setHost(String value);
 
-    String getHost();
+  String getHost();
 
-    void setPort(String value);
+  void setPort(String value);
 
-    String getPort();
+  String getPort();
 
-    void setOperation(ServerOp value);
+  void setOperation(ServerOp value);
 
-    ServerOp getOperation();
+  ServerOp getOperation();
 
-    void setParameterNames(String[] value);
+  void setParameterNames(String[] value);
 
-    String[] getParameterNames();
+  String[] getParameterNames();
 
-    void setParameterValues(String[] value);
+  void setParameterValues(String[] value);
 
-    String[] getParameterValues();
+  String[] getParameterValues();
 
-    void setRequest(String value);
+  void setRequest(String value);
 
-    String getRequest();
+  String getRequest();
 
-    void setResponse(String value);
+  void setResponse(String value);
 
-    String getResponse();
+  String getResponse();
 }
