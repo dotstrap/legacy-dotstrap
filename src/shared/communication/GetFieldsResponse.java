@@ -60,8 +60,8 @@ public class GetFieldsResponse implements Response {
    */
   @Override
   public String toString() {
-    final StringBuilder sb = new StringBuilder();
-    for (final Field f : fields) {
+    StringBuilder sb = new StringBuilder();
+    for (Field f : fields) {
       sb.append(f.getProjectId() + "\n");
       sb.append(f.getFieldId() + "\n");
       sb.append(f.getTitle() + "\n");

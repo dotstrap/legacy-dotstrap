@@ -2,7 +2,7 @@
  * BatchDAO.java
  * JRE v1.8.0_40
  *
- * Created by William Myers on Mar 23, 2015.
+ * Created by William Myers on Mar 24, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package server.database.dao;
@@ -24,7 +24,7 @@ import shared.model.Batch;
 public class BatchDAO {
 
   /** The db. */
-  private final Database db;
+  private Database      db;
 
   /** The logger used throughout the project. */
   private static Logger logger;
@@ -44,23 +44,22 @@ public class BatchDAO {
   public void initTable() throws DatabaseException {
     Statement stmt1 = null;
     Statement stmt2 = null;
-    // @formatter:off
-    final String dropBatchTable = "DROP TABLE IF EXISTS Batch";
-    final String createBatchTable =
+    String dropBatchTable = "DROP TABLE IF EXISTS Batch";// @formatter:off
+
+    String createBatchTable =
         "CREATE TABLE Batch ("
             + "BatchId INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE,"
             + "FilePath TEXT NOT NULL, "
             + "ProjectId INTEGER NOT NULL, "
             + "Status INTEGER NOT NULL, "
-            + "CurrentUserId INTEGER NOT NULL)";
-    // @formatter:on
+            + "CurrentUserId INTEGER NOT NULL)"; // @formatter:on
     try {
       stmt1 = db.getConnection().createStatement();
       stmt1.executeUpdate(dropBatchTable);
 
       stmt2 = db.getConnection().createStatement();
       stmt2.executeUpdate(createBatchTable);
-    } catch (final Exception e) {
+    } catch (Exception e) {
       logger.log(Level.SEVERE, e.toString());
       logger.log(Level.FINE, "STACKTRACE: ", e);
       throw new DatabaseException(e.toString());
@@ -78,16 +77,16 @@ public class BatchDAO {
    */
   public ArrayList<Batch> getAll() throws DatabaseException {
 
-    final ArrayList<Batch> allBatches = new ArrayList<Batch>();
+    ArrayList<Batch> allBatches = new ArrayList<Batch>();
     PreparedStatement pstmt = null;
     ResultSet resultset = null;
     try {
-      final String selectsql = "SELECT * from Batch";
-      pstmt = db.getConnection().prepareStatement(selectsql);
+      String query = "SELECT * from Batch";
+      pstmt = db.getConnection().prepareStatement(query);
 
       resultset = pstmt.executeQuery();
       while (resultset.next()) {
-        final Batch resultBatch = new Batch();
+        Batch resultBatch = new Batch();
 
         resultBatch.setBatchId(resultset.getInt("BatchId"));
         resultBatch.setFilePath(resultset.getString("Filepath"));
@@ -97,7 +96,7 @@ public class BatchDAO {
 
         allBatches.add(resultBatch);
       }
-    } catch (final Exception e) {
+    } catch (Exception e) {
       logger.log(Level.SEVERE, e.toString());
       logger.log(Level.FINE, "STACKTRACE: ", e);
       throw new DatabaseException(e.toString());
@@ -121,9 +120,9 @@ public class BatchDAO {
     Statement stmt = null;
     ResultSet resultset = null;
     try {
-      final String insertsql =
+      String query =
           "INSERT INTO Batch (FilePath, ProjectId, Status, CurrentUserId) VALUES(?, ?, ?, ?)";
-      pstmt = db.getConnection().prepareStatement(insertsql);
+      pstmt = db.getConnection().prepareStatement(query);
 
       pstmt.setString(1, batch.getFilePath());
       pstmt.setInt(2, batch.getProjectId());
@@ -134,12 +133,12 @@ public class BatchDAO {
         stmt = db.getConnection().createStatement();
         resultset = stmt.executeQuery("SELECT last_insert_rowid()");
         resultset.next();
-        final int batchid = resultset.getInt(1);
+        int batchid = resultset.getInt(1);
         batch.setBatchId(batchid);
       } else {
         throw new DatabaseException("Unable to insert new batch into database.");
       }
-    } catch (final SQLException e) {
+    } catch (SQLException e) {
       logger.log(Level.SEVERE, e.toString());
       logger.log(Level.FINE, "STACKTRACE: ", e);
       throw new DatabaseException(e.toString());
@@ -161,10 +160,10 @@ public class BatchDAO {
 
     PreparedStatement pstmt = null;
     ResultSet resultset = null;
-    final Batch resultBatch = new Batch();
+    Batch resultBatch = new Batch();
     try {
-      final String selectsql = "SELECT * from Batch WHERE BatchId = ?";
-      pstmt = db.getConnection().prepareStatement(selectsql);
+      String query = "SELECT * from Batch WHERE BatchId = ?";
+      pstmt = db.getConnection().prepareStatement(query);
       pstmt.setInt(1, batchid);
 
       resultset = pstmt.executeQuery();
@@ -174,7 +173,7 @@ public class BatchDAO {
       resultBatch.setFilePath(resultset.getString(2));
       resultBatch.setProjectId(resultset.getInt(3));
       resultBatch.setStatus(resultset.getInt(4));
-    } catch (final Exception e) {
+    } catch (Exception e) {
       logger.log(Level.SEVERE, e.toString());
       logger.log(Level.FINE, "STACKTRACE: ", e);
       throw new DatabaseException(e.toString());
@@ -196,17 +195,19 @@ public class BatchDAO {
    * */
   public Batch getIncompleteBatch(int projectId) throws DatabaseException {
 
-    final Batch resultBatch = new Batch();
+    Batch resultBatch = new Batch();
     resultBatch.setProjectId(projectId);
     PreparedStatement pstmt = null;
     ResultSet resultset = null;
 
     try {
-      final String selectsql = "SELECT * from Batch WHERE ProjectId = ? AND Status = ?";
-      pstmt = db.getConnection().prepareStatement(selectsql);
+      String query =
+          "SELECT * from Batch WHERE ProjectId = ? AND Status = ? AND CurrentUserId = ?";
+      pstmt = db.getConnection().prepareStatement(query);
 
       pstmt.setInt(1, projectId);
       pstmt.setInt(2, Batch.INCOMPLETE);
+      pstmt.setInt(3, -1); // FIXME: find a better way than using the default value
 
       resultset = pstmt.executeQuery();
       resultset.next();
@@ -215,7 +216,7 @@ public class BatchDAO {
       resultBatch.setFilePath(resultset.getString("FilePath"));
       resultBatch.setStatus(resultset.getInt("Status"));
       resultBatch.setCurrUserId(resultset.getInt("CurrentUserId"));
-    } catch (final SQLException e) {
+    } catch (SQLException e) {
       throw new DatabaseException("Unable to get incomplete batch", e);
     } finally {
       Database.closeSafely(pstmt);
@@ -231,15 +232,14 @@ public class BatchDAO {
    * @return the sample batch
    * */
   public Batch getSampleBatch(int projectId) throws DatabaseException {
-
-    final Batch resultBatch = new Batch();
+    Batch resultBatch = new Batch();
     resultBatch.setProjectId(projectId);
     PreparedStatement pstmt = null;
     ResultSet resultset = null;
 
     try {
-      final String selectsql = "SELECT * from Batch WHERE ProjectId = ?";
-      pstmt = db.getConnection().prepareStatement(selectsql);
+      String query = "SELECT * from Batch WHERE ProjectId = ?";
+      pstmt = db.getConnection().prepareStatement(query);
 
       pstmt.setInt(1, projectId);
       resultset = pstmt.executeQuery();
@@ -249,7 +249,7 @@ public class BatchDAO {
       resultBatch.setFilePath(resultset.getString("FilePath"));
       resultBatch.setStatus(resultset.getInt("Status"));
       resultBatch.setCurrUserId(resultset.getInt("CurrentUserId"));
-    } catch (final SQLException e) {
+    } catch (SQLException e) {
       throw new DatabaseException("Unable to get sample batch", e);
     } finally {
       Database.closeSafely(pstmt);
@@ -264,19 +264,17 @@ public class BatchDAO {
    * @param batch -> batch to update with
    * @throws DatabaseException
    */
-
   public void update(Batch batch) throws DatabaseException {
-
     PreparedStatement pstmt = null;
     try {
-      final String selectsql = "UPDATE Batch SET Status = ?" + "WHERE BatchId = ?";
+      String query = "UPDATE Batch SET Status = ? WHERE BatchId = ?";
 
-      pstmt = db.getConnection().prepareStatement(selectsql);
+      pstmt = db.getConnection().prepareStatement(query);
       pstmt.setInt(1, batch.getStatus());
       pstmt.setInt(2, batch.getBatchId());
 
       pstmt.executeUpdate();
-    } catch (final Exception e) {
+    } catch (Exception e) {
       logger.log(Level.SEVERE, e.toString());
       logger.log(Level.FINE, "STACKTRACE: ", e);
       throw new DatabaseException(e.toString());
@@ -286,22 +284,94 @@ public class BatchDAO {
   }
 
   /**
-   * Deletes the specified batch.
+   * Assigns a batch to a user
    *
-   * @param batch the batch
-   * @throws DatabaseException
+   * @param batchId the id of the batch being assigned
+   * @param userId the id of the user being assigned the batch
+   * @return true if operation succeeded, false otherwise
+   * */
+  public void assignBatchToUser(int batchId, int userId) throws DatabaseException {
+    PreparedStatement pstmt = null;
+    try {
+      String query = "UPDATE Batch SET CurrentUserId = ? WHERE batchId = ?";
+      pstmt = db.getConnection().prepareStatement(query);
+
+      pstmt.setInt(1, userId);
+      pstmt.setInt(2, batchId);
+
+      pstmt.executeUpdate();
+    } catch (SQLException e) {
+      logger.log(Level.SEVERE, e.toString());
+      logger.log(Level.FINE, "STACKTRACE: ", e);
+      throw new DatabaseException(e.toString());
+    } finally {
+      Database.closeSafely(pstmt);
+    }
+    return;
+  }
+
+  /**
+   * Unassigns a batch from the current user.
+   *
+   * @param batchId the id of the batch being unassigned
+   * @return true if operation succeeded, false otherwise
+   * @throws DatabaseException the database exception
    */
-  public void delete(Batch batch) throws DatabaseException {
+  public void unassignBatch(int batchId) throws DatabaseException {
+    assignBatchToUser(batchId, -1);
+    return;
+  }
+
+  /**
+   * Sets the status of a batch to 0 (inactive), 1 (active), or 2 (complete).
+   *
+   * @param batchId the id of the batch whose status to change
+   * @param currStatus the status to set on the batchs
+   * @return true if operation succeeded, false otherwise
+   * @throws DatabaseException the database exception
+   */
+  public void setStatus(int batchId, int currStatus) throws DatabaseException {
+    if (currStatus != Batch.INCOMPLETE && currStatus != Batch.ACTIVE
+        && currStatus != Batch.COMPLETE) {
+      throw new DatabaseException("ERROR: Current status: " + currStatus + " is not 0, 1, or 2...");
+    }
 
     PreparedStatement pstmt = null;
     try {
-      final String selectsql = "DELETE from Batch WHERE BatchId = ?";
+      String query = "UPDATE Batch SET Status = ? WHERE BatchId = ?";
+      pstmt = db.getConnection().prepareStatement(query);
 
-      pstmt = db.getConnection().prepareStatement(selectsql);
+      pstmt.setInt(1, currStatus);
+      pstmt.setInt(2, batchId);
+      pstmt.executeUpdate();
+
+    } catch (SQLException e) {
+      logger.log(Level.SEVERE, e.toString());
+      logger.log(Level.FINE, "STACKTRACE: ", e);
+      throw new DatabaseException(e.toString());
+    } finally {
+      Database.closeSafely(pstmt);
+    }
+
+    return;
+  }
+
+  /**
+   * Deletes the specified batch.
+   *
+   * @param batch the batch
+   * @throws DatabaseException the database exception
+   */
+  public void delete(Batch batch) throws DatabaseException {
+    PreparedStatement pstmt = null;
+    try {
+      String query = "DELETE from Batch WHERE BatchId = ?";
+
+      pstmt = db.getConnection().prepareStatement(query);
       pstmt.setInt(1, batch.getBatchId());
 
       pstmt.executeUpdate();
-    } catch (final Exception e) {
+    } catch (Exception e) {
       logger.log(Level.SEVERE, e.toString());
       logger.log(Level.FINE, "STACKTRACE: ", e);
       throw new DatabaseException(e.toString());

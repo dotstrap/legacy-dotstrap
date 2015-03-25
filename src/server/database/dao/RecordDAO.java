@@ -25,7 +25,7 @@ import shared.model.Record;
 public class RecordDAO {
 
   /** The db. */
-  private final Database db;
+  private Database db;
 
   /** The logger used throughout the project. */
   private static Logger logger;
@@ -46,8 +46,8 @@ public class RecordDAO {
     Statement stmt1 = null;
     Statement stmt2 = null;
     // @formatter:off
-    final String dropRecordTable = "DROP TABLE IF EXISTS Record";
-    final String createRecordTable =
+    String dropRecordTable = "DROP TABLE IF EXISTS Record";
+    String createRecordTable =
         "CREATE TABLE Record ("
             + "RecordId INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE, "
             + "FieldId INTEGER NOT NULL, "
@@ -63,7 +63,7 @@ public class RecordDAO {
 
       stmt2 = db.getConnection().createStatement();
       stmt2.executeUpdate(createRecordTable);
-    } catch (final Exception e) {
+    } catch (Exception e) {
       logger.log(Level.SEVERE, e.toString());
       logger.log(Level.FINE, "STACKTRACE: ", e);
       throw new DatabaseException(e.toString());
@@ -80,16 +80,16 @@ public class RecordDAO {
    * @throws DatabaseException
    */
   public ArrayList<Record> getAll() throws DatabaseException {
-    final ArrayList<Record> allRecords = new ArrayList<Record>();
+    ArrayList<Record> allRecords = new ArrayList<Record>();
     PreparedStatement pstmt = null;
     ResultSet resultset = null;
     try {
-      final String selectsql = "SELECT * from Record";
-      pstmt = db.getConnection().prepareStatement(selectsql);
+      String query = "SELECT * from Record";
+      pstmt = db.getConnection().prepareStatement(query);
 
       resultset = pstmt.executeQuery();
       while (resultset.next()) {
-        final Record resultRecord = new Record();
+        Record resultRecord = new Record();
 
         resultRecord.setRecordId(resultset.getInt(1));
         resultRecord.setFieldId(resultset.getInt(2));
@@ -101,7 +101,7 @@ public class RecordDAO {
 
         allRecords.add(resultRecord);
       }
-    } catch (final Exception e) {
+    } catch (Exception e) {
       logger.log(Level.SEVERE, e.toString());
       logger.log(Level.FINE, "STACKTRACE: ", e);
       throw new DatabaseException(e.toString());
@@ -120,16 +120,16 @@ public class RecordDAO {
    * @throws DatabaseException
    */
   public ArrayList<Record> getAll(int batchId) throws DatabaseException {
-    final ArrayList<Record> allRecords = new ArrayList<Record>();
+    ArrayList<Record> allRecords = new ArrayList<Record>();
     PreparedStatement pstmt = null;
     ResultSet resultset = null;
     try {
-      final String selectsql = "SELECT * from Record where ImageId = ?";
-      pstmt = db.getConnection().prepareStatement(selectsql);
+      String query = "SELECT * from Record where ImageId = ?";
+      pstmt = db.getConnection().prepareStatement(query);
 
       resultset = pstmt.executeQuery();
       while (resultset.next()) {
-        final Record resultRecord = new Record();
+        Record resultRecord = new Record();
 
         resultRecord.setRecordId(resultset.getInt(1));
         resultRecord.setFieldId(resultset.getInt(2));
@@ -141,7 +141,7 @@ public class RecordDAO {
 
         allRecords.add(resultRecord);
       }
-    } catch (final Exception e) {
+    } catch (Exception e) {
       logger.log(Level.SEVERE, e.toString());
       logger.log(Level.FINE, "STACKTRACE: ", e);
       throw new DatabaseException(e.toString());
@@ -159,13 +159,13 @@ public class RecordDAO {
    */
   public List<Record> search(List<Integer> searchFieldIds, List<String> searchRecords)
       throws DatabaseException {
-    final ArrayList<Record> searchResult = new ArrayList<Record>();
+    ArrayList<Record> searchResult = new ArrayList<Record>();
     PreparedStatement pstmt = null;
     ResultSet resultset = null;
 
-    final StringBuilder fieldString = new StringBuilder();
+    StringBuilder fieldString = new StringBuilder();
     fieldString.append("(");
-    final StringBuilder recordString = new StringBuilder();
+    StringBuilder recordString = new StringBuilder();
     recordString.append("(");
 
     for (int i = 0; i < searchFieldIds.size(); i++) {
@@ -186,14 +186,14 @@ public class RecordDAO {
     recordString.append(") ");
 
     try {
-      final String selectsql =
+      String query =
           "SELECT * FROM Records " + "WHERE " + fieldString + "AND " + recordString
               + "COLLATE NOCASE";
-      pstmt = db.getConnection().prepareStatement(selectsql);
+      pstmt = db.getConnection().prepareStatement(query);
       resultset = pstmt.executeQuery();
 
       while (resultset.next()) {
-        final Record resultRecord = new Record();
+        Record resultRecord = new Record();
 
         resultRecord.setRecordId(resultset.getInt(1));
         resultRecord.setFieldId(resultset.getInt(2));
@@ -205,7 +205,7 @@ public class RecordDAO {
 
         searchResult.add(resultRecord);
       }
-    } catch (final SQLException err) {
+    } catch (SQLException err) {
       throw new DatabaseException("Unable to get all records", err);
     } finally {
       Database.closeSafely(pstmt);
@@ -224,10 +224,10 @@ public class RecordDAO {
     PreparedStatement pstmt = null;
     ResultSet resultset = null;
     try {
-      final String insertsql =
+      String query =
           "insert into Record" + "(FieldId, BatchId, BatchURL, Data, RowNumber, ColumnNumber) "
               + "values (?, ?, ?, ?, ?, ?)";
-      pstmt = db.getConnection().prepareStatement(insertsql);
+      pstmt = db.getConnection().prepareStatement(query);
 
       pstmt.setInt(1, newRecord.getFieldId());
       pstmt.setInt(2, newRecord.getBatchId());
@@ -237,15 +237,15 @@ public class RecordDAO {
       pstmt.setInt(6, newRecord.getColNum());
 
       if (pstmt.executeUpdate() == 1) {
-        final Statement stmt = db.getConnection().createStatement();
+        Statement stmt = db.getConnection().createStatement();
         resultset = stmt.executeQuery("SELECT last_insert_rowid()");
         resultset.next();
-        final int id = resultset.getInt(1);
+        int id = resultset.getInt(1);
         newRecord.setRecordId(id);
       } else {
         throw new DatabaseException("Unable to insert new record into database.");
       }
-    } catch (final SQLException e) {
+    } catch (SQLException e) {
       logger.log(Level.SEVERE, e.toString());
       logger.log(Level.FINE, "STACKTRACE: ", e);
       throw new DatabaseException(e.toString());
@@ -263,14 +263,14 @@ public class RecordDAO {
    * @return the record
    */
   public Record read(int id) throws DatabaseException {
-    final Record resultRecord = new Record();
+    Record resultRecord = new Record();
     resultRecord.setRecordId(id);
 
     PreparedStatement pstmt = null;
     ResultSet resultset = null;
     try {
-      final String selectsql = "SELECT * from Record WHERE RecordId = ?";
-      pstmt = db.getConnection().prepareStatement(selectsql);
+      String query = "SELECT * from Record WHERE RecordId = ?";
+      pstmt = db.getConnection().prepareStatement(query);
       pstmt.setInt(1, id);
 
       resultset = pstmt.executeQuery();
@@ -283,7 +283,7 @@ public class RecordDAO {
       resultRecord.setData(resultset.getString("Data"));
       resultRecord.setRowNum(resultset.getInt("RowNumber"));
       resultRecord.setColNum(resultset.getInt("ColumnNumber"));
-    } catch (final Exception e) {
+    } catch (Exception e) {
       logger.log(Level.SEVERE, e.toString());
       logger.log(Level.FINE, "STACKTRACE: ", e);
       throw new DatabaseException(e.toString());
@@ -303,13 +303,13 @@ public class RecordDAO {
   public void delete(Record record) throws DatabaseException {
     PreparedStatement pstmt = null;
     try {
-      final String selectsql = "DELETE from Record WHERE RecordId = ?";
+      String query = "DELETE from Record WHERE RecordId = ?";
 
-      pstmt = db.getConnection().prepareStatement(selectsql);
+      pstmt = db.getConnection().prepareStatement(query);
       pstmt.setInt(1, record.getRecordId());
 
       pstmt.executeUpdate();
-    } catch (final Exception e) {
+    } catch (Exception e) {
       logger.log(Level.SEVERE, e.toString());
       logger.log(Level.FINE, "STACKTRACE: ", e);
       throw new DatabaseException(e.toString());

@@ -26,7 +26,7 @@ public class SearchHandler extends IndexerServerHandler {
    */
   @Override
   protected int doRequest() throws ServerException, DatabaseException, InvalidCredentialsException {
-    final SearchRequest request = (SearchRequest) getRequest();
+    SearchRequest request = (SearchRequest) getRequest();
     SearchResponse response;
 
     int statusCode;

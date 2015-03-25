@@ -12,8 +12,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.logging.*;
 
 import org.apache.commons.io.IOUtils;
 
@@ -28,13 +27,21 @@ import shared.model.Record;
 
 public class ClientCommunicator {
   /** The logger used throughout the project. */
-  private static Logger logger;
-  public final static String LOG_NAME = "client";
+  private static Logger logger; // @formatter:off
+  public static String LOG_NAME = "client";
   static {
-    logger = Logger.getLogger(LOG_NAME);
+    try {
+      FileInputStream is = new FileInputStream("logging.properties");
+      LogManager.getLogManager().readConfiguration(is);
+      logger = Logger.getLogger(LOG_NAME);
+    } catch (IOException e) {
+      Logger.getAnonymousLogger().severe("ERROR: unable to load logging properties file...");
+      Logger.getAnonymousLogger().severe(e.getMessage());
+    }
+    logger.info("===================Initialized " + LOG_NAME + " log===================");
   }
 
-  private final  XStream xs = new XStream(new DomDriver());
+  private  XStream xs = new XStream(new DomDriver());
 
   private String URL_PREFIX;
   private String host;
@@ -77,7 +84,7 @@ public class ClientCommunicator {
     ValidateUserResponse result = null;
     try {
       result = (ValidateUserResponse) doPost("/ValidateUser", params);
-    } catch (final Exception e) {
+    } catch (Exception e) {
       logger.log(Level.SEVERE, e.toString());
       logger.log(Level.FINE, "STACKTRACE: ", e);
       throw new InvalidCredentialsException(e);
@@ -89,7 +96,7 @@ public class ClientCommunicator {
     GetProjectsResponse result = null;
     try {
       result = (GetProjectsResponse) doPost("/GetProjects", creds);
-    } catch (final Exception e) {
+    } catch (Exception e) {
       logger.log(Level.SEVERE, e.toString());
       logger.log(Level.FINE, "STACKTRACE: ", e);
       throw new ClientException(e);
@@ -102,9 +109,9 @@ public class ClientCommunicator {
     GetSampleBatchResponse result = null;
     try {
       result = (GetSampleBatchResponse) doPost("/GetSampleImage", params);
-      final URL url = new URL(URL_PREFIX);
+      URL url = new URL(URL_PREFIX);
       result.setUrlPrefix(url);
-    } catch (final Exception e) {
+    } catch (Exception e) {
       logger.log(Level.SEVERE, e.toString());
       logger.log(Level.FINE, "STACKTRACE: ", e);
       throw new ClientException(e);
@@ -116,9 +123,9 @@ public class ClientCommunicator {
     DownloadBatchResponse result = null;
     try {
       result = (DownloadBatchResponse) doPost("/DownloadBatch", params);
-      final URL url = new URL(URL_PREFIX);
+      URL url = new URL(URL_PREFIX);
       result.setUrlPrefix(url);
-    } catch (final Exception e) {
+    } catch (Exception e) {
       logger.log(Level.SEVERE, e.toString());
       logger.log(Level.FINE, "STACKTRACE: ", e);
       throw new ClientException(e);
@@ -130,7 +137,7 @@ public class ClientCommunicator {
     SubmitBatchResponse result = null;
     try {
       result = (SubmitBatchResponse) doPost("/SubmitBatch", params);
-    } catch (final Exception e) {
+    } catch (Exception e) {
       logger.log(Level.SEVERE, e.toString());
       logger.log(Level.FINE, "STACKTRACE: ", e);
       throw new ClientException(e);
@@ -142,7 +149,7 @@ public class ClientCommunicator {
     GetFieldsResponse result = null;
     try {
       result = (GetFieldsResponse) doPost("/GetFields", params);
-    } catch (final Exception e) {
+    } catch (Exception e) {
       logger.log(Level.SEVERE, e.toString());
       logger.log(Level.FINE, "STACKTRACE: ", e);
       throw new ClientException(e);
@@ -154,13 +161,13 @@ public class ClientCommunicator {
     SearchResponse result;
     try {
       result = (SearchResponse) doPost("/Search", params);
-      final List<URL> urls = new ArrayList<URL>();
-      for (final Record r : result.getFoundRecords()) {
-        final URL url = new URL(URL_PREFIX + "/" + r.getBatchURL());
+      List<URL> urls = new ArrayList<URL>();
+      for (Record r : result.getFoundRecords()) {
+        URL url = new URL(URL_PREFIX + "/" + r.getBatchURL());
         urls.add(url);
       }
       result.setUrls(urls);
-    } catch (final Exception e) {
+    } catch (Exception e) {
       logger.log(Level.SEVERE, e.toString());
       logger.log(Level.FINE, "STACKTRACE: ", e);
       throw new ClientException(e);
@@ -175,18 +182,18 @@ public class ClientCommunicator {
   public byte[] doGet(String urlPath) throws ClientException {
     byte[] result = null;
     try {
-      final URL url = new URL(urlPath);
-      final HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+      URL url = new URL(urlPath);
+      HttpURLConnection connection = (HttpURLConnection) url.openConnection();
       connection.setRequestMethod("GET");
       connection.setDoOutput(true);
       connection.connect();
 
       if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-        final InputStream response = connection.getInputStream();
+        InputStream response = connection.getInputStream();
         result = IOUtils.toByteArray(response);
         response.close();
       }
-    } catch (final Exception e) {
+    } catch (Exception e) {
       logger.log(Level.SEVERE, e.toString());
       logger.log(Level.FINE, "STACKTRACE: ", e);
       throw new ClientException(e);
@@ -201,19 +208,20 @@ public class ClientCommunicator {
     URL url;
     try {
       url = new URL(URL_PREFIX + postCommand);
-      final HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+      HttpURLConnection connection = (HttpURLConnection) url.openConnection();
       connection.setRequestMethod("POST");
       connection.setDoInput(true);
       connection.setDoOutput(true);
       connection.setRequestProperty("Accept", "html/text");
 
       connection.connect();
+
       requestBody = connection.getOutputStream();
       xs.toXML(request, requestBody);
       requestBody.close();
 
       if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-        final Response r = (Response) xs.fromXML(connection.getInputStream());
+        Response r = (Response) xs.fromXML(connection.getInputStream());
         connection.getInputStream().close();
         return r;
       } else {
@@ -221,7 +229,7 @@ public class ClientCommunicator {
         throw new ClientException(String.format("POST FAILED: %s HTTP code: %d", postCommand,
             connection.getResponseCode()));
       }
-    } catch (final Exception e) {
+    } catch (Exception e) {
       logger.log(Level.SEVERE, e.toString());
       logger.log(Level.FINE, "STACKTRACE: ", e);
       throw new ClientException(e);

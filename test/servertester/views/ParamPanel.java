@@ -43,13 +43,13 @@ public class ParamPanel extends BasePanel {
 
     this.removeAll();
 
-    final GridBagConstraints gbc = new GridBagConstraints();
+    GridBagConstraints gbc = new GridBagConstraints();
 
     int row = 0;
-    for (final String paramName : _paramNames) {
-      final boolean isLast = (paramName == _paramNames[_paramNames.length - 1]);
+    for (String paramName : _paramNames) {
+      boolean isLast = (paramName == _paramNames[_paramNames.length - 1]);
 
-      final JLabel label = new JLabel(paramName + ":");
+      JLabel label = new JLabel(paramName + ":");
 
       gbc.gridx = 0;
       gbc.gridy = row;
@@ -59,7 +59,7 @@ public class ParamPanel extends BasePanel {
       gbc.insets = new Insets(5, 5, (isLast ? 5 : 0), 0);
       add(label, gbc);
 
-      final JTextField textField = new JTextField(40);
+      JTextField textField = new JTextField(40);
       textField.setMinimumSize(textField.getPreferredSize());
       _textFields.add(textField);
 
@@ -74,8 +74,8 @@ public class ParamPanel extends BasePanel {
       ++row;
     }
 
-    final Dimension prefSize = getPreferredSize();
-    final Dimension maxSize = getMaximumSize();
+    Dimension prefSize = getPreferredSize();
+    Dimension maxSize = getMaximumSize();
     setMaximumSize(new Dimension((int) maxSize.getWidth(), (int) prefSize.getHeight()));
 
     revalidate();
@@ -92,7 +92,7 @@ public class ParamPanel extends BasePanel {
   }
 
   public String[] getParameterValues() {
-    final List<String> result = new ArrayList<String>();
+    List<String> result = new ArrayList<String>();
     for (int i = 0; i < _textFields.size(); ++i) {
       result.add(_textFields.get(i).getText());
     }

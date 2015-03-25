@@ -26,7 +26,7 @@ public class GetProjectsHandler extends IndexerServerHandler {
    */
   @Override
   protected int doRequest() throws ServerException, DatabaseException, InvalidCredentialsException {
-    final GetProjectsRequest request = (GetProjectsRequest) getRequest();
+    GetProjectsRequest request = (GetProjectsRequest) getRequest();
     GetProjectsResponse response;
 
     int statusCode;

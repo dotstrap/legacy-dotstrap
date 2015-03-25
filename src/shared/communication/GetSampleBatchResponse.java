@@ -86,7 +86,7 @@ public class GetSampleBatchResponse implements Response {
    */
   @Override
   public String toString() {
-    final StringBuilder sb = new StringBuilder();
+    StringBuilder sb = new StringBuilder();
     sb.append(urlPrefix + "/" + sampleBatch.getFilePath() + "\n");
     return sb.toString();
   }

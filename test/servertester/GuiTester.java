@@ -30,10 +30,10 @@ public class GuiTester {
    */
   public static void main(String[] args) {
     try {
-      final FileInputStream is = new FileInputStream("logging.properties");
+      FileInputStream is = new FileInputStream("logging.properties");
       LogManager.getLogManager().readConfiguration(is);
       logger = Logger.getLogger("guiTester");
-    } catch (final IOException e) {
+    } catch (IOException e) {
       Logger.getAnonymousLogger().severe("ERROR: unable to load logging properties file...");
       Logger.getAnonymousLogger().severe(e.getMessage());
     }
@@ -41,8 +41,8 @@ public class GuiTester {
     EventQueue.invokeLater(new Runnable() {
       @Override
       public void run() {
-        final IndexerServerTesterFrame frame = new IndexerServerTesterFrame();
-        final Controller controller = new Controller();
+        IndexerServerTesterFrame frame = new IndexerServerTesterFrame();
+        Controller controller = new Controller();
         frame.setController(controller);
         controller.setView(frame);
         controller.initialize();

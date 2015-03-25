@@ -162,7 +162,7 @@ public class User {
       return true;
     }
 
-    final User other = (User) o;
+    User other = (User) o;
     // @formatter:off
     return ((userId == other.getUserId())
         && username.equals(other.getUsername())
@@ -175,7 +175,7 @@ public class User {
 
   @Override
   public String toString() {
-    final StringBuilder output = new StringBuilder();
+    StringBuilder output = new StringBuilder();
 
     output.append("User ID: " + userId + "\n");
     output.append("Username: " + username + "\n");

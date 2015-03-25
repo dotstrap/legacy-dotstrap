@@ -26,7 +26,7 @@ public class SubmitBatchHandler extends IndexerServerHandler {
    */
   @Override
   protected int doRequest() throws ServerException, DatabaseException, InvalidCredentialsException {
-    final SubmitBatchRequest request = (SubmitBatchRequest) getRequest();
+   SubmitBatchRequest request = (SubmitBatchRequest) getRequest();
 
     int statusCode;
     if (IndexerServerHandler.authenticate(request.getUsername(), request.getPassword())) {

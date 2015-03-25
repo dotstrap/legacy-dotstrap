@@ -7,10 +7,6 @@
  */
 package shared.communication;
 
-import java.util.List;
-
-import shared.model.Record;
-
 // TODO: Auto-generated Javadoc
 /**
  * The Class SubmitBatchRequest.
@@ -18,82 +14,53 @@ import shared.model.Record;
 public class SubmitBatchRequest implements Request {
   private String username;
   private String password;
-  private int batchId;
-  private List<Record> fieldValues;
+  private int    batchID;
+  private String fieldValues;
 
   /**
-   * @param usrname
-   * @param passwrd
-   * @param batchId
-   * @param fieldVals
+   * Instantiates a new SubmitBatch Request.
+   *
+   * @param username
+   * @param password
+   * @param batchID
+   * @param fieldValues
    */
-  public SubmitBatchRequest(String usrname, String passwrd, int batchId, List<Record> fieldVals) {
-    this.username = usrname;
-    this.password = passwrd;
-    this.batchId = batchId;
-    this.fieldValues = fieldVals;
+  public SubmitBatchRequest(String username, String password, int batchID, String fieldValues) {
+    this.username = username;
+    this.password = password;
+    this.batchID = batchID;
+    this.fieldValues = fieldValues;
   }
 
-  /**
-   * Instantiates a new submit batch parameters.
-   */
-  public SubmitBatchRequest() {
-
-  }
-
-  /**
-   * @return the username
-   */
   public String getUsername() {
-    return username;
+    return this.username;
   }
 
-  /**
-   * @param username the username to set
-   */
   public void setUsername(String username) {
     this.username = username;
   }
 
-  /**
-   * @return the password
-   */
   public String getPassword() {
-    return password;
+    return this.password;
   }
 
-  /**
-   * @param password the password to set
-   */
   public void setPassword(String password) {
     this.password = password;
   }
 
-  /**
-   * @return the batchId
-   */
-  public int getBatchId() {
-    return batchId;
+  public int getBatchID() {
+    return this.batchID;
   }
 
-  /**
-   * @param batchId the batchId to set
-   */
-  public void setBatchId(int batchId) {
-    this.batchId = batchId;
+  public void setBatchID(int batchID) {
+    this.batchID = batchID;
   }
 
-  /**
-   * @return the fieldValues
-   */
-  public List<Record> getFieldValues() {
-    return fieldValues;
+  public String getFieldValues() {
+    return this.fieldValues;
   }
 
-  /**
-   * @param fieldValues the fieldValues to set
-   */
-  public void setFieldValues(List<Record> fieldValues) {
+  public void setFieldValues(String fieldValues) {
     this.fieldValues = fieldValues;
   }
 

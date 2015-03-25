@@ -26,7 +26,7 @@ public class GetSampleBatchHandler extends IndexerServerHandler {
    */
   @Override
   protected int doRequest() throws ServerException, DatabaseException, InvalidCredentialsException {
-    final GetSampleBatchRequest request = (GetSampleBatchRequest) getRequest();
+    GetSampleBatchRequest request = (GetSampleBatchRequest) getRequest();
     GetSampleBatchResponse response = new GetSampleBatchResponse();
 
     int statusCode;

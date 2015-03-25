@@ -65,7 +65,7 @@ public class ValidateUserUnitTest {
     testUserDAO.create(testUser2);
     testUserDAO.create(testUser3);
 
-    final List<User> allUseres = testUserDAO.getAll();
+    List<User> allUseres = testUserDAO.getAll();
     assertEquals(3, allUseres.size());
     // "tearDownAfterClass");
   }
@@ -91,14 +91,14 @@ public class ValidateUserUnitTest {
   @Before
   public void setUp() throws Exception {
     // quick check to ensure size hasn't changed for some reason
-    final List<User> allUseres = testUserDAO.getAll();
+    List<User> allUseres = testUserDAO.getAll();
     assertEquals(3, allUseres.size());
   }
 
   @After
   public void tearDown() throws Exception {
     // quick check to ensure size hasn't changed for some reason
-    final List<User> allUseres = testUserDAO.getAll();
+    List<User> allUseres = testUserDAO.getAll();
     assertEquals(3, allUseres.size());
   }
 
@@ -108,7 +108,7 @@ public class ValidateUserUnitTest {
     try {
       clientComm.validateUser(new ValidateUserRequest("userTest2", "INVALID"));
       isValidPassword = true;
-    } catch (final Exception e) {
+    } catch (Exception e) {
       isValidPassword = false;
       logger.log(Level.SEVERE, e.toString());
       logger.log(Level.FINE, "STACKTRACE: ", e);
@@ -122,7 +122,7 @@ public class ValidateUserUnitTest {
     try {
       clientComm.validateUser(new ValidateUserRequest("userTest2", "pass3"));
       isValidPassword = true;
-    } catch (final Exception e) {
+    } catch (Exception e) {
       isValidPassword = false;
       logger.log(Level.SEVERE, e.toString());
       logger.log(Level.FINE, "STACKTRACE: ", e);
@@ -136,7 +136,7 @@ public class ValidateUserUnitTest {
     try {
       clientComm.validateUser(new ValidateUserRequest("pass3", "userTest3"));
       isValidUsername = true;
-    } catch (final Exception e) {
+    } catch (Exception e) {
       isValidUsername = false;
       logger.log(Level.SEVERE, e.toString());
       logger.log(Level.FINE, "STACKTRACE: ", e);
@@ -151,7 +151,7 @@ public class ValidateUserUnitTest {
     try {
       clientComm.validateUser(new ValidateUserRequest("userTest2", "userTest2"));
       isValidCreds = true;
-    } catch (final Exception e) {
+    } catch (Exception e) {
       isValidCreds = false;
       logger.log(Level.SEVERE, e.toString());
       logger.log(Level.FINE, "STACKTRACE: ", e);
@@ -165,7 +165,7 @@ public class ValidateUserUnitTest {
     try {
       clientComm.validateUser(new ValidateUserRequest("userTest2", ""));
       isValidCreds = true;
-    } catch (final Exception e) {
+    } catch (Exception e) {
       isValidCreds = false;
       logger.log(Level.SEVERE, e.toString());
       logger.log(Level.FINE, "STACKTRACE: ", e);
@@ -179,7 +179,7 @@ public class ValidateUserUnitTest {
     try {
       clientComm.validateUser(new ValidateUserRequest("", "pass3"));
       isValidCreds = true;
-    } catch (final Exception e) {
+    } catch (Exception e) {
       isValidCreds = false;
       logger.log(Level.SEVERE, e.toString());
       logger.log(Level.FINE, "STACKTRACE: ", e);
@@ -193,7 +193,7 @@ public class ValidateUserUnitTest {
     try {
       clientComm.validateUser(new ValidateUserRequest("", ""));
       isValidCreds = true;
-    } catch (final Exception e) {
+    } catch (Exception e) {
       isValidCreds = false;
       logger.log(Level.SEVERE, e.toString());
       logger.log(Level.FINE, "STACKTRACE: ", e);

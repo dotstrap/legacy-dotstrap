@@ -23,12 +23,12 @@ import server.httphandler.indexerserverhandler.*;
  * HTTPHandler Objects Bootstraps the HTTP Server
  */
 public class Server {
-  private static final int MAX_WAITING_CONNECTIONS = 10;
+  private static int    MAX_WAITING_CONNECTIONS = 10;
   /** Default port number the server runs on (can be overridden via CLI args. */
-  private static int DEFAULT_PORT = 8080;
+  private static int          DEFAULT_PORT      = 8080;
   /** The logger used throughout the project. */
-  private static Logger logger;
-  private final static String LOG_NAME = "server";
+  private static Logger       logger;
+  private static String LOG_NAME                = "server";
 
   /**
    * Entry point for the Indexer Server program
@@ -38,14 +38,14 @@ public class Server {
   public static void main(String[] args) {
     int portNum = 8080;
     try {
-      final FileInputStream is = new FileInputStream("logging.properties");
+      FileInputStream is = new FileInputStream("logging.properties");
       LogManager.getLogManager().readConfiguration(is);
       logger = Logger.getLogger(LOG_NAME);
-    } catch (final IOException e) {
+    } catch (IOException e) {
       Logger.getAnonymousLogger().severe("ERROR: unable to load logging properties file...");
       Logger.getAnonymousLogger().severe(e.getMessage());
     }
-    logger.info("Initialized " + LOG_NAME + " log...");
+    logger.info("===================Initialized " + LOG_NAME + " log===================");
 
     if (args == null) {
       logger.info("No port number specified; using default port: " + DEFAULT_PORT + "....");
@@ -53,7 +53,7 @@ public class Server {
     } else if (args.length == 1) {
       try {
         portNum = Integer.parseInt(args[0]);
-      } catch (final NumberFormatException e) {
+      } catch (NumberFormatException e) {
         logger.severe("Invalid port number argument...");
         return;
       }
@@ -65,7 +65,7 @@ public class Server {
     logger.info("Bootstrapping server...");
     try {
       new Server().bootstrap(portNum);
-    } catch (final ServerException e) {
+    } catch (ServerException e) {
       logger.log(Level.SEVERE, e.toString());
       logger.log(Level.FINE, "STACKTRACE: ", e);
     }
@@ -74,14 +74,14 @@ public class Server {
   // The server //@formatter:off
   private HttpServer server;
   // Handler objects ////////////////////////////////
-  private final SearchHandler         searchHandler;
-  private final GetFieldsHandler      getFieldsHandler;
-  private final GetProjectsHandler    getProjectsHandler;
-  private final GetSampleBatchHandler getSampleBatchHandler;
-  private final SubmitBatchHandler    submitBatchHandler;
-  private final ValidateUserHandler   validateUserHandler;
-  private final DownloadBatchHandler  downloadBatchHandler;
-  private final DownloadFileHandler   downloadFileHandler;
+  private SearchHandler         searchHandler;
+  private GetFieldsHandler      getFieldsHandler;
+  private GetProjectsHandler    getProjectsHandler;
+  private GetSampleBatchHandler getSampleBatchHandler;
+  private SubmitBatchHandler    submitBatchHandler;
+  private ValidateUserHandler   validateUserHandler;
+  private DownloadBatchHandler  downloadBatchHandler;
+  private DownloadFileHandler   downloadFileHandler;
 
   /**
    * Instantiates a new Server. Server
@@ -108,7 +108,7 @@ public class Server {
     logger.info("Initializing Model...");
     try {
       ServerFacade.initialize();
-    } catch (final ServerException e) {
+    } catch (ServerException e) {
       logger.log(Level.SEVERE, e.toString());
       logger.log(Level.FINE, "STACKTRACE: ", e);
       throw new ServerException(e.toString());
@@ -117,7 +117,7 @@ public class Server {
     logger.info("Initializing HTTP server on port: " + portNum + "...");
     try {
       server = HttpServer.create(new InetSocketAddress(portNum), MAX_WAITING_CONNECTIONS);
-    } catch (final IOException e) {
+    } catch (IOException e) {
       logger.log(Level.SEVERE, "Failed to initialize server on port: " + portNum + "...");
       logger.log(Level.SEVERE, e.toString());
       logger.log(Level.FINE, "STACKTRACE: ", e);

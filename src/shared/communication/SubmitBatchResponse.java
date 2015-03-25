@@ -50,13 +50,10 @@ public class SubmitBatchResponse implements Response {
    */
   @Override
   public String toString() {
-    final StringBuilder sb = new StringBuilder();
-
-    if (success) {
-      sb.append("TRUE\n");
-    } else {
-      sb.append("FAILED\n");
-    }
-    return sb.toString();
+//    StringBuilder sb = new StringBuilder();
+//
+//      sb.append("TRUE\n");
+//
+    return "TRUE\n";
   }
 }

@@ -62,7 +62,7 @@ public class SearchResponse implements Response {
    */
   @Override
   public String toString() {
-    final StringBuilder sb = new StringBuilder();
+    StringBuilder sb = new StringBuilder();
     for (int i = 0; i < foundRecords.size(); ++i) {
       sb.append(foundRecords.get(i).getBatchId() + "\n");
       sb.append(urls.get(i) + "\n");

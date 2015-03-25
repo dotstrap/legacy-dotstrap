@@ -2,7 +2,7 @@
  * Batch.java
  * JRE v1.8.0_40
  *
- * Created by William Myers on Mar 23, 2015.
+ * Created by William Myers on Mar 24, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package shared.model;
@@ -12,15 +12,15 @@ package shared.model;
  * The Class Batch (image).
  */
 public class Batch {
-  public final static int INCOMPLETE = 0;
-  public final static int ACTIVE = 1;
-  public final static int COMPLETE = 2;
+  public static int INCOMPLETE = 0;
+  public static int ACTIVE     = 1;
+  public static int COMPLETE   = 2;
 
-  private int batchId;
-  private String filePath;
-  private int projectId;
-  private int status;
-  private int currUserId;
+  private int       batchId;
+  private String    filePath;
+  private int       projectId;
+  private int       status;
+  private int       currUserId;
 
   /**
    * Instantiates a new Batch without params.
@@ -120,4 +120,26 @@ public class Batch {
   public void setCurrUserId(int currUserId) {
     this.currUserId = currUserId;
   }
+
+
+  /* (non-Javadoc)
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
+  @Override
+  public boolean equals(Object o) {
+    if (o == null)
+      return false;
+    if (o.getClass() != this.getClass())
+      return false;
+    if (o == this)
+      return true;
+
+    Batch other = (Batch) o;
+    return (batchId == other.getBatchId()// @formatter:off
+              && projectId == other.getProjectId()
+              && filePath.equals(other.getFilePath())
+//            && Status == other.getstatus()
+              && currUserId == other.getCurrUserId()); // @formatter:on
+  }
+
 }

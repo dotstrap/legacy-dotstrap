@@ -28,6 +28,7 @@ import shared.model.Batch;
 import shared.model.User;
 
 public class DownloadBatchUnitTest {
+
   /** The logger used throughout the project. */
   private static Logger logger; // @formatter:off
   static {
@@ -73,7 +74,7 @@ public class DownloadBatchUnitTest {
     testUserDAO.create(testUser2);
     testUserDAO.create(testUser3);
 
-    final List<User> allUseres = testUserDAO.getAll();
+    List<User> allUseres = testUserDAO.getAll();
     assertEquals(3, allUseres.size());
 
     testBatch1 = new Batch("batchTest1", 10, 10);
@@ -84,45 +85,55 @@ public class DownloadBatchUnitTest {
     testBatchDAO.create(testBatch2);
     testBatchDAO.create(testBatch3);
 
-    final List<Batch> allBatches = testBatchDAO.getAll();
+    List<Batch> allBatches = testBatchDAO.getAll();
     assertEquals(3, allBatches.size());
   }
 
   @AfterClass
   public static void tearDownAfterClass() throws Exception {
     db.endTransaction(false);
-    db = null;
+
+    testUser1 = null;
+    testUser2 = null;
+    testUser3 = null;
+
+    testBatch1 = null;
+    testBatch2 = null;
+    testBatch3 = null;
+
     testUserDAO = null;
+    testBatchDAO = null;
+
+    db = null;
     return;
   }
 
   @Before
   public void setUp() throws Exception {
     // quick checks to ensure size hasn't changed for some reason
-    final List<User> allUseres = testUserDAO.getAll();
+    List<User> allUseres = testUserDAO.getAll();
     assertEquals(3, allUseres.size());
 
-    final List<Batch> allBatches = testBatchDAO.getAll();
+    List<Batch> allBatches = testBatchDAO.getAll();
     assertEquals(3, allBatches.size());
   }
 
   @After
   public void tearDown() throws Exception {
     // quick checks to ensure size hasn't changed for some reason
-    final List<User> allUseres = testUserDAO.getAll();
+    List<User> allUseres = testUserDAO.getAll();
     assertEquals(3, allUseres.size());
 
-    final List<Batch> allBatches = testBatchDAO.getAll();
+    List<Batch> allBatches = testBatchDAO.getAll();
     assertEquals(3, allBatches.size());
   }
 
   @Test
   public void invalidUserTest() throws DatabaseException {
-    // invalid user
     boolean isValid = true;
     try {
       clientComm.downloadBatch(new DownloadBatchRequest("userTest1", "INVALID", 1));
-    } catch (final ClientException e) {
+    } catch (ClientException e) {
       isValid = false;
       logger.log(Level.SEVERE, e.toString());
       logger.log(Level.FINE, "STACKTRACE: ", e);
@@ -132,11 +143,10 @@ public class DownloadBatchUnitTest {
 
   @Test
   public void invalidProjectIdTest() throws DatabaseException {
-    // invalid projectId
     DownloadBatchResponse result2 = new DownloadBatchResponse();
     try {
       result2 = clientComm.downloadBatch(new DownloadBatchRequest("userTest2", "pass2", 100));
-    } catch (final ClientException e) {
+    } catch (ClientException e) {
       logger.fine("Caught invalid projectId test...");
       logger.log(Level.SEVERE, e.toString());
       logger.log(Level.FINE, "STACKTRACE: ", e);

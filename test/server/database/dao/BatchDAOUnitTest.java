@@ -10,11 +10,9 @@ package server.database.dao;
 import static org.junit.Assert.*;
 
 import java.util.List;
-import java.util.logging.Logger;
 
 import org.junit.*;
 
-import server.ServerUnitTests;
 import server.database.Database;
 import server.database.DatabaseException;
 
@@ -25,12 +23,6 @@ import shared.model.Batch;
  * The Class BatchDAOUnitTest.
  */
 public class BatchDAOUnitTest {
-  /** The logger used throughout the project. */
-  private static Logger logger;
-  static {
-    logger = Logger.getLogger(ServerUnitTests.LOG_NAME);
-  }
-
   /**
    * Sets the up before class.
    *
@@ -67,7 +59,6 @@ public class BatchDAOUnitTest {
    */
   @Before
   public void setUp() throws Exception {
-
     db = new Database();
     db.startTransaction();
     testBatchDAO = db.getBatchDAO();
@@ -137,7 +128,7 @@ public class BatchDAOUnitTest {
    */
   @Test
   public void testGetAll() throws DatabaseException {
-    final List<Batch> allBatches = testBatchDAO.getAll();
+    List<Batch> allBatches = testBatchDAO.getAll();
     assertEquals(3, allBatches.size());
   }
 
@@ -148,14 +139,13 @@ public class BatchDAOUnitTest {
    */
   @Test
   public void testCreate() throws DatabaseException {
-    // TODO:refractor these for all unit test cases into the setup method
-    final List<Batch> allBatches = testBatchDAO.getAll();
+    List<Batch> allBatches = testBatchDAO.getAll();
     assertEquals(3, allBatches.size());
 
     boolean hasFoundBatch1 = false;
     boolean hasFoundBatch2 = false;
     boolean hasFoundBatch3 = false;
-    for (final Batch b : allBatches) {
+    for (Batch b : allBatches) {
       assertFalse(b.getBatchId() == -1);
       if (!hasFoundBatch1) {
         hasFoundBatch1 = areEqual(b, batchTest1, false);
@@ -185,13 +175,13 @@ public class BatchDAOUnitTest {
     testBatchDAO.update(batchTest2);
     testBatchDAO.update(batchTest3);
 
-    final List<Batch> allBatches = testBatchDAO.getAll();
+    List<Batch> allBatches = testBatchDAO.getAll();
     assertEquals(3, allBatches.size());
 
     boolean hasFoundBatch1 = false;
     boolean hasFoundBatch2 = false;
     boolean hasFoundBatch3 = false;
-    for (final Batch b : allBatches) {
+    for (Batch b : allBatches) {
       assertFalse(b.getBatchId() == -1);
       if (!hasFoundBatch1) {
         hasFoundBatch1 = areEqual(b, batchTest1, false);

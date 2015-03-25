@@ -26,7 +26,7 @@ public class GetFieldsHandler extends IndexerServerHandler {
    */
   @Override
   protected int doRequest() throws ServerException, DatabaseException, InvalidCredentialsException {
-    final GetFieldsRequest request = (GetFieldsRequest) getRequest();
+    GetFieldsRequest request = (GetFieldsRequest) getRequest();
     GetFieldsResponse response;
 
     int statusCode;

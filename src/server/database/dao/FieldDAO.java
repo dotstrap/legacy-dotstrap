@@ -28,7 +28,7 @@ public class FieldDAO {
   }
 
   /** The db. */
-  private final Database db;
+  private Database db;
 
   /**
    * Instantiates a new field dao.
@@ -42,9 +42,9 @@ public class FieldDAO {
   public void initTable() throws DatabaseException {
     Statement stmt1 = null;
     Statement stmt2 = null;
-    final String dropFieldTable = "DROP TABLE IF EXISTS Field";
+    String dropFieldTable = "DROP TABLE IF EXISTS Field";
     // @formatter:off
-    final String createFieldTable =
+    String createFieldTable =
         "CREATE TABLE Field ("
             + "FieldId INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE, "
             + "ProjectId INTEGER NOT NULL, "
@@ -61,7 +61,7 @@ public class FieldDAO {
 
       stmt2 = db.getConnection().createStatement();
       stmt2.executeUpdate(createFieldTable);
-    } catch (final Exception e) {
+    } catch (Exception e) {
       logger.log(Level.SEVERE, e.toString());
       logger.log(Level.FINE, "STACKTRACE: ", e);
       throw new DatabaseException(e.toString());
@@ -73,15 +73,15 @@ public class FieldDAO {
 
   public ArrayList<Field> getAll() throws DatabaseException {
 
-    final ArrayList<Field> allFields = new ArrayList<Field>();
+    ArrayList<Field> allFields = new ArrayList<Field>();
     PreparedStatement pstmt = null;
     ResultSet resultset = null;
     try {
-      final String selectsql = "SELECT * from Field";
-      pstmt = db.getConnection().prepareStatement(selectsql);
+      String query = "SELECT * from Field";
+      pstmt = db.getConnection().prepareStatement(query);
       resultset = pstmt.executeQuery();
       while (resultset.next()) {
-        final Field resultField = new Field();
+        Field resultField = new Field();
 
         resultField.setFieldId(resultset.getInt("FieldId"));
         resultField.setProjectId(resultset.getInt("ProjectId"));
@@ -96,7 +96,7 @@ public class FieldDAO {
 
         allFields.add(resultField);
       }
-    } catch (final Exception e) {
+    } catch (Exception e) {
       logger.log(Level.SEVERE, e.toString());
       logger.log(Level.FINE, "STACKTRACE: ", e);
       throw new DatabaseException(e.toString());
@@ -109,16 +109,16 @@ public class FieldDAO {
 
   public ArrayList<Field> getAll(int projectId) throws DatabaseException {
 
-    final ArrayList<Field> allFields = new ArrayList<Field>();
+    ArrayList<Field> allFields = new ArrayList<Field>();
     PreparedStatement pstmt = null;
     ResultSet resultset = null;
     try {
-      final String selectsql = "SELECT * from Field WHERE ProjectId = ?";
-      pstmt = db.getConnection().prepareStatement(selectsql);
+      String query = "SELECT * from Field WHERE ProjectId = ?";
+      pstmt = db.getConnection().prepareStatement(query);
       pstmt.setInt(1, projectId);
       resultset = pstmt.executeQuery();
       while (resultset.next()) {
-        final Field resultField = new Field();
+        Field resultField = new Field();
 
         resultField.setFieldId(resultset.getInt("FieldId"));
         resultField.setProjectId(projectId);
@@ -133,7 +133,7 @@ public class FieldDAO {
 
         allFields.add(resultField);
       }
-    } catch (final Exception e) {
+    } catch (Exception e) {
       logger.log(Level.SEVERE, e.toString());
       logger.log(Level.FINE, "STACKTRACE: ", e);
       throw new DatabaseException(e.toString());
@@ -158,8 +158,8 @@ public class FieldDAO {
     PreparedStatement pstmt = null;
     ResultSet resultset = null;
     try {
-      final String selectsql = "SELECT FieldId FROM Field WHERE ProjectId = ? AND ColumnNumber = ?";
-      pstmt = db.getConnection().prepareStatement(selectsql);
+      String query = "SELECT FieldId FROM Field WHERE ProjectId = ? AND ColumnNumber = ?";
+      pstmt = db.getConnection().prepareStatement(query);
 
       pstmt.setInt(1, projectId);
       pstmt.setInt(2, colNum);
@@ -168,7 +168,7 @@ public class FieldDAO {
       resultset.next();
       fieldId = resultset.getInt("FieldId");
       assert (fieldId > 0);
-    } catch (final SQLException e) {
+    } catch (SQLException e) {
       logger.log(Level.SEVERE, e.toString());
       logger.log(Level.FINE, "STACKTRACE: ", e);
       throw new DatabaseException(e.toString());
@@ -191,13 +191,13 @@ public class FieldDAO {
     ResultSet resultset = null;
     try {
       // @formatter:off
-      final String insertsql =
+      String query =
           "INSERT INTO Field ("
               + "ProjectId, Title, KnownData, HelpURL, "
               + "XCoordinate, Width, ColumnNumber)"
               + "VALUES (?, ?, ?, ?, ?, ?, ?)";
       // @formatter:on
-      pstmt = db.getConnection().prepareStatement(insertsql);
+      pstmt = db.getConnection().prepareStatement(query);
       pstmt.setInt(1, newField.getProjectId());
       pstmt.setString(2, newField.getTitle());
       pstmt.setString(3, newField.getKnownData());
@@ -207,15 +207,15 @@ public class FieldDAO {
       pstmt.setInt(7, newField.getColNum());
 
       if (pstmt.executeUpdate() == 1) {
-        final Statement stmt = db.getConnection().createStatement();
+        Statement stmt = db.getConnection().createStatement();
         resultset = stmt.executeQuery("SELECT last_insert_rowid()");
         resultset.next();
-        final int fieldId = resultset.getInt(1);
+        int fieldId = resultset.getInt(1);
         newField.setFieldId(fieldId);
       } else {
         throw new DatabaseException("Unable to insert field into database.");
       }
-    } catch (final SQLException e) {
+    } catch (SQLException e) {
       logger.log(Level.SEVERE, e.toString());
       logger.log(Level.FINE, "STACKTRACE: ", e);
       throw new DatabaseException(e.toString());
@@ -237,10 +237,10 @@ public class FieldDAO {
 
     PreparedStatement pstmt = null;
     ResultSet resultset = null;
-    final Field returnField = new Field();
+    Field returnField = new Field();
     try {
-      final String selectsql = "SELECT * from Field WHERE ProjectId = ? AND Title = ?";
-      pstmt = db.getConnection().prepareStatement(selectsql);
+      String query = "SELECT * from Field WHERE ProjectId = ? AND Title = ?";
+      pstmt = db.getConnection().prepareStatement(query);
 
       pstmt.setInt(1, projectId);
       pstmt.setString(2, title);
@@ -256,7 +256,7 @@ public class FieldDAO {
       returnField.setXCoord(resultset.getInt(6));
       returnField.setWidth(resultset.getInt(7));
       returnField.setColNum(resultset.getInt(8));
-    } catch (final Exception e) {
+    } catch (Exception e) {
       logger.log(Level.SEVERE, e.toString());
       logger.log(Level.FINE, "STACKTRACE: ", e);
       throw new DatabaseException(e.toString());
@@ -277,11 +277,11 @@ public class FieldDAO {
 
     PreparedStatement pstmt = null;
     try {
-      final String selectsql =
+      String query =
           "UPDATE Field SET KnownData = ?, HelpURL = ?, XCoordinate = ?, Width = ? "
               + "WHERE ProjectId = ? AND Title = ?";
 
-      pstmt = db.getConnection().prepareStatement(selectsql);
+      pstmt = db.getConnection().prepareStatement(query);
 
       pstmt.setString(1, field.getKnownData());
       pstmt.setString(2, field.getHelpURL());
@@ -292,7 +292,7 @@ public class FieldDAO {
       pstmt.setInt(6, field.getColNum());
 
       pstmt.executeUpdate();
-    } catch (final Exception e) {
+    } catch (Exception e) {
       logger.log(Level.SEVERE, e.toString());
       logger.log(Level.FINE, "STACKTRACE: ", e);
       throw new DatabaseException(e.toString());
@@ -310,14 +310,14 @@ public class FieldDAO {
 
     PreparedStatement pstmt = null;
     try {
-      final String selectsql = "DELETE from Field WHERE ProjectId = ? AND Title = ?";
+      String query = "DELETE from Field WHERE ProjectId = ? AND Title = ?";
 
-      pstmt = db.getConnection().prepareStatement(selectsql);
+      pstmt = db.getConnection().prepareStatement(query);
       pstmt.setInt(1, field.getProjectId());
       pstmt.setString(2, field.getTitle());
 
       pstmt.executeUpdate();
-    } catch (final Exception e) {
+    } catch (Exception e) {
       logger.log(Level.SEVERE, e.toString());
       logger.log(Level.FINE, "STACKTRACE: ", e);
       throw new DatabaseException(e.toString());

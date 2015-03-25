@@ -43,7 +43,7 @@ public class ImporterUnitTest {
   @Before
   public void setUp() throws Exception {
     // Prepare database for test case(s)
-    final String[] args = {"Records/Records.xml"};
+    String[] args = {"Records/Records.xml"};
     Importer.main(args);
 
     db = new Database();

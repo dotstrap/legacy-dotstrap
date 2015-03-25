@@ -34,7 +34,7 @@ public enum ServerOp {
   // int[], String[])
 
   /** The _description. */
-  private final String _description;
+  private String _description;
 
   /**
    * Instantiates a new server op.

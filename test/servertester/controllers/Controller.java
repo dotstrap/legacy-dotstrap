@@ -38,7 +38,7 @@ public class Controller implements IController {
 
   @Override
   public void initialize() {
-    logger = Logger.getLogger("client");
+    logger = Logger.getLogger("clientComm");
     getView().setHost("localhost");
     getView().setPort("50080");
     operationSelected();
@@ -46,7 +46,7 @@ public class Controller implements IController {
 
   @Override
   public void operationSelected() {
-    final ArrayList<String> paramNames = new ArrayList<String>();
+    ArrayList<String> paramNames = new ArrayList<String>();
     paramNames.add("User");
     paramNames.add("Password");
 
@@ -113,18 +113,18 @@ public class Controller implements IController {
   }
 
   private void validateUser() {
-    final String[] args = getView().getParameterValues();
-    final String port = getView().getPort();
+    String[] args = getView().getParameterValues();
+    String port = getView().getPort();
     try {
-      final String host = getView().getHost();
+      String host = getView().getHost();
 
-      final ClientCommunicator client = new ClientCommunicator(port, host);
-      final ValidateUserRequest params = new ValidateUserRequest(args[0], args[1]);
-      final ValidateUserResponse result = client.validateUser(params);
+      ClientCommunicator clientComm = new ClientCommunicator(port, host);
+      ValidateUserRequest params = new ValidateUserRequest(args[0], args[1]);
+      ValidateUserResponse result = clientComm.validateUser(params);
 
       getView().setRequest(params.toString());
       getView().setResponse(result.toString());
-    } catch (final Exception e) {
+    } catch (Exception e) {
       logger.log(Level.SEVERE, e.toString());
       logger.log(Level.FINE, "STACKTRACE: ", e);
       getView().setResponse("FAILED\n" + e.toString());
@@ -132,18 +132,18 @@ public class Controller implements IController {
   }
 
   private void getProjects() {
-    final String[] args = getView().getParameterValues();
-    final String port = getView().getPort();
+    String[] args = getView().getParameterValues();
+    String port = getView().getPort();
     try {
-      final String host = getView().getHost();
+      String host = getView().getHost();
 
-      final ClientCommunicator client = new ClientCommunicator(port, host);
-      final GetProjectsRequest params = new GetProjectsRequest(args[0], args[1]);
-      final GetProjectsResponse result = client.getProjects(params);
+      ClientCommunicator clientComm = new ClientCommunicator(port, host);
+      GetProjectsRequest params = new GetProjectsRequest(args[0], args[1]);
+      GetProjectsResponse result = clientComm.getProjects(params);
 
       getView().setRequest(params.toString());
       getView().setResponse(result.toString());
-    } catch (final Exception e) {
+    } catch (Exception e) {
       logger.log(Level.SEVERE, e.toString());
       logger.log(Level.FINE, "STACKTRACE: ", e);
       getView().setResponse("FAILED\n" + e.toString());
@@ -151,19 +151,19 @@ public class Controller implements IController {
   }
 
   private void getSampleBatch() {
-    final String[] args = getView().getParameterValues();
-    final String port = getView().getPort();
+    String[] args = getView().getParameterValues();
+    String port = getView().getPort();
     try {
-      final String host = getView().getHost();
+      String host = getView().getHost();
 
-      final ClientCommunicator client = new ClientCommunicator(port, host);
-      final GetSampleBatchRequest params =
+      ClientCommunicator clientComm = new ClientCommunicator(port, host);
+      GetSampleBatchRequest params =
           new GetSampleBatchRequest(args[0], args[1], Integer.parseInt(args[2]));
-      final GetSampleBatchResponse result = client.getSampleBatch(params);
+      GetSampleBatchResponse result = clientComm.getSampleBatch(params);
 
       getView().setRequest(params.toString());
       getView().setResponse(result.toString());
-    } catch (final Exception e) {
+    } catch (Exception e) {
       logger.log(Level.SEVERE, e.toString());
       logger.log(Level.FINE, "STACKTRACE: ", e);
       getView().setResponse("FAILED\n" + e.toString());
@@ -171,19 +171,19 @@ public class Controller implements IController {
   }
 
   private void downloadBatch() {
-    final String[] args = getView().getParameterValues();
-    final String port = getView().getPort();
+    String[] args = getView().getParameterValues();
+    String port = getView().getPort();
     try {
-      final String host = getView().getHost();
+      String host = getView().getHost();
 
-      final ClientCommunicator client = new ClientCommunicator(port, host);
-      final DownloadBatchRequest params =
+      ClientCommunicator clientComm = new ClientCommunicator(port, host);
+      DownloadBatchRequest params =
           new DownloadBatchRequest(args[0], args[1], Integer.parseInt(args[2]));
-      final DownloadBatchResponse result = client.downloadBatch(params);
+      DownloadBatchResponse result = clientComm.downloadBatch(params);
 
       getView().setRequest(params.toString());
       getView().setResponse(result.toString());
-    } catch (final Exception e) {
+    } catch (Exception e) {
       logger.log(Level.SEVERE, e.toString());
       logger.log(Level.FINE, "STACKTRACE: ", e);
       getView().setResponse("FAILED\n" + e.toString());
@@ -192,7 +192,7 @@ public class Controller implements IController {
   }
 
   private void getFields() {
-    final String[] args = getView().getParameterValues();
+    String[] args = getView().getParameterValues();
     int projectId = 0;
     try {
       if (args[2].length() != 0) {
@@ -203,16 +203,16 @@ public class Controller implements IController {
         }
       }
 
-      final String port = getView().getPort();
-      final String host = getView().getHost();
+      String port = getView().getPort();
+      String host = getView().getHost();
 
-      final ClientCommunicator client = new ClientCommunicator(port, host);
-      final GetFieldsRequest params = new GetFieldsRequest(args[0], args[1], projectId);
-      final GetFieldsResponse result = client.getFields(params);
+      ClientCommunicator clientComm = new ClientCommunicator(port, host);
+      GetFieldsRequest params = new GetFieldsRequest(args[0], args[1], projectId);
+      GetFieldsResponse result = clientComm.getFields(params);
 
       getView().setRequest(params.toString());
       getView().setResponse(result.toString());
-    } catch (final Exception e) {
+    } catch (Exception e) {
       logger.log(Level.SEVERE, e.toString());
       logger.log(Level.FINE, "STACKTRACE: ", e);
       getView().setResponse("FAILED\n" + e.toString());
@@ -220,41 +220,38 @@ public class Controller implements IController {
   }
 
   private void submitBatch() {
-    // String[] args = getView().getParameterValues();
-    // String port = getView().getPort();
-    // try {
-    // String host = getView().getHost();
+    String[] args = getView().getParameterValues();
+    String port = getView().getPort();
+    try {
+      String host = getView().getHost();
 
-    // ClientCommunicator client = new ClientCommunicator(port, host); //
-    // TODO: parse fields as
-    // strings
-    // SubmitBatchRequest params =
-    // new SubmitBatchRequest(args[0], args[1],
-    // Integer.parseInt(args[2]), args[3]);
-    // SubmitBatchResponse result = client.submitBatch(params);
-    // getView().setResponse(result.to String());
-    // } catch (Exception e) {
-    // getView().setResponse("FAILED\n");
-    // }
+      ClientCommunicator clientComm = new ClientCommunicator(port, host);
+      SubmitBatchRequest params =
+          new SubmitBatchRequest(args[0], args[1], Integer.parseInt(args[2]), args[3]);
+      SubmitBatchResponse result = clientComm.submitBatch(params);
+      getView().setResponse(result.toString());
+    } catch (Exception e) {
+      getView().setResponse("FAILED\n");
+    }
   }
 
   private void search() {
-    final String[] args = getView().getParameterValues();
-    final ArrayList<Integer> fieldList = new ArrayList<Integer>();
-    final ArrayList<String> searchList = new ArrayList<String>();
+    String[] args = getView().getParameterValues();
+    ArrayList<Integer> fieldList = new ArrayList<Integer>();
+    ArrayList<String> searchList = new ArrayList<String>();
 
-    final String fieldId = args[2];
+    String fieldId = args[2];
     try {
 
-      final List<String> tmpFieldIds = Arrays.asList(fieldId.split(",", -1));
-      for (final String s : tmpFieldIds) {
+      List<String> tmpFieldIds = Arrays.asList(fieldId.split(",", -1));
+      for (String s : tmpFieldIds) {
         if (!fieldList.contains(Integer.parseInt(s))) {
           fieldList.add(Integer.parseInt(s));
         }
       }
 
-      final String search = args[3];
-      final List<String> searchQuery = Arrays.asList(search.split(",", -1));
+      String search = args[3];
+      List<String> searchQuery = Arrays.asList(search.split(",", -1));
       for (String s : searchQuery) {
         s = s.toUpperCase();
         if (!searchList.contains(s)) {
@@ -262,16 +259,16 @@ public class Controller implements IController {
         }
       }
 
-      final String port = getView().getPort();
-      final String host = getView().getHost();
+      String port = getView().getPort();
+      String host = getView().getHost();
 
-      final ClientCommunicator client = new ClientCommunicator(port, host);
-      final SearchRequest params = new SearchRequest(args[0], args[1], fieldList, searchList);
-      final SearchResponse result = client.search(params);
+      ClientCommunicator clientComm = new ClientCommunicator(port, host);
+      SearchRequest params = new SearchRequest(args[0], args[1], fieldList, searchList);
+      SearchResponse result = clientComm.search(params);
 
       getView().setRequest(params.toString());
       getView().setResponse(result.toString());
-    } catch (final Exception e) {
+    } catch (Exception e) {
       logger.log(Level.SEVERE, e.toString());
       logger.log(Level.FINE, "STACKTRACE: ", e);
       getView().setResponse("FAILED\n" + e.toString());

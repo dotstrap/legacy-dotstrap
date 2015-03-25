@@ -11,11 +11,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 import java.util.List;
-import java.util.logging.Logger;
 
 import org.junit.*;
 
-import server.ServerUnitTests;
 import server.database.Database;
 import server.database.DatabaseException;
 
@@ -25,12 +23,6 @@ import shared.model.Field;
  * The Class FieldDAOUnitTest.
  */
 public class FieldDAOUnitTest {
-  /** The logger used throughout the project. */
-  private static Logger logger;
-  static {
-    logger = Logger.getLogger(ServerUnitTests.LOG_NAME);
-  }
-
   /**
    * Sets up before class.
    *
@@ -67,7 +59,6 @@ public class FieldDAOUnitTest {
    */
   @Before
   public void setUp() throws Exception {
-
     // Prepare database for test case
     db = new Database();
     db.startTransaction();
@@ -82,7 +73,7 @@ public class FieldDAOUnitTest {
     testFieldDAO.create(fieldTest2);
     testFieldDAO.create(fieldTest3);
 
-    final List<Field> allFieldes = testFieldDAO.getAll();
+    List<Field> allFieldes = testFieldDAO.getAll();
     assertEquals(3, allFieldes.size());
   }
 
@@ -143,7 +134,7 @@ public class FieldDAOUnitTest {
   @Test
   public void testGetAll() throws DatabaseException {
 
-    final List<Field> allFields = testFieldDAO.getAll();
+    List<Field> allFields = testFieldDAO.getAll();
     assertEquals(3, allFields.size());
   }
 
@@ -155,13 +146,13 @@ public class FieldDAOUnitTest {
   @Test
   public void testCreate() throws DatabaseException {
 
-    final List<Field> all = testFieldDAO.getAll();
+    List<Field> all = testFieldDAO.getAll();
     assertEquals(3, all.size());
 
     boolean hasFoundField1 = false;
     boolean hasFoundField2 = false;
     boolean hasFoundField3 = false;
-    for (final Field curr : all) {
+    for (Field curr : all) {
       assertFalse(curr.getFieldId() == -1);
       if (!hasFoundField1) {
         hasFoundField1 = areEqual(curr, fieldTest1, false);
@@ -182,7 +173,6 @@ public class FieldDAOUnitTest {
    */
   @Test
   public void testDelete() throws DatabaseException {
-
     List<Field> allFieldes = testFieldDAO.getAll();
     assertEquals(3, allFieldes.size());
 

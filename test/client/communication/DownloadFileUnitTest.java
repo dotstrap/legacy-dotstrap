@@ -44,14 +44,14 @@ public class DownloadFileUnitTest {
   @Test
   public void testDownloadValidFile1() throws DatabaseException {
     try {
-      final DownloadFileResponse result =
+      DownloadFileResponse result =
           clientComm.downloadFile(new DownloadFileRequest("Records/images/1890_image0.png"));
       boolean didDownload = false;
       if (result.getFileBytes().length > 0) {
         didDownload = true;
       }
       assertTrue(didDownload);
-    } catch (final ClientException e) {
+    } catch (ClientException e) {
       logger.log(Level.SEVERE, e.toString());
       logger.log(Level.FINE, "STACKTRACE: ", e);
     }
@@ -60,14 +60,14 @@ public class DownloadFileUnitTest {
   @Test
   public void testDownloadValidFile2() throws DatabaseException {
     try {
-      final DownloadFileResponse result =
+      DownloadFileResponse result =
           clientComm.downloadFile(new DownloadFileRequest("Records/images/1890_image19.png"));
       boolean didDownload = false;
       if (result.getFileBytes().length > 0) {
         didDownload = true;
       }
       assertTrue(didDownload);
-    } catch (final ClientException e) {
+    } catch (ClientException e) {
       logger.log(Level.SEVERE, e.toString());
       logger.log(Level.FINE, "STACKTRACE: ", e);
     }
@@ -76,14 +76,14 @@ public class DownloadFileUnitTest {
   @Test
   public void testDownloadValidFile3() throws DatabaseException {
     try {
-      final DownloadFileResponse result =
+      DownloadFileResponse result =
           clientComm.downloadFile(new DownloadFileRequest("Records/images/draft_image9.png"));
       boolean didDownload = false;
       if (result.getFileBytes().length > 0) {
         didDownload = true;
       }
       assertTrue(didDownload);
-    } catch (final ClientException e) {
+    } catch (ClientException e) {
       logger.log(Level.SEVERE, e.toString());
       logger.log(Level.FINE, "STACKTRACE: ", e);
     }
@@ -92,14 +92,14 @@ public class DownloadFileUnitTest {
   @Test
   public void testDownloadInvalidFile() throws DatabaseException {
     try {
-      final DownloadFileResponse result =
+      DownloadFileResponse result =
           clientComm.downloadFile(new DownloadFileRequest("Records/images/INVALID.png"));
       boolean didDownload = false;
       if (result.getFileBytes().length > 0) {
         didDownload = true;
       }
       assertFalse(didDownload);
-    } catch (final ClientException e) {
+    } catch (ClientException e) {
       logger.log(Level.SEVERE, e.toString());
       logger.log(Level.FINE, "STACKTRACE: ", e);
     }
@@ -108,14 +108,14 @@ public class DownloadFileUnitTest {
   @Test
   public void testDownloadNullFile() throws DatabaseException {
     try {
-      final DownloadFileResponse result =
+      DownloadFileResponse result =
           clientComm.downloadFile(new DownloadFileRequest(""));
       boolean didDownload = false;
       if (result.getFileBytes().length > 0) {
         didDownload = true;
       }
       assertFalse(didDownload);
-    } catch (final ClientException e) {
+    } catch (ClientException e) {
       logger.log(Level.SEVERE, e.toString());
       logger.log(Level.FINE, "STACKTRACE: ", e);
     }

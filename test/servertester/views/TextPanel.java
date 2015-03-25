@@ -19,7 +19,7 @@ import javax.swing.*;
 public class TextPanel extends BasePanel {
 
   /** The _text area. */
-  private final JTextArea _textArea;
+  private JTextArea _textArea;
 
   /**
    * Instantiates a new text panel.

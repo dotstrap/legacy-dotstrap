@@ -2,7 +2,7 @@
  * UserDAO.java
  * JRE v1.8.0_40
  *
- * Created by William Myers on Mar 23, 2015.
+ * Created by William Myers on Mar 24, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package server.database.dao;
@@ -28,7 +28,7 @@ public class UserDAO {
   }
 
   /** The db. */
-  private final Database db;
+  private Database      db;
 
   /**
    * Instantiates a new user dao.
@@ -43,8 +43,8 @@ public class UserDAO {
     Statement stmt1 = null;
     Statement stmt2 = null;
     // @formatter:off
-    final String dropUserTable = "DROP TABLE IF EXISTS User";
-    final String createUserTable =
+    String dropUserTable = "DROP TABLE IF EXISTS User";
+    String createUserTable =
         "CREATE TABLE User ("
             + "UserId INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE, "
             + "Username TEXT NOT NULL UNIQUE, "
@@ -61,7 +61,7 @@ public class UserDAO {
 
       stmt2 = db.getConnection().createStatement();
       stmt2.executeUpdate(createUserTable);
-    } catch (final Exception e) {
+    } catch (Exception e) {
       logger.log(Level.SEVERE, e.toString());
       logger.log(Level.FINE, "STACKTRACE: ", e);
       throw new DatabaseException(e.toString());
@@ -72,15 +72,15 @@ public class UserDAO {
   }
 
   public ArrayList<User> getAll() throws DatabaseException {
-    final ArrayList<User> allUsers = new ArrayList<User>();
+    ArrayList<User> allUsers = new ArrayList<User>();
     PreparedStatement pstmt = null;
     ResultSet resultset = null;
     try {
-      final String selectsql = "SELECT * from User";
-      pstmt = db.getConnection().prepareStatement(selectsql);
+      String query = "SELECT * from User";
+      pstmt = db.getConnection().prepareStatement(query);
       resultset = pstmt.executeQuery();
       while (resultset.next()) {
-        final User resultUser = new User();
+        User resultUser = new User();
 
         resultUser.setUserId(resultset.getInt("UserId"));
         resultUser.setUsername(resultset.getString("Username"));
@@ -95,7 +95,7 @@ public class UserDAO {
 
         allUsers.add(resultUser);
       }
-    } catch (final Exception e) {
+    } catch (Exception e) {
       logger.log(Level.SEVERE, e.toString());
       logger.log(Level.FINE, "STACKTRACE: ", e);
       throw new DatabaseException(e.toString());
@@ -117,12 +117,12 @@ public class UserDAO {
     PreparedStatement pstmt = null;
     ResultSet resultset = null;
     try {
-      final String insertsql = "INSERT INTO User ("
+      String query = "INSERT INTO User ("
           + "Username, Password, FirstName, LastName, "
           + "Email, RecordCount, CurrentBatchId)"
           + "VALUES (?, ?, ?, ?, ?, ?, ?)";
       //@formatter:on
-      pstmt = db.getConnection().prepareStatement(insertsql);
+      pstmt = db.getConnection().prepareStatement(query);
       pstmt.setString(1, newUser.getUsername());
       pstmt.setString(2, newUser.getPassword());
       pstmt.setString(3, newUser.getFirst());
@@ -132,15 +132,15 @@ public class UserDAO {
       pstmt.setInt(7, newUser.getCurrBatch());
 
       if (pstmt.executeUpdate() == 1) {
-        final Statement stmt = db.getConnection().createStatement();
+        Statement stmt = db.getConnection().createStatement();
         resultset = stmt.executeQuery("SELECT last_insert_rowid()");
         resultset.next();
-        final int userid = resultset.getInt(1);
+        int userid = resultset.getInt(1);
         newUser.setUserId(userid);
       } else {
         throw new DatabaseException("Unable to insert user into database.");
       }
-    } catch (final SQLException e) {
+    } catch (SQLException e) {
       logger.log(Level.SEVERE, e.toString());
       logger.log(Level.FINE, "STACKTRACE: ", e);
       throw new DatabaseException(e.toString());
@@ -161,10 +161,10 @@ public class UserDAO {
   public User read(String username, String password) throws DatabaseException {
     PreparedStatement pstmt = null;
     ResultSet resultset = null;
-    final User returnUser = new User();
+    User returnUser = new User();
     try {
-      final String selectsql = "SELECT * from User WHERE Username = ? AND Password = ?";
-      pstmt = db.getConnection().prepareStatement(selectsql);
+      String query = "SELECT * from User WHERE Username = ? AND Password = ?";
+      pstmt = db.getConnection().prepareStatement(query);
 
       pstmt.setString(1, username);
       pstmt.setString(2, password);
@@ -180,7 +180,7 @@ public class UserDAO {
       returnUser.setEmail(resultset.getString(6));
       returnUser.setRecordCount(resultset.getInt(7));
       returnUser.setCurrBatch(resultset.getInt(8));
-    } catch (final Exception e) {
+    } catch (Exception e) {
       logger.log(Level.SEVERE, e.toString());
       logger.log(Level.FINE, "STACKTRACE: ", e);
       throw new DatabaseException(e.toString());
@@ -199,10 +199,10 @@ public class UserDAO {
   public void update(User user) throws DatabaseException {
     PreparedStatement pstmt = null;//@formatter:off
     try {
-      final String selectsql = "UPDATE User SET FirstName = ?, LastName = ?,"
+      String query = "UPDATE User SET FirstName = ?, LastName = ?, "
           + "Email = ?, RecordCount = ?, CurrentBatchId = ?"
           + "WHERE Username = ? AND Password = ?";  //@formatter:on
-      pstmt = db.getConnection().prepareStatement(selectsql);
+      pstmt = db.getConnection().prepareStatement(query);
 
       pstmt.setString(1, user.getFirst());
       pstmt.setString(2, user.getLast());
@@ -214,13 +214,77 @@ public class UserDAO {
       pstmt.setString(7, user.getPassword());
 
       pstmt.executeUpdate();
-    } catch (final Exception e) {
+    } catch (Exception e) {
       logger.log(Level.SEVERE, e.toString());
       logger.log(Level.FINE, "STACKTRACE: ", e);
       throw new DatabaseException(e.toString());
     } finally {
       Database.closeSafely(pstmt);
     }
+  }
+
+  /**
+   * Updates the id of the image a user is currently working on
+   *
+   * @param userId the id of the user working on a new image
+   * @param batchId the id of the image the user is working on
+   * */
+  public void updateCurrentBatchId(int userId, int batchId) throws DatabaseException {
+    PreparedStatement pstmt = null;
+    ResultSet resultset = null;
+
+    try {
+      String query = "UPDATE User SET CurrentBatchId = ? WHERE UserId = ?";
+      pstmt = db.getConnection().prepareStatement(query);
+      pstmt.setInt(1, batchId);
+      pstmt.setInt(2, userId);
+      pstmt.executeUpdate();
+    } catch (SQLException e) {
+      logger.log(Level.SEVERE, e.toString());
+      logger.log(Level.FINE, "STACKTRACE: ", e);
+      throw new DatabaseException(e.toString());
+    } finally {
+      Database.closeSafely(pstmt);
+      Database.closeSafely(resultset);
+    }
+
+    return;
+  }
+
+  /**
+   * Clears the current image id of a user
+   *
+   * */
+  public void clearCurrentBatchId(int userId) throws DatabaseException {
+    updateCurrentBatchId(userId, -1);
+    return;
+  }
+
+  /**
+   * Increments the number of records a user has indexed
+   *
+   * @param userId the id of the user who indexed another record
+   * @return true if operation succeeded, false otherwise
+   * */
+  public void incrementIndexedRecords(int userId) throws DatabaseException {
+    PreparedStatement pstmt = null;
+    ResultSet resultset = null;
+
+    try {
+      String query = "UPDATE User SET IndexedRecords = IndexedRecords + 1 WHERE UserId = ?";
+      pstmt = db.getConnection().prepareStatement(query);
+      pstmt.setInt(1, userId);
+      pstmt.executeUpdate();
+    } catch (SQLException e) {
+      logger.log(Level.SEVERE, e.toString());
+      logger.log(Level.FINE, "STACKTRACE: ", e);
+      throw new DatabaseException(e.toString());
+    } finally {
+      Database.closeSafely(pstmt);
+      Database.closeSafely(resultset);
+    }
+
+    return;
   }
 
   /**
@@ -231,14 +295,14 @@ public class UserDAO {
   public void delete(User user) throws DatabaseException {
     PreparedStatement pstmt = null;
     try {
-      final String selectsql = "DELETE from User WHERE Username = ? AND Password = ?";
+      String query = "DELETE from User WHERE Username = ? AND Password = ?";
 
-      pstmt = db.getConnection().prepareStatement(selectsql);
+      pstmt = db.getConnection().prepareStatement(query);
       pstmt.setString(1, user.getUsername());
       pstmt.setString(2, user.getPassword());
 
       pstmt.executeUpdate();
-    } catch (final Exception e) {
+    } catch (Exception e) {
       logger.log(Level.SEVERE, e.toString());
       logger.log(Level.FINE, "STACKTRACE: ", e);
       throw new DatabaseException(e.toString());

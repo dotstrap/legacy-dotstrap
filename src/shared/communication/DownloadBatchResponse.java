@@ -103,7 +103,7 @@ public class DownloadBatchResponse implements Response {
    */
   @Override
   public String toString() {
-    final StringBuilder sb = new StringBuilder();
+    StringBuilder sb = new StringBuilder();
     sb.append(batch.getBatchId() + "\n");
     sb.append(project.getProjectId() + "\n");
     sb.append(urlPrefix + "/" + batch.getFilePath() + "\n");
@@ -112,7 +112,7 @@ public class DownloadBatchResponse implements Response {
     sb.append(project.getRecordsPerBatch() + "\n");
     sb.append(fields.size() + "\n");
     int i = 1;
-    for (final Field f : fields) {
+    for (Field f : fields) {
       sb.append(f.getFieldId() + "\n");
       sb.append(i + "\n");
       sb.append(f.getTitle() + "\n");

@@ -21,20 +21,21 @@ import server.database.dao.*;
 public class Database {
 
   // @formatter:off
-  final public static String DB_NAME            = "IndexerServer.sqlite";
-  final public static String DB_DIRECTORY       = "database";
-  final public static String DB_FILE            = DB_DIRECTORY + File.separator + DB_NAME;
-  final public static String DB_TEMPLATE        = DB_DIRECTORY + File.separator + "template"
+  public static String DB_NAME            = "IndexerServer.sqlite";
+  public static String DB_DIRECTORY       = "database";
+  public static String DB_FILE            = DB_DIRECTORY + File.separator + DB_NAME;
+  public static String DB_TEMPLATE        = DB_DIRECTORY + File.separator + "template"
       + File.separator + DB_NAME;
-  final private static String DB_CONNECTION_URL = "jdbc:sqlite:" + DB_DIRECTORY + File.separator
+  private static String DB_CONNECTION_URL = "jdbc:sqlite:" + DB_DIRECTORY + File.separator
       + DB_NAME;
 
   /** The logger used throughout the project. */
   private static Logger      logger;
-  public final static String LOG_NAME = "server";
+  public static String LOG_NAME = "server";
   static {
     logger = Logger.getLogger(LOG_NAME);
   }
+
   // @formatter:on
   // DataBase Access //////////////////
   /** The database driver connection. */
@@ -43,19 +44,19 @@ public class Database {
   /**
    * The batch DataBaseAccess. interfaces with the database to modify the batch (image) table
    */
-  private final BatchDAO      batchDAO;
+  private BatchDAO      batchDAO;
   /**
    * The field DataBaseAccess. interfaces with the database to modify the field table
    */
-  private final FieldDAO      fieldDAO;
+  private FieldDAO      fieldDAO;
   /**
    * The project DataBaseAccess. interfaces with the database to modify the project table
    */
-  private final ProjectDAO    projectDAO;
+  private ProjectDAO    projectDAO;
   /*
    * * The record DataBaseAccess. interfaces with the database to modify the record table
    */
-  private final RecordDAO     recordDAO;
+  private RecordDAO     recordDAO;
   /**
    * The user DataBaseAccess. interfaces with the database to modify the user table
    */
@@ -123,9 +124,9 @@ public class Database {
    */
   public static void initDriver() throws DatabaseException {
     try {
-      final String driver = "org.sqlite.JDBC";
+      String driver = "org.sqlite.JDBC";
       Class.forName(driver);
-    } catch (final ClassNotFoundException e) {
+    } catch (ClassNotFoundException e) {
       logger.log(Level.SEVERE, e.toString());
       logger.log(Level.FINE, "STACKTRACE: ", e);
       throw new DatabaseException(e.toString());
@@ -143,7 +144,7 @@ public class Database {
       assert (connection == null);
       connection = DriverManager.getConnection(DB_CONNECTION_URL);
       connection.setAutoCommit(false);
-    } catch (final Exception e) {
+    } catch (Exception e) {
       logger.log(Level.SEVERE, e.toString());
       logger.log(Level.FINE, "STACKTRACE: ", e);
       throw new DatabaseException(e.toString());
@@ -165,7 +166,7 @@ public class Database {
         } else {
           connection.rollback();
         }
-      } catch (final SQLException e) {
+      } catch (SQLException e) {
         logger.log(Level.SEVERE, e.toString());
         logger.log(Level.FINE, "STACKTRACE: ", e);
         // throw new DatabaseException(e.toString());
@@ -188,7 +189,7 @@ public class Database {
       projectDAO.initTable();
       recordDAO.initTable();
       userDAO.initTable();
-    } catch (final Exception e) {
+    } catch (Exception e) {
       logger.log(Level.SEVERE, e.toString());
       logger.log(Level.FINE, "STACKTRACE: ", e);
       throw new DatabaseException(e.toString());
@@ -200,7 +201,7 @@ public class Database {
     if (c != null) {
       try {
         c.close();
-      } catch (final SQLException e) {
+      } catch (SQLException e) {
         logger.log(Level.SEVERE, e.toString());
         logger.log(Level.FINE, "STACKTRACE: ", e);
       }
@@ -211,7 +212,7 @@ public class Database {
     if (stmt != null) {
       try {
         stmt.close();
-      } catch (final SQLException e) {
+      } catch (SQLException e) {
         logger.log(Level.SEVERE, e.toString());
         logger.log(Level.FINE, "STACKTRACE: ", e);
       }
@@ -222,7 +223,7 @@ public class Database {
     if (pstmt != null) {
       try {
         pstmt.close();
-      } catch (final SQLException e) {
+      } catch (SQLException e) {
         logger.log(Level.SEVERE, e.toString());
         logger.log(Level.FINE, "STACKTRACE: ", e);
       }
@@ -233,7 +234,7 @@ public class Database {
     if (rs != null) {
       try {
         rs.close();
-      } catch (final SQLException e) {
+      } catch (SQLException e) {
         logger.log(Level.SEVERE, e.toString());
         logger.log(Level.FINE, "STACKTRACE: ", e);
       }

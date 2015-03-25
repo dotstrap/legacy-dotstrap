@@ -60,7 +60,7 @@ public class ValidateUserResponse implements Response {
    */
   @Override
   public String toString() {
-    final StringBuilder output = new StringBuilder();
+    StringBuilder output = new StringBuilder();
     output.append("TRUE\n");
     output.append(user.getFirst() + "\n");
     output.append(user.getLast() + "\n");

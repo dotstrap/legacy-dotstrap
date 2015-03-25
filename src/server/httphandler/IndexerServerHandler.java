@@ -33,9 +33,9 @@ import shared.communication.*;
 public abstract class IndexerServerHandler implements HttpHandler {
   protected static Logger logger = Logger.getLogger(ServerFacade.LOG_NAME); // @formatter:off
 
-  protected static final String SERVER = HttpServer.class.getName() + " ("
+  protected static String SERVER = HttpServer.class.getName() + " ("
       + System.getProperty("os.name") + ")";
-  protected static final String CONTENT_TYPE = "text/xml";
+  protected static String CONTENT_TYPE = "text/xml";
 
   protected XStream xStream = new XStream(new DomDriver());
 
@@ -46,7 +46,7 @@ public abstract class IndexerServerHandler implements HttpHandler {
 
   @Override
   public void handle(HttpExchange exchange) throws IOException {
-    final Headers headers = exchange.getResponseHeaders();
+    Headers headers = exchange.getResponseHeaders();
     headers.add("Server", SERVER);
     headers.add("Content-Type", CONTENT_TYPE);
 
@@ -106,13 +106,13 @@ public abstract class IndexerServerHandler implements HttpHandler {
    * @throws InvalidCredentialsException if the credentials are invalid
    */
   public static boolean authenticate(String username, String password) {
-    final ValidateUserRequest auth = new ValidateUserRequest();
+    ValidateUserRequest auth = new ValidateUserRequest();
     auth.setUsername(username);
     auth.setPassword(password);
     boolean isValid = true; // FIXME: this should default to false...
     try {
       ServerFacade.validateUser(auth);
-    } catch (final InvalidCredentialsException e) {
+    } catch (InvalidCredentialsException e) {
       logger.log(Level.SEVERE,
           String.format("ERROR: username: %s & password: %s are invalid", username, password));
       logger.log(Level.FINE, "STACKTRACE: ", e);

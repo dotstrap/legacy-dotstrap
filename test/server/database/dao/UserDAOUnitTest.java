@@ -10,11 +10,9 @@ package server.database.dao;
 import static org.junit.Assert.*;
 
 import java.util.List;
-import java.util.logging.Logger;
 
 import org.junit.*;
 
-import server.ServerUnitTests;
 import server.database.Database;
 import server.database.DatabaseException;
 
@@ -24,12 +22,6 @@ import shared.model.User;
  * The Class UserDAOUnitTest.
  */
 public class UserDAOUnitTest {
-  /** The logger used throughout the project. */
-  private static Logger logger;
-  static {
-    logger = Logger.getLogger(ServerUnitTests.LOG_NAME);
-  }
-
   /**
    * Sets up before class.
    *
@@ -53,7 +45,10 @@ public class UserDAOUnitTest {
   }
 
   private Database db;
-  private UserDAO testUserDAO;
+  private UserDAO  testUserDAO;
+  User             userTest1;
+  User             userTest2;
+  User             userTest3;
 
   /**
    * Sets the database up.
@@ -68,6 +63,17 @@ public class UserDAOUnitTest {
     db.startTransaction();
     testUserDAO = db.getUserDAO();
     testUserDAO.initTable();
+
+    userTest1 = new User("Update1", "pass1", "first1", "last1", "email1", 1, 1);
+    userTest2 = new User("Update2", "pass2", "first2", "last2", "email2", 2, 2);
+    userTest3 = new User("Update3", "pass3", "first3", "last3", "email3", 3, 3);
+
+    testUserDAO.create(userTest1);
+    testUserDAO.create(userTest2);
+    testUserDAO.create(userTest3);
+
+    List<User> all = testUserDAO.getAll();
+    assertEquals(3, all.size());
   }
 
   /**
@@ -112,18 +118,6 @@ public class UserDAOUnitTest {
   }
 
   /**
-   * Test get all.
-   *
-   * @throws DatabaseException the database exception
-   */
-  @Test
-  public void testGetAll() throws DatabaseException {
-
-    final List<User> allUsers = testUserDAO.getAll();
-    assertEquals(0, allUsers.size());
-  }
-
-  /**
    * Test create.
    *
    * @throws DatabaseException the database exception
@@ -131,21 +125,13 @@ public class UserDAOUnitTest {
   @Test
   public void testCreate() throws DatabaseException {
 
-    final User userTest1 = new User("Create1", "pass1", "first1", "last1", "email1", 1, 1);
-    final User userTest2 = new User("Create2", "pass2", "first2", "last2", "email2", 2, 2);
-    final User userTest3 = new User("Create3", "pass3", "first3", "last3", "email3", 3, 3);
-
-    testUserDAO.create(userTest1);
-    testUserDAO.create(userTest2);
-    testUserDAO.create(userTest3);
-
-    final List<User> all = testUserDAO.getAll();
+    List<User> all = testUserDAO.getAll();
     assertEquals(3, all.size());
 
     boolean hasFoundUser1 = false;
     boolean hasFoundUser2 = false;
     boolean hasFoundUser3 = false;
-    for (final User curr : all) {
+    for (User curr : all) {
       assertFalse(curr.getUserId() == -1);
       if (!hasFoundUser1) {
         hasFoundUser1 = areEqual(curr, userTest1, false);
@@ -167,15 +153,6 @@ public class UserDAOUnitTest {
    */
   @Test
   public void testUpdate() throws DatabaseException {
-
-    final User userTest1 = new User("Update1", "pass1", "first1", "last1", "email1", 1, 1);
-    final User userTest2 = new User("Update2", "pass2", "first2", "last2", "email2", 2, 2);
-    final User userTest3 = new User("Update3", "pass3", "first3", "last3", "email3", 3, 3);
-
-    testUserDAO.create(userTest1);
-    testUserDAO.create(userTest2);
-    testUserDAO.create(userTest3);
-
     userTest1.setFirst("first-001");
     userTest2.setFirst("first-002");
     userTest3.setFirst("first-003");
@@ -192,13 +169,13 @@ public class UserDAOUnitTest {
     testUserDAO.update(userTest2);
     testUserDAO.update(userTest3);
 
-    final List<User> all = testUserDAO.getAll();
+    List<User> all = testUserDAO.getAll();
     assertEquals(3, all.size());
 
     boolean hasFoundUser1 = false;
     boolean hasFoundUser2 = false;
     boolean hasFoundUser3 = false;
-    for (final User curr : all) {
+    for (User curr : all) {
       assertFalse(curr.getUserId() == -1);
       if (!hasFoundUser1) {
         hasFoundUser1 = areEqual(curr, userTest1, false);
@@ -220,15 +197,6 @@ public class UserDAOUnitTest {
    */
   @Test
   public void testDelete() throws DatabaseException {
-
-    final User userTest1 = new User("Delete1", "pass1", "first1", "last1", "email1", 1, 1);
-    final User userTest2 = new User("Delete2", "pass2", "first2", "last2", "email2", 2, 2);
-    final User userTest3 = new User("Delete3", "pass3", "first3", "last3", "email3", 3, 3);
-
-    testUserDAO.create(userTest1);
-    testUserDAO.create(userTest2);
-    testUserDAO.create(userTest3);
-
     List<User> allUseres = testUserDAO.getAll();
     assertEquals(3, allUseres.size());
 

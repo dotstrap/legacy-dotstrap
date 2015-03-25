@@ -161,7 +161,7 @@ public class Field {
       return true;
     }
 
-    final Field other = (Field) o;
+    Field other = (Field) o;
 
     return ((fieldId == other.getFieldId()) // @formatter:off
         && (projectId == other.getProjectId())

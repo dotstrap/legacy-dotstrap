@@ -27,7 +27,7 @@ public class ValidateUserHandler extends IndexerServerHandler {
    */
   @Override
   protected int doRequest() throws ServerException, DatabaseException, InvalidCredentialsException {
-    final ValidateUserRequest request = (ValidateUserRequest) getRequest();
+    ValidateUserRequest request = (ValidateUserRequest) getRequest();
 
     ValidateUserResponse response;
     response = ServerFacade.validateUser(request);

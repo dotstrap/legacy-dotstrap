@@ -29,17 +29,17 @@ public class DownloadFileHandler implements HttpHandler {
 
   @Override
   public void handle(HttpExchange exchange) throws IOException {
-    final String url = new File("").getAbsolutePath() + exchange.getRequestURI().getPath();
-    final DownloadFileRequest request = new DownloadFileRequest(url);
+    String url = new File("").getAbsolutePath() + exchange.getRequestURI().getPath();
+    DownloadFileRequest request = new DownloadFileRequest(url);
 
     try {
       DownloadFileResponse result = ServerFacade.downloadFile(request);
 
-      final OutputStream response = exchange.getResponseBody();
+      OutputStream response = exchange.getResponseBody();
       exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
 
       response.write(result.getFileBytes());
-    } catch (final Exception e) {
+    } catch (Exception e) {
       logger.log(Level.SEVERE, e.toString());
       logger.log(Level.FINE, "STACKTRACE: ", e);
     } finally {

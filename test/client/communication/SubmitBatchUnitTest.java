@@ -1,105 +1,182 @@
-///**
-// * SubmitBatchUnitTest.java
-// * JRE v1.8.0_40
-// *
-// * Created by William Myers on Mar 23, 2015.
-// * Copyright (c) 2015 William Myers. All Rights reserved.
-// */
-//package client.communication;
-//
-//import static org.junit.Assert.assertEquals;
-//
-//import java.util.ArrayList;
-//
-//import org.junit.*;
-//
-//import client.communication.ClientCommunicator;
-//
-//import server.database.Database;
-//import server.database.DatabaseException;
-//import server.database.dao.BatchDAO;
-//import server.database.dao.UserDAO;
-//
-//import shared.model.*;
-//
-//public class SubmitBatchUnitTest {
-//    @BeforeClass
-//    public static void setUpBeforeClass() throws Exception {
-//        // Load database driver
-//        Database.initialize();
-//    }
-//
-//    @AfterClass
-//    public static void tearDownAfterClass() throws Exception {
-//        return;
-//    }
-//
-//    private Database           db;
-//    private UserDAO            dbUser;
-//    private BatchDAO           dbBatch;
-//    private ClientCommunicator cCom;
-//
-//    @SuppressWarnings("static-access")
-//    @Before
-//    public void setUp() throws Exception {
-//        db = new Database();
-//        db.startTransaction();
-//
-//        ArrayList<User> users = db.getUserDAO().getAll();
-//        for (User u : users) {
-//            db.getUserDAO().delete(u);
-//        }
-//
-//        ArrayList<Record> records = db.getRecordDAO().getAll();
-//
-//        for (Record r : records) {
-//            db.getRecordDAO().delete(r);
-//        }
-//
-//        ArrayList<Project> projects = db.getProjectDAO().getAll();
-//
-//        for (Project p : projects) {
-//            db.getProjectDAO().delete(p);
-//        }
-//
-//        ArrayList<Batch> batches = db.getBatchDAO().getAll();
-//
-//        for (Batch b : batches) {
-//            db.getBatchDAO().delete(b);
-//        }
-//
-//        db.endTransaction(true);
-//
-//        // Prepare database for test case
-//        db = new Database();
-//        db.initializeTables();
-//        dbUser = db.getUserDAO();
-//        dbBatch = db.getBatchDAO();
-//        cCom = new ClientCommunicator();
-//    }
-//
-//    @After
-//    public void tearDown() throws Exception {
-//        db = null;
-//        dbUser = null;
-//    }
-//
-//    @Test
-//    public void testProjects() throws DatabaseException {
-//        db.startTransaction();
-//        User validate =
-//                        new User(new Credentials("validate", "validate"), new UserInfo("Vali",
-//                                        "Date", "validate@validate.com"));
-//        validate.setCurrentBatch(1);
-//        dbUser.add(validate);
-//        Batch batch = new Batch("TempFilePath", 1, 0);
-//        dbBatch.add(batch);
-//        Project project = new Project(new ProjectInfo("Project"), 1, 1, 1);
-//        db.getProjectDAO().add(project);
-//        db.endTransaction(true);
-//        // valid user, bad input
-//        SubmitBatchResult result =
-//                        cCom.submitBatch(new SubmitBatchParameters("validate", "validate", 1, ";"));
-//        assertEquals(result.isSuccess(), false);
-//    }
-// }
+/**
+ * SubmitBatchUnitTest.java
+ * JRE v1.8.0_40
+ *
+ * Created by William Myers on Mar 23, 2015.
+ * Copyright (c) 2015 William Myers. All Rights reserved.
+ */
+package client.communication;
+
+import static org.junit.Assert.assertEquals;
+
+import java.util.List;
+import java.util.logging.Logger;
+
+import org.junit.*;
+
+import client.ClientException;
+
+import server.database.Database;
+import server.database.dao.*;
+
+import shared.communication.SubmitBatchRequest;
+import shared.communication.SubmitBatchResponse;
+import shared.model.*;
+
+public class SubmitBatchUnitTest {
+
+  /** The logger used throughout the project. */
+  private static Logger logger; // @formatter:off
+  static {
+    logger = Logger.getLogger(ClientCommunicator.LOG_NAME);
+  }
+
+  private static ClientCommunicator clientComm;
+
+  private static Database   db;
+
+  private static UserDAO    testUserDAO;
+  private static BatchDAO   testBatchDAO;
+  private static ProjectDAO testProjectDAO;
+
+  private static User     testUser1;
+  private static User     testUser2;
+  private static User     testUser3;
+  private static Batch    testBatch1;
+  private static Batch    testBatch2;
+  private static Batch    testBatch3;
+  private static Project  testProject1;
+  private static Project  testProject2;
+  private static Project  testProject3;  // @formatter:on
+
+  @BeforeClass
+  public static void setUpBeforeClass() throws Exception {
+    // Load database driver
+    Database.initDriver();
+
+    db = new Database();
+    db.startTransaction();
+
+    /*
+     * Populate the database once per test-suite instead of per test-case because it is faster and
+     * we wont be modifying it each test-case; just reading from it
+     */
+    testUserDAO = db.getUserDAO();
+    testBatchDAO = db.getBatchDAO();
+    testProjectDAO = db.getProjectDAO();
+    clientComm = new ClientCommunicator();
+
+    testUserDAO.initTable();
+    testBatchDAO.initTable();
+    testProjectDAO.initTable();
+
+    testUser1 = new User("userTest1", "pass1", "first1", "last1", "email1", 1, 1);
+    testUser2 = new User("userTest2", "pass2", "first2", "last2", "email2", 2, 2);
+    testUser3 = new User("userTest3", "pass3", "first3", "last3", "email3", 3, 3);
+
+    testUserDAO.create(testUser1);
+    testUserDAO.create(testUser2);
+    testUserDAO.create(testUser3);
+
+    List<User> allUseres = testUserDAO.getAll();
+    assertEquals(3, allUseres.size());
+
+    testProject1 = new Project("testProject1", 10, 11, 12);
+    testProject2 = new Project("testProject2", 20, 21, 22);
+    testProject3 = new Project("testProject3", 30, 31, 32);
+
+    testProjectDAO.create(testProject1);
+    testProjectDAO.create(testProject2);
+    testProjectDAO.create(testProject3);
+
+    List<Project> allProjectes = testProjectDAO.getAll();
+    assertEquals(3, allProjectes.size());
+
+    testBatch1 =
+        new Batch(1, "someTestPath/batchTest1", testProject1.getProjectId(), Batch.INCOMPLETE,
+            testUser1.getUserId());
+    testBatch2 =
+        new Batch(2, "someTestPath/batchTest2", testProject2.getProjectId(), Batch.INCOMPLETE,
+            testUser2.getUserId());
+    testBatch3 =
+        new Batch(3, "someTestPath/batchTest3", testProject3.getProjectId(), Batch.INCOMPLETE,
+            testUser3.getUserId());
+
+    testBatchDAO.create(testBatch1);
+    testBatchDAO.create(testBatch2);
+    testBatchDAO.create(testBatch3);
+
+    List<Batch> allBatches = testBatchDAO.getAll();
+    assertEquals(3, allBatches.size());
+  }
+
+  @AfterClass
+  public static void tearDownAfterClass() {
+    // Roll back this transaction so changes are undone
+    db.endTransaction(false);
+
+    testUser1 = null;
+    testUser2 = null;
+    testUser3 = null;
+    testBatch1 = null;
+    testBatch2 = null;
+    testBatch3 = null;
+    testProject1 = null;
+    testProject2 = null;
+    testProject3 = null;
+
+    testUserDAO = null;
+    testBatchDAO = null;
+    testProjectDAO = null;
+
+    db = null;
+
+    clientComm = null;
+
+    return;
+  }
+
+  @Before
+  public void setUp() throws Exception {
+    // quick checks to ensure size hasn't changed for some reason
+    List<User> allUseres = testUserDAO.getAll();
+    assertEquals(3, allUseres.size());
+
+    List<Project> allProjectes = testProjectDAO.getAll();
+    assertEquals(3, allProjectes.size());
+
+    List<Batch> allBatches = testBatchDAO.getAll();
+    assertEquals(3, allBatches.size());
+  }
+
+  @After
+  public void tearDown() throws Exception {
+    // quick checks to ensure size hasn't changed for some reason
+    List<User> allUseres = testUserDAO.getAll();
+    assertEquals(3, allUseres.size());
+
+    List<Project> allProjectes = testProjectDAO.getAll();
+    assertEquals(3, allProjectes.size());
+
+    List<Batch> allBatches = testBatchDAO.getAll();
+    assertEquals(3, allBatches.size());
+  }
+
+  @Test
+  public void badInputTest() {
+    SubmitBatchResponse result = null;
+    boolean isValidInput = true;
+    try {
+      isValidInput = true;
+      result =
+          clientComm.submitBatch(new SubmitBatchRequest("userTest1", "pass1", testBatch1
+              .getBatchId(), ";"));
+    } catch (ClientException e) {
+      isValidInput = false;
+//      logger.log(Level.SEVERE, e.toString());
+//      logger.log(Level.FINE, "STACKTRACE: ", e);
+    }
+    assertEquals(false, isValidInput);
+//     assertEquals(result.isSuccess(), false);
+  }
+}

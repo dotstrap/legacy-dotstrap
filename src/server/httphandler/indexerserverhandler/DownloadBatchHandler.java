@@ -26,7 +26,7 @@ public class DownloadBatchHandler extends IndexerServerHandler {
    */
   @Override
   protected int doRequest() throws ServerException, DatabaseException, InvalidCredentialsException {
-    final DownloadBatchRequest request = (DownloadBatchRequest) getRequest();
+    DownloadBatchRequest request = (DownloadBatchRequest) getRequest();
     DownloadBatchResponse response;
 
     int statusCode;

@@ -22,16 +22,16 @@ import javax.swing.*;
 public class SettingsPanel extends BasePanel {
 
   /** The _host text field. */
-  private final JTextField _hostTextField;
+  private JTextField _hostTextField;
 
   /** The _port text field. */
-  private final JTextField _portTextField;
+  private JTextField _portTextField;
 
   /** The _op combo box. */
-  private final JComboBox _opComboBox;
+  private JComboBox _opComboBox;
 
   /** The _execute button. */
-  private final JButton _executeButton;
+  private JButton _executeButton;
 
   /**
    * Instantiates a new settings panel.

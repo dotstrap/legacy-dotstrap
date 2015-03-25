@@ -28,16 +28,16 @@ public class IndexerServerTesterFrame extends JFrame implements IView {
   private IController _controller;
 
   /** The _settings panel. */
-  private final SettingsPanel _settingsPanel;
+  private SettingsPanel _settingsPanel;
 
   /** The _param panel. */
-  private final ParamPanel _paramPanel;
+  private ParamPanel _paramPanel;
 
   /** The _request panel. */
-  private final TextPanel _requestPanel;
+  private TextPanel _requestPanel;
 
   /** The _response panel. */
-  private final TextPanel _responsePanel;
+  private TextPanel _responsePanel;
 
   /**
    * Instantiates a new indexer server tester frame.
@@ -67,7 +67,7 @@ public class IndexerServerTesterFrame extends JFrame implements IView {
 
     _responsePanel = new TextPanel("Response");
 
-    final JSplitPane splitPane =
+    JSplitPane splitPane =
         new JSplitPane(JSplitPane.VERTICAL_SPLIT, _requestPanel, _responsePanel);
     splitPane.setResizeWeight(0.5);
     splitPane.setAlignmentX(Component.CENTER_ALIGNMENT);

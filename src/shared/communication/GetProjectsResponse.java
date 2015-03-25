@@ -51,8 +51,8 @@ public class GetProjectsResponse implements Response {
    */
   @Override
   public String toString() {
-    final StringBuilder sb = new StringBuilder();
-    for (final Project p : projects) {
+    StringBuilder sb = new StringBuilder();
+    for (Project p : projects) {
       sb.append(p.getProjectId() + "\n");
       sb.append(p.getTitle() + "\n");
     }

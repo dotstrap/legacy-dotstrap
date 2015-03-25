@@ -1,4 +1,4 @@
-<project name="Record Indexer" default="all-tests" basedir=".">
+<project name="RecordIndexer" default="all-tests" basedir=".">
 
     <!-- PROPERTIES -->
     <!-- ********** -->
@@ -159,7 +159,7 @@
         </parallel>
     </target>
 
-    <target name="server-gui" depends="compile, server-daemon"
+    <target name="server-gui" depends="server-daemon"
         description="run the server test gui">
         <java classname="servertester.GuiTester" fork="yes">
             <classpath>
@@ -185,7 +185,7 @@
     <!--</target>-->
 
     <target name="server-tests" depends="compile" description="run automated server tests">
-        <junit fork="yes" forkmode="once" haltonfailure="no" showoutput="yes">
+        <junit fork="yes" forkmode="once" haltonfailure="no" showoutput="no">
             <formatter type="brief" usefile="false"/>
             <classpath>
                 <path refid="all-classpath" />
@@ -202,7 +202,7 @@
     </target>   
 
     <target name="importer-test" depends="compile">
-        <junit fork="yes" forkmode="once" haltonfailure="no" showoutput="yes">
+        <junit fork="yes" forkmode="once" haltonfailure="no" showoutput="no">
             <formatter type="brief" usefile="false"/>
             <classpath>
                 <path refid="all-classpath" />
@@ -255,6 +255,7 @@
     </target>
 
     <target name="client-tests" depends="server-daemon">
+    <!--<target name="client-tests">-->
         <junit fork="yes" forkmode="once" haltonfailure="no" showoutput="no">
             <formatter type="brief" usefile="false"/>
             <classpath>
@@ -265,8 +266,8 @@
             </assertions>
             <batchtest>
                 <fileset dir="${test}">
-                    <!--<include name="${client-test-dir}/*Test*" />-->
-                    <include name="${client-test-dir}/GetSampleBatchUnitTest.java" />
+                    <include name="${client-test-dir}/*Test*" />
+                    <!--<include name="${client-test-dir}/SubmitBatchUnitTest.java" />-->
                 </fileset>
             </batchtest>
         </junit>
@@ -310,7 +311,7 @@
     <target name="deploy" depends="clean"
         description="copies source code to remote host">
         <exec executable="${rsync}">
-            <arg line="rsync -e ssh -ahuv --exclude '/**/*.DS_Store' --exclude '${build}' --exclude '*git*' --exclude '${logs}' --exclude '${demo}' --exclude 'specs' . ${user}@${host}:${remote-path}" />
+            <arg line="rsync -e ssh -ahuv --exclude '.DS_Store' --exclude '*git*' --exclude 'specs' . ${user}@${host}:${remote-path}" />
         </exec>
     </target>
 
