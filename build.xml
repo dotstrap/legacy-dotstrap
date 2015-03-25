@@ -94,7 +94,7 @@
         <delete dir="${build}" />
         <delete dir="${passoff}" />
         <delete dir="${import-destdir}" />
-        <delete dir="${logs}" />
+        <!--<delete dir="${logs}" />-->
         <delete file="${tar-name}" />
     </target>
 
