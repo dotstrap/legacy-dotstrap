@@ -1,8 +1,8 @@
 /**
  * IndexerServerTesterFrame.java
  * JRE v1.8.0_40
- *
- * Created by William Myers on Mar 23, 2015.
+ * 
+ * Created by William Myers on Mar 24, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package servertester.views;
@@ -25,19 +25,19 @@ import servertester.controllers.IController;
 public class IndexerServerTesterFrame extends JFrame implements IView {
 
   /** The _controller. */
-  private IController _controller;
+  private IController   _controller;
 
   /** The _settings panel. */
   private SettingsPanel _settingsPanel;
 
   /** The _param panel. */
-  private ParamPanel _paramPanel;
+  private ParamPanel    _paramPanel;
 
   /** The _request panel. */
-  private TextPanel _requestPanel;
+  private TextPanel     _requestPanel;
 
   /** The _response panel. */
-  private TextPanel _responsePanel;
+  private TextPanel     _responsePanel;
 
   /**
    * Instantiates a new indexer server tester frame.

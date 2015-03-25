@@ -1,8 +1,8 @@
 /**
-q * IndexerServerHandler.java
+ * IndexerServerHandler.java
  * JRE v1.8.0_40
  *
- * Created by William Myers on Mar 23, 2015.
+ * Created by William Myers on Mar 24, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package server.httphandler;
@@ -24,6 +24,7 @@ import server.facade.ServerFacade;
 import shared.InvalidCredentialsException;
 import shared.communication.*;
 
+// TODO: Auto-generated Javadoc
 /**
  * Template class for the HTTP handlers for the various operations.
  *
@@ -31,12 +32,23 @@ import shared.communication.*;
  * of operation.
  */
 public abstract class IndexerServerHandler implements HttpHandler {
+
+
+
+
+
+
+  /** The logger. */
   protected static Logger logger = Logger.getLogger(ServerFacade.LOG_NAME); // @formatter:off
 
+  /** The server. */
   protected static String SERVER = HttpServer.class.getName() + " ("
       + System.getProperty("os.name") + ")";
+
+  /** The content type. */
   protected static String CONTENT_TYPE = "text/xml";
 
+  /** The x stream. */
   protected XStream xStream = new XStream(new DomDriver());
 
   private Request  request;
@@ -65,20 +77,17 @@ public abstract class IndexerServerHandler implements HttpHandler {
     } catch (InvalidCredentialsException e) {
       statusCode = HttpURLConnection.HTTP_UNAUTHORIZED;
       exchange.sendResponseHeaders(statusCode, -1);
-      logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
+      logger.log(Level.SEVERE, "STACKTRACE: ", e);
 
     } catch (XStreamException e) {
       statusCode = HttpURLConnection.HTTP_BAD_REQUEST;
       exchange.sendResponseHeaders(statusCode, -1);
-      logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
+      logger.log(Level.SEVERE, "STACKTRACE: ", e);
 
     } catch (Exception e) {
       statusCode = HttpURLConnection.HTTP_INTERNAL_ERROR;
       exchange.sendResponseHeaders(statusCode, -1);
-      logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
+      logger.log(Level.SEVERE, "STACKTRACE: ", e);
 
     } finally {
       exchange.close();
@@ -89,11 +98,10 @@ public abstract class IndexerServerHandler implements HttpHandler {
   /**
    * Processes the request and returns a response and status code.
    *
-   * @param request The request object received in the HTTP request
-   * @param response The response object to return
    * @return The HTTP status code to return
-   * @throws DatabaseException
-   * @throws IOException
+   * @throws ServerException the server exception
+   * @throws DatabaseException the database exception
+   * @throws InvalidCredentialsException the invalid credentials exception
    */
   protected abstract int doRequest() throws ServerException, DatabaseException,
       InvalidCredentialsException;
@@ -101,11 +109,11 @@ public abstract class IndexerServerHandler implements HttpHandler {
   /**
    * Validates user credentials.
    *
-   * @param user The user credentials to validate
+   * @param username the username
+   * @param password the password
    * @return True if credentials are valid, false otherwise
-   * @throws InvalidCredentialsException if the credentials are invalid
    */
-  public static boolean authenticate(String username, String password) {
+  public static boolean authenticate(String username, String password) throws DatabaseException {
     ValidateUserRequest auth = new ValidateUserRequest();
     auth.setUsername(username);
     auth.setPassword(password);
@@ -113,9 +121,8 @@ public abstract class IndexerServerHandler implements HttpHandler {
     try {
       ServerFacade.validateUser(auth);
     } catch (InvalidCredentialsException e) {
-      logger.log(Level.SEVERE,
-          String.format("ERROR: username: %s & password: %s are invalid", username, password));
-      logger.log(Level.FINE, "STACKTRACE: ", e);
+      logger.warning("INVALID: username: " + username + " & password: " + password + "...");
+      logger.log(Level.SEVERE, "STACKTRACE: ", e);
       isValid = false;
     }
     return isValid;

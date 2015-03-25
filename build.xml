@@ -1,4 +1,4 @@
-<project name="RecordIndexer" default="all-tests" basedir=".">
+<project name="RecordIndexer" default="client-tests" basedir=".">
 
     <!-- PROPERTIES -->
     <!-- ********** -->
@@ -25,21 +25,17 @@
     <!-- Directory where the application puts logs -->
     <property name="logs" location="logs" />
 
-    <!-- Directory containing database files -->
-    <property name="database" location="database" />
-
     <!-- Directory containing demo files -->
     <property name="demo" location="demo" />
 
     <!-- Directory containing passoff files -->
     <property name="passoff" location="passoff" />
 
-    <!-- Database file used by the server -->
+    <!-- Directory containing database files -->
+    <property name="database" location="database" />
     <property name="db-file" location="${database}/IndexerServer.sqlite" />
-
-    <!-- Database file containing empty tables. -->
     <property name="empty-db-file" location="${database}/template/IndexerServer.sqlite" />
-
+    <property name="imported-db-file" location="${database}/imported/IndexerServer.sqlite" />
     <property name="import-destdir" location="download" />
 
     <!-- File containing the report output by Checkstyle -->
@@ -49,7 +45,12 @@
     <property name="rsync" value="/usr/local/bin/rsync" />
     <property name="user" value="wmyers7" />
     <property name="host" value="schizo.cs.byu.edu" />
-    <property name="remote-path" value="/users/guest/w/${user}/Documents/Developer/CS240/${ant.project.name}/" />
+    <!--<property name="remote-path" value="/users/guest/w/${user}/Documents/Developer/CS240/${ant.project.name}/" 
+        /> -->
+    <property name="remote-path" value="/users/guest/w/${user}/Downloads/" />
+
+    <property name="tar" value="/usr/bin/tar" />
+    <property name="tar-name" value="server.tar.gz" />
 
     <!-- Default values for command-line properties. Values specified on the 
         command-line will override these. -->
@@ -93,6 +94,8 @@
         <delete dir="${build}" />
         <delete dir="${passoff}" />
         <delete dir="${import-destdir}" />
+        <delete dir="${logs}" />
+        <delete file="${tar-name}" />
     </target>
 
     <target name="compile" depends="init" description="compile the source code">
@@ -102,9 +105,14 @@
             debug="true" includeantruntime="true" />
     </target>
 
-    <target name="clean-db" depends="clean"
+    <target name="clean-db"
         description="copy empty template database overwriting existing database">
         <copy file="${empty-db-file}" tofile="${db-file}" overwrite="true" />
+    </target>
+
+    <target name="restore-db"
+            description="copy already imported database overwriting existing database">
+        <copy file="${imported-db-file}" tofile="${db-file}" overwrite="true" />
     </target>
 
     <!-- ant import -Dfile=<INDEXER_DATA_XML_FILE> -->
@@ -159,8 +167,7 @@
         </parallel>
     </target>
 
-    <target name="server-gui" depends="server-daemon"
-        description="run the server test gui">
+    <target name="server-gui" depends="server-daemon" description="run the server test gui">
         <java classname="servertester.GuiTester" fork="yes">
             <classpath>
                 <path refid="all-classpath" />
@@ -170,23 +177,24 @@
             </assertions>
         </java>
     </target>
-    
+
     <!-- AUTOMATED TEST TARGETS -->
     <!-- ********************** -->
-    <!--<target name="server-tests" depends="compile" description="run automated server tests">-->
-        <!--<java classname="server.ServerUnitTests" fork="yes">-->
-            <!--<classpath>-->
-                <!--<path refid="all-classpath" />-->
-            <!--</classpath>-->
-            <!--<assertions>-->
-                <!--<enable />-->
-            <!--</assertions>-->
-        <!--</java>-->
-    <!--</target>-->
+    <!--<target name="server-tests" depends="compile" description="run automated 
+        server tests"> -->
+    <!--<java classname="server.ServerUnitTests" fork="yes"> -->
+    <!--<classpath> -->
+    <!--<path refid="all-classpath" /> -->
+    <!--</classpath> -->
+    <!--<assertions> -->
+    <!--<enable /> -->
+    <!--</assertions> -->
+    <!--</java> -->
+    <!--</target> -->
 
     <target name="server-tests" depends="compile" description="run automated server tests">
         <junit fork="yes" forkmode="once" haltonfailure="no" showoutput="no">
-            <formatter type="brief" usefile="false"/>
+            <formatter type="brief" usefile="false" />
             <classpath>
                 <path refid="all-classpath" />
             </classpath>
@@ -199,11 +207,11 @@
                 </fileset>
             </batchtest>
         </junit>
-    </target>   
+    </target>
 
     <target name="importer-test" depends="compile">
         <junit fork="yes" forkmode="once" haltonfailure="no" showoutput="no">
-            <formatter type="brief" usefile="false"/>
+            <formatter type="brief" usefile="false" />
             <classpath>
                 <path refid="all-classpath" />
             </classpath>
@@ -216,7 +224,7 @@
                 </fileset>
             </batchtest>
         </junit>
-    </target>   
+    </target>
 
     <!-- ant server-passoff {-Dhost=<SERVER_HOST>} {-Dport=<SERVER_PORT_NUMBER>} -->
     <!-- EXAMPLE: ant server-passoff -Dhost=testserver.cs.byu.edu -Dport=39640 -->
@@ -255,9 +263,9 @@
     </target>
 
     <target name="client-tests" depends="server-daemon">
-    <!--<target name="client-tests">-->
+        <!--<target name="client-tests"> -->
         <junit fork="yes" forkmode="once" haltonfailure="no" showoutput="no">
-            <formatter type="brief" usefile="false"/>
+            <formatter type="brief" usefile="false" />
             <classpath>
                 <path refid="all-classpath" />
             </classpath>
@@ -266,24 +274,31 @@
             </assertions>
             <batchtest>
                 <fileset dir="${test}">
-                    <include name="${client-test-dir}/*Test*" />
-                    <!--<include name="${client-test-dir}/SubmitBatchUnitTest.java" />-->
+                    <!--<include name="${client-test-dir}/*Test*" /> -->
+                    <include name="${client-test-dir}/DownloadBatchUnitTest.java" /> 
+                    <include name="${client-test-dir}/DownloadFileUnitTest.java" /> 
+                    <include name="${client-test-dir}/GetFieldsUnitTest.java" />
+                    <!--<include name="${client-test-dir}/GetProjectsUnitTest.java" /> -->
+                    <include name="${client-test-dir}/GetSampleBatchUnitTest.java" /> 
+                    <include name="${client-test-dir}/SearchUnitTestTest.java" /> 
+                    <!--<include name="${client-test-dir}/SubmitBatchUnitTest.java" /> -->
+                    <include name="${client-test-dir}/ValidateUserUnitTest.java" /> 
                 </fileset>
             </batchtest>
         </junit>
-    </target>   
+    </target>
 
-    <!--<target name="client-tests" depends="compile, server-daemon"-->
-        <!--description="run automated client tests">-->
-        <!--<java classname="client.ClientUnitTests" fork="yes">-->
-            <!--<classpath>-->
-                <!--<path refid="all-classpath" />-->
-            <!--</classpath>-->
-            <!--<assertions>-->
-                <!--<enable />-->
-            <!--</assertions>-->
-        <!--</java>-->
-    <!--</target>-->
+    <!--<target name="client-tests" depends="compile, server-daemon" -->
+    <!--description="run automated client tests"> -->
+    <!--<java classname="client.ClientUnitTests" fork="yes"> -->
+    <!--<classpath> -->
+    <!--<path refid="all-classpath" /> -->
+    <!--</classpath> -->
+    <!--<assertions> -->
+    <!--<enable /> -->
+    <!--</assertions> -->
+    <!--</java> -->
+    <!--</target> -->
 
     <target name="all-tests" depends="importer-test, server-tests, client-tests"
         description="run all automated tests">
@@ -310,8 +325,13 @@
 
     <target name="deploy" depends="clean"
         description="copies source code to remote host">
+        <exec executable="${tar}">
+            <arg
+                line="--exclude=docs --exclude='*README*' --exclude=.gitignore --exclude=.git -X .gitignore -czf ${tar-name} ." />
+        </exec>
         <exec executable="${rsync}">
-            <arg line="rsync -e ssh -ahuv --exclude '.DS_Store' --exclude '*git*' --exclude 'specs' . ${user}@${host}:${remote-path}" />
+            <arg
+                line="-e ssh -ahuv --delete ${tar-name} ${user}@${host}:${remote-path}" />
         </exec>
     </target>
 

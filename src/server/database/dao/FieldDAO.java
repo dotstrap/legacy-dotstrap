@@ -1,7 +1,8 @@
 /**
- * FieldDAO.java JRE v1.8.0_40
+ * FieldDAO.java
+ * JRE v1.8.0_40
  *
- * Created by William Myers on Mar 23, 2015.
+ * Created by William Myers on Mar 24, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package server.database.dao;
@@ -16,6 +17,7 @@ import server.database.DatabaseException;
 
 import shared.model.Field;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class FieldDAO. Interfaces with the database to CRUD fields & getAll() fields.
  */
@@ -28,7 +30,7 @@ public class FieldDAO {
   }
 
   /** The db. */
-  private Database db;
+  private Database      db;
 
   /**
    * Instantiates a new field dao.
@@ -39,6 +41,11 @@ public class FieldDAO {
     this.db = db;
   }
 
+  /**
+   * Initializes the table.
+   *
+   * @throws DatabaseException the database exception
+   */
   public void initTable() throws DatabaseException {
     Statement stmt1 = null;
     Statement stmt2 = null;
@@ -53,8 +60,7 @@ public class FieldDAO {
             + "HelpURL TEXT NOT NULL, "
             + "XCoordinate INTEGER NOT NULL, "
             + "Width INTEGER NOT NULL, "
-            + "ColumnNumber INTEGER NOT NULL)";
-    // @formatter:on
+            + "ColumnNumber INTEGER NOT NULL)";     // @formatter:on
     try {
       stmt1 = db.getConnection().createStatement();
       stmt1.executeUpdate(dropFieldTable);
@@ -63,8 +69,7 @@ public class FieldDAO {
       stmt2.executeUpdate(createFieldTable);
     } catch (Exception e) {
       logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
-      throw new DatabaseException(e.toString());
+      throw new DatabaseException(e);
     } finally {
       Database.closeSafely(stmt1);
       Database.closeSafely(stmt2);
@@ -98,8 +103,7 @@ public class FieldDAO {
       }
     } catch (Exception e) {
       logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
-      throw new DatabaseException(e.toString());
+      throw new DatabaseException(e);
     } finally {
       Database.closeSafely(pstmt);
       Database.closeSafely(resultset);
@@ -107,6 +111,13 @@ public class FieldDAO {
     return allFields;
   }
 
+  /**
+   * Gets the all.
+   *
+   * @param projectId the project id
+   * @return the all
+   * @throws DatabaseException the database exception
+   */
   public ArrayList<Field> getAll(int projectId) throws DatabaseException {
 
     ArrayList<Field> allFields = new ArrayList<Field>();
@@ -135,8 +146,7 @@ public class FieldDAO {
       }
     } catch (Exception e) {
       logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
-      throw new DatabaseException(e.toString());
+      throw new DatabaseException(e);
     } finally {
       Database.closeSafely(pstmt);
       Database.closeSafely(resultset);
@@ -145,12 +155,12 @@ public class FieldDAO {
   }
 
   /**
-   * Gets the id for the field of a project at a certain column
+   * Gets the id for the field of a project at a certain column.
    *
    * @param projectId the projectId for the desired fieldId
    * @param colNum the colNum for the desired fieldId
    * @return the fieldId
-   * @throws DatabaseException
+   * @throws DatabaseException the database exception
    */
   public int getFieldId(int projectId, int colNum) throws DatabaseException {
 
@@ -170,8 +180,7 @@ public class FieldDAO {
       assert (fieldId > 0);
     } catch (SQLException e) {
       logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
-      throw new DatabaseException(e.toString());
+      throw new DatabaseException(e);
     } finally {
       Database.closeSafely(pstmt);
       Database.closeSafely(resultset);
@@ -184,6 +193,7 @@ public class FieldDAO {
    *
    * @param newField the field
    * @return the int FieldId of the field
+   * @throws DatabaseException the database exception
    */
   public int create(Field newField) throws DatabaseException {
 
@@ -217,8 +227,7 @@ public class FieldDAO {
       }
     } catch (SQLException e) {
       logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
-      throw new DatabaseException(e.toString());
+      throw new DatabaseException(e);
     } finally {
       Database.closeSafely(pstmt);
       Database.closeSafely(resultset);
@@ -227,11 +236,12 @@ public class FieldDAO {
   }
 
   /**
-   * Gets the field with specified projectId and title
+   * Gets the field with specified projectId and title.
    *
-   * @param projectid
-   * @param title
+   * @param projectId the project id
+   * @param title the title
    * @return true if valid, else false
+   * @throws DatabaseException the database exception
    */
   public Field read(int projectId, String title) throws DatabaseException {
 
@@ -258,8 +268,7 @@ public class FieldDAO {
       returnField.setColNum(resultset.getInt(8));
     } catch (Exception e) {
       logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
-      throw new DatabaseException(e.toString());
+      throw new DatabaseException(e);
       // return null;
     } finally {
       Database.closeSafely(pstmt);
@@ -272,6 +281,7 @@ public class FieldDAO {
    * Updates the given field with the provided information.
    *
    * @param field the field
+   * @throws DatabaseException the database exception
    */
   public void update(Field field) throws DatabaseException {
 
@@ -294,8 +304,7 @@ public class FieldDAO {
       pstmt.executeUpdate();
     } catch (Exception e) {
       logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
-      throw new DatabaseException(e.toString());
+      throw new DatabaseException(e);
     } finally {
       Database.closeSafely(pstmt);
     }
@@ -305,6 +314,7 @@ public class FieldDAO {
    * Deletes the specified field.
    *
    * @param field the field
+   * @throws DatabaseException the database exception
    */
   public void delete(Field field) throws DatabaseException {
 
@@ -319,8 +329,7 @@ public class FieldDAO {
       pstmt.executeUpdate();
     } catch (Exception e) {
       logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
-      throw new DatabaseException(e.toString());
+      throw new DatabaseException(e);
     } finally {
       Database.closeSafely(pstmt);
     }

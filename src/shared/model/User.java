@@ -1,19 +1,20 @@
 /**
  * User.java
  * JRE v1.8.0_40
- *
- * Created by William Myers on Mar 23, 2015.
+ * 
+ * Created by William Myers on Mar 24, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 
 package shared.model;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class User.
  */
 public class User {
   // Credentials
-  private int userId;
+  private int    userId;
   private String username;
   private String password;
   // User info
@@ -21,8 +22,8 @@ public class User {
   private String last;
   private String email;
   // Current project info
-  private int recordCount;
-  private int currentBatchId;
+  private int    recordCount;
+  private int    currentBatchId;
 
   //@formatter:off
   /**
@@ -42,13 +43,13 @@ public class User {
   /**
    * Instantiates a new User.
    *
-   * @param username
-   * @param password
-   * @param first
-   * @param last
-   * @param email
-   * @param recordCount
-   * @param currBatch
+   * @param username the username
+   * @param password the password
+   * @param first the first
+   * @param last the last
+   * @param email the email
+   * @param recordCount the record count
+   * @param currBatch the curr batch
    */
   public User(String username, String password, String first, String last, String email,
       int recordCount, int currBatch) {
@@ -64,14 +65,14 @@ public class User {
   /**
    * Instantiates a new User.
    *
-   * @param id
-   * @param username
-   * @param password
-   * @param first
-   * @param last
-   * @param email
-   * @param recordCount
-   * @param currBatch
+   * @param id the id
+   * @param username the username
+   * @param password the password
+   * @param first the first
+   * @param last the last
+   * @param email the email
+   * @param recordCount the record count
+   * @param currBatch the curr batch
    */
   public User(int id, String username, String password, String first,
       String last, String email, int recordCount, int currBatch) {

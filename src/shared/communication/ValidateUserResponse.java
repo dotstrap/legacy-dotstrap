@@ -2,7 +2,7 @@
  * ValidateUserResponse.java
  * JRE v1.8.0_40
  *
- * Created by William Myers on Mar 23, 2015.
+ * Created by William Myers on Mar 24, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package shared.communication;
@@ -14,7 +14,7 @@ import shared.model.User;
  * The Class ValidateUserResponse.
  */
 public class ValidateUserResponse implements Response {
-  private User user;
+  private User    user;
   private boolean isValid;
 
   /**
@@ -28,7 +28,16 @@ public class ValidateUserResponse implements Response {
    * Instantiates a new ValidateUserResponse.
    *
    * @param user
-   * @param isValid
+   */
+  public ValidateUserResponse(User user) {
+    this.user = user;
+  }
+
+  /**
+   * Instantiates a new ValidateUserResponse.
+   *
+   * @param user the user
+   * @param isValid the is valid
    */
   public ValidateUserResponse(User user, boolean isValid) {
     this.user = user;

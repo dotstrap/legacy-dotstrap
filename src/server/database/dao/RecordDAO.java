@@ -2,7 +2,7 @@
  * RecordDAO.java
  * JRE v1.8.0_40
  *
- * Created by William Myers on Mar 23, 2015.
+ * Created by William Myers on Mar 24, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package server.database.dao;
@@ -25,7 +25,7 @@ import shared.model.Record;
 public class RecordDAO {
 
   /** The db. */
-  private Database db;
+  private Database      db;
 
   /** The logger used throughout the project. */
   private static Logger logger;
@@ -42,6 +42,11 @@ public class RecordDAO {
     this.db = db;
   }
 
+  /**
+   * Initializes the table.
+   *
+   * @throws DatabaseException the database exception
+   */
   public void initTable() throws DatabaseException {
     Statement stmt1 = null;
     Statement stmt2 = null;
@@ -55,8 +60,7 @@ public class RecordDAO {
             + "BatchURL TEXT NOT NULL, "
             + "Data TEXT NOT NULL COllATE NOCASE, "
             + "RowNumber INTEGER NOT NULL, "
-            + "ColumnNumber INTEGER NOT NULL)";
-    // @formatter:on
+            + "ColumnNumber INTEGER NOT NULL)";     // @formatter:on
     try {
       stmt1 = db.getConnection().createStatement();
       stmt1.executeUpdate(dropRecordTable);
@@ -65,8 +69,7 @@ public class RecordDAO {
       stmt2.executeUpdate(createRecordTable);
     } catch (Exception e) {
       logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
-      throw new DatabaseException(e.toString());
+      throw new DatabaseException(e);
     } finally {
       Database.closeSafely(stmt1);
       Database.closeSafely(stmt2);
@@ -103,8 +106,7 @@ public class RecordDAO {
       }
     } catch (Exception e) {
       logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
-      throw new DatabaseException(e.toString());
+      throw new DatabaseException(e);
     } finally {
       Database.closeSafely(pstmt);
       Database.closeSafely(resultset);
@@ -117,7 +119,7 @@ public class RecordDAO {
    *
    * @param batchId the BatchId of the image whose records are requested
    * @return record array if found, else return null
-   * @throws DatabaseException
+   * @throws DatabaseException the database exception
    */
   public ArrayList<Record> getAll(int batchId) throws DatabaseException {
     ArrayList<Record> allRecords = new ArrayList<Record>();
@@ -143,8 +145,7 @@ public class RecordDAO {
       }
     } catch (Exception e) {
       logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
-      throw new DatabaseException(e.toString());
+      throw new DatabaseException(e);
     } finally {
       Database.closeSafely(pstmt);
       Database.closeSafely(resultset);
@@ -153,9 +154,12 @@ public class RecordDAO {
   }
 
   /**
-   * Searches the records table for a string
+   * Searches the records table for a string.
    *
+   * @param searchFieldIds the search field ids
+   * @param searchRecords the search records
    * @return the records that contain the string
+   * @throws DatabaseException the database exception
    */
   public List<Record> search(List<Integer> searchFieldIds, List<String> searchRecords)
       throws DatabaseException {
@@ -217,8 +221,9 @@ public class RecordDAO {
   /**
    * Inserts the given record to the database.
    *
-   * @param record the record
+   * @param newRecord the new record
    * @return the int
+   * @throws DatabaseException the database exception
    */
   public int create(Record newRecord) throws DatabaseException {
     PreparedStatement pstmt = null;
@@ -247,8 +252,7 @@ public class RecordDAO {
       }
     } catch (SQLException e) {
       logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
-      throw new DatabaseException(e.toString());
+      throw new DatabaseException(e);
     } finally {
       Database.closeSafely(pstmt);
       Database.closeSafely(resultset);
@@ -261,6 +265,7 @@ public class RecordDAO {
    *
    * @param id the id
    * @return the record
+   * @throws DatabaseException the database exception
    */
   public Record read(int id) throws DatabaseException {
     Record resultRecord = new Record();
@@ -285,8 +290,7 @@ public class RecordDAO {
       resultRecord.setColNum(resultset.getInt("ColumnNumber"));
     } catch (Exception e) {
       logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
-      throw new DatabaseException(e.toString());
+      throw new DatabaseException(e);
     } finally {
       Database.closeSafely(pstmt);
       Database.closeSafely(resultset);
@@ -298,7 +302,7 @@ public class RecordDAO {
    * Deletes the specified record.
    *
    * @param record the record
-   * @throws DatabaseException
+   * @throws DatabaseException the database exception
    */
   public void delete(Record record) throws DatabaseException {
     PreparedStatement pstmt = null;
@@ -311,8 +315,7 @@ public class RecordDAO {
       pstmt.executeUpdate();
     } catch (Exception e) {
       logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
-      throw new DatabaseException(e.toString());
+      throw new DatabaseException(e);
     } finally {
       Database.closeSafely(pstmt);
     }

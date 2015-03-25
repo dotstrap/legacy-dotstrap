@@ -1,8 +1,8 @@
 /**
  * Field.java
  * JRE v1.8.0_40
- *
- * Created by William Myers on Mar 23, 2015.
+ * 
+ * Created by William Myers on Mar 24, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package shared.model;
@@ -39,14 +39,13 @@ public class Field {
   /**
    * Instantiates a new Field.
    *
-   * @param projectId
-   * @param title
-   * @param knownData
-   * @param helpURL
-   * @param fieldPath
-   * @param xCoord
-   * @param width
-   * @param colNum
+   * @param projectId the project id
+   * @param title the title
+   * @param knownData the known data
+   * @param helpURL the help url
+   * @param xCoord the x coord
+   * @param width the width
+   * @param colNum the col num
    */
   public Field(int projectId, String title, String knownData, String helpURL, int xCoord,
       int width, int colNum) {
@@ -63,15 +62,14 @@ public class Field {
   /**
    * Instantiates a new Field.
    *
-   * @param fieldId
-   * @param projectId
-   * @param title
-   * @param knownData
-   * @param helpURL
-   * @param fieldPath
-   * @param xCoord
-   * @param width
-   * @param colNum
+   * @param fieldId the field id
+   * @param projectId the project id
+   * @param title the title
+   * @param knownData the known data
+   * @param helpURL the help url
+   * @param xCoord the x coord
+   * @param width the width
+   * @param colNum the col num
    */
   public Field(int fieldId, int projectId, String title, String knownData, String helpURL,
       int xCoord, int width, int colNum) {

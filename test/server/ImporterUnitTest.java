@@ -1,8 +1,8 @@
 /**
  * ImporterUnitTest.java
  * JRE v1.8.0_40
- *
- * Created by William Myers on Mar 23, 2015.
+ * 
+ * Created by William Myers on Mar 24, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package server;
@@ -18,8 +18,9 @@ import server.importer.Importer;
 
 import shared.model.*;
 
+// TODO: Auto-generated Javadoc
 /**
- *
+ * The Class ImporterUnitTest.
  */
 public class ImporterUnitTest {
   /**
@@ -33,6 +34,7 @@ public class ImporterUnitTest {
     Database.initDriver();
   }
 
+  /** The database. */
   Database db;
 
   /**
@@ -62,6 +64,11 @@ public class ImporterUnitTest {
     db = null;
   }
 
+  /**
+   * Import test.
+   *
+   * @throws Exception the exception
+   */
   @Test
   public void importTest() throws Exception {
     // Extra precaution that lists are empty to start with...

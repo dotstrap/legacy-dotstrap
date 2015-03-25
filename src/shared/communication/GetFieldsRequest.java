@@ -1,8 +1,8 @@
 /**
  * GetFieldsRequest.java
  * JRE v1.8.0_40
- *
- * Created by William Myers on Mar 23, 2015.
+ * 
+ * Created by William Myers on Mar 24, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package shared.communication;
@@ -14,7 +14,7 @@ package shared.communication;
 public class GetFieldsRequest implements Request {
   private String username;
   private String password;
-  private int projectId;
+  private int    projectId;
 
   /**
    * Instantiates a new gets the fields parameters.
@@ -23,6 +23,12 @@ public class GetFieldsRequest implements Request {
 
   }
 
+  /**
+   * Instantiates a new gets the fields request.
+   *
+   * @param name the name
+   * @param password the password
+   */
   public GetFieldsRequest(String name, String password) {
     username = name;
     this.password = password;
@@ -95,4 +101,8 @@ public class GetFieldsRequest implements Request {
     this.projectId = projectId;
   }
 
+  @Override
+  public String toString() {
+    return this.username + "\n" + this.password + "\n" + this.projectId + "\n";
+  }
 }

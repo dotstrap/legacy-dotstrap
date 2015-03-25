@@ -17,6 +17,7 @@ import server.database.DatabaseException;
 
 import shared.model.User;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class UserDAO. Interfaces with the database to CRUD users & getAll() users.
  */
@@ -39,6 +40,11 @@ public class UserDAO {
     this.db = db;
   }
 
+  /**
+   * Initializes the table.
+   *
+   * @throws DatabaseException the database exception
+   */
   public void initTable() throws DatabaseException {
     Statement stmt1 = null;
     Statement stmt2 = null;
@@ -53,8 +59,7 @@ public class UserDAO {
             + "LastName TEXT NOT NULL, "
             + "Email TEXT NOT NULL UNIQUE, "
             + "RecordCount INTEGER NOT NULL, "
-            + "CurrentBatchId INTEGER NOT NULL)";
-    // @formatter:on
+            + "CurrentBatchId INTEGER NOT NULL)"; // @formatter:on
     try {
       stmt1 = db.getConnection().createStatement();
       stmt1.executeUpdate(dropUserTable);
@@ -63,8 +68,7 @@ public class UserDAO {
       stmt2.executeUpdate(createUserTable);
     } catch (Exception e) {
       logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
-      throw new DatabaseException(e.toString());
+      throw new DatabaseException(e);
     } finally {
       Database.closeSafely(stmt1);
       Database.closeSafely(stmt2);
@@ -97,8 +101,7 @@ public class UserDAO {
       }
     } catch (Exception e) {
       logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
-      throw new DatabaseException(e.toString());
+      throw new DatabaseException(e);
     } finally {
       Database.closeSafely(pstmt);
       Database.closeSafely(resultset);
@@ -111,17 +114,16 @@ public class UserDAO {
    *
    * @param newUser the user
    * @return the int UserId of the user
+   * @throws DatabaseException the database exception
    */
   public int create(User newUser) throws DatabaseException {
-    //@formatter:off
-    PreparedStatement pstmt = null;
+    PreparedStatement pstmt = null;  //@formatter:off
     ResultSet resultset = null;
     try {
       String query = "INSERT INTO User ("
           + "Username, Password, FirstName, LastName, "
           + "Email, RecordCount, CurrentBatchId)"
-          + "VALUES (?, ?, ?, ?, ?, ?, ?)";
-      //@formatter:on
+          + "VALUES (?, ?, ?, ?, ?, ?, ?)";  //@formatter:on
       pstmt = db.getConnection().prepareStatement(query);
       pstmt.setString(1, newUser.getUsername());
       pstmt.setString(2, newUser.getPassword());
@@ -142,8 +144,7 @@ public class UserDAO {
       }
     } catch (SQLException e) {
       logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
-      throw new DatabaseException(e.toString());
+      throw new DatabaseException(e);
     } finally {
       Database.closeSafely(pstmt);
       Database.closeSafely(resultset);
@@ -152,11 +153,12 @@ public class UserDAO {
   }
 
   /**
-   * Gets the user with specified username and password
+   * Gets the user with specified username and password.
    *
-   * @param username
-   * @param password
+   * @param username the username
+   * @param password the password
    * @return true if valid, else false
+   * @throws DatabaseException the database exception
    */
   public User read(String username, String password) throws DatabaseException {
     PreparedStatement pstmt = null;
@@ -180,10 +182,9 @@ public class UserDAO {
       returnUser.setEmail(resultset.getString(6));
       returnUser.setRecordCount(resultset.getInt(7));
       returnUser.setCurrBatch(resultset.getInt(8));
-    } catch (Exception e) {
+    } catch (SQLException e) {
       logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
-      throw new DatabaseException(e.toString());
+      throw new DatabaseException(e);
     } finally {
       Database.closeSafely(pstmt);
       Database.closeSafely(resultset);
@@ -195,6 +196,7 @@ public class UserDAO {
    * Updates the given user with the provided information.
    *
    * @param user the user
+   * @throws DatabaseException the database exception
    */
   public void update(User user) throws DatabaseException {
     PreparedStatement pstmt = null;//@formatter:off
@@ -216,19 +218,19 @@ public class UserDAO {
       pstmt.executeUpdate();
     } catch (Exception e) {
       logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
-      throw new DatabaseException(e.toString());
+      throw new DatabaseException(e);
     } finally {
       Database.closeSafely(pstmt);
     }
   }
 
   /**
-   * Updates the id of the image a user is currently working on
+   * Updates the id of the image a user is currently working on.
    *
    * @param userId the id of the user working on a new image
    * @param batchId the id of the image the user is working on
-   * */
+   * @throws DatabaseException the database exception
+   */
   public void updateCurrentBatchId(int userId, int batchId) throws DatabaseException {
     PreparedStatement pstmt = null;
     ResultSet resultset = null;
@@ -241,8 +243,7 @@ public class UserDAO {
       pstmt.executeUpdate();
     } catch (SQLException e) {
       logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
-      throw new DatabaseException(e.toString());
+      throw new DatabaseException(e);
     } finally {
       Database.closeSafely(pstmt);
       Database.closeSafely(resultset);
@@ -252,20 +253,23 @@ public class UserDAO {
   }
 
   /**
-   * Clears the current image id of a user
+   * Clears the current image id of a user.
    *
-   * */
+   * @param userId the user id
+   * @throws DatabaseException the database exception
+   */
   public void clearCurrentBatchId(int userId) throws DatabaseException {
     updateCurrentBatchId(userId, -1);
     return;
   }
 
   /**
-   * Increments the number of records a user has indexed
+   * Increments the number of records a user has indexed.
    *
    * @param userId the id of the user who indexed another record
    * @return true if operation succeeded, false otherwise
-   * */
+   * @throws DatabaseException the database exception
+   */
   public void incrementIndexedRecords(int userId) throws DatabaseException {
     PreparedStatement pstmt = null;
     ResultSet resultset = null;
@@ -277,8 +281,7 @@ public class UserDAO {
       pstmt.executeUpdate();
     } catch (SQLException e) {
       logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
-      throw new DatabaseException(e.toString());
+      throw new DatabaseException(e);
     } finally {
       Database.closeSafely(pstmt);
       Database.closeSafely(resultset);
@@ -291,6 +294,7 @@ public class UserDAO {
    * Deletes the specified user.
    *
    * @param user the user
+   * @throws DatabaseException the database exception
    */
   public void delete(User user) throws DatabaseException {
     PreparedStatement pstmt = null;
@@ -304,8 +308,7 @@ public class UserDAO {
       pstmt.executeUpdate();
     } catch (Exception e) {
       logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
-      throw new DatabaseException(e.toString());
+      throw new DatabaseException(e);
     } finally {
       Database.closeSafely(pstmt);
     }

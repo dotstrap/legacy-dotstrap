@@ -2,7 +2,7 @@
  * SearchRequest.java
  * JRE v1.8.0_40
  *
- * Created by William Myers on Mar 23, 2015.
+ * Created by William Myers on Mar 24, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package shared.communication;
@@ -15,9 +15,9 @@ import java.util.List;
  * The Class SearchRequest.
  */
 public class SearchRequest implements Request {
-  private String username;
-  private String password;
-  private List<Integer> fieldIds;
+  private String            username;
+  private String            password;
+  private List<Integer>     fieldIds;
   private ArrayList<String> searchQueries;
 
   /**
@@ -27,40 +27,37 @@ public class SearchRequest implements Request {
 
   }
 
-  //@formatter:off
   /**
    * Instantiates a new search parameters.
    *
-   * @param name
-   *            the name
-   * @param password
-   *            the password
-   * @param fieldId
-   *            the field id
-   * @param search
-   *            the search
+   * @param name the name
+   * @param password the password
+   * @param fieldId the field id
+   * @param search the search
    */
-  public SearchRequest(String name, String password,
-      ArrayList<Integer> fieldId, ArrayList<String> search) {
+  public SearchRequest(String name, String password, ArrayList<Integer> fieldId,
+      ArrayList<String> search) {//@formatter:off
     username      = name;
     this.password = password;
     searchQueries = search;
   }
 
   /**
-   * @param name
-   * @param password
-   * @param fieldIds
-   * @param searchQuery
+   * Instantiates a new search request.
+   *
+   * @param name the name
+   * @param password the password
+   * @param fieldIds the field ids
+   * @param searchQuery the search query
    */
   public SearchRequest(String name, String password,
       List<Integer> fieldIds, ArrayList<String> searchQuery) {
     username      = name;
     this.password = password;
     this.fieldIds = fieldIds;
-    searchQueries = searchQuery;
+    searchQueries = searchQuery; //@formatter:on
   }
-  //@formatter:on
+
   /**
    * Gets the name.
    *
@@ -129,4 +126,9 @@ public class SearchRequest implements Request {
     searchQueries = search;
   }
 
+  @Override
+  public String toString() {
+    return this.username + "\n" + this.password + "\n" + this.fieldIds + "\n" + this.searchQueries
+        + "\n";
+  }
 }

@@ -1,8 +1,8 @@
 /**
  * DownloadBatchResponse.java
  * JRE v1.8.0_40
- *
- * Created by William Myers on Mar 23, 2015.
+ * 
+ * Created by William Myers on Mar 24, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package shared.communication;
@@ -17,10 +17,12 @@ import shared.model.*;
  * The Class DownloadBatchResponse.
  */
 public class DownloadBatchResponse implements Response {
-  public Batch batch;
-  private Project project;
+
+  /** The batch. */
+  public Batch        batch;
+  private Project     project;
   private List<Field> fields;
-  private URL urlPrefix;
+  private URL         urlPrefix;
 
   /**
    * Instantiates a new download batch result.
@@ -31,10 +33,10 @@ public class DownloadBatchResponse implements Response {
   /**
    * Instantiates a new DownloadBatchResponse.
    *
-   * @param batch
-   * @param project
-   * @param fields
-   * @param urlPrefix
+   * @param batch the batch
+   * @param project the project
+   * @param fields the fields
+   * @param url the url
    */
   public DownloadBatchResponse(Batch batch, Project project,
       List<Field> fields, URL url) {

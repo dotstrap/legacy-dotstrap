@@ -2,7 +2,7 @@
  * Importer.java
  * JRE v1.8.0_40
  *
- * Created by William Myers on Mar 23, 2015.
+ * Created by William Myers on Mar 24, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package server.importer;
@@ -28,9 +28,12 @@ import shared.model.*;
  */
 public class Importer {
   private static Logger logger;
-  private static String importDir;
+  private static String importDirName;
   private static String importFileName;
+
+  /** The log name. */
   public static String  LOG_NAME = "importer";
+
   /**
    * The main method
    *
@@ -42,32 +45,31 @@ public class Importer {
       LogManager.getLogManager().readConfiguration(is);
       logger = Logger.getLogger(LOG_NAME);
     } catch (IOException e) {
-      Logger.getAnonymousLogger().severe("ERROR: unable to load logging properties file...");
-      Logger.getAnonymousLogger().severe(e.getMessage());
+
     }
     logger.info("===================Initialized " + LOG_NAME + " log===================");
 
     if (args.length != 1) {
-      logger.log(Level.SEVERE, "ERROR: Invalid arguements specified...");
+
       return;
     }
 
     // try opening file
     File xmlImportFile = new File(args[0]);
     if (!xmlImportFile.exists()) {
-      logger.log(Level.SEVERE, "ERROR: specified import file does not exist...");
+
       return;
     } else {
       importFileName = xmlImportFile.getAbsolutePath();
-      importDir = xmlImportFile.getParentFile().getName();
+      importDirName = xmlImportFile.getParentFile().getName(); // used later in URL prefix
     }
 
-    try {// @formatter:off
-//      if (!xmlImportFile.getParentFile().getCanonicalPath()
-//          .equals(destImportDir.getCanonicalPath())) {
-//        FileUtils.deleteDirectory(destImportDir);
-//      }
-//      FileUtils.copyDirectory(xmlImportFile.getParentFile(), destImportDir); // @formatter:on
+    try {
+      File dest = new File(importDirName);
+      // does nothing if import directory is same as the destination directory, otherwise copy the
+      // directory into the projects' directory structure
+      FileUtils.copyDirectoryToDirectory(xmlImportFile.getParentFile(), dest);
+
       Database.initDriver();
 
       Database db = new Database();
@@ -90,8 +92,7 @@ public class Importer {
       new Importer().importData(root);
 
     } catch (Exception e) {
-      logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
+      logger.log(Level.SEVERE, "STACKTRACE: ", e);
     }
     logger.info("Importing complete.");
     return;
@@ -176,14 +177,12 @@ public class Importer {
     try {
       db.startTransaction();
 
-      User newUser =
-          new User(username, password, firstName, lastName, email, indexedRecords, 0);
+      User newUser = new User(username, password, firstName, lastName, email, indexedRecords, 0);
       db.getUserDAO().create(newUser);
 
       db.endTransaction(true);
     } catch (DatabaseException e) {
-      logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
+      logger.log(Level.SEVERE, "STACKTRACE: ", e);
     }
   }
 
@@ -193,8 +192,7 @@ public class Importer {
   private void loadProjects(Element projectElem) {
     // Get Project Elements
     Element titleElem = (Element) projectElem.getElementsByTagName("title").item(0);
-    Element recPerImgElem =
-        (Element) projectElem.getElementsByTagName("recordsperimage").item(0);
+    Element recPerImgElem = (Element) projectElem.getElementsByTagName("recordsperimage").item(0);
     Element firstYElem = (Element) projectElem.getElementsByTagName("firstycoord").item(0);
     Element recordElem = (Element) projectElem.getElementsByTagName("recordheight").item(0);
 
@@ -216,8 +214,7 @@ public class Importer {
 
       db.endTransaction(true);
     } catch (DatabaseException e) {
-      logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
+      logger.log(Level.SEVERE, "STACKTRACE: ", e);
     }
 
     // Get project fields and images
@@ -251,25 +248,23 @@ public class Importer {
     String title = titleElem.getTextContent();
     int xCoord = Integer.parseInt(xCoordElem.getTextContent());
     String knownData = "";
-    String helpHtml = importDir + "/" + helpElem.getTextContent();
+    String helpHtml = importDirName + "/" + helpElem.getTextContent();
     int width = Integer.parseInt(widthElem.getTextContent());
 
     if (knownDataElem != null) {
-      knownData = importDir + "/" + knownDataElem.getTextContent();
+      knownData = importDirName + "/" + knownDataElem.getTextContent();
     }
 
     Database db = new Database();
     try {
       db.startTransaction();
 
-      Field newField =
-          new Field(projectId, title, knownData, helpHtml, xCoord, width, colNum);
+      Field newField = new Field(projectId, title, knownData, helpHtml, xCoord, width, colNum);
       db.getFieldDAO().create(newField);
 
       db.endTransaction(true);
     } catch (DatabaseException e) {
-      logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
+      logger.log(Level.SEVERE, "STACKTRACE: ", e);
     }
   }
 
@@ -281,7 +276,7 @@ public class Importer {
     Element batchFileElem = (Element) batchElem.getElementsByTagName("file").item(0);
 
     // get Batch primitive from batch file element
-    String batchUrl = importDir + "/" + batchFileElem.getTextContent();
+    String batchUrl = importDirName + "/" + batchFileElem.getTextContent();
 
     int batchId = -1;
     ArrayList<Element> records = null;
@@ -295,8 +290,7 @@ public class Importer {
 
       db.endTransaction(true);
     } catch (DatabaseException e) {
-      logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
+      logger.log(Level.SEVERE, "STACKTRACE: ", e);
     }
 
     if (contains(batchElem, "records")) {
@@ -328,14 +322,13 @@ public class Importer {
 
         fieldId = db.getFieldDAO().getFieldId(projectId, colNum);
         assert (fieldId > 0);
-        Record newRecord =
-            new Record(fieldId, batchId, batchUrl, recordData, rowNum, colNum);
+        Record newRecord = new Record(fieldId, batchId, batchUrl, recordData, rowNum, colNum);
         db.getRecordDAO().create(newRecord);
 
         db.endTransaction(true);
       } catch (DatabaseException e) {
-        logger.log(Level.SEVERE, e.toString());
-        logger.log(Level.FINE, "STACKTRACE: ", e);
+
+        logger.log(Level.SEVERE, "STACKTRACE: ", e);
       }
     }
   }

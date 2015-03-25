@@ -2,7 +2,7 @@
  * GetProjectsRequest.java
  * JRE v1.8.0_40
  *
- * Created by William Myers on Mar 23, 2015.
+ * Created by William Myers on Mar 24, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package shared.communication;
@@ -12,14 +12,11 @@ package shared.communication;
  * The Class GetProjectsRequest.
  */
 public class GetProjectsRequest implements Request {
-  /** The name. */
   private String username;
-
-  /** The password. */
   private String password;
 
   /**
-   * Instantiates a new gets the projects parameters.
+   * Instantiates GetProjectsRequest
    */
   public GetProjectsRequest() {
     username = "newuser";
@@ -27,50 +24,34 @@ public class GetProjectsRequest implements Request {
   }
 
   /**
-   * Instantiates a new gets the projects parameters.
+   * Instantiates GetProjectsRequest
    *
-   * @param name the name
-   * @param password the password
+   * @param usrname the name
+   * @param passwrd the password
    */
-  public GetProjectsRequest(String name, String password) {
-    username = name;
-    this.password = password;
+  public GetProjectsRequest(String usrname, String passwrd) {
+    this.username = usrname;
+    this.password = passwrd;
   }
 
-  /**
-   * Gets the name.
-   *
-   * @return the name
-   */
   public String getUsername() {
     return username;
   }
 
-  /**
-   * Sets the name.
-   *
-   * @param name the new name
-   */
-  public void setUsername(String name) {
-    username = name;
+  public void setUsername(String usrname) {
+    username = usrname;
   }
 
-  /**
-   * Gets the password.
-   *
-   * @return the password
-   */
   public String getPassword() {
     return password;
   }
 
-  /**
-   * Sets the password.
-   *
-   * @param password the new password
-   */
   public void setPassword(String password) {
     this.password = password;
   }
 
+  @Override
+  public String toString() {
+    return this.username + "\n" + this.password + "\n";
+  }
 }

@@ -41,11 +41,15 @@ public class BatchDAO {
     this.db = db;
   }
 
+  /**
+   * Initializes the table.
+   *
+   * @throws DatabaseException the database exception
+   */
   public void initTable() throws DatabaseException {
     Statement stmt1 = null;
     Statement stmt2 = null;
     String dropBatchTable = "DROP TABLE IF EXISTS Batch";// @formatter:off
-
     String createBatchTable =
         "CREATE TABLE Batch ("
             + "BatchId INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE,"
@@ -61,8 +65,7 @@ public class BatchDAO {
       stmt2.executeUpdate(createBatchTable);
     } catch (Exception e) {
       logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
-      throw new DatabaseException(e.toString());
+      throw new DatabaseException(e);
     } finally {
       Database.closeSafely(stmt1);
       Database.closeSafely(stmt2);
@@ -98,8 +101,7 @@ public class BatchDAO {
       }
     } catch (Exception e) {
       logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
-      throw new DatabaseException(e.toString());
+      throw new DatabaseException(e);
     } finally {
       Database.closeSafely(pstmt);
       Database.closeSafely(resultset);
@@ -112,7 +114,7 @@ public class BatchDAO {
    *
    * @param batch the batch
    * @return the int
-   * @throws DatabaseException
+   * @throws DatabaseException the database exception
    */
   public int create(Batch batch) throws DatabaseException {
 
@@ -140,8 +142,7 @@ public class BatchDAO {
       }
     } catch (SQLException e) {
       logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
-      throw new DatabaseException(e.toString());
+      throw new DatabaseException(e);
     } finally {
       Database.closeSafely(pstmt);
       Database.closeSafely(resultset);
@@ -175,8 +176,7 @@ public class BatchDAO {
       resultBatch.setStatus(resultset.getInt(4));
     } catch (Exception e) {
       logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
-      throw new DatabaseException(e.toString());
+      throw new DatabaseException(e);
     } finally {
       Database.closeSafely(pstmt);
       Database.closeSafely(resultset);
@@ -188,11 +188,12 @@ public class BatchDAO {
   }
 
   /**
-   * Gets a sample batch for a project
+   * Gets a sample batch for a project.
    *
    * @param projectId the id of the project the sample batch is in
    * @return the sample batch
-   * */
+   * @throws DatabaseException the database exception
+   */
   public Batch getIncompleteBatch(int projectId) throws DatabaseException {
 
     Batch resultBatch = new Batch();
@@ -226,11 +227,12 @@ public class BatchDAO {
   }
 
   /**
-   * Gets a sample batch for a project
+   * Gets a sample batch for a project.
    *
    * @param projectId the id of the project the sample batch is in
    * @return the sample batch
-   * */
+   * @throws DatabaseException the database exception
+   */
   public Batch getSampleBatch(int projectId) throws DatabaseException {
     Batch resultBatch = new Batch();
     resultBatch.setProjectId(projectId);
@@ -250,6 +252,7 @@ public class BatchDAO {
       resultBatch.setStatus(resultset.getInt("Status"));
       resultBatch.setCurrUserId(resultset.getInt("CurrentUserId"));
     } catch (SQLException e) {
+      logger.log(Level.SEVERE, e.toString());
       throw new DatabaseException("Unable to get sample batch", e);
     } finally {
       Database.closeSafely(pstmt);
@@ -262,7 +265,7 @@ public class BatchDAO {
    * updates the batch.
    *
    * @param batch -> batch to update with
-   * @throws DatabaseException
+   * @throws DatabaseException the database exception
    */
   public void update(Batch batch) throws DatabaseException {
     PreparedStatement pstmt = null;
@@ -276,20 +279,20 @@ public class BatchDAO {
       pstmt.executeUpdate();
     } catch (Exception e) {
       logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
-      throw new DatabaseException(e.toString());
+      throw new DatabaseException(e);
     } finally {
       Database.closeSafely(pstmt);
     }
   }
 
   /**
-   * Assigns a batch to a user
+   * Assigns a batch to a user.
    *
    * @param batchId the id of the batch being assigned
    * @param userId the id of the user being assigned the batch
    * @return true if operation succeeded, false otherwise
-   * */
+   * @throws DatabaseException the database exception
+   */
   public void assignBatchToUser(int batchId, int userId) throws DatabaseException {
     PreparedStatement pstmt = null;
     try {
@@ -302,8 +305,7 @@ public class BatchDAO {
       pstmt.executeUpdate();
     } catch (SQLException e) {
       logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
-      throw new DatabaseException(e.toString());
+      throw new DatabaseException(e);
     } finally {
       Database.closeSafely(pstmt);
     }
@@ -347,8 +349,7 @@ public class BatchDAO {
 
     } catch (SQLException e) {
       logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
-      throw new DatabaseException(e.toString());
+      throw new DatabaseException(e);
     } finally {
       Database.closeSafely(pstmt);
     }
@@ -373,8 +374,7 @@ public class BatchDAO {
       pstmt.executeUpdate();
     } catch (Exception e) {
       logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
-      throw new DatabaseException(e.toString());
+      throw new DatabaseException(e);
     } finally {
       Database.closeSafely(pstmt);
     }

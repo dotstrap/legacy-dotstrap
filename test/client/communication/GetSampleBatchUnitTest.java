@@ -1,3 +1,10 @@
+/**
+ * GetSampleBatchUnitTest.java
+ * JRE v1.8.0_40
+ *
+ * Created by William Myers on Mar 24, 2015.
+ * Copyright (c) 2015 William Myers. All Rights reserved.
+ */
 package client.communication;
 
 import static org.junit.Assert.assertEquals;
@@ -12,13 +19,29 @@ import org.junit.*;
 import client.ClientException;
 
 import server.database.Database;
+import server.database.DatabaseException;
 import server.database.dao.*;
 
 import shared.communication.GetSampleBatchRequest;
 import shared.communication.GetSampleBatchResponse;
 import shared.model.*;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class GetSampleBatchUnitTest.
+ */
 public class GetSampleBatchUnitTest {
+
+
+
+
+
+
+
+
+
+
+
   /** The logger used throughout the project. */
   private static Logger logger; // @formatter:off
   static {
@@ -41,36 +64,46 @@ public class GetSampleBatchUnitTest {
   private static User       testUser2;
   private static User       testUser3; // @formatter:on
 
+  /**
+   * Sets the up before class.
+   *
+   * @throws Exception the exception
+   */
   @BeforeClass
   public static void setUpBeforeClass() throws Exception {
     // Load database driver
     Database.initDriver();
 
+  }
+
+  /**
+   * Tear down after class.
+   *
+   * @throws Exception the exception
+   */
+  @AfterClass
+  public static void tearDownAfterClass() throws Exception {}
+
+  /**
+   * Sets the up.
+   *
+   * @throws Exception the exception
+   */
+  @Before
+  public void setUp() throws Exception {
     db = new Database();
     db.startTransaction();
+    // clear db before adding test data to it
+    db.initTables();
 
-    /*
-     * Populate the database once per test-suite instead of per test-case because it is faster and
-     * we wont be modifying it each test-case; just reading from it
-     */
     testUserDAO = db.getUserDAO();
     testBatchDAO = db.getBatchDAO();
+    testProjectDAO = db.getProjectDAO();
     clientComm = new ClientCommunicator();
 
-    testProject1 = new Project("testProject1", 10, 11, 12);
-    testProject2 = new Project("testProject2", 20, 21, 22);
-    testProject3 = new Project("testProject3", 30, 31, 32);
-
-    testProjectDAO.create(testProject1);
-    testProjectDAO.create(testProject2);
-    testProjectDAO.create(testProject3);
-
-    List<Project> allProjectes = testProjectDAO.getAll();
-    assertEquals(3, allProjectes.size());
-
-    testBatch1 = new Batch("someTestPath/batchTest1", 1, 1);
-    testBatch2 = new Batch("someTestPath/batchTest2", 2, 2);
-    testBatch3 = new Batch("someTestPath/batchTest3", 3, 3);
+    testBatch1 = new Batch(1, "someTestPath/batchTest1", 1, 0, -1);
+    testBatch2 = new Batch(2, "someTestPath/batchTest2", 2, 0, 2);
+    testBatch3 = new Batch(3, "someTestPath/batchTest3", 3, 0, 3);
 
     testBatchDAO.create(testBatch1);
     testBatchDAO.create(testBatch2);
@@ -79,12 +112,20 @@ public class GetSampleBatchUnitTest {
     List<Batch> allBatches = testBatchDAO.getAll();
     assertEquals(3, allBatches.size());
 
-    testUserDAO.initTable();
-    testBatchDAO.initTable();
+    testProject1 = new Project(1, "testProject1", 10, 11, 12);
+    testProject2 = new Project(2, "testProject2", 20, 21, 22);
+    testProject3 = new Project(3, "testProject3", 30, 31, 32);
 
-    testUser1 = new User("userTest1", "pass1", "first1", "last1", "email1", 1, testBatch1.getBatchId());
-    testUser2 = new User("userTest2", "pass2", "first2", "last2", "email2", 2, testBatch2.getBatchId());
-    testUser3 = new User("userTest3", "pass3", "first3", "last3", "email3", 3, testBatch3.getBatchId());
+    testProjectDAO.create(testProject1);
+    testProjectDAO.create(testProject2);
+    testProjectDAO.create(testProject3);
+
+    List<Project> allProjectes = testProjectDAO.getAll();
+    assertEquals(3, allProjectes.size());
+
+    testUser1 = new User("userTest1", "pass1", "first1", "last1", "email1", 1, 1);
+    testUser2 = new User("userTest2", "pass2", "first2", "last2", "email2", 2, 2);
+    testUser3 = new User("userTest3", "pass3", "first3", "last3", "email3", 3, 3);
 
     testUserDAO.create(testUser1);
     testUserDAO.create(testUser2);
@@ -92,11 +133,18 @@ public class GetSampleBatchUnitTest {
 
     List<User> allUseres = testUserDAO.getAll();
     assertEquals(3, allUseres.size());
+
+    db.endTransaction(true);
   }
 
-  @AfterClass
-  public static void tearDownAfterClass() throws Exception {
-    db.endTransaction(false);
+  /**
+   * Tear down.
+   *
+   * @throws Exception the exception
+   */
+  @After
+  public void tearDown() throws Exception {
+    // db.endTransaction(false;
 
     testProject1 = null;
     testProject2 = null;
@@ -119,75 +167,59 @@ public class GetSampleBatchUnitTest {
     return;
   }
 
-  @Before
-  public void setUp() throws Exception {
-    // quick checks to ensure size hasn't changed for some reason
-    List<User> allUseres = testUserDAO.getAll();
-    assertEquals(3, allUseres.size());
-
-    List<Project> allProjectes = testProjectDAO.getAll();
-    assertEquals(3, allProjectes.size());
-
-    List<Batch> allBatches = testBatchDAO.getAll();
-    assertEquals(3, allBatches.size());
-  }
-
-  @After
-  public void tearDown() throws Exception {
-    // quick checks to ensure size hasn't changed for some reason
-    List<User> allUseres = testUserDAO.getAll();
-    assertEquals(3, allUseres.size());
-
-    List<Project> allProjectes = testProjectDAO.getAll();
-    assertEquals(3, allProjectes.size());
-
-    List<Batch> allBatches = testBatchDAO.getAll();
-    assertEquals(3, allBatches.size());
-  }
-
+  /**
+   * Valid user test.
+   */
   @Test
-  public void validUserTest() {
+  public void validUserTest() throws DatabaseException {
+    db.startTransaction();
     GetSampleBatchResponse result = null;
     try {
-      result =
-          clientComm.getSampleBatch(new GetSampleBatchRequest("userTest1", "pass1", testBatch1
-              .getBatchId()));
+      result = clientComm.getSampleBatch(new GetSampleBatchRequest("userTest1", "pass1", 1));
     } catch (ClientException e) {
-      logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
+      logger.log(Level.SEVERE, "STACKTRACE: ", e);
     }
     assertTrue(testBatch1.equals(result.getSampleBatch()));
+    db.endTransaction(true);
   }
 
+  /**
+   * Invalid username test.
+   */
   @Test
-  public void invalidUsernameTest() {
+  public void invalidUsernameTest() throws DatabaseException {
+    db.startTransaction();
     GetSampleBatchResponse result = null;
     boolean shouldPass = false;
     try {
       result = clientComm.getSampleBatch(new GetSampleBatchRequest("INVALID", "pass1", 1));
     } catch (ClientException e) {
       shouldPass = true; // invalid creds will trigger an exception before we reach server facade
-      logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
+      logger.log(Level.SEVERE, "STACKTRACE: ", e);
     }
     assertTrue(shouldPass);
-    assertEquals(null, result);
+    // assertEquals(null, result);
     // assertEquals(false, result.isValidUser());
+    db.endTransaction(true);
   }
 
+  /**
+   * Invalidtest project.
+   */
   @Test
-  public void invalidtestProject() {
+  public void invalidtestProject() throws DatabaseException {
+    db.startTransaction();
     GetSampleBatchResponse result = null;
     boolean shouldPass = false;
     try {
       result = clientComm.getSampleBatch(new GetSampleBatchRequest("userTest1", "pass1", 9999));
     } catch (ClientException e) {
       shouldPass = true;
-      logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
+      logger.log(Level.SEVERE, "STACKTRACE: ", e);
     }
     assertTrue(shouldPass);
     // assertEquals(null, result);
     // assertEquals(false, result.isValidUser());
+    db.endTransaction(true);
   }
 }

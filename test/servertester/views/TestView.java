@@ -1,8 +1,8 @@
 /**
  * TestView.java
  * JRE v1.8.0_40
- *
- * Created by William Myers on Mar 23, 2015.
+ * 
+ * Created by William Myers on Mar 24, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package servertester.views;
@@ -16,10 +16,10 @@ import servertester.controllers.IController;
 public class TestView implements IView {
 
   /** The _host. */
-  private String _host;
+  private String   _host;
 
   /** The _port. */
-  private String _port;
+  private String   _port;
 
   /** The _op. */
   private ServerOp _op;
@@ -31,10 +31,10 @@ public class TestView implements IView {
   private String[] _paramValues;
 
   /** The _request. */
-  private String _request;
+  private String   _request;
 
   /** The _response. */
-  private String _response;
+  private String   _response;
 
   /**
    * Instantiates a new test view.

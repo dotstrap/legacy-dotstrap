@@ -1,8 +1,8 @@
 /**
  * DownloadFileRequest.java
  * JRE v1.8.0_40
- *
- * Created by William Myers on Mar 23, 2015.
+ * 
+ * Created by William Myers on Mar 24, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package shared.communication;
@@ -25,7 +25,7 @@ public class DownloadFileRequest implements Request {
   /**
    * Instantiates a new DownloadFileRequest.
    *
-   * @param url
+   * @param url the url
    */
   public DownloadFileRequest(String url) {
     this.url = url;
@@ -34,9 +34,9 @@ public class DownloadFileRequest implements Request {
   /**
    * Instantiates a new DownloadFileRequest.
    *
-   * @param url
-   * @param username
-   * @param password
+   * @param url the url
+   * @param username the username
+   * @param password the password
    */
   public DownloadFileRequest(String url, String username, String password) {
     this.url = url;
@@ -84,6 +84,11 @@ public class DownloadFileRequest implements Request {
    */
   public void setPassword(String password) {
     this.password = password;
+  }
+
+  @Override
+  public String toString() {
+    return this.username + "\n" + this.password + "\n" + this.url + "\n";
   }
 
 }

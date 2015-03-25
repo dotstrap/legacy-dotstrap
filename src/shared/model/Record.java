@@ -7,10 +7,15 @@
  */
 package shared.model;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class Record.
  */
 public class Record {
+
+  /**
+   * The Class Value.
+   */
   public static class Value {
     private int    valueId;
     private String data;
@@ -33,9 +38,9 @@ public class Record {
     }
 
     /**
-     * Initializes the value model with the specified data
+     * Initializes the value model with the specified data.
      *
-     * @param valueId The field definition this value is associated with
+     * @param id the id
      * @param value The literal value or "cell" contents in db
      */
     public Value(int id, String value) {
@@ -110,6 +115,7 @@ public class Record {
   /**
    * Instantiates a new record.
    *
+   * @param recId the rec id
    * @param fieldId the field id
    * @param batchId the batch id
    * @param batchURL the batch url
@@ -223,6 +229,13 @@ public class Record {
     ColNum = colNum;
   }
 
+  /**
+   * Equals.
+   *
+   * @param o the o
+   * @param shouldCompareIds the should compare ids
+   * @return true, if successful
+   */
   public boolean equals(Object o, boolean shouldCompareIds) {
     if (o == null) {
       return false;

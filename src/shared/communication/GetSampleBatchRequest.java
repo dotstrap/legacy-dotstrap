@@ -1,8 +1,8 @@
 /**
  * GetSampleBatchRequest.java
  * JRE v1.8.0_40
- *
- * Created by William Myers on Mar 23, 2015.
+ * 
+ * Created by William Myers on Mar 24, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package shared.communication;
@@ -14,7 +14,7 @@ package shared.communication;
 public class GetSampleBatchRequest implements Request {
   private String username;
   private String password;
-  private int projectId;
+  private int    projectId;
 
   /**
    * Instantiates a new gets the sample image parameters.
@@ -90,4 +90,8 @@ public class GetSampleBatchRequest implements Request {
     this.projectId = projectId;
   }
 
+  @Override
+  public String toString() {
+    return this.username + "\n" + this.password + "\n" + this.projectId + "\n";
+  }
 }

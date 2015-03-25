@@ -2,7 +2,7 @@
  * ClientCommunicator.java
  * JRE v1.8.0_40
  *
- * Created by William Myers on Mar 23, 2015.
+ * Created by William Myers on Mar 24, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package client.communication;
@@ -12,7 +12,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.*;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
 
 import org.apache.commons.io.IOUtils;
 
@@ -25,9 +26,18 @@ import shared.InvalidCredentialsException;
 import shared.communication.*;
 import shared.model.Record;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ClientCommunicator.
+ */
 public class ClientCommunicator {
+
+
+
   /** The logger used throughout the project. */
   private static Logger logger; // @formatter:off
+
+  /** The log name. */
   public static String LOG_NAME = "client";
   static {
     try {
@@ -35,8 +45,8 @@ public class ClientCommunicator {
       LogManager.getLogManager().readConfiguration(is);
       logger = Logger.getLogger(LOG_NAME);
     } catch (IOException e) {
-      Logger.getAnonymousLogger().severe("ERROR: unable to load logging properties file...");
-      Logger.getAnonymousLogger().severe(e.getMessage());
+
+
     }
     logger.info("===================Initialized " + LOG_NAME + " log===================");
   }
@@ -73,37 +83,62 @@ public class ClientCommunicator {
     URL_PREFIX = String.format("http://%s:%d", host, port);
   }
 
+  /**
+   * Instantiates a new client communicator.
+   *
+   * @param port the port
+   * @param host the host
+   */
   public ClientCommunicator(String port, String host) {
     this.port = Integer.parseInt(port);
     this.host = host;
     URL_PREFIX = String.format("http://%s:%s", host, port);
   }
 
+  /**
+   * Validate user.
+   *
+   * @param params the params
+   * @return the validate user response
+   * @throws InvalidCredentialsException the invalid credentials exception
+   */
   public ValidateUserResponse validateUser(ValidateUserRequest params)
       throws InvalidCredentialsException {
     ValidateUserResponse result = null;
     try {
       result = (ValidateUserResponse) doPost("/ValidateUser", params);
     } catch (Exception e) {
-      logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
+      // logger.log(Level.SEVERE, "STACKTRACE: ", e);
       throw new InvalidCredentialsException(e);
     }
     return result;
   }
 
+  /**
+   * Gets the projects.
+   *
+   * @param creds the creds
+   * @return the projects
+   * @throws ClientException the client exception
+   */
   public GetProjectsResponse getProjects(GetProjectsRequest creds) throws ClientException {
     GetProjectsResponse result = null;
     try {
       result = (GetProjectsResponse) doPost("/GetProjects", creds);
     } catch (Exception e) {
-      logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
+      // logger.log(Level.SEVERE, "STACKTRACE: ", e);
       throw new ClientException(e);
     }
     return result;
   }
 
+  /**
+   * Gets the sample batch.
+   *
+   * @param params the params
+   * @return the sample batch
+   * @throws ClientException the client exception
+   */
   public GetSampleBatchResponse getSampleBatch(GetSampleBatchRequest params)
       throws ClientException {
     GetSampleBatchResponse result = null;
@@ -112,13 +147,19 @@ public class ClientCommunicator {
       URL url = new URL(URL_PREFIX);
       result.setUrlPrefix(url);
     } catch (Exception e) {
-      logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
+      // logger.log(Level.SEVERE, "STACKTRACE: ", e);
       throw new ClientException(e);
     }
     return result;
   }
 
+  /**
+   * Download batch.
+   *
+   * @param params the params
+   * @return the download batch response
+   * @throws ClientException the client exception
+   */
   public DownloadBatchResponse downloadBatch(DownloadBatchRequest params) throws ClientException {
     DownloadBatchResponse result = null;
     try {
@@ -126,37 +167,55 @@ public class ClientCommunicator {
       URL url = new URL(URL_PREFIX);
       result.setUrlPrefix(url);
     } catch (Exception e) {
-      logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
+      // logger.log(Level.SEVERE, "STACKTRACE: ", e);
       throw new ClientException(e);
     }
     return result;
   }
 
+  /**
+   * Submit batch.
+   *
+   * @param params the params
+   * @return the submit batch response
+   * @throws ClientException the client exception
+   */
   public SubmitBatchResponse submitBatch(SubmitBatchRequest params) throws ClientException {
     SubmitBatchResponse result = null;
     try {
       result = (SubmitBatchResponse) doPost("/SubmitBatch", params);
     } catch (Exception e) {
-      logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
+      // logger.log(Level.SEVERE, "STACKTRACE: ", e);
       throw new ClientException(e);
     }
     return result;
   }
 
+  /**
+   * Gets the fields.
+   *
+   * @param params the params
+   * @return the fields
+   * @throws ClientException the client exception
+   */
   public GetFieldsResponse getFields(GetFieldsRequest params) throws ClientException {
     GetFieldsResponse result = null;
     try {
       result = (GetFieldsResponse) doPost("/GetFields", params);
     } catch (Exception e) {
-      logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
+      // logger.log(Level.SEVERE, "STACKTRACE: ", e);
       throw new ClientException(e);
     }
     return result;
   }
 
+  /**
+   * Search.
+   *
+   * @param params the params
+   * @return the search response
+   * @throws ClientException the client exception
+   */
   public SearchResponse search(SearchRequest params) throws ClientException {
     SearchResponse result;
     try {
@@ -168,17 +227,30 @@ public class ClientCommunicator {
       }
       result.setUrls(urls);
     } catch (Exception e) {
-      logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
+      // logger.log(Level.SEVERE, "STACKTRACE: ", e);
       throw new ClientException(e);
     }
     return result;
   }
 
+  /**
+   * Download file.
+   *
+   * @param params the params
+   * @return the download file response
+   * @throws ClientException the client exception
+   */
   public DownloadFileResponse downloadFile(DownloadFileRequest params) throws ClientException {
     return new DownloadFileResponse(doGet(URL_PREFIX + File.separator + params.getUrl()));
   }
 
+  /**
+   * Do get.
+   *
+   * @param urlPath the url path
+   * @return the byte[]
+   * @throws ClientException the client exception
+   */
   public byte[] doGet(String urlPath) throws ClientException {
     byte[] result = null;
     try {
@@ -194,8 +266,7 @@ public class ClientCommunicator {
         response.close();
       }
     } catch (Exception e) {
-      logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
+      // logger.log(Level.SEVERE, "STACKTRACE: ", e);
       throw new ClientException(e);
     }
     return result;
@@ -230,8 +301,7 @@ public class ClientCommunicator {
             connection.getResponseCode()));
       }
     } catch (Exception e) {
-      logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
+      // logger.log(Level.SEVERE, "STACKTRACE: ", e);
       throw new ClientException(e);
     }
   }

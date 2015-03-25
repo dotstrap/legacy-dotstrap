@@ -2,7 +2,7 @@
  * GetFieldsUnitTest.java
  * JRE v1.8.0_40
  *
- * Created by William Myers on Mar 23, 2015.
+ * Created by William Myers on Mar 24, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package client.communication;
@@ -25,6 +25,10 @@ import shared.communication.GetFieldsRequest;
 import shared.communication.GetFieldsResponse;
 import shared.model.*;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class GetFieldsUnitTest.
+ */
 public class GetFieldsUnitTest {
 
 
@@ -35,31 +39,52 @@ public class GetFieldsUnitTest {
     logger = Logger.getLogger(ClientCommunicator.LOG_NAME);
   }
 
-  static private ClientCommunicator clientComm;
+   private ClientCommunicator clientComm;
 
-  static private Database   db;
-  static private UserDAO    testUserDAO;
-  static private ProjectDAO testProjectDAO;
-  static private FieldDAO   testFieldDAO;
-  static private User       testUser1;
-  static private User       testUser2;
-  static private User       testUser3;
-  static private Field      fieldTest1;
-  static private Field      fieldTest2;
-  static private Field      fieldTest3;
-  static private Project    testProject1;
-  static private Project    testProject2;
-  static private Project    testProject3;  // @formatter:on
+   private Database   db;
+   private UserDAO    testUserDAO;
+   private ProjectDAO testProjectDAO;
+   private FieldDAO   testFieldDAO;
+   private User       testUser1;
+   private User       testUser2;
+   private User       testUser3;
+   private Field      fieldTest1;
+   private Field      fieldTest2;
+   private Field      fieldTest3;
+   private Project    testProject1;
+   private Project    testProject2;
+   private Project    testProject3;  // @formatter:on
 
+  /**
+   * Sets the up before class.
+   *
+   * @throws Exception the exception
+   */
   @BeforeClass
   public static void setUpBeforeClass() throws Exception {
     // Load database driver
     Database.initDriver();
+  }
 
-    /*
-     * Populate the database once per test-suite instead of per test-case because it is faster and
-     * we wont be modifying it each test-case; just reading from it
-     */
+  /**
+   * Tear down after class.
+   *
+   * @throws Exception the exception
+   */
+  @AfterClass
+  public static void tearDownAfterClass() throws Exception {
+    return;
+  }
+
+  /**
+   * Sets the up.
+   *
+   * @throws Exception the exception
+   */
+  @Before
+  public void setUp() throws Exception {
+    // Empty & populate db for each test (even though it is slower) case to prevent against possible
+    // db locking
     db = new Database();
     db.startTransaction();
 
@@ -68,9 +93,11 @@ public class GetFieldsUnitTest {
     testFieldDAO = db.getFieldDAO();
     clientComm = new ClientCommunicator();
 
-    testUserDAO.initTable();
-    testProjectDAO.initTable();
-    testFieldDAO.initTable();
+    // ensure tables we are going to use are empty
+    // testUserDAO.initTable();
+    // testProjectDAO.initTable();
+    // testFieldDAO.initTable();
+    db.initTables();
 
     testUser1 = new User("userTest1", "pass1", "first1", "last1", "email1", 1, 1);
     testUser2 = new User("userTest2", "pass2", "first2", "last2", "email2", 2, 2);
@@ -104,11 +131,22 @@ public class GetFieldsUnitTest {
 
     List<Field> allFields = testFieldDAO.getAll();
     assertEquals(3, allFields.size());
+
+    db.endTransaction(true);
   }
 
-  @AfterClass
-  public static void tearDownAfterClass() throws Exception {
-    db.endTransaction(false);
+  /**
+   * Tear down.
+   *
+   * @throws Exception the exception
+   */
+  @After
+  public void tearDown() throws Exception {
+    // empty db and restore it to its original state
+    db.startTransaction();
+    db.initTables();
+    db.endTransaction(true);
+
     db = null;
 
     clientComm = null;
@@ -122,61 +160,43 @@ public class GetFieldsUnitTest {
     fieldTest1 = null;
     fieldTest2 = null;
     fieldTest3 = null;
-    return;
   }
 
-  @Before
-  public void setUp() throws Exception {
-    // quick check to ensure size hasnt changed for some reason
-    List<User> allUseres = testUserDAO.getAll();
-    assertEquals(3, allUseres.size());
-
-    List<Project> allProjectes = testProjectDAO.getAll();
-    assertEquals(3, allProjectes.size());
-
-    List<Field> allFieldes = testFieldDAO.getAll();
-    assertEquals(3, allFieldes.size());
-  }
-
-  @After
-  public void tearDown() throws Exception {
-    // quick check to ensure size hasnt changed for some reason
-    List<User> allUseres = testUserDAO.getAll();
-    assertEquals(3, allUseres.size());
-
-    List<Project> allProjectes = testProjectDAO.getAll();
-    assertEquals(3, allProjectes.size());
-
-    List<Field> allFieldes = testFieldDAO.getAll();
-    assertEquals(3, allFieldes.size());
-  }
-
+  /**
+   * Test valid field.
+   */
   @Test
   public void testValidField() {
     GetFieldsResponse result1 = null;
     try {
-      result1 = clientComm.getFields(new GetFieldsRequest("userTest1", "pass1", 1));
+      result1 =
+          clientComm.getFields(new GetFieldsRequest("userTest1", "pass1", testProject1
+              .getProjectId()));
     } catch (ClientException e) {
       fail("ERROR: failed vaild test...");
-      // logger.log(Level.SEVERE, e.toString());
-      // logger.log(Level.FINE, "STACKTRACE: ", e);
+      logger.log(Level.SEVERE, "STACKTRACE: ", e);
     }
     assertEquals(1, result1.getFields().size());
   }
 
+  /**
+   * Test valid field with no project.
+   */
   @Test
   public void testValidFieldWithNoProject() {
     GetFieldsResponse result2 = null;
     try {
       result2 = clientComm.getFields(new GetFieldsRequest("userTest1", "pass1"));
     } catch (Exception e) {
-//      fail("ERROR: failed vaild test...");
-      // logger.log(Level.SEVERE, e.toString());
-      // logger.log(Level.FINE, "STACKTRACE: ", e);
+      fail("ERROR: failed vaild test...");
+      logger.log(Level.SEVERE, "STACKTRACE: ", e);
     }
-     assertEquals(3, result2.getFields().size());
+    assertEquals(3, result2.getFields().size());
   }
 
+  /**
+   * Invalid password test.
+   */
   @Test
   public void invalidPasswordTest() {
     boolean isValidPassword = false;
@@ -185,12 +205,14 @@ public class GetFieldsUnitTest {
       isValidPassword = true;
     } catch (Exception e) {
       isValidPassword = false;
-      logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
+      logger.log(Level.SEVERE, "STACKTRACE: ", e);
     }
     assertEquals(false, isValidPassword);
   }
 
+  /**
+   * Mismatched password test.
+   */
   @Test
   public void misMatchedPasswordTest() {
     boolean isValidPassword = false;
@@ -199,12 +221,14 @@ public class GetFieldsUnitTest {
       isValidPassword = true;
     } catch (Exception e) {
       isValidPassword = false;
-      logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
+      logger.log(Level.SEVERE, "STACKTRACE: ", e);
     }
     assertEquals(false, isValidPassword);
   }
 
+  /**
+   * Invalid username test.
+   */
   @Test
   public void invalidUsernameTest() {
     boolean isValidUsername = false;
@@ -213,12 +237,14 @@ public class GetFieldsUnitTest {
       isValidUsername = true;
     } catch (Exception e) {
       isValidUsername = false;
-      logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
+      logger.log(Level.SEVERE, "STACKTRACE: ", e);
     }
     assertEquals(false, isValidUsername);
   }
 
+  /**
+   * Invalid creds test.
+   */
   @Test
   public void invalidCredsTest() {
     boolean isValidCreds = false;
@@ -227,12 +253,14 @@ public class GetFieldsUnitTest {
       isValidCreds = true;
     } catch (Exception e) {
       isValidCreds = false;
-      logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
+      logger.log(Level.SEVERE, "STACKTRACE: ", e);
     }
     assertEquals(false, isValidCreds);
   }
 
+  /**
+   * Invalid user test.
+   */
   @Test
   public void invalidUserTest() {
     boolean isValidUser = false;
@@ -241,12 +269,14 @@ public class GetFieldsUnitTest {
       isValidUser = true;
     } catch (Exception e) {
       isValidUser = false;
-      logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
+      logger.log(Level.SEVERE, "STACKTRACE: ", e);
     }
     assertEquals(false, isValidUser);
   }
 
+  /**
+   * Invalid project id test.
+   */
   @Test
   public void invalidProjectIdTest() {
     boolean isValidProject = false;
@@ -255,8 +285,7 @@ public class GetFieldsUnitTest {
       isValidProject = true;
     } catch (Exception e) {
       isValidProject = false;
-      logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
+      logger.log(Level.SEVERE, "STACKTRACE: ", e);
     }
     assertEquals(false, isValidProject);
   }

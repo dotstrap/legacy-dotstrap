@@ -1,8 +1,8 @@
 /**
- * DownloadBatchHandler.java
+ * GetProjectsHandler.java
  * JRE v1.8.0_40
- *
- * Created by William Myers on Mar 23, 2015.
+ * 
+ * Created by William Myers on Mar 24, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package server.httphandler.indexerserverhandler;
@@ -18,10 +18,13 @@ import shared.InvalidCredentialsException;
 import shared.communication.GetProjectsRequest;
 import shared.communication.GetProjectsResponse;
 
+/**
+ * The Class GetProjectsHandler.
+ */
 public class GetProjectsHandler extends IndexerServerHandler {
   /*
    * (non-Javadoc)
-   *
+   * 
    * @see server.httphandler.IndexerServerHandler#doRequest()
    */
   @Override

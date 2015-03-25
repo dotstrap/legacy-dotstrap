@@ -1,8 +1,8 @@
 /**
  * GetSampleBatchResponse.java
  * JRE v1.8.0_40
- *
- * Created by William Myers on Mar 23, 2015.
+ * 
+ * Created by William Myers on Mar 24, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package shared.communication;
@@ -16,8 +16,8 @@ import shared.model.Batch;
  * The Class GetSampleBatchResponse.
  */
 public class GetSampleBatchResponse implements Response {
-  private URL urlPrefix;
-  private Batch sampleBatch;
+  private URL     urlPrefix;
+  private Batch   sampleBatch;
   private boolean validUser;
 
   /**

@@ -2,7 +2,7 @@
  * Server.java
  * JRE v1.8.0_40
  *
- * Created by William Myers on Mar 23, 2015.
+ * Created by William Myers on Mar 24, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 
@@ -18,6 +18,7 @@ import com.sun.net.httpserver.HttpServer;
 import server.facade.ServerFacade;
 import server.httphandler.indexerserverhandler.*;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class Server. Initializes the server's logs (used in all non-testing classes) Creates
  * HTTPHandler Objects Bootstraps the HTTP Server
@@ -25,13 +26,13 @@ import server.httphandler.indexerserverhandler.*;
 public class Server {
   private static int    MAX_WAITING_CONNECTIONS = 10;
   /** Default port number the server runs on (can be overridden via CLI args. */
-  private static int          DEFAULT_PORT      = 8080;
+  private static int    DEFAULT_PORT            = 8080;
   /** The logger used throughout the project. */
-  private static Logger       logger;
-  private static String LOG_NAME                = "server";
+  private static Logger logger;
+  public static String LOG_NAME                = "server";
 
   /**
-   * Entry point for the Indexer Server program
+   * Entry point for the Indexer Server program.
    *
    * @param args the port to run the indexer server on
    */
@@ -42,8 +43,7 @@ public class Server {
       LogManager.getLogManager().readConfiguration(is);
       logger = Logger.getLogger(LOG_NAME);
     } catch (IOException e) {
-      Logger.getAnonymousLogger().severe("ERROR: unable to load logging properties file...");
-      Logger.getAnonymousLogger().severe(e.getMessage());
+
     }
     logger.info("===================Initialized " + LOG_NAME + " log===================");
 
@@ -54,11 +54,11 @@ public class Server {
       try {
         portNum = Integer.parseInt(args[0]);
       } catch (NumberFormatException e) {
-        logger.severe("Invalid port number argument...");
+
         return;
       }
     } else {
-      logger.severe("Too many input arguments...");
+
       return;
     }
 
@@ -66,10 +66,11 @@ public class Server {
     try {
       new Server().bootstrap(portNum);
     } catch (ServerException e) {
-      logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
+      logger.log(Level.SEVERE, "STACKTRACE: ", e);
     }
   }
+
+
 
   // The server //@formatter:off
   private HttpServer server;
@@ -100,28 +101,27 @@ public class Server {
 
   /**
    * Bootstraps the server: Initializes the models Starts the HTTP server Creates contexts Starts
-   * the server
+   * the server.
    *
-   * @param portNum
+   * @param portNum the port num
+   * @throws ServerException the server exception
    */
   public void bootstrap(int portNum) throws ServerException {
     logger.info("Initializing Model...");
     try {
       ServerFacade.initialize();
     } catch (ServerException e) {
-      logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
-      throw new ServerException(e.toString());
+      logger.log(Level.SEVERE, "STACKTRACE: ", e);
+      throw new ServerException(e);
     }
 
     logger.info("Initializing HTTP server on port: " + portNum + "...");
     try {
       server = HttpServer.create(new InetSocketAddress(portNum), MAX_WAITING_CONNECTIONS);
     } catch (IOException e) {
-      logger.log(Level.SEVERE, "Failed to initialize server on port: " + portNum + "...");
-      logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
-      throw new ServerException(e.toString());
+
+      logger.log(Level.SEVERE, "STACKTRACE: ", e);
+      throw new ServerException(e);
     }
 
     server.setExecutor(null); // use the default executor
@@ -141,7 +141,7 @@ public class Server {
   }
 
   /**
-   * Stops the server and frees the port
+   * Stops the server and frees the port.
    */
   public void stop() {
     server.stop(0);

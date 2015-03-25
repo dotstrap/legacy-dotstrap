@@ -2,7 +2,7 @@
  * DownloadBatchUnitTest.java
  * JRE v1.8.0_40
  *
- * Created by William Myers on Mar 23, 2015.
+ * Created by William Myers on Mar 24, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package client.communication;
@@ -27,7 +27,14 @@ import shared.communication.DownloadBatchResponse;
 import shared.model.Batch;
 import shared.model.User;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class DownloadBatchUnitTest.
+ */
 public class DownloadBatchUnitTest {
+
+
+
 
   /** The logger used throughout the project. */
   private static Logger logger; // @formatter:off
@@ -47,6 +54,11 @@ public class DownloadBatchUnitTest {
   private static Batch    testBatch2;
   private static Batch    testBatch3;  // @formatter:on
 
+  /**
+   * Sets the up before class.
+   *
+   * @throws Exception the exception
+   */
   @BeforeClass
   public static void setUpBeforeClass() throws Exception {
     // Load database driver
@@ -89,6 +101,11 @@ public class DownloadBatchUnitTest {
     assertEquals(3, allBatches.size());
   }
 
+  /**
+   * Tear down after class.
+   *
+   * @throws Exception the exception
+   */
   @AfterClass
   public static void tearDownAfterClass() throws Exception {
     db.endTransaction(false);
@@ -108,6 +125,11 @@ public class DownloadBatchUnitTest {
     return;
   }
 
+  /**
+   * Sets the up.
+   *
+   * @throws Exception the exception
+   */
   @Before
   public void setUp() throws Exception {
     // quick checks to ensure size hasn't changed for some reason
@@ -118,6 +140,11 @@ public class DownloadBatchUnitTest {
     assertEquals(3, allBatches.size());
   }
 
+  /**
+   * Tear down.
+   *
+   * @throws Exception the exception
+   */
   @After
   public void tearDown() throws Exception {
     // quick checks to ensure size hasn't changed for some reason
@@ -128,6 +155,11 @@ public class DownloadBatchUnitTest {
     assertEquals(3, allBatches.size());
   }
 
+  /**
+   * Invalid user test.
+   *
+   * @throws DatabaseException the database exception
+   */
   @Test
   public void invalidUserTest() throws DatabaseException {
     boolean isValid = true;
@@ -135,12 +167,16 @@ public class DownloadBatchUnitTest {
       clientComm.downloadBatch(new DownloadBatchRequest("userTest1", "INVALID", 1));
     } catch (ClientException e) {
       isValid = false;
-      logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
+      logger.log(Level.SEVERE, "STACKTRACE: ", e);
     }
     assertEquals(false, isValid);
   }
 
+  /**
+   * Invalid project id test.
+   *
+   * @throws DatabaseException the database exception
+   */
   @Test
   public void invalidProjectIdTest() throws DatabaseException {
     DownloadBatchResponse result2 = new DownloadBatchResponse();
@@ -148,8 +184,7 @@ public class DownloadBatchUnitTest {
       result2 = clientComm.downloadBatch(new DownloadBatchRequest("userTest2", "pass2", 100));
     } catch (ClientException e) {
       logger.fine("Caught invalid projectId test...");
-      logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
+      logger.log(Level.SEVERE, "STACKTRACE: ", e);
     }
     assertEquals(null, result2.getFields());
   }

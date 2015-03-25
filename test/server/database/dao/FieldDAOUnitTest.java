@@ -1,8 +1,8 @@
 /**
  * FieldDAOUnitTest.java
  * JRE v1.8.0_40
- *
- * Created by William Myers on Mar 23, 2015.
+ * 
+ * Created by William Myers on Mar 24, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package server.database.dao;
@@ -19,6 +19,7 @@ import server.database.DatabaseException;
 
 import shared.model.Field;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class FieldDAOUnitTest.
  */
@@ -48,9 +49,9 @@ public class FieldDAOUnitTest {
 
   private Database db;
   private FieldDAO testFieldDAO;
-  private Field fieldTest1 = null;
-  private Field fieldTest2 = null;
-  private Field fieldTest3 = null;
+  private Field    fieldTest1 = null;
+  private Field    fieldTest2 = null;
+  private Field    fieldTest3 = null;
 
   /**
    * Sets the database up.

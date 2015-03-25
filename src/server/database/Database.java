@@ -2,7 +2,7 @@
  * Database.java
  * JRE v1.8.0_40
  *
- * Created by William Myers on Mar 23, 2015.
+ * Created by William Myers on Mar 24, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package server.database;
@@ -12,6 +12,7 @@ import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import server.Server;
 import server.database.dao.*;
 
 // TODO: Auto-generated Javadoc
@@ -19,11 +20,17 @@ import server.database.dao.*;
  * The Class Database.
  */
 public class Database {
-
-  // @formatter:off
+// @formatter:off
+  /** The database name. */
   public static String DB_NAME            = "IndexerServer.sqlite";
+
+  /** The database directory. */
   public static String DB_DIRECTORY       = "database";
+
+  /** The database file. */
   public static String DB_FILE            = DB_DIRECTORY + File.separator + DB_NAME;
+
+  /** The database template. */
   public static String DB_TEMPLATE        = DB_DIRECTORY + File.separator + "template"
       + File.separator + DB_NAME;
   private static String DB_CONNECTION_URL = "jdbc:sqlite:" + DB_DIRECTORY + File.separator
@@ -31,7 +38,9 @@ public class Database {
 
   /** The logger used throughout the project. */
   private static Logger      logger;
-  public static String LOG_NAME = "server";
+
+  /** The log name. */
+  public static String LOG_NAME = Server.LOG_NAME;
   static {
     logger = Logger.getLogger(LOG_NAME);
   }
@@ -39,7 +48,7 @@ public class Database {
   // @formatter:on
   // DataBase Access //////////////////
   /** The database driver connection. */
-  private Connection          connection;
+  private Connection    connection;
 
   /**
    * The batch DataBaseAccess. interfaces with the database to modify the batch (image) table
@@ -60,7 +69,7 @@ public class Database {
   /**
    * The user DataBaseAccess. interfaces with the database to modify the user table
    */
-  private UserDAO             userDAO;
+  private UserDAO       userDAO;
 
   //@formatter:off
   /**
@@ -79,10 +88,10 @@ public class Database {
   /**
    * Instantiates a new Database.
    *
-   * @param bDao
-   * @param fDao
-   * @param pDao
-   * @param rDao
+   * @param bDao the b dao
+   * @param fDao the f dao
+   * @param pDao the dao
+   * @param rDao the r dao
    */
   public Database(BatchDAO bDao, FieldDAO fDao, ProjectDAO pDao, RecordDAO rDao) {
     connection      = null;
@@ -127,8 +136,7 @@ public class Database {
       String driver = "org.sqlite.JDBC";
       Class.forName(driver);
     } catch (ClassNotFoundException e) {
-      logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
+      logger.log(Level.SEVERE, "STACKTRACE: ", e);
       throw new DatabaseException(e.toString());
     }
   }
@@ -145,8 +153,7 @@ public class Database {
       connection = DriverManager.getConnection(DB_CONNECTION_URL);
       connection.setAutoCommit(false);
     } catch (Exception e) {
-      logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
+      logger.log(Level.SEVERE, "STACKTRACE: ", e);
       throw new DatabaseException(e.toString());
     }
   }
@@ -155,9 +162,9 @@ public class Database {
    * Ends the database transaction.
    *
    * @param shouldCommit - commit or rollback transaction?
-   * @throws DatabaseException the database exception
+   * @throws DatabaseException
    */
-  public void endTransaction(boolean shouldCommit) {
+  public void endTransaction(boolean shouldCommit) throws DatabaseException {
     // Commit or rollback the transaction and finally close the connection
     if (connection != null) {
       try {
@@ -167,9 +174,8 @@ public class Database {
           connection.rollback();
         }
       } catch (SQLException e) {
-        logger.log(Level.SEVERE, e.toString());
-        logger.log(Level.FINE, "STACKTRACE: ", e);
-        // throw new DatabaseException(e.toString());
+        logger.log(Level.SEVERE, "STACKTRACE: ", e);
+        throw new DatabaseException(e.toString());
       } finally {
         closeSafely(connection);
         connection = null;
@@ -180,7 +186,7 @@ public class Database {
   /**
    * Initializes the database by sequentially dropping each table and then creating it.
    *
-   * @throws DatabaseException
+   * @throws DatabaseException the database exception
    */
   public void initTables() throws DatabaseException {
     try {
@@ -190,53 +196,68 @@ public class Database {
       recordDAO.initTable();
       userDAO.initTable();
     } catch (Exception e) {
-      logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
+      logger.log(Level.SEVERE, "STACKTRACE: ", e);
       throw new DatabaseException(e.toString());
     }
   }
 
   // TODO: how to make these into one generic method?
+  /**
+   * Close safely.
+   *
+   * @param c the c
+   */
   public static void closeSafely(Connection c) {
     if (c != null) {
       try {
         c.close();
       } catch (SQLException e) {
-        logger.log(Level.SEVERE, e.toString());
-        logger.log(Level.FINE, "STACKTRACE: ", e);
+        logger.log(Level.SEVERE, "STACKTRACE: ", e);
       }
     }
   }
 
+  /**
+   * Close safely.
+   *
+   * @param stmt the stmt
+   */
   public static void closeSafely(Statement stmt) {
     if (stmt != null) {
       try {
         stmt.close();
       } catch (SQLException e) {
-        logger.log(Level.SEVERE, e.toString());
-        logger.log(Level.FINE, "STACKTRACE: ", e);
+        logger.log(Level.SEVERE, "STACKTRACE: ", e);
       }
     }
   }
 
+  /**
+   * Close safely.
+   *
+   * @param pstmt the pstmt
+   */
   public static void closeSafely(PreparedStatement pstmt) {
     if (pstmt != null) {
       try {
         pstmt.close();
       } catch (SQLException e) {
-        logger.log(Level.SEVERE, e.toString());
-        logger.log(Level.FINE, "STACKTRACE: ", e);
+        logger.log(Level.SEVERE, "STACKTRACE: ", e);
       }
     }
   }
 
+  /**
+   * Close safely.
+   *
+   * @param rs the rs
+   */
   public static void closeSafely(ResultSet rs) {
     if (rs != null) {
       try {
         rs.close();
       } catch (SQLException e) {
-        logger.log(Level.SEVERE, e.toString());
-        logger.log(Level.FINE, "STACKTRACE: ", e);
+        logger.log(Level.SEVERE, "STACKTRACE: ", e);
       }
     }
   }

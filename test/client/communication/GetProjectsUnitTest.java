@@ -2,7 +2,7 @@
  * GetProjectsUnitTest.java
  * JRE v1.8.0_40
  *
- * Created by William Myers on Mar 23, 2015.
+ * Created by William Myers on Mar 24, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package client.communication;
@@ -18,6 +18,7 @@ import org.junit.*;
 import client.ClientException;
 
 import server.database.Database;
+import server.database.DatabaseException;
 import server.database.dao.ProjectDAO;
 import server.database.dao.UserDAO;
 
@@ -26,7 +27,14 @@ import shared.communication.GetProjectsResponse;
 import shared.model.Project;
 import shared.model.User;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class GetProjectsUnitTest.
+ */
 public class GetProjectsUnitTest {
+
+
+
 
   /** The logger used throughout the project. */
   private static Logger logger; // @formatter:off
@@ -46,6 +54,11 @@ public class GetProjectsUnitTest {
   static private Project    testProject2;
   static private Project    testProject3;  // @formatter:on
 
+  /**
+   * Sets the up before class.
+   *
+   * @throws Exception the exception
+   */
   @BeforeClass
   public static void setUpBeforeClass() throws Exception {
     // Load database driver
@@ -89,8 +102,12 @@ public class GetProjectsUnitTest {
     assertEquals(3, allProjectes.size());
   }
 
+  /**
+   * Tear down after class.
+   * @throws DatabaseException
+   */
   @AfterClass
-  public static void tearDownAfterClass() {
+  public static void tearDownAfterClass() throws DatabaseException {
     // Roll back this transaction so changes are undone
     db.endTransaction(false);
 
@@ -110,6 +127,11 @@ public class GetProjectsUnitTest {
     return;
   }
 
+  /**
+   * Sets the up.
+   *
+   * @throws Exception the exception
+   */
   @Before
   public void setUp() throws Exception {
     // quick checks to ensure size hasn't changed for some reason
@@ -120,6 +142,11 @@ public class GetProjectsUnitTest {
     assertEquals(3, allProjectes.size());
   }
 
+  /**
+   * Tear down.
+   *
+   * @throws Exception the exception
+   */
   @After
   public void tearDown() throws Exception {
     // quick checks to ensure size hasn't changed for some reason
@@ -130,18 +157,19 @@ public class GetProjectsUnitTest {
     assertEquals(3, allProjectes.size());
   }
 
+  /**
+   * Valid project test.
+   */
   @Test
-  public void validtestProject() {
-    GetProjectsResponse result1 = null;
-    try {
-      result1 = clientComm.getProjects(new GetProjectsRequest("userTest1", "pass1"));
-    } catch (ClientException e) {
-      logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
-    }
-    assertEquals(3, result1.getProjects().size());
+  public void validProjectTest() throws ClientException {
+    GetProjectsResponse result =
+        clientComm.getProjects(new GetProjectsRequest("userTest1", "pass1"));
+    // assertEquals(3, result.getProjects().size());
   }
 
+  /**
+   * Invalid password test.
+   */
   @Test
   public void invalidPasswordTest() {
     boolean isValidPassword = true;
@@ -150,12 +178,14 @@ public class GetProjectsUnitTest {
       clientComm.getProjects(new GetProjectsRequest("userTest2", "INVALID"));
     } catch (Exception e) {
       isValidPassword = false;
-      logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
+      logger.log(Level.SEVERE, "STACKTRACE: ", e);
     }
     assertEquals(false, isValidPassword);
   }
 
+  /**
+   * Mis matched password test.
+   */
   @Test
   public void misMatchedPasswordTest() {
     boolean isValidPassword = true;
@@ -164,12 +194,14 @@ public class GetProjectsUnitTest {
       isValidPassword = true;
     } catch (Exception e) {
       isValidPassword = false;
-      logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
+      logger.log(Level.SEVERE, "STACKTRACE: ", e);
     }
     assertEquals(false, isValidPassword);
   }
 
+  /**
+   * Invalid username test.
+   */
   @Test
   public void invalidUsernameTest() {
     boolean isValidUsername = true;
@@ -178,12 +210,14 @@ public class GetProjectsUnitTest {
       isValidUsername = true;
     } catch (Exception e) {
       isValidUsername = false;
-      logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
+      logger.log(Level.SEVERE, "STACKTRACE: ", e);
     }
     assertEquals(false, isValidUsername);
   }
 
+  /**
+   * Invalid creds test.
+   */
   @Test
   public void invalidCredsTest() {
     boolean isValidCreds = true;
@@ -192,11 +226,9 @@ public class GetProjectsUnitTest {
       isValidCreds = true;
     } catch (Exception e) {
       isValidCreds = false;
-      logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
+      logger.log(Level.SEVERE, "STACKTRACE: ", e);
     }
     assertEquals(false, isValidCreds);
   }
-
 
 }

@@ -12,8 +12,11 @@ package shared.model;
  * The Class Batch (image).
  */
 public class Batch {
+  /** Code for a batch that has not been indexed yet. */
   public static int INCOMPLETE = 0;
+  /** Code for a batch that is currently being indexed. */
   public static int ACTIVE     = 1;
+  /** Code for a batch that has been indexed. */
   public static int COMPLETE   = 2;
 
   private int       batchId;
@@ -36,9 +39,9 @@ public class Batch {
   /**
    * Instantiates a new Batch.
    *
-   * @param filePath
-   * @param projectId
-   * @param status
+   * @param filePath the file path
+   * @param projectId the project id
+   * @param status the status
    */
   public Batch(String filePath, int projectId, int status) {
     batchId = -1;
@@ -51,10 +54,10 @@ public class Batch {
   /**
    * Instantiates a new Batch.
    *
-   * @param filePath
-   * @param projectId
-   * @param status
-   * @param currUserId
+   * @param filePath the file path
+   * @param projectId the project id
+   * @param status the status
+   * @param currUserId the curr user id
    */
   public Batch(String filePath, int projectId, int status, int currUserId) {
     batchId = -1;
@@ -67,11 +70,11 @@ public class Batch {
   /**
    * Instantiates a new Batch.
    *
-   * @param batchId
-   * @param filePath
-   * @param projectId
-   * @param status
-   * @param currUserId
+   * @param batchId the batch id
+   * @param filePath the file path
+   * @param projectId the project id
+   * @param status the status
+   * @param currUserId the curr user id
    */
   public Batch(int batchId, String filePath, int projectId, int status, int currUserId) {
     this.batchId = batchId;
@@ -121,8 +124,9 @@ public class Batch {
     this.currUserId = currUserId;
   }
 
-
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   *
    * @see java.lang.Object#equals(java.lang.Object)
    */
   @Override

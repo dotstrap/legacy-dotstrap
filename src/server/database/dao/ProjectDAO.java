@@ -1,8 +1,8 @@
 /**
  * ProjectDAO.java
  * JRE v1.8.0_40
- *
- * Created by William Myers on Mar 23, 2015.
+ * 
+ * Created by William Myers on Mar 24, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package server.database.dao;
@@ -24,7 +24,7 @@ import shared.model.Project;
 public class ProjectDAO {
 
   /** The db. */
-  private Database db;
+  private Database      db;
 
   /** The logger used throughout the project. */
   private static Logger logger;
@@ -41,6 +41,11 @@ public class ProjectDAO {
     this.db = db;
   }
 
+  /**
+   * Initializes the table.
+   *
+   * @throws DatabaseException the database exception
+   */
   public void initTable() throws DatabaseException {
     Statement stmt1 = null;
     Statement stmt2 = null;
@@ -61,8 +66,7 @@ public class ProjectDAO {
       stmt2.executeUpdate(createProjectTable);
     } catch (Exception e) {
       logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
-      throw new DatabaseException(e.toString());
+      throw new DatabaseException(e);
     } finally {
       Database.closeSafely(stmt1);
       Database.closeSafely(stmt2);
@@ -97,8 +101,7 @@ public class ProjectDAO {
       }
     } catch (Exception e) {
       logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
-      throw new DatabaseException(e.toString());
+      throw new DatabaseException(e);
     } finally {
       Database.closeSafely(pstmt);
       Database.closeSafely(resultset);
@@ -111,13 +114,14 @@ public class ProjectDAO {
    *
    * @param project the project
    * @return the int
+   * @throws DatabaseException the database exception
    */
   public int create(Project project) throws DatabaseException {
     PreparedStatement pstmt = null;
     Statement stmt = null;
     ResultSet resultset = null;
     try {
-      String query = // @formatter:off
+      String query =// @formatter:off
           "INSERT INTO Project ("
               + "Title, RecordsPerBatch, FirstYCoord, RecordHeight)"
               + "VALUES (?, ?, ?, ?)"; // @formatter:on
@@ -139,8 +143,7 @@ public class ProjectDAO {
       }
     } catch (SQLException e) {
       logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
-      throw new DatabaseException(e.toString());
+      throw new DatabaseException(e);
     } finally {
       Database.closeSafely(pstmt);
       Database.closeSafely(resultset);
@@ -151,8 +154,9 @@ public class ProjectDAO {
   /**
    * Gets the project.
    *
-   * @param id the id
+   * @param projectid the projectid
    * @return the project
+   * @throws DatabaseException the database exception
    */
   public Project read(int projectid) throws DatabaseException {
     PreparedStatement pstmt = null;
@@ -173,8 +177,7 @@ public class ProjectDAO {
       resultProject.setRecordHeight(resultset.getInt(5));
     } catch (Exception e) {
       logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
-      throw new DatabaseException(e.toString());
+      throw new DatabaseException(e);
     } finally {
       Database.closeSafely(pstmt);
       Database.closeSafely(resultset);
@@ -189,7 +192,7 @@ public class ProjectDAO {
    * Deletes the specified project.
    *
    * @param project the project
-   * @throws DatabaseException
+   * @throws DatabaseException the database exception
    */
   public void delete(Project project) throws DatabaseException {
     PreparedStatement pstmt = null;
@@ -202,8 +205,7 @@ public class ProjectDAO {
       pstmt.executeUpdate();
     } catch (Exception e) {
       logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
-      throw new DatabaseException(e.toString());
+      throw new DatabaseException(e);
     } finally {
       Database.closeSafely(pstmt);
     }

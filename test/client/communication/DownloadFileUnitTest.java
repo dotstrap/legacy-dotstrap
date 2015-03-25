@@ -1,8 +1,8 @@
 /**
  * DownloadFileUnitTest.java
  * JRE v1.8.0_40
- *
- * Created by William Myers on Mar 23, 2015.
+ * 
+ * Created by William Myers on Mar 24, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package client.communication;
@@ -22,6 +22,10 @@ import server.database.DatabaseException;
 import shared.communication.DownloadFileRequest;
 import shared.communication.DownloadFileResponse;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class DownloadFileUnitTest.
+ */
 public class DownloadFileUnitTest {
   /** The logger used throughout the project. */
   private static Logger      logger;
@@ -31,16 +35,31 @@ public class DownloadFileUnitTest {
 
   private ClientCommunicator clientComm;
 
+  /**
+   * Sets the up.
+   *
+   * @throws Exception the exception
+   */
   @Before
   public void setUp() throws Exception {
     clientComm = new ClientCommunicator();
   }
 
+  /**
+   * Tear down.
+   *
+   * @throws Exception the exception
+   */
   @After
   public void tearDown() throws Exception {
     clientComm = null;
   }
 
+  /**
+   * Test download valid file1.
+   *
+   * @throws DatabaseException the database exception
+   */
   @Test
   public void testDownloadValidFile1() throws DatabaseException {
     try {
@@ -52,11 +71,15 @@ public class DownloadFileUnitTest {
       }
       assertTrue(didDownload);
     } catch (ClientException e) {
-      logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
+      logger.log(Level.SEVERE, "STACKTRACE: ", e);
     }
   }
 
+  /**
+   * Test download valid file2.
+   *
+   * @throws DatabaseException the database exception
+   */
   @Test
   public void testDownloadValidFile2() throws DatabaseException {
     try {
@@ -68,11 +91,15 @@ public class DownloadFileUnitTest {
       }
       assertTrue(didDownload);
     } catch (ClientException e) {
-      logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
+      logger.log(Level.SEVERE, "STACKTRACE: ", e);
     }
   }
 
+  /**
+   * Test download valid file3.
+   *
+   * @throws DatabaseException the database exception
+   */
   @Test
   public void testDownloadValidFile3() throws DatabaseException {
     try {
@@ -84,11 +111,15 @@ public class DownloadFileUnitTest {
       }
       assertTrue(didDownload);
     } catch (ClientException e) {
-      logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
+      logger.log(Level.SEVERE, "STACKTRACE: ", e);
     }
   }
 
+  /**
+   * Test download invalid file.
+   *
+   * @throws DatabaseException the database exception
+   */
   @Test
   public void testDownloadInvalidFile() throws DatabaseException {
     try {
@@ -100,24 +131,26 @@ public class DownloadFileUnitTest {
       }
       assertFalse(didDownload);
     } catch (ClientException e) {
-      logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
+      logger.log(Level.SEVERE, "STACKTRACE: ", e);
     }
   }
 
+  /**
+   * Test download null file.
+   *
+   * @throws DatabaseException the database exception
+   */
   @Test
   public void testDownloadNullFile() throws DatabaseException {
     try {
-      DownloadFileResponse result =
-          clientComm.downloadFile(new DownloadFileRequest(""));
+      DownloadFileResponse result = clientComm.downloadFile(new DownloadFileRequest(""));
       boolean didDownload = false;
       if (result.getFileBytes().length > 0) {
         didDownload = true;
       }
       assertFalse(didDownload);
     } catch (ClientException e) {
-      logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
+      logger.log(Level.SEVERE, "STACKTRACE: ", e);
     }
   }
 }

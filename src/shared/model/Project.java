@@ -2,7 +2,7 @@
  * Project.java
  * JRE v1.8.0_40
  *
- * Created by William Myers on Mar 23, 2015.
+ * Created by William Myers on Mar 24, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package shared.model;
@@ -12,11 +12,11 @@ package shared.model;
  * The Class Project.
  */
 public class Project {
-  private int projectId;
+  private int    projectId;
   private String title;
-  private int recordsPerBatch;
-  private int firstYCoord;
-  private int recordHeight;
+  private int    recordsPerBatch;
+  private int    firstYCoord;
+  private int    recordHeight;
 
   /**
    * Instantiates a new Project.
@@ -29,14 +29,13 @@ public class Project {
     firstYCoord = -1;
   }
 
-
   /**
    * Instantiates a new Project.
    *
-   * @param title
-   * @param recordsPerBatch
-   * @param firstYCoord
-   * @param recordHeight
+   * @param title the title
+   * @param recordsPerBatch the records per batch
+   * @param firstYCoord the first y coord
+   * @param recordHeight the record height
    */
   public Project(String title, int recordsPerBatch, int firstYCoord, int recordHeight) {
     this.title = title;
@@ -48,11 +47,11 @@ public class Project {
   /**
    * Instantiates a new Project.
    *
-   * @param id
-   * @param title
-   * @param recordsPerBatch
-   * @param firstYCoord
-   * @param recordHeight
+   * @param id the id
+   * @param title the title
+   * @param recordsPerBatch the records per batch
+   * @param firstYCoord the first y coord
+   * @param recordHeight the record height
    */
   public Project(int id, String title, int recordsPerBatch, int firstYCoord, int recordHeight) {
     projectId = id;

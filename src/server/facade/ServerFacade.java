@@ -2,7 +2,7 @@
  * ServerFacade.java
  * JRE v1.8.0_40
  *
- * Created by William Myers on Mar 23, 2015.
+ * Created by William Myers on Mar 24, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package server.facade;
@@ -23,30 +23,39 @@ import shared.InvalidCredentialsException;
 import shared.communication.*;
 import shared.model.*;
 
+// TODO: Auto-generated Javadoc
 /**
+ * The Class ServerFacade.
  */
 public class ServerFacade {
   /** The logger used throughout the project. */
   private static Logger logger;
+
+  /** The log name. */
   public static String  LOG_NAME = "server";
 
+  /**
+   * Initialize.
+   *
+   * @throws ServerException the server exception
+   */
   public static void initialize() throws ServerException {
     try {
-      logger = Logger.getLogger(LOG_NAME);
       Database.initDriver();
     } catch (DatabaseException e) {
-      throw new ServerException(e.getMessage(), e);
+      throw new ServerException(e);
     }
   }
 
   /**
-   * Validates a username/password combination
+   * Validates a username/password combination.
    *
-   * @throws ServerException
-   * @throws InvalidCredentialsException
+   * @param request the request
+   * @return the validate user response
+   * @throws InvalidCredentialsException the invalid credentials exception
    */
   public static ValidateUserResponse validateUser(ValidateUserRequest request)
-      throws InvalidCredentialsException {
+      throws InvalidCredentialsException, DatabaseException {
     Database db = new Database();
     boolean isValid = false;
     String username = request.getUsername();
@@ -57,26 +66,27 @@ public class ServerFacade {
       db.startTransaction();
       user = db.getUserDAO().read(username, password);
       // TODO: should I Perform this additional check on password...
-      isValid = user.getPassword().equals(password);
-    } catch (DatabaseException e) {
-      logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
+      //isValid = user.getPassword().equals(password);
+       db.endTransaction(true);
+    } catch (Exception e) {
+      logger.log(Level.SEVERE, "STACKTRACE: ", e);
       throw new InvalidCredentialsException(e.toString());
     } finally {
       db.endTransaction(true);
     }
 
-    ValidateUserResponse result = new ValidateUserResponse(user, isValid);
+    ValidateUserResponse result = new ValidateUserResponse(user);
     return result;
   }
 
   /**
-   * Gets all the projects in the database
+   * Gets all the projects in the database.
    *
-   * @throws InvalidCredentialsException
+   * @param request the request
+   * @return the projects
+   * @throws ServerException the server exception
    */
-  public static GetProjectsResponse getProjects(GetProjectsRequest request)
-      throws ServerException, InvalidCredentialsException {
+  public static GetProjectsResponse getProjects(GetProjectsRequest request) throws ServerException {
     Database db = new Database();
     List<Project> projects = null;
 
@@ -85,9 +95,8 @@ public class ServerFacade {
       projects = db.getProjectDAO().getAll();
       db.endTransaction(true);
     } catch (DatabaseException e) {
-      logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
-      throw new ServerException(e.toString());
+      logger.log(Level.SEVERE, "STACKTRACE: ", e);
+      throw new ServerException(e);
     }
 
     GetProjectsResponse result = new GetProjectsResponse();
@@ -96,9 +105,12 @@ public class ServerFacade {
   }
 
   /**
-   * Gets a sample batch from a project
+   * Gets a sample batch from a project.
    *
-   * @throws InvalidCredentialsException
+   * @param request the request
+   * @return the sample batch
+   * @throws ServerException the server exception
+   * @throws InvalidCredentialsException the invalid credentials exception
    */
   public static GetSampleBatchResponse getSampleBatch(GetSampleBatchRequest request)
       throws ServerException, InvalidCredentialsException {
@@ -110,9 +122,7 @@ public class ServerFacade {
       sampleBatch = db.getBatchDAO().getSampleBatch(request.getProjectId());
       db.endTransaction(true);
     } catch (DatabaseException e) {
-      logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
-      throw new ServerException(e.toString());
+      throw new ServerException(e);
     }
 
     GetSampleBatchResponse result = new GetSampleBatchResponse();
@@ -124,8 +134,11 @@ public class ServerFacade {
    * Downloads an incomplete batch from a project. This includes information from batchs, projects,
    * and fields
    *
-   * @throws InvalidCredentialsException
-   * @throws DatabaseException
+   * @param request the request
+   * @return the download batch response
+   * @throws ServerException the server exception
+   * @throws InvalidCredentialsException the invalid credentials exception
+   * @throws DatabaseException the database exception
    */
   public static DownloadBatchResponse downloadBatch(DownloadBatchRequest request)
       throws ServerException, InvalidCredentialsException, DatabaseException {
@@ -163,9 +176,7 @@ public class ServerFacade {
 
       db.endTransaction(true);
     } catch (DatabaseException e) {
-      logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
-      throw new ServerException(e.toString());
+      throw new ServerException(e);
     }
 
     DownloadBatchResponse result = new DownloadBatchResponse();
@@ -207,13 +218,13 @@ public class ServerFacade {
   }
 
   /**
-   * Submits values from a batch into the database
+   * Submits values from a batch into the database.
    *
-   * @return
-   *
-   * @throws InvalidCredentialsException
+   * @param request the request
+   * @return the submit batch response
    */
-  public static SubmitBatchResponse submitBatch(SubmitBatchRequest request) {
+  public static SubmitBatchResponse submitBatch(SubmitBatchRequest request)
+      throws DatabaseException {
     SubmitBatchResponse result = new SubmitBatchResponse();
     Database db = new Database();
     try {
@@ -247,16 +258,19 @@ public class ServerFacade {
       }
     } catch (Exception e) {
       db.endTransaction(false);
-      e.printStackTrace();
+      logger.log(Level.SEVERE, "STACKTRACE: ", e);
     }
     db.endTransaction(true);
     return result;
   }
 
   /**
-   * Gets the fields for a project
+   * Gets the fields for a project.
    *
-   * @throws InvalidCredentialsException
+   * @param request the request
+   * @return the fields
+   * @throws ServerException the server exception
+   * @throws InvalidCredentialsException the invalid credentials exception
    */
   public static GetFieldsResponse getFields(GetFieldsRequest request) throws ServerException,
       InvalidCredentialsException {
@@ -269,9 +283,11 @@ public class ServerFacade {
       fields = projectId > 0 ? db.getFieldDAO().getAll(projectId) : db.getFieldDAO().getAll();
       db.endTransaction(true);
     } catch (DatabaseException e) {
-      logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
-      throw new ServerException(e.toString());
+      throw new ServerException(e);
+    }
+
+    if (fields.isEmpty()) {
+      throw new ServerException("Requested projectId (" + projectId + ") does not exist...");
     }
 
     GetFieldsResponse result = new GetFieldsResponse();
@@ -280,9 +296,12 @@ public class ServerFacade {
   }
 
   /**
-   * Searches certain fields for certain values
+   * Searches certain fields for certain values.
    *
-   * @throws InvalidCredentialsException
+   * @param request the request
+   * @return the search response
+   * @throws ServerException the server exception
+   * @throws InvalidCredentialsException the invalid credentials exception
    */
   public static SearchResponse search(SearchRequest request) throws ServerException,
       InvalidCredentialsException {
@@ -294,9 +313,7 @@ public class ServerFacade {
       records = db.getRecordDAO().search(request.getFieldIds(), request.getSearchQueries());
       db.endTransaction(true);
     } catch (DatabaseException e) {
-      logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
-      throw new ServerException(e.toString());
+      throw new ServerException(e);
     }
 
     SearchResponse result = new SearchResponse();
@@ -305,12 +322,12 @@ public class ServerFacade {
   }
 
   /**
-   * Downloads a file from the server
+   * Downloads a file from the server.
    *
-   * @param request
-   * @return
-   * @throws ServerException
-   * @throws InvalidCredentialsException
+   * @param request the request
+   * @return the download file response
+   * @throws ServerException the server exception
+   * @throws InvalidCredentialsException the invalid credentials exception
    */
   public static DownloadFileResponse downloadFile(DownloadFileRequest request)
       throws ServerException, InvalidCredentialsException {
@@ -322,9 +339,7 @@ public class ServerFacade {
       data = IOUtils.toByteArray(is);
       is.close();
     } catch (Exception e) {
-      logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
-      throw new ServerException(e.toString());
+      throw new ServerException(e);
     }
     return new DownloadFileResponse(data);
   }

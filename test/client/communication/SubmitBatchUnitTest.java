@@ -2,7 +2,7 @@
  * SubmitBatchUnitTest.java
  * JRE v1.8.0_40
  *
- * Created by William Myers on Mar 23, 2015.
+ * Created by William Myers on Mar 24, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package client.communication;
@@ -17,13 +17,20 @@ import org.junit.*;
 import client.ClientException;
 
 import server.database.Database;
+import server.database.DatabaseException;
 import server.database.dao.*;
 
 import shared.communication.SubmitBatchRequest;
 import shared.communication.SubmitBatchResponse;
 import shared.model.*;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class SubmitBatchUnitTest.
+ */
 public class SubmitBatchUnitTest {
+
+
 
   /** The logger used throughout the project. */
   private static Logger logger; // @formatter:off
@@ -49,6 +56,11 @@ public class SubmitBatchUnitTest {
   private static Project  testProject2;
   private static Project  testProject3;  // @formatter:on
 
+  /**
+   * Sets the up before class.
+   *
+   * @throws Exception the exception
+   */
   @BeforeClass
   public static void setUpBeforeClass() throws Exception {
     // Load database driver
@@ -110,8 +122,12 @@ public class SubmitBatchUnitTest {
     assertEquals(3, allBatches.size());
   }
 
+  /**
+   * Tear down after class.
+   * @throws DatabaseException
+   */
   @AfterClass
-  public static void tearDownAfterClass() {
+  public static void tearDownAfterClass() throws DatabaseException {
     // Roll back this transaction so changes are undone
     db.endTransaction(false);
 
@@ -136,6 +152,11 @@ public class SubmitBatchUnitTest {
     return;
   }
 
+  /**
+   * Sets the up.
+   *
+   * @throws Exception the exception
+   */
   @Before
   public void setUp() throws Exception {
     // quick checks to ensure size hasn't changed for some reason
@@ -149,6 +170,11 @@ public class SubmitBatchUnitTest {
     assertEquals(3, allBatches.size());
   }
 
+  /**
+   * Tear down.
+   *
+   * @throws Exception the exception
+   */
   @After
   public void tearDown() throws Exception {
     // quick checks to ensure size hasn't changed for some reason
@@ -162,6 +188,9 @@ public class SubmitBatchUnitTest {
     assertEquals(3, allBatches.size());
   }
 
+  /**
+   * Bad input test.
+   */
   @Test
   public void badInputTest() {
     SubmitBatchResponse result = null;
@@ -173,10 +202,10 @@ public class SubmitBatchUnitTest {
               .getBatchId(), ";"));
     } catch (ClientException e) {
       isValidInput = false;
-//      logger.log(Level.SEVERE, e.toString());
-//      logger.log(Level.FINE, "STACKTRACE: ", e);
+
+      // logger.log(Level.SEVERE, "STACKTRACE: ", e);
     }
     assertEquals(false, isValidInput);
-//     assertEquals(result.isSuccess(), false);
+    // assertEquals(result.isSuccess(), false);
   }
 }

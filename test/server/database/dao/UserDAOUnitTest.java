@@ -1,8 +1,8 @@
 /**
  * UserDAOUnitTest.java
  * JRE v1.8.0_40
- *
- * Created by William Myers on Mar 23, 2015.
+ * 
+ * Created by William Myers on Mar 24, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package server.database.dao;
@@ -18,6 +18,7 @@ import server.database.DatabaseException;
 
 import shared.model.User;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class UserDAOUnitTest.
  */
@@ -46,8 +47,14 @@ public class UserDAOUnitTest {
 
   private Database db;
   private UserDAO  testUserDAO;
+
+  /** The user test1. */
   User             userTest1;
+
+  /** The user test2. */
   User             userTest2;
+
+  /** The user test3. */
   User             userTest3;
 
   /**

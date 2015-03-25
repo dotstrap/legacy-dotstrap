@@ -1,8 +1,8 @@
 /**
- * DownloadBatchHandler.java
+ * ValidateUserHandler.java
  * JRE v1.8.0_40
- *
- * Created by William Myers on Mar 23, 2015.
+ * 
+ * Created by William Myers on Mar 24, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package server.httphandler.indexerserverhandler;
@@ -18,11 +18,14 @@ import shared.InvalidCredentialsException;
 import shared.communication.ValidateUserRequest;
 import shared.communication.ValidateUserResponse;
 
+/**
+ * The Class ValidateUserHandler.
+ */
 public class ValidateUserHandler extends IndexerServerHandler {
   // TODO: try to use the authentication method for this??
   /*
    * (non-Javadoc)
-   *
+   * 
    * @see server.httphandler.IndexerServerHandler#doRequest()
    */
   @Override

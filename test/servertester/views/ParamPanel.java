@@ -1,8 +1,8 @@
 /**
  * ParamPanel.java
  * JRE v1.8.0_40
- *
- * Created by William Myers on Mar 23, 2015.
+ * 
+ * Created by William Myers on Mar 24, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package servertester.views;
@@ -21,7 +21,7 @@ import javax.swing.*;
 public class ParamPanel extends BasePanel {
 
   /** The _param names. */
-  private String[] _paramNames;
+  private String[]              _paramNames;
 
   /** The _text fields. */
   private ArrayList<JTextField> _textFields;

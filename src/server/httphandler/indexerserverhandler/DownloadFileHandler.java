@@ -1,8 +1,8 @@
 /**
  * DownloadFileHandler.java
  * JRE v1.8.0_40
- *
- * Created by William Myers on Mar 23, 2015.
+ * 
+ * Created by William Myers on Mar 24, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package server.httphandler.indexerserverhandler;
@@ -20,6 +20,9 @@ import server.facade.ServerFacade;
 import shared.communication.DownloadFileRequest;
 import shared.communication.DownloadFileResponse;
 
+/**
+ * The Class DownloadFileHandler.
+ */
 public class DownloadFileHandler implements HttpHandler {
   /** The logger used throughout the project. */
   private static Logger logger;
@@ -40,8 +43,7 @@ public class DownloadFileHandler implements HttpHandler {
 
       response.write(result.getFileBytes());
     } catch (Exception e) {
-      logger.log(Level.SEVERE, e.toString());
-      logger.log(Level.FINE, "STACKTRACE: ", e);
+      logger.log(Level.SEVERE, "STACKTRACE: ", e);
     } finally {
       exchange.close();
     }

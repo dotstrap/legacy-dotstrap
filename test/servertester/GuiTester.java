@@ -1,8 +1,8 @@
 /**
  * GuiTester.java
  * JRE v1.8.0_40
- *
- * Created by William Myers on Mar 23, 2015.
+ * 
+ * Created by William Myers on Mar 24, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package servertester;
@@ -16,6 +16,7 @@ import java.util.logging.Logger;
 import servertester.controllers.Controller;
 import servertester.views.IndexerServerTesterFrame;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class GuiTester.
  */
@@ -34,8 +35,7 @@ public class GuiTester {
       LogManager.getLogManager().readConfiguration(is);
       logger = Logger.getLogger("guiTester");
     } catch (IOException e) {
-      Logger.getAnonymousLogger().severe("ERROR: unable to load logging properties file...");
-      Logger.getAnonymousLogger().severe(e.getMessage());
+
     }
 
     EventQueue.invokeLater(new Runnable() {
