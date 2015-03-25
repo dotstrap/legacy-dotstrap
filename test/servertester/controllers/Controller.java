@@ -1,10 +1,3 @@
-/**
- * Controller.java
- * JRE v1.8.0_40
- *
- * Created by William Myers on Mar 24, 2015.
- * Copyright (c) 2015 William Myers. All Rights reserved.
- */
 package servertester.controllers;
 
 import java.util.*;
@@ -16,125 +9,123 @@ import client.communication.ClientCommunicator;
 import servertester.views.IView;
 
 import shared.communication.*;
-
-/**
- * The Class Controller.
- */
 public class Controller implements IController {
-  /** The logger used throughout the project. */
-  private static Logger logger;
-  private IView         _view;
 
-  /**
-   * Instantiates a new controller.
-   */
-  public Controller() {
-    return;
-  }
-
-  public IView getView() {
-    return _view;
-  }
-
-  public void setView(IView value) {
-    _view = value;
-  }
-
-  // IController methods
-
-  @Override
-  public void initialize() {
-    logger = Logger.getLogger("clientComm");
-    getView().setHost("localhost");
-    getView().setPort("50080");
-    operationSelected();
-  }
-
-  @Override
-  public void operationSelected() {
-    ArrayList<String> paramNames = new ArrayList<String>();
-    paramNames.add("User");
-    paramNames.add("Password");
-
-    switch (getView().getOperation()) {
-      case VALIdATE_USER:
-        break;
-      case GET_PROJECTS:
-        break;
-      case GET_SAMPLE_IMAGE:
-        paramNames.add("Project");
-        break;
-      case DOWNLOAD_BATCH:
-        paramNames.add("Project");
-        break;
-      case GET_FIELDS:
-        paramNames.add("Project");
-        break;
-      case SUBMIT_BATCH:
-        paramNames.add("Batch");
-        paramNames.add("Record Values");
-        break;
-      case SEARCH:
-        paramNames.add("Fields");
-        paramNames.add("Search Values");
-        break;
-      default:
-        assert false;
-        break;
+    private IView _view;
+    
+    public Controller() {
+        return;
+    }
+    
+    public IView getView() {
+        return _view;
+    }
+    
+    public void setView(IView value) {
+        _view = value;
+    }
+    
+    // IController methods
+    //
+    
+    @Override
+    public void initialize() {
+        getView().setHost("localhost");
+        getView().setPort("39640");
+        operationSelected();
     }
 
-    getView().setRequest("");
-    getView().setResponse("");
-    getView().setParameterNames(paramNames.toArray(new String[paramNames.size()]));
-  }
-
-  @Override
-  public void executeOperation() {
-    switch (getView().getOperation()) {
-      case VALIdATE_USER:
-        validateUser();
-        break;
-      case GET_PROJECTS:
-        getProjects();
-        break;
-      case GET_SAMPLE_IMAGE:
-        getSampleBatch();
-        break;
-      case DOWNLOAD_BATCH:
-        downloadBatch();
-        break;
-      case GET_FIELDS:
-        getFields();
-        break;
-      case SUBMIT_BATCH:
-        submitBatch();
-        break;
-      case SEARCH:
-        search();
-        break;
-      default:
-        assert false;
-        break;
+    @Override
+    public void operationSelected() {
+        ArrayList<String> paramNames = new ArrayList<String>();
+        paramNames.add("User");
+        paramNames.add("Password");
+        
+        switch (getView().getOperation()) {
+        case VALIDATE_USER:
+            break;
+        case GET_PROJECTS:
+            break;
+        case GET_SAMPLE_IMAGE:
+            paramNames.add("Project");
+            break;
+        case DOWNLOAD_BATCH:
+            paramNames.add("Project");
+            break;
+        case GET_FIELDS:
+            paramNames.add("Project");
+            break;
+        case SUBMIT_BATCH:
+            paramNames.add("Batch");
+            paramNames.add("Record Values");
+            break;
+        case SEARCH:
+            paramNames.add("Fields");
+            paramNames.add("Search Values");
+            break;
+        default:
+            assert false;
+            break;
+        }
+        
+        getView().setRequest("");
+        getView().setResponse("");
+        getView().setParameterNames(paramNames.toArray(new String[paramNames.size()]));
     }
-  }
 
-  private void validateUser() {
+    @Override
+    public void executeOperation() {
+        switch (getView().getOperation()) {
+        case VALIDATE_USER:
+            validateUser();
+            break;
+        case GET_PROJECTS:
+            getProjects();
+            break;
+        case GET_SAMPLE_IMAGE:
+            getSampleBatch();
+            break;
+        case DOWNLOAD_BATCH:
+            downloadBatch();
+            break;
+        case GET_FIELDS:
+            getFields();
+            break;
+        case SUBMIT_BATCH:
+            submitBatch();
+            break;
+        case SEARCH:
+            search();
+            break;
+        default:
+            assert false;
+            break;
+        }
+    }
+    
+private void validateUser() {
     String[] args = getView().getParameterValues();
     String port = getView().getPort();
+    System.out.print("\nPORT: " + port);
     ValidateUserRequest params = null;
     try {
       String host = getView().getHost();
-
+      System.out.print("\nHOST: " + host);
       ClientCommunicator clientComm = new ClientCommunicator(port, host);
+      System.out.print("\nbuilt client comm");
       params = new ValidateUserRequest(args[0], args[1]);
       ValidateUserResponse result = clientComm.validateUser(params);
-
+      System.out.print("after validateUserResponse");
       getView().setRequest(params.toString());
+      System.out.print("\nparams: " + params.toString());
       getView().setResponse(result.toString());
+      System.out.print("\nresult: " + result.toString());
     } catch (Exception e) {
-      logger.log(Level.SEVERE, "STACKTRACE: ", e);
-      getView().setResponse("FAILED\n" + e.toString());
+      System.out.print("\ncaught exception!!!");
+      // logger.log(Level.SEVERE, "STACKTRACE: ", e);
+      getView().setResponse("FAILED\n");
     } finally {
+      System.out.print("\nparams: " + params.toString());
       getView().setRequest(params.toString());
     }
   }
@@ -153,8 +144,8 @@ public class Controller implements IController {
       getView().setRequest(params.toString());
       getView().setResponse(result.toString());
     } catch (Exception e) {
-      logger.log(Level.SEVERE, "STACKTRACE: ", e);
-      getView().setResponse("FAILED\n" + e.toString());
+      // logger.log(Level.SEVERE, "STACKTRACE: ", e);
+      getView().setResponse("FAILED\n");
     } finally {
       getView().setRequest(params.toString());
     }
@@ -174,8 +165,8 @@ public class Controller implements IController {
       getView().setRequest(params.toString());
       getView().setResponse(result.toString());
     } catch (Exception e) {
-      logger.log(Level.SEVERE, "STACKTRACE: ", e);
-      getView().setResponse("FAILED\n" + e.toString());
+      // logger.log(Level.SEVERE, "STACKTRACE: ", e);
+      getView().setResponse("FAILED\n");
     }
   }
 
@@ -192,8 +183,8 @@ public class Controller implements IController {
 
       getView().setResponse(result.toString());
     } catch (Exception e) {
-      logger.log(Level.SEVERE, "STACKTRACE: ", e);
-      getView().setResponse("FAILED\n" + e.toString());
+      // logger.log(Level.SEVERE, "STACKTRACE: ", e);
+      getView().setResponse("FAILED\n");
     } finally {
       getView().setRequest(params.toString());
     }
@@ -222,8 +213,8 @@ public class Controller implements IController {
       getView().setRequest(params.toString());
       getView().setResponse(result.toString());
     } catch (Exception e) {
-      logger.log(Level.SEVERE, "STACKTRACE: ", e);
-      getView().setResponse("FAILED\n" + e.toString());
+      // logger.log(Level.SEVERE, "STACKTRACE: ", e);
+      getView().setResponse("FAILED\n");
     } finally {
       getView().setRequest(params.toString());
     }
@@ -242,7 +233,7 @@ public class Controller implements IController {
       getView().setResponse(result.toString()); // FIXME: there is no output upon success....
     } catch (Exception e) {
       // getView().setResponse(result.toString());
-      // getView().setResponse("FAILED\n" + e.toString());
+      getView().setResponse("FAILED\n");
     } finally {
       getView().setRequest(params.toString());
     }
@@ -281,11 +272,12 @@ public class Controller implements IController {
 
       getView().setResponse(result.toString());
     } catch (Exception e) {
-      logger.log(Level.SEVERE, "STACKTRACE: ", e);
-      getView().setResponse("FAILED\n" + e.toString());
+      // logger.log(Level.SEVERE, "STACKTRACE: ", e);
+      getView().setResponse("FAILED\n");
     } finally {
       getView().setRequest(params.toString());
     }
   }
 
 }
+

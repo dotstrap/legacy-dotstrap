@@ -68,7 +68,7 @@ public class Importer {
       File dest = new File(importDirName);
       // does nothing if import directory is same as the destination directory, otherwise copy the
       // directory into the projects' directory structure
-      FileUtils.copyDirectoryToDirectory(xmlImportFile.getParentFile(), dest);
+      FileUtils.copyDirectory(xmlImportFile.getParentFile(), dest);
 
       Database.initDriver();
 

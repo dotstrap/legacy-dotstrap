@@ -26,7 +26,7 @@ import server.httphandler.indexerserverhandler.*;
 public class Server {
   private static int    MAX_WAITING_CONNECTIONS = 10;
   /** Default port number the server runs on (can be overridden via CLI args. */
-  private static int    DEFAULT_PORT            = 8080;
+  private static int    DEFAULT_PORT            = 39640;
   /** The logger used throughout the project. */
   private static Logger logger;
   public static String LOG_NAME                = "server";

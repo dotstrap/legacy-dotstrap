@@ -1,128 +1,106 @@
-/**
- * TestView.java
- * JRE v1.8.0_40
- * 
- * Created by William Myers on Mar 24, 2015.
- * Copyright (c) 2015 William Myers. All Rights reserved.
- */
 package servertester.views;
 
-import servertester.controllers.IController;
+import servertester.controllers.*;
 
-// TODO: Auto-generated Javadoc
-/**
- * The Class TestView.
- */
 public class TestView implements IView {
 
-  /** The _host. */
-  private String   _host;
+	private IController _controller;
+	private String _host;
+	private String _port;
+	private ServerOp _op;
+	private String[] _paramNames;
+	private String[] _paramValues;
+	private String _request;
+	private String _response;
+	
+	public TestView() {
+		_controller = null;
+		_host = "";
+		_port = "";
+		_op = ServerOp.VALIDATE_USER;
+		_paramNames = new String[0];
+		_paramValues = new String[0];
+		_request = "";
+		_response = "";
+	}
+	
+	public void setController(IController value) {
+		_controller = value;
+	}
+	
+	//
+	// IView
+	//
+	
+	@Override
+	public void setHost(String value) {
+		_host = value;
+	}
 
-  /** The _port. */
-  private String   _port;
+	@Override
+	public String getHost() {
+		return _host;
+	}
 
-  /** The _op. */
-  private ServerOp _op;
+	@Override
+	public void setPort(String value) {
+		_port = value;
+	}
 
-  /** The _param names. */
-  private String[] _paramNames;
+	@Override
+	public String getPort() {
+		return _port;
+	}
 
-  /** The _param values. */
-  private String[] _paramValues;
+	@Override
+	public void setOperation(ServerOp value) {
+		_op = value;
+	}
 
-  /** The _request. */
-  private String   _request;
+	@Override
+	public ServerOp getOperation() {
+		return _op;
+	}
 
-  /** The _response. */
-  private String   _response;
+	@Override
+	public void setParameterNames(String[] value) {
+		_paramNames = value;
+	}
 
-  /**
-   * Instantiates a new test view.
-   */
-  public TestView() {
-    _host = "";
-    _port = "";
-    _op = ServerOp.VALIdATE_USER;
-    _paramNames = new String[0];
-    _paramValues = new String[0];
-    _request = "";
-    _response = "";
-  }
+	@Override
+	public String[] getParameterNames() {
+		return _paramNames;
+	}
 
-  public void setController(IController value) {}
+	@Override
+	public void setParameterValues(String[] value) {
+		_paramValues = value;
+	}
 
-  //
-  // IView
-  //
+	@Override
+	public String[] getParameterValues() {
+		return _paramValues;
+	}
 
-  @Override
-  public void setHost(String value) {
-    _host = value;
-  }
+	@Override
+	public void setRequest(String value) {
+		_request = value;
+	}
 
-  @Override
-  public String getHost() {
-    return _host;
-  }
+	@Override
+	public String getRequest() {
+		return _request;
+	}
 
-  @Override
-  public void setPort(String value) {
-    _port = value;
-  }
+	@Override
+	public void setResponse(String value) {
+		_response = value;
+	}
 
-  @Override
-  public String getPort() {
-    return _port;
-  }
-
-  @Override
-  public void setOperation(ServerOp value) {
-    _op = value;
-  }
-
-  @Override
-  public ServerOp getOperation() {
-    return _op;
-  }
-
-  @Override
-  public void setParameterNames(String[] value) {
-    _paramNames = value;
-  }
-
-  @Override
-  public String[] getParameterNames() {
-    return _paramNames;
-  }
-
-  @Override
-  public void setParameterValues(String[] value) {
-    _paramValues = value;
-  }
-
-  @Override
-  public String[] getParameterValues() {
-    return _paramValues;
-  }
-
-  @Override
-  public void setRequest(String value) {
-    _request = value;
-  }
-
-  @Override
-  public String getRequest() {
-    return _request;
-  }
-
-  @Override
-  public void setResponse(String value) {
-    _response = value;
-  }
-
-  @Override
-  public String getResponse() {
-    return _response;
-  }
+	@Override
+	public String getResponse() {
+		return _response;
+	}
 
 }
+
