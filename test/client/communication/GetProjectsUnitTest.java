@@ -42,17 +42,17 @@ public class GetProjectsUnitTest {
     logger = Logger.getLogger(ClientCommunicator.LOG_NAME);
   }
 
-  static private ClientCommunicator clientComm;
+   private ClientCommunicator clientComm;
 
-  static private Database   db;
-  static private UserDAO    testUserDAO;
-  static private ProjectDAO testProjectDAO;
-  static private User       testUser1;
-  static private User       testUser2;
-  static private User       testUser3;
-  static private Project    testProject1;
-  static private Project    testProject2;
-  static private Project    testProject3;  // @formatter:on
+   private Database   db;
+   private UserDAO    testUserDAO;
+   private ProjectDAO testProjectDAO;
+   private User       testUser1;
+   private User       testUser2;
+   private User       testUser3;
+   private Project    testProject1;
+   private Project    testProject2;
+   private Project    testProject3;  // @formatter:on
 
   /**
    * Sets the up before class.
@@ -63,11 +63,24 @@ public class GetProjectsUnitTest {
   public static void setUpBeforeClass() throws Exception {
     // Load database driver
     Database.initDriver();
+  }
 
-    /*
-     * Populate the database once per test-suite instead of per test-case because it is faster and
-     * we wont be modifying it each test-case; just reading from it
-     */
+  /**
+   * Tear down after class.
+   * @throws DatabaseException
+   */
+  @AfterClass
+  public static void tearDownAfterClass() throws DatabaseException {
+    return;
+  }
+
+  /**
+   * Sets the up.
+   *
+   * @throws Exception the exception
+   */
+  @Before
+  public void setUp() throws Exception {
     db = new Database();
     db.startTransaction();
 
@@ -76,8 +89,7 @@ public class GetProjectsUnitTest {
     testProjectDAO = db.getProjectDAO();
     clientComm = new ClientCommunicator();
 
-    testUserDAO.initTable();
-    testProjectDAO.initTable();
+    db.initTables();
 
     testUser1 = new User("userTest1", "pass1", "first1", "last1", "email1", 1, 1);
     testUser2 = new User("userTest2", "pass2", "first2", "last2", "email2", 2, 2);
@@ -100,16 +112,21 @@ public class GetProjectsUnitTest {
 
     List<Project> allProjectes = testProjectDAO.getAll();
     assertEquals(3, allProjectes.size());
+
+    db.endTransaction(true);
   }
 
   /**
-   * Tear down after class.
-   * @throws DatabaseException
+   * Tear down.
+   *
+   * @throws Exception the exception
    */
-  @AfterClass
-  public static void tearDownAfterClass() throws DatabaseException {
-    // Roll back this transaction so changes are undone
-    db.endTransaction(false);
+  @After
+  public void tearDown() throws Exception {
+   // empty db and restore it to its original state
+    db.startTransaction();
+    db.initTables();
+    db.endTransaction(true);
 
     testUser1 = null;
     testUser2 = null;
@@ -124,37 +141,6 @@ public class GetProjectsUnitTest {
     clientComm = null;
 
     db = null;
-    return;
-  }
-
-  /**
-   * Sets the up.
-   *
-   * @throws Exception the exception
-   */
-  @Before
-  public void setUp() throws Exception {
-    // quick checks to ensure size hasn't changed for some reason
-    List<User> allUseres = testUserDAO.getAll();
-    assertEquals(3, allUseres.size());
-
-    List<Project> allProjectes = testProjectDAO.getAll();
-    assertEquals(3, allProjectes.size());
-  }
-
-  /**
-   * Tear down.
-   *
-   * @throws Exception the exception
-   */
-  @After
-  public void tearDown() throws Exception {
-    // quick checks to ensure size hasn't changed for some reason
-    List<User> allUseres = testUserDAO.getAll();
-    assertEquals(3, allUseres.size());
-
-    List<Project> allProjectes = testProjectDAO.getAll();
-    assertEquals(3, allProjectes.size());
   }
 
   /**
@@ -164,7 +150,7 @@ public class GetProjectsUnitTest {
   public void validProjectTest() throws ClientException {
     GetProjectsResponse result =
         clientComm.getProjects(new GetProjectsRequest("userTest1", "pass1"));
-    // assertEquals(3, result.getProjects().size());
+     assertEquals(3, result.getProjects().size());
   }
 
   /**
@@ -230,5 +216,4 @@ public class GetProjectsUnitTest {
     }
     assertEquals(false, isValidCreds);
   }
-
 }

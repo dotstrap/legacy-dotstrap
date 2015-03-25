@@ -249,15 +249,14 @@ public class Record {
 
     Record other = (Record) o;
 
-    if (shouldCompareIds) {
-      if (recordId != other.getRecordId()) {
-        return false;
-      }
-    }
+   //if (shouldCompareIds) {
+      //if (recordId != other.getRecordId()) {
+        //return false;
+      //}
+    //}
 
-    return ((fieldId == other.getFieldId() // @formatter:off
-        )
-        && (batchId == other.getBatchId())
+    return ( // @formatter:off
+         (batchId == other.getBatchId())
         && batchURL.equals(other.getBatchURL())
         && this.getData().equals(other.getData())
         && (RowNum == other.getRowNum())

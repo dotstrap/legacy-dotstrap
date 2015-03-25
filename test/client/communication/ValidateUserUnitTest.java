@@ -26,10 +26,6 @@ import shared.model.User;
  * The Class ValidateUserUnitTest.
  */
 public class ValidateUserUnitTest {
-
-
-
-
   /** The logger used throughout the project. */
   private static Logger   logger;
   static {
@@ -53,7 +49,6 @@ public class ValidateUserUnitTest {
   public static void setUpBeforeClass() throws Exception {
     // Load database driver
     Database.initDriver();
-
   }
 
   /**

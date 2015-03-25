@@ -31,38 +31,27 @@ import shared.model.*;
  * The Class GetSampleBatchUnitTest.
  */
 public class GetSampleBatchUnitTest {
-
-
-
-
-
-
-
-
-
-
-
   /** The logger used throughout the project. */
   private static Logger logger; // @formatter:off
   static {
     logger = Logger.getLogger(ClientCommunicator.LOG_NAME);
   }
 
-  private static ClientCommunicator clientComm;
+  private  ClientCommunicator clientComm;
 
-  private static Database   db;
-  private static ProjectDAO testProjectDAO;
-  private static BatchDAO   testBatchDAO;
-  private static UserDAO    testUserDAO;
-  private static Project    testProject1;
-  private static Project    testProject2;
-  private static Project    testProject3;
-  private static Batch      testBatch1;
-  private static Batch      testBatch2;
-  private static Batch      testBatch3;
-  private static User       testUser1;
-  private static User       testUser2;
-  private static User       testUser3; // @formatter:on
+  private  Database   db;
+  private  ProjectDAO testProjectDAO;
+  private  BatchDAO   testBatchDAO;
+  private  UserDAO    testUserDAO;
+  private  Project    testProject1;
+  private  Project    testProject2;
+  private  Project    testProject3;
+  private  Batch      testBatch1;
+  private  Batch      testBatch2;
+  private  Batch      testBatch3;
+  private  User       testUser1;
+  private  User       testUser2;
+  private  User       testUser3; // @formatter:on
 
   /**
    * Sets the up before class.
@@ -70,7 +59,7 @@ public class GetSampleBatchUnitTest {
    * @throws Exception the exception
    */
   @BeforeClass
-  public static void setUpBeforeClass() throws Exception {
+  public static  void setUpBeforeClass() throws Exception {
     // Load database driver
     Database.initDriver();
 
@@ -82,7 +71,7 @@ public class GetSampleBatchUnitTest {
    * @throws Exception the exception
    */
   @AfterClass
-  public static void tearDownAfterClass() throws Exception {}
+  public  static void tearDownAfterClass() throws Exception {}
 
   /**
    * Sets the up.
@@ -144,7 +133,10 @@ public class GetSampleBatchUnitTest {
    */
   @After
   public void tearDown() throws Exception {
-    // db.endTransaction(false;
+     // empty db and restore it to its original state
+    db.startTransaction();
+    db.initTables();
+    db.endTransaction(true);
 
     testProject1 = null;
     testProject2 = null;
@@ -172,7 +164,6 @@ public class GetSampleBatchUnitTest {
    */
   @Test
   public void validUserTest() throws DatabaseException {
-    db.startTransaction();
     GetSampleBatchResponse result = null;
     try {
       result = clientComm.getSampleBatch(new GetSampleBatchRequest("userTest1", "pass1", 1));
@@ -180,7 +171,6 @@ public class GetSampleBatchUnitTest {
       logger.log(Level.SEVERE, "STACKTRACE: ", e);
     }
     assertTrue(testBatch1.equals(result.getSampleBatch()));
-    db.endTransaction(true);
   }
 
   /**
@@ -188,7 +178,6 @@ public class GetSampleBatchUnitTest {
    */
   @Test
   public void invalidUsernameTest() throws DatabaseException {
-    db.startTransaction();
     GetSampleBatchResponse result = null;
     boolean shouldPass = false;
     try {
@@ -200,7 +189,6 @@ public class GetSampleBatchUnitTest {
     assertTrue(shouldPass);
     // assertEquals(null, result);
     // assertEquals(false, result.isValidUser());
-    db.endTransaction(true);
   }
 
   /**
@@ -208,7 +196,6 @@ public class GetSampleBatchUnitTest {
    */
   @Test
   public void invalidtestProject() throws DatabaseException {
-    db.startTransaction();
     GetSampleBatchResponse result = null;
     boolean shouldPass = false;
     try {
@@ -220,6 +207,5 @@ public class GetSampleBatchUnitTest {
     assertTrue(shouldPass);
     // assertEquals(null, result);
     // assertEquals(false, result.isValidUser());
-    db.endTransaction(true);
   }
 }

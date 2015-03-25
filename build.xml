@@ -278,10 +278,10 @@
                     <include name="${client-test-dir}/DownloadBatchUnitTest.java" /> 
                     <include name="${client-test-dir}/DownloadFileUnitTest.java" /> 
                     <include name="${client-test-dir}/GetFieldsUnitTest.java" />
-                    <!--<include name="${client-test-dir}/GetProjectsUnitTest.java" /> -->
-                    <include name="${client-test-dir}/GetSampleBatchUnitTest.java" /> 
-                    <include name="${client-test-dir}/SearchUnitTestTest.java" /> 
-                    <!--<include name="${client-test-dir}/SubmitBatchUnitTest.java" /> -->
+                    <include name="${client-test-dir}/GetProjectsUnitTest.java" /> 
+                    <!--<include name="${client-test-dir}/GetSampleBatchUnitTest.java" /> -->
+                    <!--<include name="${client-test-dir}/SearchUnitTestTest.java" /> -->
+                    <include name="${client-test-dir}/SubmitBatchUnitTest.java" /> 
                     <include name="${client-test-dir}/ValidateUserUnitTest.java" /> 
                 </fileset>
             </batchtest>

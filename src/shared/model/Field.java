@@ -1,7 +1,7 @@
 /**
  * Field.java
  * JRE v1.8.0_40
- * 
+ *
  * Created by William Myers on Mar 24, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
@@ -149,10 +149,7 @@ public class Field {
 
   @Override
   public boolean equals(Object o) {
-    if (o == null) {
-      return false;
-    }
-    if (o.getClass() != this.getClass()) {
+    if ((o == null) || (o.getClass() != this.getClass())) {
       return false;
     }
     if (o == this) {
@@ -160,16 +157,12 @@ public class Field {
     }
 
     Field other = (Field) o;
-
-    return ((fieldId == other.getFieldId()) // @formatter:off
-        && (projectId == other.getProjectId())
+        return ((projectId == other.getProjectId()) // @formatter:off
         && title.equals(other.getTitle())
         && (xCoord == other.getXCoord())
         && (width == other.getWidth())
         && helpURL.equals(other.getHelpURL())
         && knownData.equals(other.getKnownData())
         && (colNum == other.getColNum()));  // @formatter:on
-
   }
-
 }
