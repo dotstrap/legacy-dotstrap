@@ -25,7 +25,6 @@ public class UserDAO {
   private static Logger logger;
   static {
     logger = Logger.getLogger("server");
-
   }
 
   /** The db. */
@@ -49,8 +48,8 @@ public class UserDAO {
   public void initTable() throws DatabaseException {
     Statement stmt1 = null;
     Statement stmt2 = null;
-    // @formatter:off
-    String dropUserTable = "DROP TABLE IF EXISTS User";
+
+    String dropUserTable = "DROP TABLE IF EXISTS User"; // @formatter:off
     String createUserTable =
         "CREATE TABLE User ("
             + "UserId INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE, "
@@ -77,37 +76,34 @@ public class UserDAO {
   }
 
   public ArrayList<User> getAll() throws DatabaseException {
-    ArrayList<User> allUsers = new ArrayList<User>();
-    ResultSet resultset = null;
     String query = "SELECT * from User";
 
-    try (PreparedStatement pstmt = db.getConnection().prepareStatement(query) {
-      pstmt = db.getConnection().prepareStatement(query);
-      resultset = pstmt.executeQuery();
-      while (resultset.next()) {
-        User resultUser = new User();
+    try (PreparedStatement pstmt = db.getConnection().prepareStatement(query)) {
 
-        resultUser.setUserId(resultset.getInt("UserId"));
-        resultUser.setUsername(resultset.getString("Username"));
-        resultUser.setPassword(resultset.getString("Password"));
+      try (ResultSet resultset = pstmt.executeQuery()) {
 
-        resultUser.setFirst(resultset.getString("FirstName"));
-        resultUser.setLast(resultset.getString("LastName"));
-        resultUser.setEmail(resultset.getString("Email"));
+        ArrayList<User> allUsers = new ArrayList<User>();
+        while (resultset.next()) {
+          User resultUser = new User();
 
-        resultUser.setRecordCount(resultset.getInt("RecordCount"));
-        resultUser.setCurrBatch(resultset.getInt("CurrentBatchId"));
+          resultUser.setUserId(resultset.getInt("UserId"));
+          resultUser.setUsername(resultset.getString("Username"));
+          resultUser.setPassword(resultset.getString("Password"));
 
-        allUsers.add(resultUser);
+          resultUser.setFirst(resultset.getString("FirstName"));
+          resultUser.setLast(resultset.getString("LastName"));
+          resultUser.setEmail(resultset.getString("Email"));
+
+          resultUser.setRecordCount(resultset.getInt("RecordCount"));
+          resultUser.setCurrBatch(resultset.getInt("CurrentBatchId"));
+
+          allUsers.add(resultUser);
+        }
+        return allUsers;
       }
-    } catch (Exception e) {
-      logger.log(Level.SEVERE, e.toString());
+    } catch (SQLException e) {
       throw new DatabaseException(e);
-    } finally {
-      Database.closeSafely(pstmt);
-      Database.closeSafely(resultset);
     }
-    return allUsers;
   }
 
   /**
@@ -145,7 +141,6 @@ public class UserDAO {
         throw new DatabaseException("Unable to insert user into database.");
       }
     } catch (SQLException e) {
-      logger.log(Level.SEVERE, e.toString());
       throw new DatabaseException(e);
     }
     return newUser.getUserId();
@@ -160,6 +155,7 @@ public class UserDAO {
    */
   public User read(String username, String password) throws DatabaseException {
     String query = "SELECT * from User WHERE Username = ? AND Password = ?";
+
     try (PreparedStatement pstmt = db.getConnection().prepareStatement(query)) {
       pstmt.setString(1, username);
       pstmt.setString(2, password);
@@ -180,13 +176,13 @@ public class UserDAO {
         returnUser.setCurrBatch(resultset.getInt(8));
 
         if (resultset.next()) {
-          logger.log(Level.SEVERE, "ERROR, read more than one username: " + username + " from database...");
+          logger.log(Level.SEVERE, "ERROR, read more than one username: " + username
+              + " from database...");
         }
 
         return returnUser;
       }
     } catch (SQLException e) {
-      logger.log(Level.SEVERE, e.toString());
       throw new DatabaseException("ERROR username: " + username + " from database...", e);
     }
   }
@@ -198,13 +194,11 @@ public class UserDAO {
    * @throws DatabaseException the database exception
    */
   public void update(User user) throws DatabaseException {
-    PreparedStatement pstmt = null;//@formatter:off
-    try {
-      String query = "UPDATE User SET FirstName = ?, LastName = ?, "
-          + "Email = ?, RecordCount = ?, CurrentBatchId = ?"
-          + "WHERE Username = ? AND Password = ?";  //@formatter:on
-      pstmt = db.getConnection().prepareStatement(query);
+    String query = "UPDATE User SET FirstName = ?, LastName = ?, "//@formatter:off
+        + "Email = ?, RecordCount = ?, CurrentBatchId = ?"
+        + "WHERE Username = ? AND Password = ?";  //@formatter:on
 
+    try (PreparedStatement pstmt = db.getConnection().prepareStatement(query)) {
       pstmt.setString(1, user.getFirst());
       pstmt.setString(2, user.getLast());
       pstmt.setString(3, user.getEmail());
@@ -218,8 +212,6 @@ public class UserDAO {
     } catch (Exception e) {
       logger.log(Level.SEVERE, e.toString());
       throw new DatabaseException(e);
-    } finally {
-      Database.closeSafely(pstmt);
     }
   }
 
@@ -231,24 +223,16 @@ public class UserDAO {
    * @throws DatabaseException the database exception
    */
   public void updateCurrentBatchId(int userId, int batchId) throws DatabaseException {
-    PreparedStatement pstmt = null;
-    ResultSet resultset = null;
+    String query = "UPDATE User SET CurrentBatchId = ? WHERE UserId = ?";
 
-    try {
-      String query = "UPDATE User SET CurrentBatchId = ? WHERE UserId = ?";
-      pstmt = db.getConnection().prepareStatement(query);
+    try (PreparedStatement pstmt = db.getConnection().prepareStatement(query)) {
       pstmt.setInt(1, batchId);
       pstmt.setInt(2, userId);
+
       pstmt.executeUpdate();
     } catch (SQLException e) {
-      logger.log(Level.SEVERE, e.toString());
       throw new DatabaseException(e);
-    } finally {
-      Database.closeSafely(pstmt);
-      Database.closeSafely(resultset);
     }
-
-    return;
   }
 
   /**
@@ -270,23 +254,15 @@ public class UserDAO {
    * @throws DatabaseException the database exception
    */
   public void incrementIndexedRecords(int userId) throws DatabaseException {
-    PreparedStatement pstmt = null;
-    ResultSet resultset = null;
+    String query = "UPDATE User SET IndexedRecords = IndexedRecords + 1 WHERE UserId = ?";
 
-    try {
-      String query = "UPDATE User SET IndexedRecords = IndexedRecords + 1 WHERE UserId = ?";
-      pstmt = db.getConnection().prepareStatement(query);
+    try (PreparedStatement pstmt = db.getConnection().prepareStatement(query)) {
       pstmt.setInt(1, userId);
+
       pstmt.executeUpdate();
     } catch (SQLException e) {
-      logger.log(Level.SEVERE, e.toString());
       throw new DatabaseException(e);
-    } finally {
-      Database.closeSafely(pstmt);
-      Database.closeSafely(resultset);
     }
-
-    return;
   }
 
   /**
@@ -296,20 +272,14 @@ public class UserDAO {
    * @throws DatabaseException the database exception
    */
   public void delete(User user) throws DatabaseException {
-    PreparedStatement pstmt = null;
-    try {
-      String query = "DELETE from User WHERE Username = ? AND Password = ?";
-
-      pstmt = db.getConnection().prepareStatement(query);
+    String query = "DELETE from User WHERE Username = ? AND Password = ?";
+    try (PreparedStatement pstmt = db.getConnection().prepareStatement(query)) {
       pstmt.setString(1, user.getUsername());
       pstmt.setString(2, user.getPassword());
 
       pstmt.executeUpdate();
     } catch (Exception e) {
-      logger.log(Level.SEVERE, e.toString());
       throw new DatabaseException(e);
-    } finally {
-      Database.closeSafely(pstmt);
     }
   }
 }
