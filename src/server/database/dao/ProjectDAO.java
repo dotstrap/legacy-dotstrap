@@ -17,7 +17,7 @@ import server.database.DatabaseException;
 
 import shared.model.Project;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class ProjectDAO.
  */
@@ -29,7 +29,7 @@ public class ProjectDAO {
   /** The logger used throughout the project. */
   private static Logger logger;
   static {
-    logger = Logger.getLogger(Database.LOG_NAME);
+    logger = Logger.getLogger("server");
   }
 
   /**

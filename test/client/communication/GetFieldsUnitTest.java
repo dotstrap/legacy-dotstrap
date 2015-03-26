@@ -25,7 +25,7 @@ import shared.communication.GetFieldsRequest;
 import shared.communication.GetFieldsResponse;
 import shared.model.*;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class GetFieldsUnitTest.
  */
@@ -36,7 +36,7 @@ public class GetFieldsUnitTest {
   /** The logger used throughout the project. */
   static private Logger logger; // @formatter:off
   static {
-    logger = Logger.getLogger(ClientCommunicator.LOG_NAME);
+    logger = Logger.getLogger("server");
   }
 
    private ClientCommunicator clientComm;

@@ -21,7 +21,7 @@ import server.database.dao.UserDAO;
 import shared.communication.ValidateUserRequest;
 import shared.model.User;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class ValidateUserUnitTest.
  */
@@ -29,7 +29,7 @@ public class ValidateUserUnitTest {
   /** The logger used throughout the project. */
   private static Logger   logger;
   static {
-    logger = Logger.getLogger(ClientCommunicator.LOG_NAME);
+    logger = Logger.getLogger("server");
   }
 
   static private ClientCommunicator clientComm; // @formatter:off

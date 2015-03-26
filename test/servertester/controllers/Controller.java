@@ -1,34 +1,25 @@
 package servertester.controllers;
 
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.*;
-import java.util.logging.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import client.communication.ClientCommunicator;
 
+import server.ServerException;
 import servertester.views.IView;
 
 import shared.communication.*;
+
 public class Controller implements IController {
 
-    private IView _view;
+  private IView         _view;
 
-    /** The logger used throughout the project. */
-    private static Logger logger; // @formatter:off
-
-    /** The log name. */
-    public static String LOG_NAME = "client";
+  /** The logger used throughout the project. */
+  private static Logger logger;// @formatter:off
     static {
-      try {
-        FileInputStream is = new FileInputStream("logging.properties");
-        LogManager.getLogManager().readConfiguration(is);
-        logger = Logger.getLogger(LOG_NAME);
-      } catch (IOException e) {
-
-
-      }
-      logger.info("===================Initialized " + LOG_NAME + " log===================");
+      logger = Logger.getLogger("client");
+      logger.info("===============Initialized " + logger.getName() + " log...");
     }
 
     public Controller() {
@@ -93,6 +84,7 @@ public class Controller implements IController {
 
     @Override
     public void executeOperation() {
+
         switch (getView().getOperation()) {
         case VALIDATE_USER:
             validateUser();
@@ -128,19 +120,17 @@ private void validateUser() {
 
     ValidateUserRequest params = null;
     try {
-
       ClientCommunicator clientComm = new ClientCommunicator(port, host);
 
       params = new ValidateUserRequest(args[0], args[1]);
       ValidateUserResponse result = clientComm.validateUser(params);
 
       getView().setResponse(result.toString());
-    } catch (Exception e) {
-       logger.log(Level.SEVERE, "STACKTRACE: ", e);
-       System.out.println("SOOOOOOOOOOOOOOOOOOOOOOOOOO TIRED");
-      getView().setResponse("FAILED\n" + e.toString());
-    } finally {
-      getView().setRequest(params.toString());
+    } catch (ServerException e) {
+     logger.log(Level.SEVERE, "STACKTRACE: ", e);
+     getView().setResponse("FAILED\n");
+    }finally {
+     getView().setRequest(params.toString());
     }
   }
 
@@ -157,7 +147,7 @@ private void validateUser() {
 
       getView().setRequest(params.toString());
       getView().setResponse(result.toString());
-    } catch (Exception e) {
+    } catch (ServerException e) {
       // logger.log(Level.SEVERE, "STACKTRACE: ", e);
       getView().setResponse("FAILED\n");
     } finally {
@@ -245,7 +235,7 @@ private void validateUser() {
       params = new SubmitBatchRequest(args[0], args[1], Integer.parseInt(args[2]), args[3]);
       SubmitBatchResponse result = clientComm.submitBatch(params);
       getView().setResponse(result.toString()); // FIXME: there is no output upon success....
-    } catch (Exception e) {
+    } catch (ServerException e) {
       // getView().setResponse(result.toString());
       getView().setResponse("FAILED\n");
     } finally {

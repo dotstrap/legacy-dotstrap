@@ -17,7 +17,6 @@ import server.database.DatabaseException;
 
 import shared.model.User;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class UserDAO. Interfaces with the database to CRUD users & getAll() users.
  */
@@ -25,7 +24,8 @@ public class UserDAO {
   /** The logger used throughout the project. */
   private static Logger logger;
   static {
-    logger = Logger.getLogger(Database.LOG_NAME);
+    logger = Logger.getLogger("server");
+
   }
 
   /** The db. */
@@ -37,6 +37,7 @@ public class UserDAO {
    * @param db the db
    */
   public UserDAO(Database db) {
+
     this.db = db;
   }
 
@@ -77,10 +78,10 @@ public class UserDAO {
 
   public ArrayList<User> getAll() throws DatabaseException {
     ArrayList<User> allUsers = new ArrayList<User>();
-    PreparedStatement pstmt = null;
     ResultSet resultset = null;
-    try {
-      String query = "SELECT * from User";
+    String query = "SELECT * from User";
+
+    try (PreparedStatement pstmt = db.getConnection().prepareStatement(query) {
       pstmt = db.getConnection().prepareStatement(query);
       resultset = pstmt.executeQuery();
       while (resultset.next()) {
@@ -157,11 +158,11 @@ public class UserDAO {
    * @return the user with the given
    * @throws DatabaseException the database exception
    */
-  public User read(String username) throws DatabaseException {
-    String query = "SELECT * from User WHERE Username = ?";
+  public User read(String username, String password) throws DatabaseException {
+    String query = "SELECT * from User WHERE Username = ? AND Password = ?";
     try (PreparedStatement pstmt = db.getConnection().prepareStatement(query)) {
       pstmt.setString(1, username);
-
+      pstmt.setString(2, password);
       try (ResultSet resultset = pstmt.executeQuery()) {
         User returnUser = new User();
 
@@ -170,7 +171,7 @@ public class UserDAO {
         }
 
         returnUser.setUserId(resultset.getInt(1));
-        returnUser.setUsername(username);
+        returnUser.setUsername(resultset.getString(2));
         returnUser.setPassword(resultset.getString(3));
         returnUser.setFirst(resultset.getString(4));
         returnUser.setLast(resultset.getString(5));
@@ -179,7 +180,7 @@ public class UserDAO {
         returnUser.setCurrBatch(resultset.getInt(8));
 
         if (resultset.next()) {
-          logger.severe("ERROR, read more than one username: " + username + " from database...");
+          logger.log(Level.SEVERE, "ERROR, read more than one username: " + username + " from database...");
         }
 
         return returnUser;

@@ -11,7 +11,7 @@ import java.util.List;
 
 import shared.model.Project;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class GetProjectsResponse.
  */

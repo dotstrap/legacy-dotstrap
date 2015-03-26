@@ -26,7 +26,7 @@ import shared.communication.SearchRequest;
 import shared.communication.SearchResponse;
 import shared.model.*;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class SearchUnitTestTest.
  *
@@ -36,7 +36,7 @@ public class SearchUnitTestTest {
   /** The logger used throughout the project. */
   static private Logger logger; // @formatter:off
   static {
-    logger = Logger.getLogger(ClientCommunicator.LOG_NAME);
+    logger = Logger.getLogger("server");
   }
 
    private ClientCommunicator clientComm;

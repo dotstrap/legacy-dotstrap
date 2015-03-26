@@ -8,7 +8,7 @@
 
 package shared.model;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class User.
  */

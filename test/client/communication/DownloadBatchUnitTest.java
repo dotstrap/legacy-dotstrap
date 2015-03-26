@@ -25,7 +25,7 @@ import shared.communication.DownloadBatchResponse;
 import shared.model.Batch;
 import shared.model.User;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class DownloadBatchUnitTest.
  */
@@ -34,7 +34,7 @@ public class DownloadBatchUnitTest {
 //  /** The logger used throughout the project. */
 //  private static Logger logger; // @formatter:off
 //  static {
-//    logger = Logger.getLogger(ClientCommunicator.LOG_NAME);
+//    logger = Logger.getLogger("server");
 //  }
 
   private static ClientCommunicator clientComm;

@@ -10,7 +10,7 @@ package shared.communication;
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class SearchRequest.
  */

@@ -19,7 +19,7 @@ import server.database.DatabaseException;
 
 import shared.model.Field;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class FieldDAOUnitTest.
  */

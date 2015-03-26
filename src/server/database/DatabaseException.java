@@ -7,7 +7,7 @@
  */
 package server.database;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class DatabaseException.
  */

@@ -31,9 +31,6 @@ public class Importer {
   private static String importDirName;
   private static String importFileName;
 
-  /** The log name. */
-  public static String  LOG_NAME = "importer";
-
   /**
    * The main method
    *
@@ -43,12 +40,12 @@ public class Importer {
     try {
       FileInputStream is = new FileInputStream("logging.properties");
       LogManager.getLogManager().readConfiguration(is);
-      logger = Logger.getLogger(LOG_NAME);
+      logger = Logger.getLogger("importer");
     } catch (IOException e) {
         Logger.getAnonymousLogger().severe("ERROR: unable to load logging properties file...");
         Logger.getAnonymousLogger().severe(e.getMessage());
     }
-    logger.info("===================Initialized " + LOG_NAME + " log===================");
+    logger.info("===============Initialized " + logger.getName() + " log...");
 
     if (args.length != 1) {
       return;
@@ -57,7 +54,7 @@ public class Importer {
     // try opening file
     File xmlImportFile = new File(args[0]);
     if (!xmlImportFile.exists()) {
-        logger.severe("requested file: " + args[0] + " does not exist...");
+        logger.log(Level.SEVERE, "requested file: " + args[0] + " does not exist...");
       return;
     } else {
       importFileName = xmlImportFile.getAbsolutePath();

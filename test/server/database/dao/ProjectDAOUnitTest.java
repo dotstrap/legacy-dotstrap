@@ -18,7 +18,7 @@ import server.database.DatabaseException;
 
 import shared.model.Project;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class ProjectDAOUnitTest.
  */

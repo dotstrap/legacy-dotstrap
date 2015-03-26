@@ -23,7 +23,6 @@ import server.facade.ServerFacade;
 
 import shared.communication.*;
 
-// TODO: Auto-generated Javadoc
 /**
  * Template class for the HTTP handlers for the various operations.
  *
@@ -31,7 +30,13 @@ import shared.communication.*;
  * of operation.
  */
 public abstract class IndexerServerHandler implements HttpHandler {
-  protected static Logger logger = Logger.getLogger(ServerFacade.LOG_NAME); // @formatter:off
+
+  /** The logger used throughout the project. */
+  private static Logger logger;
+  static {
+    logger = Logger.getLogger("server");
+
+  } // @formatter:off
 
   /** The server. */
   protected static String SERVER = HttpServer.class.getName() + " ("
@@ -63,7 +68,7 @@ public abstract class IndexerServerHandler implements HttpHandler {
       request = (Request) xStream.fromXML(exchange.getRequestBody());
       statusCode = doRequest();
 
-      int responseLength = -1;
+      int responseLength = -1; // FIXME: validate user no longer returns HTTP_UNAUTHORIZED
       if (statusCode == HttpURLConnection.HTTP_OK) {
         responseLength = 0;
       }
@@ -111,16 +116,14 @@ public abstract class IndexerServerHandler implements HttpHandler {
    * @param password the password
    * @return True if credentials are valid, false otherwise
    */
-  public static boolean authenticate(String username, String password) throws DatabaseException {
+  public static boolean authenticate(String username, String password) throws DatabaseException,
+      ServerException {
     ValidateUserRequest auth = new ValidateUserRequest();
     auth.setUsername(username);
     auth.setPassword(password);
-    boolean isValid = true; // FIXME: this should default to false...
+    // ServerFacade.validateUser(auth);
+    // logger.warning("INVALID: username: " + username + " & password: " + password + "...");
 
-    ServerFacade.validateUser(auth);
-    logger.warning("INVALID: username: " + username + " & password: " + password + "...");
-    isValid = false;
-
-    return isValid;
+    return (ServerFacade.validateUser(auth) != null);
   }
 }

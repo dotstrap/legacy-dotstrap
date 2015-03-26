@@ -18,7 +18,7 @@ import server.database.DatabaseException;
 
 import shared.model.Batch;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class BatchDAOUnitTest.
  */

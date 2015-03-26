@@ -12,7 +12,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 import org.apache.commons.io.IOUtils;
@@ -20,39 +19,26 @@ import org.apache.commons.io.IOUtils;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 
-import client.ClientException;
+import server.ServerException;
 
 import shared.communication.*;
 import shared.model.Record;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class ClientCommunicator.
  */
 public class ClientCommunicator {
-
   /** The logger used throughout the project. */
-  private static Logger logger; // @formatter:off
-
-  /** The log name. */
-  public static String LOG_NAME = "client";
+  private static Logger logger;
   static {
-    try {
-      FileInputStream is = new FileInputStream("logging.properties");
-      LogManager.getLogManager().readConfiguration(is);
-      logger = Logger.getLogger(LOG_NAME);
-    } catch (IOException e) {
-
-
-    }
-    logger.info("===================Initialized " + LOG_NAME + " log===================");
+    logger = Logger.getLogger("client");
   }
 
-  private  XStream xs = new XStream(new DomDriver());
+  private XStream       xs = new XStream(new DomDriver());
 
-  private String URL_PREFIX;
-  private String host;
-  private int    port; // @formatter:on
+  private String        URL_PREFIX;
+  private String        host;
+  private int           port;
 
   public String getHost() {
     return host;
@@ -98,14 +84,8 @@ public class ClientCommunicator {
    * @param params the params
    * @return the validate user response
    */
-  public ValidateUserResponse validateUser(ValidateUserRequest params)
-      {
-    ValidateUserResponse result = null;
-    try {
-      result = (ValidateUserResponse) doPost("/ValidateUser", params);
-    } catch (Exception e) {
-      // logger.log(Level.SEVERE, "STACKTRACE: ", e);
-    }
+  public ValidateUserResponse validateUser(ValidateUserRequest params) throws ServerException {
+    ValidateUserResponse result = (ValidateUserResponse) doPost("/ValidateUser", params);
     return result;
   }
 
@@ -114,15 +94,15 @@ public class ClientCommunicator {
    *
    * @param creds the creds
    * @return the projects
-   * @throws ClientException the client exception
+   * @throws ServerException the client exception
    */
-  public GetProjectsResponse getProjects(GetProjectsRequest creds) throws ClientException {
+  public GetProjectsResponse getProjects(GetProjectsRequest creds) throws ServerException {
     GetProjectsResponse result = null;
     try {
       result = (GetProjectsResponse) doPost("/GetProjects", creds);
     } catch (Exception e) {
       // logger.log(Level.SEVERE, "STACKTRACE: ", e);
-      throw new ClientException(e);
+      throw new ServerException(e);
     }
     return result;
   }
@@ -132,10 +112,10 @@ public class ClientCommunicator {
    *
    * @param params the params
    * @return the sample batch
-   * @throws ClientException the client exception
+   * @throws ServerException the client exception
    */
   public GetSampleBatchResponse getSampleBatch(GetSampleBatchRequest params)
-      throws ClientException {
+      throws ServerException {
     GetSampleBatchResponse result = null;
     try {
       result = (GetSampleBatchResponse) doPost("/GetSampleImage", params);
@@ -143,7 +123,7 @@ public class ClientCommunicator {
       result.setUrlPrefix(url);
     } catch (Exception e) {
       // logger.log(Level.SEVERE, "STACKTRACE: ", e);
-      throw new ClientException(e);
+      throw new ServerException(e);
     }
     return result;
   }
@@ -153,9 +133,9 @@ public class ClientCommunicator {
    *
    * @param params the params
    * @return the download batch response
-   * @throws ClientException the client exception
+   * @throws ServerException the client exception
    */
-  public DownloadBatchResponse downloadBatch(DownloadBatchRequest params) throws ClientException {
+  public DownloadBatchResponse downloadBatch(DownloadBatchRequest params) throws ServerException {
     DownloadBatchResponse result = null;
     try {
       result = (DownloadBatchResponse) doPost("/DownloadBatch", params);
@@ -163,7 +143,7 @@ public class ClientCommunicator {
       result.setUrlPrefix(url);
     } catch (Exception e) {
       // logger.log(Level.SEVERE, "STACKTRACE: ", e);
-      throw new ClientException(e);
+      throw new ServerException(e);
     }
     return result;
   }
@@ -173,15 +153,15 @@ public class ClientCommunicator {
    *
    * @param params the params
    * @return the submit batch response
-   * @throws ClientException the client exception
+   * @throws ServerException the client exception
    */
-  public SubmitBatchResponse submitBatch(SubmitBatchRequest params) throws ClientException {
+  public SubmitBatchResponse submitBatch(SubmitBatchRequest params) throws ServerException {
     SubmitBatchResponse result = null;
     try {
       result = (SubmitBatchResponse) doPost("/SubmitBatch", params);
     } catch (Exception e) {
       // logger.log(Level.SEVERE, "STACKTRACE: ", e);
-      throw new ClientException(e);
+      throw new ServerException(e);
     }
     return result;
   }
@@ -191,15 +171,15 @@ public class ClientCommunicator {
    *
    * @param params the params
    * @return the fields
-   * @throws ClientException the client exception
+   * @throws ServerException the client exception
    */
-  public GetFieldsResponse getFields(GetFieldsRequest params) throws ClientException {
+  public GetFieldsResponse getFields(GetFieldsRequest params) throws ServerException {
     GetFieldsResponse result = null;
     try {
       result = (GetFieldsResponse) doPost("/GetFields", params);
     } catch (Exception e) {
       // logger.log(Level.SEVERE, "STACKTRACE: ", e);
-      throw new ClientException(e);
+      throw new ServerException(e);
     }
     return result;
   }
@@ -209,9 +189,9 @@ public class ClientCommunicator {
    *
    * @param params the params
    * @return the search response
-   * @throws ClientException the client exception
+   * @throws ServerException the client exception
    */
-  public SearchResponse search(SearchRequest params) throws ClientException {
+  public SearchResponse search(SearchRequest params) throws ServerException {
     SearchResponse result;
     try {
       result = (SearchResponse) doPost("/Search", params);
@@ -223,7 +203,7 @@ public class ClientCommunicator {
       result.setUrls(urls);
     } catch (Exception e) {
       // logger.log(Level.SEVERE, "STACKTRACE: ", e);
-      throw new ClientException(e);
+      throw new ServerException(e);
     }
     return result;
   }
@@ -233,9 +213,9 @@ public class ClientCommunicator {
    *
    * @param params the params
    * @return the download file response
-   * @throws ClientException the client exception
+   * @throws ServerException the client exception
    */
-  public DownloadFileResponse downloadFile(DownloadFileRequest params) throws ClientException {
+  public DownloadFileResponse downloadFile(DownloadFileRequest params) throws ServerException {
     return new DownloadFileResponse(doGet(URL_PREFIX + File.separator + params.getUrl()));
   }
 
@@ -244,9 +224,9 @@ public class ClientCommunicator {
    *
    * @param urlPath the url path
    * @return the byte[]
-   * @throws ClientException the client exception
+   * @throws ServerException the client exception
    */
-  public byte[] doGet(String urlPath) throws ClientException {
+  public byte[] doGet(String urlPath) throws ServerException {
     byte[] result = null;
     try {
       URL url = new URL(urlPath);
@@ -262,18 +242,16 @@ public class ClientCommunicator {
       }
     } catch (Exception e) {
       // logger.log(Level.SEVERE, "STACKTRACE: ", e);
-      throw new ClientException(e);
+      throw new ServerException(e);
     }
     return result;
   }
 
-  private Response doPost(String postCommand, Request request) throws ClientException {
+  private Response doPost(String postCommand, Request request) throws ServerException {
     assert postCommand != null;
     assert request != null;
-    OutputStream requestBody = null;
-    URL url;
     try {
-      url = new URL(URL_PREFIX + postCommand);
+      URL url = new URL(URL_PREFIX + postCommand);
       HttpURLConnection connection = (HttpURLConnection) url.openConnection();
       connection.setRequestMethod("POST");
       connection.setDoInput(true);
@@ -282,7 +260,7 @@ public class ClientCommunicator {
 
       connection.connect();
 
-      requestBody = connection.getOutputStream();
+      OutputStream requestBody = connection.getOutputStream();
       xs.toXML(request, requestBody);
       requestBody.close();
 
@@ -292,12 +270,11 @@ public class ClientCommunicator {
         return r;
       } else {
         connection.getInputStream().close();
-        throw new ClientException(String.format("POST FAILED: %s HTTP code: %d", postCommand,
+        throw new ServerException(String.format("POST FAILED: %s HTTP code: %d", postCommand,
             connection.getResponseCode()));
       }
     } catch (Exception e) {
-      // logger.log(Level.SEVERE, "STACKTRACE: ", e);
-      throw new ClientException(e);
+      throw new ServerException(e);
     }
   }
 }

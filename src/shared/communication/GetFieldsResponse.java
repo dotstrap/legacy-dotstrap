@@ -12,7 +12,7 @@ import java.util.List;
 import shared.model.Field;
 import shared.model.User;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class GetFieldsResponse.
  */

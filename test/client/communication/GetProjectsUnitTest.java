@@ -27,7 +27,7 @@ import shared.communication.GetProjectsResponse;
 import shared.model.Project;
 import shared.model.User;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class GetProjectsUnitTest.
  */
@@ -39,7 +39,7 @@ public class GetProjectsUnitTest {
   /** The logger used throughout the project. */
   private static Logger logger; // @formatter:off
   static {
-    logger = Logger.getLogger(ClientCommunicator.LOG_NAME);
+    logger = Logger.getLogger("server");
   }
 
    private ClientCommunicator clientComm;

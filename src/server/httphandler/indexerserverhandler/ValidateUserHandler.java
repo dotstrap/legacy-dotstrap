@@ -36,6 +36,7 @@ public class ValidateUserHandler extends IndexerServerHandler {
 
     this.setResponse(response);
 
-    return response.isValid() ? HttpURLConnection.HTTP_OK : HttpURLConnection.HTTP_UNAUTHORIZED;
+//    return response.getUser() != null ? HttpURLConnection.HTTP_OK : HttpURLConnection.HTTP_UNAUTHORIZED;
+    return HttpURLConnection.HTTP_OK;
   }
 }

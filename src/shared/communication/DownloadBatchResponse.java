@@ -1,7 +1,7 @@
 /**
  * DownloadBatchResponse.java
  * JRE v1.8.0_40
- * 
+ *
  * Created by William Myers on Mar 24, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
@@ -12,7 +12,6 @@ import java.util.List;
 
 import shared.model.*;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class DownloadBatchResponse.
  */
@@ -106,25 +105,29 @@ public class DownloadBatchResponse implements Response {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append(batch.getBatchId() + "\n");
-    sb.append(project.getProjectId() + "\n");
-    sb.append(urlPrefix + "/" + batch.getFilePath() + "\n");
-    sb.append(project.getFirstYCoord() + "\n");
-    sb.append(project.getRecordHeight() + "\n");
-    sb.append(project.getRecordsPerBatch() + "\n");
-    sb.append(fields.size() + "\n");
-    int i = 1;
-    for (Field f : fields) {
-      sb.append(f.getFieldId() + "\n");
-      sb.append(i + "\n");
-      sb.append(f.getTitle() + "\n");
-      sb.append(urlPrefix + "/" + f.getHelpURL() + "\n");
-      sb.append(f.getXCoord() + "\n");
-      sb.append(f.getWidth() + "\n");
-      if (f.getKnownData().length() > 0) {
-        sb.append(urlPrefix + "/" + f.getKnownData() + "\n");
+    if (batch != null) {
+      sb.append(batch.getBatchId() + "\n");
+      sb.append(project.getProjectId() + "\n");
+      sb.append(urlPrefix + "/" + batch.getFilePath() + "\n");
+      sb.append(project.getFirstYCoord() + "\n");
+      sb.append(project.getRecordHeight() + "\n");
+      sb.append(project.getRecordsPerBatch() + "\n");
+      sb.append(fields.size() + "\n");
+      int i = 1;
+      for (Field f : fields) {
+        sb.append(f.getFieldId() + "\n");
+        sb.append(i + "\n");
+        sb.append(f.getTitle() + "\n");
+        sb.append(urlPrefix + "/" + f.getHelpURL() + "\n");
+        sb.append(f.getXCoord() + "\n");
+        sb.append(f.getWidth() + "\n");
+        if (f.getKnownData().length() > 0) {
+          sb.append(urlPrefix + "/" + f.getKnownData() + "\n");
+        }
+        i++;
       }
-      i++;
+    } else {
+      sb.append("FAILED\n");
     }
     return sb.toString();
   }

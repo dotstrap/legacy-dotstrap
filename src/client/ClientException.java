@@ -7,7 +7,7 @@
  */
 package client;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class ClientException.
  */

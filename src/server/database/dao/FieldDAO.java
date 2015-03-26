@@ -17,7 +17,7 @@ import server.database.DatabaseException;
 
 import shared.model.Field;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class FieldDAO. Interfaces with the database to CRUD fields & getAll() fields.
  */
@@ -26,7 +26,7 @@ public class FieldDAO {
   /** The logger used throughout the project. */
   private static Logger logger;
   static {
-    logger = Logger.getLogger(Database.LOG_NAME);
+    logger = Logger.getLogger("server");
   }
 
   /** The db. */

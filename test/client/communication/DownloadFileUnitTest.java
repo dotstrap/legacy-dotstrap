@@ -22,7 +22,7 @@ import server.database.DatabaseException;
 import shared.communication.DownloadFileRequest;
 import shared.communication.DownloadFileResponse;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class DownloadFileUnitTest.
  */
@@ -30,7 +30,7 @@ public class DownloadFileUnitTest {
   /** The logger used throughout the project. */
   private static Logger      logger;
   static {
-    logger = Logger.getLogger(ClientCommunicator.LOG_NAME);
+    logger = Logger.getLogger("server");
   }
 
   private ClientCommunicator clientComm;

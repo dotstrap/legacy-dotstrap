@@ -22,16 +22,15 @@ import server.database.DatabaseException;
 import shared.communication.*;
 import shared.model.*;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class ServerFacade.
  */
 public class ServerFacade {
   /** The logger used throughout the project. */
   private static Logger logger;
-
-  /** The log name. */
-  public static String  LOG_NAME = "server";
+  static {
+    logger = Logger.getLogger("server");
+  }
 
   /**
    * Initialize.
@@ -51,36 +50,25 @@ public class ServerFacade {
    *
    * @param request the request
    * @return the validate user response
+   * @throws ServerException
    */
   public static ValidateUserResponse validateUser(ValidateUserRequest request)
-      {
+      throws ServerException {
     Database db = new Database();
-    boolean isValid = false;
-    String username = request.getUsername();
-    String password = request.getPassword();
     User user = null;
 
     try {
       db.startTransaction();
-      user = db.getUserDAO().read(username);
-      if (user != null){
-        System.out.println("SETTING ISVALID....");
-        isValid = user.getPassword().equals(password);
-      }
+      user = db.getUserDAO().read(request.getUsername(), request.getPassword());
     } catch (DatabaseException e) {
-      System.out.println("HELPPPP I HAVE BEEN CAUGHT");
       logger.log(Level.SEVERE, "STACKTRACE: ", e);
-      //throw new ServerException("ERROR reading from database to validate username: " + username);
+      throw new ServerException("ERROR reading from database to validate username: "
+          + request.getUsername());
     } finally {
-      System.out.println("UGHHHHHH FINALLLLLY");
       db.endTransaction(true);
     }
 
-    System.out.println("MADE IT OUT OF CATCH CRAP");
-    if (!isValid)
-      user = new User();
-
-    ValidateUserResponse result = new ValidateUserResponse(user, isValid);
+    ValidateUserResponse result = new ValidateUserResponse(user);
     return result;
   }
 
@@ -155,7 +143,7 @@ public class ServerFacade {
       db.startTransaction();
 
       // update the batch & user to reflect downloaded batch
-      User currUser = db.getUserDAO().read(request.getUsername());
+      User currUser = db.getUserDAO().read(request.getUsername(), request.getPassword());
       int currUserId = currUser.getUserId();
 
       if (currUser.getCurrBatch() < 1) {
@@ -174,7 +162,7 @@ public class ServerFacade {
         fields = db.getFieldDAO().getAll(projectId);
       } else {
         db.endTransaction(false);
-        throw new ServerException("ERROR: user already has a batch checked out...");
+        logger.log(Level.WARNING, "user already has a batch checked out...");
       }
 
       db.endTransaction(true);
@@ -232,7 +220,7 @@ public class ServerFacade {
     Database db = new Database();
     try {
       db.startTransaction();
-      User user = db.getUserDAO().read(request.getUsername());
+      User user = db.getUserDAO().read(request.getUsername(), request.getPassword());
 
       if (user.getCurrBatch() == request.getBatchID()) {
         String input = request.getFieldValues();

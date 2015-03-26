@@ -17,7 +17,7 @@ import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.Test;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class ServerUnitTests.
  */

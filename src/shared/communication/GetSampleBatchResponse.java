@@ -11,7 +11,7 @@ import java.net.URL;
 
 import shared.model.Batch;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class GetSampleBatchResponse.
  */

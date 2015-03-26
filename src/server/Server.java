@@ -18,7 +18,6 @@ import com.sun.net.httpserver.HttpServer;
 import server.facade.ServerFacade;
 import server.httphandler.indexerserverhandler.*;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Server. Initializes the server's logs (used in all non-testing classes) Creates
  * HTTPHandler Objects Bootstraps the HTTP Server
@@ -29,7 +28,6 @@ public class Server {
   private static int    DEFAULT_PORT            = 39640;
   /** The logger used throughout the project. */
   private static Logger logger;
-  public static String LOG_NAME                = "server";
 
   /**
    * Entry point for the Indexer Server program.
@@ -37,15 +35,17 @@ public class Server {
    * @param args the port to run the indexer server on
    */
   public static void main(String[] args) {
-    int portNum = 39640;
+    int portNum = DEFAULT_PORT;
     try {
       FileInputStream is = new FileInputStream("logging.properties");
       LogManager.getLogManager().readConfiguration(is);
-      logger = Logger.getLogger(LOG_NAME);
+      logger = Logger.getLogger("server");
     } catch (IOException e) {
-
+      Logger.getAnonymousLogger().severe(
+          "ERROR: unable to load logging properties file from " + Server.class.getSimpleName());
+      Logger.getAnonymousLogger().severe(e.getMessage());
     }
-    logger.info("===================Initialized " + LOG_NAME + " log===================");
+   logger.info("===============Initialized " + logger.getName() + " log...");
 
     if (args == null) {
       logger.info("No port number specified; using default port: " + DEFAULT_PORT + "....");
@@ -54,11 +54,11 @@ public class Server {
       try {
         portNum = Integer.parseInt(args[0]);
       } catch (NumberFormatException e) {
-
+        logger.log(Level.SEVERE, "Invalid port number format...");
         return;
       }
     } else {
-
+      logger.log(Level.SEVERE, "Invalid port number argument...");
       return;
     }
 
@@ -69,6 +69,8 @@ public class Server {
       logger.log(Level.SEVERE, "STACKTRACE: ", e);
     }
   }
+
+
 
 
 
@@ -119,7 +121,7 @@ public class Server {
     try {
       server = HttpServer.create(new InetSocketAddress(portNum), MAX_WAITING_CONNECTIONS);
     } catch (IOException e) {
-
+      logger.log(Level.SEVERE, "Failed to initialize server on port: " + portNum + "...");
       logger.log(Level.SEVERE, "STACKTRACE: ", e);
       throw new ServerException(e);
     }

@@ -12,10 +12,9 @@ import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import server.Server;
 import server.database.dao.*;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class Database.
  */
@@ -37,12 +36,10 @@ public class Database {
       + DB_NAME;
 
   /** The logger used throughout the project. */
-  private static Logger      logger;
-
-  /** The log name. */
-  public static String LOG_NAME = Server.LOG_NAME;
+  private static Logger logger;
   static {
-    logger = Logger.getLogger(LOG_NAME);
+    logger = Logger.getLogger("server");
+   
   }
 
   // @formatter:on

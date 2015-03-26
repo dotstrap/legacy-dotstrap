@@ -24,7 +24,7 @@ import shared.communication.SubmitBatchRequest;
 import shared.communication.SubmitBatchResponse;
 import shared.model.*;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class SubmitBatchUnitTest.
  */
@@ -35,7 +35,7 @@ public class SubmitBatchUnitTest {
   /** The logger used throughout the project. */
   private static Logger logger; // @formatter:off
   static {
-    logger = Logger.getLogger(ClientCommunicator.LOG_NAME);
+    logger = Logger.getLogger("server");
   }
 
   private static ClientCommunicator clientComm;

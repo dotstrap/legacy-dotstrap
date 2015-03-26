@@ -18,7 +18,7 @@ import server.database.DatabaseException;
 
 import shared.model.Record;
 
-// TODO: Auto-generated Javadoc
+
 /**
  * The Class RecordDAO.
  */
@@ -30,7 +30,7 @@ public class RecordDAO {
   /** The logger used throughout the project. */
   private static Logger logger;
   static {
-    logger = Logger.getLogger(Database.LOG_NAME);
+    logger = Logger.getLogger("server");
   }
 
   /**

@@ -94,7 +94,7 @@
     <!-- ant import -Dfile=<INDEXER_DATA_XML_FILE> -->
     <!-- EXAMPLE: ant import -Dfile=dir1/dir2/indexer_data.xml -->
     <target name="import" depends="compile" description="import indexer data">
-        <copy file="${empty-db-file}" tofile="${db-file}" overwrite="true"/>
+        <!--<copy file="${empty-db-file}" tofile="${db-file}" overwrite="true"/>-->
         <java classname="server/importer/Importer" fork="yes">
             <classpath>
                 <path refid="all-classpath"/>

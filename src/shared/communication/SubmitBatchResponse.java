@@ -7,7 +7,6 @@
  */
 package shared.communication;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class SubmitBatchResponse.
  */
