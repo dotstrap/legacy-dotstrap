@@ -17,7 +17,6 @@ import server.database.DatabaseException;
 
 import shared.model.Field;
 
-
 /**
  * The Class FieldDAO. Interfaces with the database to CRUD fields & getAll() fields.
  */
@@ -47,11 +46,8 @@ public class FieldDAO {
    * @throws DatabaseException the database exception
    */
   public void initTable() throws DatabaseException {
-    Statement stmt1 = null;
-    Statement stmt2 = null;
-    String dropFieldTable = "DROP TABLE IF EXISTS Field";
-    // @formatter:off
-    String createFieldTable =
+    String dropTable = "DROP TABLE IF EXISTS Field";
+    String createTable =// @formatter:off
         "CREATE TABLE Field ("
             + "FieldId INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE, "
             + "ProjectId INTEGER NOT NULL, "
@@ -61,98 +57,80 @@ public class FieldDAO {
             + "XCoordinate INTEGER NOT NULL, "
             + "Width INTEGER NOT NULL, "
             + "ColumnNumber INTEGER NOT NULL)";     // @formatter:on
-    try {
-      stmt1 = db.getConnection().createStatement();
-      stmt1.executeUpdate(dropFieldTable);
+    try (Statement stmt1 = db.getConnection().createStatement();
+        Statement stmt2 = db.getConnection().createStatement()) {
+      stmt1.executeUpdate(dropTable);
 
-      stmt2 = db.getConnection().createStatement();
-      stmt2.executeUpdate(createFieldTable);
-    } catch (Exception e) {
-      logger.log(Level.SEVERE, e.toString());
+      stmt2.executeUpdate(createTable);
+    } catch (SQLException e) {
       throw new DatabaseException(e);
-    } finally {
-      Database.closeSafely(stmt1);
-      Database.closeSafely(stmt2);
     }
   }
 
   public ArrayList<Field> getAll() throws DatabaseException {
+    String query = "SELECT * from Field";
 
-    ArrayList<Field> allFields = new ArrayList<Field>();
-    PreparedStatement pstmt = null;
-    ResultSet resultset = null;
-    try {
-      String query = "SELECT * from Field";
-      pstmt = db.getConnection().prepareStatement(query);
-      resultset = pstmt.executeQuery();
-      while (resultset.next()) {
-        Field resultField = new Field();
+    try (PreparedStatement pstmt = db.getConnection().prepareStatement(query)) {
 
-        resultField.setFieldId(resultset.getInt("FieldId"));
-        resultField.setProjectId(resultset.getInt("ProjectId"));
-        resultField.setTitle(resultset.getString("Title"));
+      try (ResultSet resultset = pstmt.executeQuery()) {
 
-        resultField.setKnownData(resultset.getString("KnownData"));
-        resultField.setHelpURL(resultset.getString("HelpURL"));
+        ArrayList<Field> allFields = new ArrayList<Field>();
+        while (resultset.next()) {
+          Field resultField = new Field();
 
-        resultField.setXCoord(resultset.getInt("XCoordinate"));
-        resultField.setWidth(resultset.getInt("Width"));
-        resultField.setWidth(resultset.getInt("ColumnNumber"));
+          resultField.setFieldId(resultset.getInt("FieldId"));
+          resultField.setProjectId(resultset.getInt("ProjectId"));
+          resultField.setTitle(resultset.getString("Title"));
 
-        allFields.add(resultField);
+          resultField.setKnownData(resultset.getString("KnownData"));
+          resultField.setHelpURL(resultset.getString("HelpURL"));
+
+          resultField.setXCoord(resultset.getInt("XCoordinate"));
+          resultField.setWidth(resultset.getInt("Width"));
+          resultField.setWidth(resultset.getInt("ColumnNumber"));
+
+          allFields.add(resultField);
+        }
+        return allFields;
       }
-    } catch (Exception e) {
-      logger.log(Level.SEVERE, e.toString());
+    } catch (SQLException e) {
       throw new DatabaseException(e);
-    } finally {
-      Database.closeSafely(pstmt);
-      Database.closeSafely(resultset);
     }
-    return allFields;
   }
 
-  /**
-   * Gets the all.
-   *
-   * @param projectId the project id
-   * @return the all
-   * @throws DatabaseException the database exception
-   */
   public ArrayList<Field> getAll(int projectId) throws DatabaseException {
+    String query = "SELECT * from Field WHERE ProjectId = ?";
 
-    ArrayList<Field> allFields = new ArrayList<Field>();
-    PreparedStatement pstmt = null;
-    ResultSet resultset = null;
-    try {
-      String query = "SELECT * from Field WHERE ProjectId = ?";
-      pstmt = db.getConnection().prepareStatement(query);
-      pstmt.setInt(1, projectId);
-      resultset = pstmt.executeQuery();
-      while (resultset.next()) {
-        Field resultField = new Field();
+    try (PreparedStatement pstmt = db.getConnection().prepareStatement(query)) {
 
-        resultField.setFieldId(resultset.getInt("FieldId"));
-        resultField.setProjectId(projectId);
-        resultField.setTitle(resultset.getString("Title"));
+      try (ResultSet resultset = pstmt.executeQuery()) {
+        pstmt.setInt(1, projectId);
 
-        resultField.setKnownData(resultset.getString("KnownData"));
-        resultField.setHelpURL(resultset.getString("HelpURL"));
+        ArrayList<Field> allFields = new ArrayList<Field>();
+        while (resultset.next()) {
+          Field resultField = new Field();
 
-        resultField.setXCoord(resultset.getInt("XCoordinate"));
-        resultField.setWidth(resultset.getInt("Width"));
-        resultField.setWidth(resultset.getInt("ColumnNumber"));
+          resultField.setFieldId(resultset.getInt("FieldId"));
+          // resultField.setProjectId(projectId);
+          resultField.setProjectId(resultset.getInt("ProjectId"));
+          resultField.setTitle(resultset.getString("Title"));
 
-        allFields.add(resultField);
+          resultField.setKnownData(resultset.getString("KnownData"));
+          resultField.setHelpURL(resultset.getString("HelpURL"));
+
+          resultField.setXCoord(resultset.getInt("XCoordinate"));
+          resultField.setWidth(resultset.getInt("Width"));
+          resultField.setWidth(resultset.getInt("ColumnNumber"));
+
+          allFields.add(resultField);
+        }
+        return allFields;
       }
-    } catch (Exception e) {
-      logger.log(Level.SEVERE, e.toString());
+    } catch (SQLException e) {
       throw new DatabaseException(e);
-    } finally {
-      Database.closeSafely(pstmt);
-      Database.closeSafely(resultset);
     }
-    return allFields;
   }
+
 
   /**
    * Gets the id for the field of a project at a certain column.

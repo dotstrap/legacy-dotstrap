@@ -46,11 +46,8 @@ public class UserDAO {
    * @throws DatabaseException the database exception
    */
   public void initTable() throws DatabaseException {
-    Statement stmt1 = null;
-    Statement stmt2 = null;
-
-    String dropUserTable = "DROP TABLE IF EXISTS User"; // @formatter:off
-    String createUserTable =
+    String dropTable = "DROP TABLE IF EXISTS User";// @formatter:off
+    String createTable =
         "CREATE TABLE User ("
             + "UserId INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE, "
             + "Username TEXT NOT NULL UNIQUE, "
@@ -60,18 +57,13 @@ public class UserDAO {
             + "Email TEXT NOT NULL UNIQUE, "
             + "RecordCount INTEGER NOT NULL, "
             + "CurrentBatchId INTEGER NOT NULL)"; // @formatter:on
-    try {
-      stmt1 = db.getConnection().createStatement();
-      stmt1.executeUpdate(dropUserTable);
+    try (Statement stmt1 = db.getConnection().createStatement();
+        Statement stmt2 = db.getConnection().createStatement()) {
+      stmt1.executeUpdate(dropTable);
 
-      stmt2 = db.getConnection().createStatement();
-      stmt2.executeUpdate(createUserTable);
-    } catch (Exception e) {
-      logger.log(Level.SEVERE, e.toString());
+      stmt2.executeUpdate(createTable);
+    } catch (SQLException e) {
       throw new DatabaseException(e);
-    } finally {
-      Database.closeSafely(stmt1);
-      Database.closeSafely(stmt2);
     }
   }
 
@@ -85,6 +77,7 @@ public class UserDAO {
         ArrayList<User> allUsers = new ArrayList<User>();
         while (resultset.next()) {
           User resultUser = new User();
+
 
           resultUser.setUserId(resultset.getInt("UserId"));
           resultUser.setUsername(resultset.getString("Username"));
@@ -176,7 +169,7 @@ public class UserDAO {
         returnUser.setCurrBatch(resultset.getInt(8));
 
         if (resultset.next()) {
-          logger.log(Level.SEVERE, "ERROR, read more than one username: " + username
+          throw new DatabaseException("Read more than one username: " + username
               + " from database...");
         }
 
@@ -273,6 +266,7 @@ public class UserDAO {
    */
   public void delete(User user) throws DatabaseException {
     String query = "DELETE from User WHERE Username = ? AND Password = ?";
+
     try (PreparedStatement pstmt = db.getConnection().prepareStatement(query)) {
       pstmt.setString(1, user.getUsername());
       pstmt.setString(2, user.getPassword());

@@ -1,7 +1,7 @@
 /**
  * UserDAOUnitTest.java
  * JRE v1.8.0_40
- * 
+ *
  * Created by William Myers on Mar 24, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
@@ -18,7 +18,6 @@ import server.database.DatabaseException;
 
 import shared.model.User;
 
-
 /**
  * The Class UserDAOUnitTest.
  */
@@ -30,7 +29,6 @@ public class UserDAOUnitTest {
    */
   @BeforeClass
   public static void setUpBeforeClass() throws Exception {
-
     // Load database driver
     Database.initDriver();
   }
@@ -47,14 +45,8 @@ public class UserDAOUnitTest {
 
   private Database db;
   private UserDAO  testUserDAO;
-
-  /** The user test1. */
   User             userTest1;
-
-  /** The user test2. */
   User             userTest2;
-
-  /** The user test3. */
   User             userTest3;
 
   /**
@@ -64,7 +56,6 @@ public class UserDAOUnitTest {
    */
   @Before
   public void setUp() throws Exception {
-
     // Prepare database for test case
     db = new Database();
     db.startTransaction();
@@ -93,8 +84,11 @@ public class UserDAOUnitTest {
 
     // Roll back this transaction so changes are undone
     db.endTransaction(false);
-    db = null;
+    userTest1 = null;
+    userTest2 = null;
+    userTest3 = null;
     testUserDAO = null;
+    db = null;
   }
 
   /**

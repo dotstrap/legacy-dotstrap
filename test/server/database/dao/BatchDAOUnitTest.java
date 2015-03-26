@@ -1,7 +1,7 @@
 /**
  * BatchDAOUnitTest.java
  * JRE v1.8.0_40
- * 
+ *
  * Created by William Myers on Mar 24, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
@@ -18,7 +18,6 @@ import server.database.DatabaseException;
 
 import shared.model.Batch;
 
-
 /**
  * The Class BatchDAOUnitTest.
  */
@@ -30,7 +29,6 @@ public class BatchDAOUnitTest {
    */
   @BeforeClass
   public static void setUpBeforeClass() throws Exception {
-
     // Load database drivers
     Database.initDriver();
   }
@@ -48,9 +46,9 @@ public class BatchDAOUnitTest {
 
   private Database db;
   private BatchDAO testBatchDAO;
-  private Batch    batchTest1;
-  private Batch    batchTest2;
-  private Batch    batchTest3;
+  Batch            batchTest1;
+  Batch            batchTest2;
+  Batch            batchTest3;
 
   /**
    * Sets the database up.
@@ -71,6 +69,10 @@ public class BatchDAOUnitTest {
     testBatchDAO.create(batchTest1);
     testBatchDAO.create(batchTest2);
     testBatchDAO.create(batchTest3);
+
+    List<Batch> allBatches = testBatchDAO.getAll();
+    assertEquals(3, allBatches.size());
+
   }
 
   /**
@@ -80,11 +82,14 @@ public class BatchDAOUnitTest {
    */
   @After
   public void tearDown() throws Exception {
-
-    // Roll back this transaction so changes are undone
     db.endTransaction(false);
-    db = null;
+
+    batchTest1 = null;
+    batchTest2 = null;
+    batchTest3 = null;
     testBatchDAO = null;
+    db = null;
+
   }
 
   /**

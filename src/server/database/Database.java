@@ -14,11 +14,11 @@ import java.util.logging.Logger;
 
 import server.database.dao.*;
 
-
 /**
  * The Class Database.
  */
 public class Database {
+
 // @formatter:off
   /** The database name. */
   public static String DB_NAME            = "IndexerServer.sqlite";
@@ -39,7 +39,7 @@ public class Database {
   private static Logger logger;
   static {
     logger = Logger.getLogger("server");
-   
+
   }
 
   // @formatter:on
@@ -172,7 +172,7 @@ public class Database {
         }
       } catch (SQLException e) {
         logger.log(Level.SEVERE, "STACKTRACE: ", e);
-        //throw new DatabaseException(e.toString()); // FIXME: should this through a db exception?
+        // throw new DatabaseException(e.toString()); // FIXME: should this through a db exception?
       } finally {
         closeSafely(connection);
         connection = null;
