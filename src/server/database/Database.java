@@ -164,7 +164,7 @@ public class Database {
    * @param shouldCommit - commit or rollback transaction?
    * @throws DatabaseException
    */
-  public void endTransaction(boolean shouldCommit) throws DatabaseException {
+  public void endTransaction(boolean shouldCommit) {
     // Commit or rollback the transaction and finally close the connection
     if (connection != null) {
       try {
@@ -175,7 +175,7 @@ public class Database {
         }
       } catch (SQLException e) {
         logger.log(Level.SEVERE, "STACKTRACE: ", e);
-        throw new DatabaseException(e.toString());
+        //throw new DatabaseException(e.toString()); // FIXME: should this through a db exception?
       } finally {
         closeSafely(connection);
         connection = null;
@@ -205,7 +205,7 @@ public class Database {
   /**
    * Close safely.
    *
-   * @param c the c
+   * @param c the database connection
    */
   public static void closeSafely(Connection c) {
     if (c != null) {

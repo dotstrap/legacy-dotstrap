@@ -1,7 +1,7 @@
 /**
  * SearchHandler.java
  * JRE v1.8.0_40
- * 
+ *
  * Created by William Myers on Mar 24, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
@@ -14,7 +14,6 @@ import server.database.DatabaseException;
 import server.facade.ServerFacade;
 import server.httphandler.IndexerServerHandler;
 
-import shared.InvalidCredentialsException;
 import shared.communication.SearchRequest;
 import shared.communication.SearchResponse;
 
@@ -24,11 +23,11 @@ import shared.communication.SearchResponse;
 public class SearchHandler extends IndexerServerHandler {
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see server.httphandler.IndexerServerHandler#doRequest()
    */
   @Override
-  protected int doRequest() throws ServerException, DatabaseException, InvalidCredentialsException {
+  protected int doRequest() throws ServerException, DatabaseException {
     SearchRequest request = (SearchRequest) getRequest();
     SearchResponse response;
 

@@ -1,8 +1,9 @@
 package servertester.controllers;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.logging.*;
 
 import client.communication.ClientCommunicator;
 
@@ -12,22 +13,39 @@ import shared.communication.*;
 public class Controller implements IController {
 
     private IView _view;
-    
+
+    /** The logger used throughout the project. */
+    private static Logger logger; // @formatter:off
+
+    /** The log name. */
+    public static String LOG_NAME = "client";
+    static {
+      try {
+        FileInputStream is = new FileInputStream("logging.properties");
+        LogManager.getLogManager().readConfiguration(is);
+        logger = Logger.getLogger(LOG_NAME);
+      } catch (IOException e) {
+
+
+      }
+      logger.info("===================Initialized " + LOG_NAME + " log===================");
+    }
+
     public Controller() {
         return;
     }
-    
+
     public IView getView() {
         return _view;
     }
-    
+
     public void setView(IView value) {
         _view = value;
     }
-    
+
     // IController methods
     //
-    
+
     @Override
     public void initialize() {
         getView().setHost("localhost");
@@ -40,7 +58,7 @@ public class Controller implements IController {
         ArrayList<String> paramNames = new ArrayList<String>();
         paramNames.add("User");
         paramNames.add("Password");
-        
+
         switch (getView().getOperation()) {
         case VALIDATE_USER:
             break;
@@ -67,7 +85,7 @@ public class Controller implements IController {
             assert false;
             break;
         }
-        
+
         getView().setRequest("");
         getView().setResponse("");
         getView().setParameterNames(paramNames.toArray(new String[paramNames.size()]));
@@ -102,30 +120,26 @@ public class Controller implements IController {
             break;
         }
     }
-    
+
 private void validateUser() {
     String[] args = getView().getParameterValues();
     String port = getView().getPort();
-    System.out.print("\nPORT: " + port);
+    String host = getView().getHost();
+
     ValidateUserRequest params = null;
     try {
-      String host = getView().getHost();
-      System.out.print("\nHOST: " + host);
+
       ClientCommunicator clientComm = new ClientCommunicator(port, host);
-      System.out.print("\nbuilt client comm");
+
       params = new ValidateUserRequest(args[0], args[1]);
       ValidateUserResponse result = clientComm.validateUser(params);
-      System.out.print("after validateUserResponse");
-      getView().setRequest(params.toString());
-      System.out.print("\nparams: " + params.toString());
+
       getView().setResponse(result.toString());
-      System.out.print("\nresult: " + result.toString());
     } catch (Exception e) {
-      System.out.print("\ncaught exception!!!");
-      // logger.log(Level.SEVERE, "STACKTRACE: ", e);
-      getView().setResponse("FAILED\n");
+       logger.log(Level.SEVERE, "STACKTRACE: ", e);
+       System.out.println("SOOOOOOOOOOOOOOOOOOOOOOOOOO TIRED");
+      getView().setResponse("FAILED\n" + e.toString());
     } finally {
-      System.out.print("\nparams: " + params.toString());
       getView().setRequest(params.toString());
     }
   }

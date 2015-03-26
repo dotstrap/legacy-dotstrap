@@ -45,19 +45,19 @@ public class Importer {
       LogManager.getLogManager().readConfiguration(is);
       logger = Logger.getLogger(LOG_NAME);
     } catch (IOException e) {
-
+        Logger.getAnonymousLogger().severe("ERROR: unable to load logging properties file...");
+        Logger.getAnonymousLogger().severe(e.getMessage());
     }
     logger.info("===================Initialized " + LOG_NAME + " log===================");
 
     if (args.length != 1) {
-
       return;
     }
 
     // try opening file
     File xmlImportFile = new File(args[0]);
     if (!xmlImportFile.exists()) {
-
+        logger.severe("requested file: " + args[0] + " does not exist...");
       return;
     } else {
       importFileName = xmlImportFile.getAbsolutePath();
@@ -68,7 +68,10 @@ public class Importer {
       File dest = new File(importDirName);
       // does nothing if import directory is same as the destination directory, otherwise copy the
       // directory into the projects' directory structure
-      FileUtils.copyDirectory(xmlImportFile.getParentFile(), dest);
+      if (!xmlImportFile.getParentFile().getCanonicalPath().equals(dest.getCanonicalPath())) {
+        FileUtils.deleteDirectory(dest);
+        FileUtils.copyDirectory(xmlImportFile.getParentFile(), dest);
+      }
 
       Database.initDriver();
 

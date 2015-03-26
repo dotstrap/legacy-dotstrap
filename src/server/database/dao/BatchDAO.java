@@ -52,7 +52,7 @@ public class BatchDAO {
     String dropBatchTable = "DROP TABLE IF EXISTS Batch";// @formatter:off
     String createBatchTable =
         "CREATE TABLE Batch ("
-            + "BatchId INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE,"
+            + "BatchId INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE, "
             + "FilePath TEXT NOT NULL, "
             + "ProjectId INTEGER NOT NULL, "
             + "Status INTEGER NOT NULL, "

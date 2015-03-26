@@ -22,7 +22,6 @@ import com.thoughtworks.xstream.io.xml.DomDriver;
 
 import client.ClientException;
 
-import shared.InvalidCredentialsException;
 import shared.communication.*;
 import shared.model.Record;
 
@@ -31,8 +30,6 @@ import shared.model.Record;
  * The Class ClientCommunicator.
  */
 public class ClientCommunicator {
-
-
 
   /** The logger used throughout the project. */
   private static Logger logger; // @formatter:off
@@ -100,16 +97,14 @@ public class ClientCommunicator {
    *
    * @param params the params
    * @return the validate user response
-   * @throws InvalidCredentialsException the invalid credentials exception
    */
   public ValidateUserResponse validateUser(ValidateUserRequest params)
-      throws InvalidCredentialsException {
+      {
     ValidateUserResponse result = null;
     try {
       result = (ValidateUserResponse) doPost("/ValidateUser", params);
     } catch (Exception e) {
       // logger.log(Level.SEVERE, "STACKTRACE: ", e);
-      throw new InvalidCredentialsException(e);
     }
     return result;
   }

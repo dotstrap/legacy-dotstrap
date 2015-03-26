@@ -37,7 +37,7 @@ public class Server {
    * @param args the port to run the indexer server on
    */
   public static void main(String[] args) {
-    int portNum = 8080;
+    int portNum = 39640;
     try {
       FileInputStream is = new FileInputStream("logging.properties");
       LogManager.getLogManager().readConfiguration(is);

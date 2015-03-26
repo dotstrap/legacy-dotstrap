@@ -19,7 +19,6 @@ import server.ServerException;
 import server.database.Database;
 import server.database.DatabaseException;
 
-import shared.InvalidCredentialsException;
 import shared.communication.*;
 import shared.model.*;
 
@@ -52,10 +51,9 @@ public class ServerFacade {
    *
    * @param request the request
    * @return the validate user response
-   * @throws InvalidCredentialsException the invalid credentials exception
    */
   public static ValidateUserResponse validateUser(ValidateUserRequest request)
-      throws InvalidCredentialsException, DatabaseException {
+      {
     Database db = new Database();
     boolean isValid = false;
     String username = request.getUsername();
@@ -64,18 +62,25 @@ public class ServerFacade {
 
     try {
       db.startTransaction();
-      user = db.getUserDAO().read(username, password);
-      // TODO: should I Perform this additional check on password...
-      //isValid = user.getPassword().equals(password);
-       db.endTransaction(true);
-    } catch (Exception e) {
+      user = db.getUserDAO().read(username);
+      if (user != null){
+        System.out.println("SETTING ISVALID....");
+        isValid = user.getPassword().equals(password);
+      }
+    } catch (DatabaseException e) {
+      System.out.println("HELPPPP I HAVE BEEN CAUGHT");
       logger.log(Level.SEVERE, "STACKTRACE: ", e);
-      throw new InvalidCredentialsException(e.toString());
+      //throw new ServerException("ERROR reading from database to validate username: " + username);
     } finally {
+      System.out.println("UGHHHHHH FINALLLLLY");
       db.endTransaction(true);
     }
 
-    ValidateUserResponse result = new ValidateUserResponse(user);
+    System.out.println("MADE IT OUT OF CATCH CRAP");
+    if (!isValid)
+      user = new User();
+
+    ValidateUserResponse result = new ValidateUserResponse(user, isValid);
     return result;
   }
 
@@ -110,10 +115,9 @@ public class ServerFacade {
    * @param request the request
    * @return the sample batch
    * @throws ServerException the server exception
-   * @throws InvalidCredentialsException the invalid credentials exception
    */
   public static GetSampleBatchResponse getSampleBatch(GetSampleBatchRequest request)
-      throws ServerException, InvalidCredentialsException {
+      throws ServerException {
     Database db = new Database();
     Batch sampleBatch = null;
 
@@ -137,11 +141,10 @@ public class ServerFacade {
    * @param request the request
    * @return the download batch response
    * @throws ServerException the server exception
-   * @throws InvalidCredentialsException the invalid credentials exception
    * @throws DatabaseException the database exception
    */
   public static DownloadBatchResponse downloadBatch(DownloadBatchRequest request)
-      throws ServerException, InvalidCredentialsException, DatabaseException {
+      throws ServerException, DatabaseException {
     Database db = new Database();
     int projectId = request.getProjectId();
 
@@ -152,7 +155,7 @@ public class ServerFacade {
       db.startTransaction();
 
       // update the batch & user to reflect downloaded batch
-      User currUser = db.getUserDAO().read(request.getUsername(), request.getPassword());
+      User currUser = db.getUserDAO().read(request.getUsername());
       int currUserId = currUser.getUserId();
 
       if (currUser.getCurrBatch() < 1) {
@@ -229,7 +232,7 @@ public class ServerFacade {
     Database db = new Database();
     try {
       db.startTransaction();
-      User user = db.getUserDAO().read(request.getUsername(), request.getPassword());
+      User user = db.getUserDAO().read(request.getUsername());
 
       if (user.getCurrBatch() == request.getBatchID()) {
         String input = request.getFieldValues();
@@ -270,10 +273,8 @@ public class ServerFacade {
    * @param request the request
    * @return the fields
    * @throws ServerException the server exception
-   * @throws InvalidCredentialsException the invalid credentials exception
    */
-  public static GetFieldsResponse getFields(GetFieldsRequest request) throws ServerException,
-      InvalidCredentialsException {
+  public static GetFieldsResponse getFields(GetFieldsRequest request) throws ServerException {
     Database db = new Database();
     int projectId = request.getProjectId();
     List<Field> fields = null;
@@ -301,10 +302,8 @@ public class ServerFacade {
    * @param request the request
    * @return the search response
    * @throws ServerException the server exception
-   * @throws InvalidCredentialsException the invalid credentials exception
    */
-  public static SearchResponse search(SearchRequest request) throws ServerException,
-      InvalidCredentialsException {
+  public static SearchResponse search(SearchRequest request) throws ServerException {
     Database db = new Database();
     List<Record> records = null;
 
@@ -327,10 +326,9 @@ public class ServerFacade {
    * @param request the request
    * @return the download file response
    * @throws ServerException the server exception
-   * @throws InvalidCredentialsException the invalid credentials exception
    */
   public static DownloadFileResponse downloadFile(DownloadFileRequest request)
-      throws ServerException, InvalidCredentialsException {
+      throws ServerException {
     InputStream is;
     byte[] data = null;
 

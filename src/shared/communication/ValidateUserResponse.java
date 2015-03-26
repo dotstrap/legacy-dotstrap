@@ -70,11 +70,14 @@ public class ValidateUserResponse implements Response {
   @Override
   public String toString() {
     StringBuilder output = new StringBuilder();
-    output.append("TRUE\n");
-    output.append(user.getFirst() + "\n");
-    output.append(user.getLast() + "\n");
-    output.append(user.getRecordCount() + "\n");
-
+    if (this.isValid) {
+      output.append("TRUE\n");
+      output.append(user.getFirst() + "\n");
+      output.append(user.getLast() + "\n");
+      output.append(user.getRecordCount() + "\n");
+    } else {
+      output.append("FALSE\n");
+    }
     return output.toString();
   }
 }

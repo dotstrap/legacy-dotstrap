@@ -21,7 +21,6 @@ import server.ServerException;
 import server.database.DatabaseException;
 import server.facade.ServerFacade;
 
-import shared.InvalidCredentialsException;
 import shared.communication.*;
 
 // TODO: Auto-generated Javadoc
@@ -32,13 +31,6 @@ import shared.communication.*;
  * of operation.
  */
 public abstract class IndexerServerHandler implements HttpHandler {
-
-
-
-
-
-
-  /** The logger. */
   protected static Logger logger = Logger.getLogger(ServerFacade.LOG_NAME); // @formatter:off
 
   /** The server. */
@@ -71,13 +63,13 @@ public abstract class IndexerServerHandler implements HttpHandler {
       request = (Request) xStream.fromXML(exchange.getRequestBody());
       statusCode = doRequest();
 
-      exchange.sendResponseHeaders(statusCode, 0);
-      xStream.toXML(response, exchange.getResponseBody());
+      int responseLength = -1;
+      if (statusCode == HttpURLConnection.HTTP_OK) {
+        responseLength = 0;
+      }
+      exchange.sendResponseHeaders(statusCode, responseLength);
 
-    } catch (InvalidCredentialsException e) {
-      statusCode = HttpURLConnection.HTTP_UNAUTHORIZED;
-      exchange.sendResponseHeaders(statusCode, -1);
-      logger.log(Level.SEVERE, "STACKTRACE: ", e);
+      xStream.toXML(response, exchange.getResponseBody());
 
     } catch (XStreamException e) {
       statusCode = HttpURLConnection.HTTP_BAD_REQUEST;
@@ -101,10 +93,16 @@ public abstract class IndexerServerHandler implements HttpHandler {
    * @return The HTTP status code to return
    * @throws ServerException the server exception
    * @throws DatabaseException the database exception
-   * @throws InvalidCredentialsException the invalid credentials exception
    */
-  protected abstract int doRequest() throws ServerException, DatabaseException,
-      InvalidCredentialsException;
+  protected abstract int doRequest() throws ServerException, DatabaseException;
+
+  protected Request getRequest() {
+    return request;
+  }
+
+  protected void setResponse(Response response) {
+    this.response = response;
+  }
 
   /**
    * Validates user credentials.
@@ -118,21 +116,11 @@ public abstract class IndexerServerHandler implements HttpHandler {
     auth.setUsername(username);
     auth.setPassword(password);
     boolean isValid = true; // FIXME: this should default to false...
-    try {
-      ServerFacade.validateUser(auth);
-    } catch (InvalidCredentialsException e) {
-      logger.warning("INVALID: username: " + username + " & password: " + password + "...");
-      logger.log(Level.SEVERE, "STACKTRACE: ", e);
-      isValid = false;
-    }
+
+    ServerFacade.validateUser(auth);
+    logger.warning("INVALID: username: " + username + " & password: " + password + "...");
+    isValid = false;
+
     return isValid;
-  }
-
-  protected Request getRequest() {
-    return request;
-  }
-
-  protected void setResponse(Response response) {
-    this.response = response;
   }
 }

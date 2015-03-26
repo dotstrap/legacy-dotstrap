@@ -117,14 +117,12 @@ public class UserDAO {
    * @throws DatabaseException the database exception
    */
   public int create(User newUser) throws DatabaseException {
-    PreparedStatement pstmt = null;  //@formatter:off
-    ResultSet resultset = null;
-    try {
-      String query = "INSERT INTO User ("
+    String query = "INSERT INTO User ("  //@formatter:off
           + "Username, Password, FirstName, LastName, "
           + "Email, RecordCount, CurrentBatchId)"
           + "VALUES (?, ?, ?, ?, ?, ?, ?)";  //@formatter:on
-      pstmt = db.getConnection().prepareStatement(query);
+
+    try (PreparedStatement pstmt = db.getConnection().prepareStatement(query)) {
       pstmt.setString(1, newUser.getUsername());
       pstmt.setString(2, newUser.getPassword());
       pstmt.setString(3, newUser.getFirst());
@@ -134,62 +132,62 @@ public class UserDAO {
       pstmt.setInt(7, newUser.getCurrBatch());
 
       if (pstmt.executeUpdate() == 1) {
-        Statement stmt = db.getConnection().createStatement();
-        resultset = stmt.executeQuery("SELECT last_insert_rowid()");
-        resultset.next();
-        int userid = resultset.getInt(1);
-        newUser.setUserId(userid);
+
+        try (Statement stmt = db.getConnection().createStatement();
+            ResultSet resultset = stmt.executeQuery("SELECT last_insert_rowid()")) {
+          resultset.next();
+          int userid = resultset.getInt(1);
+          newUser.setUserId(userid);
+        }
+
       } else {
         throw new DatabaseException("Unable to insert user into database.");
       }
     } catch (SQLException e) {
       logger.log(Level.SEVERE, e.toString());
       throw new DatabaseException(e);
-    } finally {
-      Database.closeSafely(pstmt);
-      Database.closeSafely(resultset);
     }
     return newUser.getUserId();
   }
 
   /**
-   * Gets the user with specified username and password.
+   * Gets the user with specified username.
    *
    * @param username the username
-   * @param password the password
-   * @return true if valid, else false
+   * @return the user with the given
    * @throws DatabaseException the database exception
    */
-  public User read(String username, String password) throws DatabaseException {
-    PreparedStatement pstmt = null;
-    ResultSet resultset = null;
-    User returnUser = new User();
-    try {
-      String query = "SELECT * from User WHERE Username = ? AND Password = ?";
-      pstmt = db.getConnection().prepareStatement(query);
-
+  public User read(String username) throws DatabaseException {
+    String query = "SELECT * from User WHERE Username = ?";
+    try (PreparedStatement pstmt = db.getConnection().prepareStatement(query)) {
       pstmt.setString(1, username);
-      pstmt.setString(2, password);
 
-      resultset = pstmt.executeQuery();
+      try (ResultSet resultset = pstmt.executeQuery()) {
+        User returnUser = new User();
 
-      resultset.next();
-      returnUser.setUserId(resultset.getInt(1));
-      returnUser.setUsername(username);
-      returnUser.setPassword(password);
-      returnUser.setFirst(resultset.getString(4));
-      returnUser.setLast(resultset.getString(5));
-      returnUser.setEmail(resultset.getString(6));
-      returnUser.setRecordCount(resultset.getInt(7));
-      returnUser.setCurrBatch(resultset.getInt(8));
+        if (!resultset.next()) {
+          return null;
+        }
+
+        returnUser.setUserId(resultset.getInt(1));
+        returnUser.setUsername(username);
+        returnUser.setPassword(resultset.getString(3));
+        returnUser.setFirst(resultset.getString(4));
+        returnUser.setLast(resultset.getString(5));
+        returnUser.setEmail(resultset.getString(6));
+        returnUser.setRecordCount(resultset.getInt(7));
+        returnUser.setCurrBatch(resultset.getInt(8));
+
+        if (resultset.next()) {
+          logger.severe("ERROR, read more than one username: " + username + " from database...");
+        }
+
+        return returnUser;
+      }
     } catch (SQLException e) {
       logger.log(Level.SEVERE, e.toString());
-      throw new DatabaseException(e);
-    } finally {
-      Database.closeSafely(pstmt);
-      Database.closeSafely(resultset);
+      throw new DatabaseException("ERROR username: " + username + " from database...", e);
     }
-    return returnUser;
   }
 
   /**

@@ -10,8 +10,6 @@ package client.communication;
 import static org.junit.Assert.assertEquals;
 
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.junit.*;
 
@@ -33,14 +31,11 @@ import shared.model.User;
  */
 public class DownloadBatchUnitTest {
 
-
-
-
-  /** The logger used throughout the project. */
-  private static Logger logger; // @formatter:off
-  static {
-    logger = Logger.getLogger(ClientCommunicator.LOG_NAME);
-  }
+//  /** The logger used throughout the project. */
+//  private static Logger logger; // @formatter:off
+//  static {
+//    logger = Logger.getLogger(ClientCommunicator.LOG_NAME);
+//  }
 
   private static ClientCommunicator clientComm;
 
@@ -167,7 +162,6 @@ public class DownloadBatchUnitTest {
       clientComm.downloadBatch(new DownloadBatchRequest("userTest1", "INVALID", 1));
     } catch (ClientException e) {
       isValid = false;
-      logger.log(Level.SEVERE, "STACKTRACE: ", e);
     }
     assertEquals(false, isValid);
   }
@@ -183,8 +177,7 @@ public class DownloadBatchUnitTest {
     try {
       result2 = clientComm.downloadBatch(new DownloadBatchRequest("userTest2", "pass2", 100));
     } catch (ClientException e) {
-      logger.fine("Caught invalid projectId test...");
-      logger.log(Level.SEVERE, "STACKTRACE: ", e);
+
     }
     assertEquals(null, result2.getFields());
   }
