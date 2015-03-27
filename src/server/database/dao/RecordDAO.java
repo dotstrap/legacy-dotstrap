@@ -169,10 +169,12 @@ public class RecordDAO {
     StringBuilder recordString = new StringBuilder();
     recordString.append("(");
 
+    System.out.println("IN DA SEARCH=========================" + searchFieldIds.size());
     for (int i = 0; i < searchFieldIds.size(); i++) {
       if (i > 0) {
         fieldString.append("OR ");
       }
+      System.out.println("\n\nFIELD IDs: " + searchFieldIds.get(i));
       fieldString.append("FieldId = " + searchFieldIds.get(i) + " ");
     }
 
@@ -180,12 +182,15 @@ public class RecordDAO {
       if (i > 0) {
         recordString.append("OR ");
       }
+      System.out.println("\n\nrecords: " + searchRecords.get(i));
       recordString.append("Record = '" + searchRecords.get(i) + "' ");
     }
 
     String query =
         "SELECT * FROM Record " + "WHERE " + fieldString + "AND " + recordString
             + "COLLATE NOCASE";
+
+    System.out.println("\n\n\n======================QUERY: " + query + "\n\n\n");
 
     fieldString.append(") ");
     recordString.append(") ");

@@ -29,18 +29,17 @@ public class SearchHandler extends IndexerServerHandler {
   @Override
   protected int doRequest() throws ServerException, DatabaseException {
     SearchRequest request = (SearchRequest) getRequest();
-    SearchResponse response;
 
     int statusCode;
     if (IndexerServerHandler.authenticate(request.getUsername(), request.getPassword())) {
       statusCode = HttpURLConnection.HTTP_OK;
 
-      response = ServerFacade.search(request);
+      SearchResponse response = ServerFacade.search(request);
 
       this.setResponse(response);
     } else {
-        statusCode = HttpURLConnection.HTTP_OK;
-        this.setResponse(null);
+      statusCode = HttpURLConnection.HTTP_OK;
+      this.setResponse(null);
     }
     return statusCode;
   }

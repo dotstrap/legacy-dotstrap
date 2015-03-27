@@ -29,13 +29,12 @@ public class GetProjectsHandler extends IndexerServerHandler {
   @Override
   protected int doRequest() throws ServerException, DatabaseException {
     GetProjectsRequest request = (GetProjectsRequest) getRequest();
-    GetProjectsResponse response;
 
     int statusCode;
     if (IndexerServerHandler.authenticate(request.getUsername(), request.getPassword())) {
       statusCode = HttpURLConnection.HTTP_OK;
 
-      response = ServerFacade.getProjects(request);
+      GetProjectsResponse response = ServerFacade.getProjects(request);
 
       this.setResponse(response);
     } else {

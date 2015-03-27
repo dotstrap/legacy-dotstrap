@@ -193,6 +193,7 @@ public class ClientCommunicator {
    */
   public SearchResponse search(SearchRequest params) throws ServerException {
     SearchResponse result;
+    System.out.println("HELLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLOOOOOOOOOOOOOOOOOO ");
     try {
       result = (SearchResponse) doPost("/Search", params);
       List<URL> urls = new ArrayList<URL>();
@@ -202,6 +203,8 @@ public class ClientCommunicator {
       }
       result.setUrls(urls);
     } catch (Exception e) {
+
+    System.out.println("HELLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLOOOOOOOOOOOOOOOOOO ");
       // logger.log(Level.SEVERE, "STACKTRACE: ", e);
       throw new ServerException(e);
     }

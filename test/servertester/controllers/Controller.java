@@ -4,13 +4,12 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import server.ServerException;
+import client.communication.ClientCommunicator;
 
+import server.ServerException;
 import servertester.views.IView;
 
 import shared.communication.*;
-
-import client.communication.ClientCommunicator;
 
 public class Controller implements IController {
   private ClientCommunicator clientComm;
@@ -234,7 +233,7 @@ public class Controller implements IController {
 
     try {
       // FIXME: fields wont parse if 1,2,3 and it returns a server error 500 if just one digit
-      List<String> tmpFieldIds = Arrays.asList(fieldId.split(",|;"));
+      List<String> tmpFieldIds = Arrays.asList(fieldId.split(",|;", -1));
       for (String s : tmpFieldIds) {
         if (!fieldList.contains(Integer.parseInt(s))) {
           fieldList.add(Integer.parseInt(s));
@@ -242,7 +241,7 @@ public class Controller implements IController {
       }
 
       String search = args[3];
-      List<String> searchQuery = Arrays.asList(search.split(",|;"));
+      List<String> searchQuery = Arrays.asList(search.split(",|;", -1));
       for (String s : searchQuery) {
         s = s.toUpperCase();
         if (!searchList.contains(s)) {
@@ -255,6 +254,7 @@ public class Controller implements IController {
 
       getView().setResponse(result.toString());
     } catch (Exception e) {
+      getView().setResponse(e.toString());
       logger.log(Level.SEVERE, "STACKTRACE: ", e);
       getView().setResponse("FAILED\n");
     } finally {
