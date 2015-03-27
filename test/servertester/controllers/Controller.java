@@ -9,15 +9,15 @@ import server.ServerException;
 import servertester.views.IView;
 
 import shared.communication.*;
-import org.apache.commons.lang3.math.NumberUtils;
+
 import client.communication.ClientCommunicator;
 
 public class Controller implements IController {
-
-  private IView         _view;
+  private ClientCommunicator clientComm;
+  private IView              _view;
 
   /** The logger used throughout the project. */
-  private static Logger logger;
+  private static Logger      logger;
   static {
     logger = Logger.getLogger("server");
   }
@@ -35,7 +35,6 @@ public class Controller implements IController {
   }
 
   // IController methods
-  //
 
   @Override
   public void initialize() {
@@ -84,6 +83,7 @@ public class Controller implements IController {
 
   @Override
   public void executeOperation() {
+    clientComm = new ClientCommunicator(getView().getHost(), getView().getPort());
 
     switch (getView().getOperation()) {
       case VALIDATE_USER:
@@ -115,14 +115,9 @@ public class Controller implements IController {
 
   private void validateUser() {
     String[] args = getView().getParameterValues();
-    String port = getView().getPort();
-    String host = getView().getHost();
 
-    ValidateUserRequest params = null;
     try {
-      ClientCommunicator clientComm = new ClientCommunicator(port, host);
-
-      params = new ValidateUserRequest(args[0], args[1]);
+      ValidateUserRequest params = new ValidateUserRequest(args[0], args[1]);
       ValidateUserResponse result = clientComm.validateUser(params);
 
       getView().setResponse(result.toString());
@@ -130,139 +125,104 @@ public class Controller implements IController {
       logger.log(Level.SEVERE, "STACKTRACE: ", e);
       getView().setResponse("FAILED\n");
     } finally {
-      getView().setRequest(params.toString());
+      getView().setRequest(printUserInput(args));
     }
   }
 
   private void getProjects() {
     String[] args = getView().getParameterValues();
-    String port = getView().getPort();
-    GetProjectsRequest params = null;
 
     try {
-      String host = getView().getHost();
-
-      ClientCommunicator clientComm = new ClientCommunicator(port, host);
-      params = new GetProjectsRequest(args[0], args[1]);
+      GetProjectsRequest params = new GetProjectsRequest(args[0], args[1]);
       GetProjectsResponse result = clientComm.getProjects(params);
 
-      getView().setRequest(params.toString());
+      getView().setRequest(printUserInput(args));
       getView().setResponse(result.toString());
     } catch (Exception e) {
       logger.log(Level.SEVERE, "STACKTRACE: ", e);
       getView().setResponse("FAILED\n");
     } finally {
-      getView().setRequest(params.toString());
+      getView().setRequest(printUserInput(args));
     }
   }
 
   private void getSampleBatch() {
     String[] args = getView().getParameterValues();
-    String port = getView().getPort();
-    if (NumberUtils.isDigits(args[2])) {
-      try {
-        String host = getView().getHost();
 
-        ClientCommunicator clientComm = new ClientCommunicator(port, host);
-        GetSampleBatchRequest params =
-            new GetSampleBatchRequest(args[0], args[1], Integer.parseInt(args[2]));
-        GetSampleBatchResponse result = clientComm.getSampleBatch(params);
+    try {
+      GetSampleBatchRequest params =
+          new GetSampleBatchRequest(args[0], args[1], Integer.parseInt(args[2]));
+      GetSampleBatchResponse result = clientComm.getSampleBatch(params);
 
-        getView().setRequest(params.toString());
-        getView().setResponse(result.toString());
-      } catch (ServerException e) {
-        logger.log(Level.SEVERE, "STACKTRACE: ", e);
-        getView().setResponse("FAILED\n");
-      }
-    } else {
+      getView().setRequest(printUserInput(args));
+      getView().setResponse(result.toString());
+    } catch (NumberFormatException | ServerException e) {
+      logger.log(Level.SEVERE, "STACKTRACE: ", e);
       getView().setResponse("FAILED\n");
+    } finally {
+      getView().setRequest(printUserInput(args));
     }
   }
 
   private void downloadBatch() {
     String[] args = getView().getParameterValues();
-    String port = getView().getPort();
-    DownloadBatchRequest params = null;
 
-    if (NumberUtils.isDigits(args[2])) {
-      try {
-        String host = getView().getHost();
+    try {
+      DownloadBatchRequest params =
+          new DownloadBatchRequest(args[0], args[1], Integer.parseInt(args[2]));
+      DownloadBatchResponse result = clientComm.downloadBatch(params);
 
-        ClientCommunicator clientComm = new ClientCommunicator(port, host);
-        params = new DownloadBatchRequest(args[0], args[1], Integer.parseInt(args[2]));
-        DownloadBatchResponse result = clientComm.downloadBatch(params);
-
-        getView().setResponse(result.toString());
-      } catch (ServerException e) {
-        logger.log(Level.SEVERE, "STACKTRACE: ", e);
-        getView().setResponse("FAILED\n");
-      } finally {
-        getView().setRequest(params.toString());
-      }
-
-    } else {
+      getView().setResponse(result.toString());
+    } catch (NumberFormatException | ServerException e) {
+      logger.log(Level.SEVERE, "STACKTRACE: ", e);
       getView().setResponse("FAILED\n");
+    } finally {
+      getView().setRequest(printUserInput(args));
     }
-
   }
 
   private void getFields() {
     String[] args = getView().getParameterValues();
+
     int projectId = 0;
-    GetFieldsRequest params = null;
     try {
       // detect for presence of projectId and validate it
       if (args[2].length() != 0) {
-        if (NumberUtils.isDigits(args[2])) {
-          projectId = Integer.parseInt(args[2]);
-        } else {
-          getView().setResponse("FAILED\n");
-          return;
-        }
-        if (projectId < 0) {
-          getView().setResponse("FAILED\n");
-          return;
-        }
+        projectId = Integer.parseInt(args[2]);
       }
 
-      String port = getView().getPort();
-      String host = getView().getHost();
+      if (projectId < 0) {
+        getView().setResponse("FAILED\n");
+        return;
+      }
 
-      ClientCommunicator clientComm = new ClientCommunicator(port, host);
-      params = new GetFieldsRequest(args[0], args[1], projectId);
+      GetFieldsRequest params = new GetFieldsRequest(args[0], args[1], projectId);
       GetFieldsResponse result = clientComm.getFields(params);
 
-      getView().setRequest(params.toString());
+      getView().setRequest(printUserInput(args));
       getView().setResponse(result.toString());
-    } catch (Exception e) {
+    } catch (NumberFormatException | ServerException e) {
       logger.log(Level.SEVERE, "STACKTRACE: ", e);
       getView().setResponse("FAILED\n");
     } finally {
-      getView().setRequest(params.toString());
+      getView().setRequest(printUserInput(args));
     }
   }
 
   private void submitBatch() {
     String[] args = getView().getParameterValues();
-    String port = getView().getPort();
-    SubmitBatchRequest params = null;
-    SubmitBatchResponse result = null;
-    if (NumberUtils.isDigits(args[2])) {
-      try {
-        String host = getView().getHost();
 
-        ClientCommunicator clientComm = new ClientCommunicator(port, host);
-        params = new SubmitBatchRequest(args[0], args[1], Integer.parseInt(args[2]), args[3]);
-        result = clientComm.submitBatch(params);
-        getView().setResponse(result.toString());
-      } catch (ServerException e) {
-        logger.log(Level.SEVERE, "STACKTRACE: ", e);
-        getView().setResponse("FAILED\n");
-      } finally {
-        getView().setRequest(params.toString());
-      }
-    } else {
+    try {
+      SubmitBatchRequest params =
+          new SubmitBatchRequest(args[0], args[1], Integer.parseInt(args[2]), args[3]);
+      SubmitBatchResponse result = clientComm.submitBatch(params);
+
+      getView().setResponse(result.toString());
+    } catch (NumberFormatException | ServerException e) {
+      logger.log(Level.SEVERE, "STACKTRACE: ", e);
       getView().setResponse("FAILED\n");
+    } finally {
+      getView().setRequest(printUserInput(args));
     }
   }
 
@@ -270,12 +230,11 @@ public class Controller implements IController {
     String[] args = getView().getParameterValues();
     ArrayList<Integer> fieldList = new ArrayList<Integer>();
     ArrayList<String> searchList = new ArrayList<String>();
-    SearchRequest params = null;
     String fieldId = args[2];
 
     try {
       // FIXME: fields wont parse if 1,2,3 and it returns a server error 500 if just one digit
-      List<String> tmpFieldIds = Arrays.asList(fieldId.split(",", -1));
+      List<String> tmpFieldIds = Arrays.asList(fieldId.split(",|;"));
       for (String s : tmpFieldIds) {
         if (!fieldList.contains(Integer.parseInt(s))) {
           fieldList.add(Integer.parseInt(s));
@@ -283,7 +242,7 @@ public class Controller implements IController {
       }
 
       String search = args[3];
-      List<String> searchQuery = Arrays.asList(search.split(",", -1));
+      List<String> searchQuery = Arrays.asList(search.split(",|;"));
       for (String s : searchQuery) {
         s = s.toUpperCase();
         if (!searchList.contains(s)) {
@@ -291,11 +250,7 @@ public class Controller implements IController {
         }
       }
 
-      String port = getView().getPort();
-      String host = getView().getHost();
-
-      ClientCommunicator clientComm = new ClientCommunicator(port, host);
-      params = new SearchRequest(args[0], args[1], fieldList, searchList);
+      SearchRequest params = new SearchRequest(args[0], args[1], fieldList, searchList);
       SearchResponse result = clientComm.search(params);
 
       getView().setResponse(result.toString());
@@ -303,8 +258,15 @@ public class Controller implements IController {
       logger.log(Level.SEVERE, "STACKTRACE: ", e);
       getView().setResponse("FAILED\n");
     } finally {
-      getView().setRequest(params.toString());
+      getView().setRequest(printUserInput(args));
     }
   }
 
+  private String printUserInput(String[] args) {
+    StringBuilder sb = new StringBuilder();
+    for (String each : args) {
+      sb.append(each.toString() + "\n");
+    }
+    return sb.toString();
+  }
 }

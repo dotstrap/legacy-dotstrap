@@ -70,10 +70,10 @@ public class ClientCommunicator {
   /**
    * Instantiates a new client communicator.
    *
-   * @param port the port
    * @param host the host
+   * @param port the port
    */
-  public ClientCommunicator(String port, String host) {
+  public ClientCommunicator(String host, String port) {
     this.port = Integer.parseInt(port);
     this.host = host;
     URL_PREFIX = String.format("http://%s:%s", host, port);

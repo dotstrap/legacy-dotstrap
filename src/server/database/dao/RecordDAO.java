@@ -18,7 +18,6 @@ import server.database.DatabaseException;
 
 import shared.model.Record;
 
-
 /**
  * The Class RecordDAO.
  */
@@ -164,7 +163,6 @@ public class RecordDAO {
   public List<Record> search(List<Integer> searchFieldIds, List<String> searchRecords)
       throws DatabaseException {
     ArrayList<Record> searchResult = new ArrayList<Record>();
-    ResultSet resultset = null;
 
     StringBuilder fieldString = new StringBuilder();
     fieldString.append("(");
@@ -180,38 +178,37 @@ public class RecordDAO {
 
     for (int i = 0; i < searchRecords.size(); i++) {
       if (i > 0) {
-        recordString.append("or ");
+        recordString.append("OR ");
       }
       recordString.append("Record = '" + searchRecords.get(i) + "' ");
     }
 
     String query =
-        "SELECT * FROM Records " + "WHERE " + fieldString + "AND " + recordString
-        + "COLLATE NOCASE";
+        "SELECT * FROM Record " + "WHERE " + fieldString + "AND " + recordString
+            + "COLLATE NOCASE";
 
     fieldString.append(") ");
     recordString.append(") ");
 
     try (PreparedStatement pstmt = db.getConnection().prepareStatement(query)) {
-      resultset = pstmt.executeQuery();
+      try (ResultSet resultset = pstmt.executeQuery()) {
 
-      while (resultset.next()) {
-        Record resultRecord = new Record();
+        while (resultset.next()) {
+          Record resultRecord = new Record();
 
-        resultRecord.setRecordId(resultset.getInt(1));
-        resultRecord.setFieldId(resultset.getInt(2));
-        resultRecord.setBatchId(3);
-        resultRecord.setBatchURL(resultset.getString(4));
-        resultRecord.setData(resultset.getString(5));
-        resultRecord.setRowNum(resultset.getInt(6));
-        resultRecord.setColNum(resultset.getInt(7));
+          resultRecord.setRecordId(resultset.getInt(1));
+          resultRecord.setFieldId(resultset.getInt(2));
+          resultRecord.setBatchId(3);
+          resultRecord.setBatchURL(resultset.getString(4));
+          resultRecord.setData(resultset.getString(5));
+          resultRecord.setRowNum(resultset.getInt(6));
+          resultRecord.setColNum(resultset.getInt(7));
 
-        searchResult.add(resultRecord);
+          searchResult.add(resultRecord);
+        }
       }
-    } catch (SQLException err) {
-      throw new DatabaseException("Unable to get all records", err);
-    } finally {
-      Database.closeSafely(resultset);
+    } catch (SQLException e) {
+      throw new DatabaseException("unable to search all records...", e);
     }
     return searchResult;
   }
