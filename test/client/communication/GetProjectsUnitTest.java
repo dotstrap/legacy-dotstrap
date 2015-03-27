@@ -15,8 +15,7 @@ import java.util.logging.Logger;
 
 import org.junit.*;
 
-import client.ClientException;
-
+import server.ServerException;
 import server.database.Database;
 import server.database.DatabaseException;
 import server.database.dao.ProjectDAO;
@@ -147,7 +146,7 @@ public class GetProjectsUnitTest {
    * Valid project test.
    */
   @Test
-  public void validProjectTest() throws ClientException {
+  public void validProjectTest() throws ServerException {
     GetProjectsResponse result =
         clientComm.getProjects(new GetProjectsRequest("userTest1", "pass1"));
      assertEquals(3, result.getProjects().size());

@@ -9,8 +9,6 @@ package server.httphandler.indexerserverhandler;
 
 import java.io.*;
 import java.net.HttpURLConnection;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -24,13 +22,7 @@ import shared.communication.DownloadFileResponse;
  * The Class DownloadFileHandler.
  */
 public class DownloadFileHandler implements HttpHandler {
-  /** The logger used throughout the project. */
-  private static Logger logger;
-  static {
-    logger = Logger.getLogger("server");
-  }
-
-  @Override
+   @Override
   public void handle(HttpExchange exchange) throws IOException {
     String url = new File("").getAbsolutePath() + exchange.getRequestURI().getPath();
     DownloadFileRequest request = new DownloadFileRequest(url);
@@ -43,7 +35,7 @@ public class DownloadFileHandler implements HttpHandler {
 
       response.write(result.getFileBytes());
     } catch (Exception e) {
-      logger.log(Level.SEVERE, "STACKTRACE: ", e);
+        throw new IOException("while handling file download: " + e);
     } finally {
       exchange.close();
     }

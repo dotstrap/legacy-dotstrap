@@ -16,8 +16,7 @@ import java.util.logging.Logger;
 
 import org.junit.*;
 
-import client.ClientException;
-
+import server.ServerException;
 import server.database.Database;
 import server.database.DatabaseException;
 import server.database.dao.*;
@@ -180,21 +179,21 @@ public class SearchUnitTestTest {
   }
 
   //@Test
-  //public void validUserTest() throws ClientException, DatabaseException {
+  //public void validUserTest() throws ServerException, DatabaseException {
     //SearchResponse result =
         //clientComm.search(new SearchRequest("userTest1", "pass1", fieldIDs, values));
     //assertEquals(result.getFoundRecords().size(), 1);
   //}
 
   //@Test
-  //public void invalidFieldIdTest() throws ClientException, DatabaseException {
+  //public void invalidFieldIdTest() throws ServerException, DatabaseException {
     //SearchResponse result =
         //clientComm.search(new SearchRequest("userTest1", "pass1", badFieldIDs, values));
     //assertEquals(result.getUrls().size(), 0);
   //}
 
   //@Test
-  //public void invalidValuesTest() throws ClientException, DatabaseException {
+  //public void invalidValuesTest() throws ServerException, DatabaseException {
     //SearchResponse result =
         //clientComm.search(new SearchRequest("userTest1", "pass1", fieldIDs, badValues));
     //assertEquals(result.getFoundRecords().size(), 0);

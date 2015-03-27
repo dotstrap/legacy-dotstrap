@@ -1,7 +1,7 @@
 /**
  * ProjectDAO.java
  * JRE v1.8.0_40
- * 
+ *
  * Created by William Myers on Mar 24, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
@@ -152,40 +152,40 @@ public class ProjectDAO {
   }
 
   /**
-   * Gets the project.
+   * Retrieves the project with the specified id from the database.
    *
-   * @param projectid the projectid
-   * @return the project
-   * @throws DatabaseException the database exception
+   * @param projectId The project id
+   * @return The project with the specified id, null if doesn't exist
+   * @throws DatabaseException
    */
-  public Project read(int projectid) throws DatabaseException {
-    PreparedStatement pstmt = null;
-    ResultSet resultset = null;
-    Project resultProject = new Project();
-    try {
-      String query = "SELECT * from Project WHERE ProjectId = ?";
-      pstmt = db.getConnection().prepareStatement(query);
-      pstmt.setInt(1, projectid);
+  public Project read(int projectId) throws DatabaseException {
+    String query = "SELECT * FROM Project WHERE ProjectId = ?";
 
-      resultset = pstmt.executeQuery();
+    try (PreparedStatement pstmt = db.getConnection().prepareStatement(query)) {
+      pstmt.setInt(1, projectId);
 
-      resultset.next();
-      resultProject.setProjectId(resultset.getInt(1));
-      resultProject.setTitle(resultset.getString(2));
-      resultProject.setRecordsPerBatch(resultset.getInt(3));
-      resultProject.setFirstYCoord(resultset.getInt(4));
-      resultProject.setRecordHeight(resultset.getInt(5));
-    } catch (Exception e) {
-      logger.log(Level.SEVERE, e.toString());
-      throw new DatabaseException(e);
-    } finally {
-      Database.closeSafely(pstmt);
-      Database.closeSafely(resultset);
+      try (ResultSet resultset = pstmt.executeQuery()) {
+        Project resultProject = new Project();
+
+        if (!resultset.next()) {
+          return null;
+        }
+
+        resultProject.setProjectId(resultset.getInt("ProjectId"));
+        resultProject.setTitle(resultset.getString("Title"));
+        resultProject.setRecordsPerBatch(resultset.getInt("RecordsPerBatch"));
+        resultProject.setFirstYCoord(resultset.getInt("FirstYCoord"));
+        resultProject.setRecordHeight(resultset.getInt("RecordHeight"));
+
+        // if (resultset.next())
+        // throw new DatabaseException("Read more than one project: " + projectId
+        // + " from database...");
+
+        return resultProject;
+      }
+    } catch (SQLException e) {
+      throw new DatabaseException("retrieving project with ProjectId " + projectId, e);
     }
-    if (resultProject.getTitle() == "") {
-      return null;
-    }
-    return resultProject;
   }
 
   /**
@@ -195,19 +195,15 @@ public class ProjectDAO {
    * @throws DatabaseException the database exception
    */
   public void delete(Project project) throws DatabaseException {
-    PreparedStatement pstmt = null;
-    try {
-      String query = "DELETE from Project WHERE ProjectId = ?";
+    String query = "DELETE from Project WHERE ProjectId = ?";
 
-      pstmt = db.getConnection().prepareStatement(query);
+    try (PreparedStatement pstmt = db.getConnection().prepareStatement(query)) {
       pstmt.setInt(1, project.getProjectId());
 
       pstmt.executeUpdate();
-    } catch (Exception e) {
-      logger.log(Level.SEVERE, e.toString());
-      throw new DatabaseException(e);
-    } finally {
-      Database.closeSafely(pstmt);
+    } catch (SQLException e) {
+      throw new DatabaseException("deleting project with projectID: " + project.getProjectId(), e);
     }
   }
+
 }

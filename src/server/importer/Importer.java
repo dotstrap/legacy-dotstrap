@@ -37,13 +37,21 @@ public class Importer {
    * @param args the xml file to import into the database
    */
   public static void main(String[] args) {
+    File logDir = new File("logs");
+    if (!logDir.exists()) {
+      try {
+        logDir.mkdir();
+      } catch (SecurityException e) {
+        System.out.println("ERROR: do not have permission to create log directory...");
+      }
+    }
+
     try {
       FileInputStream is = new FileInputStream("logging.properties");
       LogManager.getLogManager().readConfiguration(is);
       logger = Logger.getLogger("importer");
     } catch (IOException e) {
-        Logger.getAnonymousLogger().severe("ERROR: unable to load logging properties file...");
-        Logger.getAnonymousLogger().severe(e.getMessage());
+      System.out.println("ERROR: unable to load logging properties file...");
     }
     logger.info("===============Initialized " + logger.getName() + " log...");
 
@@ -54,7 +62,7 @@ public class Importer {
     // try opening file
     File xmlImportFile = new File(args[0]);
     if (!xmlImportFile.exists()) {
-        logger.log(Level.SEVERE, "requested file: " + args[0] + " does not exist...");
+      logger.log(Level.SEVERE, "requested file: " + args[0] + " does not exist...");
       return;
     } else {
       importFileName = xmlImportFile.getAbsolutePath();

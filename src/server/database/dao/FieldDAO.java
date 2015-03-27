@@ -222,37 +222,36 @@ public class FieldDAO {
    * @throws DatabaseException the database exception
    */
   public Field read(int projectId, String title) throws DatabaseException {
-
-    PreparedStatement pstmt = null;
-    ResultSet resultset = null;
-    Field returnField = new Field();
-    try {
-      String query = "SELECT * from Field WHERE ProjectId = ? AND Title = ?";
-      pstmt = db.getConnection().prepareStatement(query);
-
+    String query = "SELECT * from Field WHERE ProjectId = ? AND Title = ?";
+    try (PreparedStatement pstmt = db.getConnection().prepareStatement(query)) {
       pstmt.setInt(1, projectId);
       pstmt.setString(2, title);
 
-      resultset = pstmt.executeQuery();
+      try (ResultSet resultset = pstmt.executeQuery()) {
+        Field returnField = new Field();
 
-      resultset.next();
-      returnField.setFieldId(resultset.getInt(1));
-      returnField.setProjectId(projectId);
-      returnField.setTitle(title);
-      returnField.setKnownData(resultset.getString(4));
-      returnField.setHelpURL(resultset.getString(5));
-      returnField.setXCoord(resultset.getInt(6));
-      returnField.setWidth(resultset.getInt(7));
-      returnField.setColNum(resultset.getInt(8));
-    } catch (Exception e) {
-      logger.log(Level.SEVERE, e.toString());
-      throw new DatabaseException(e);
-      // return null;
-    } finally {
-      Database.closeSafely(pstmt);
-      Database.closeSafely(resultset);
+        if (!resultset.next()) {
+          return null;
+        }
+
+        returnField.setFieldId(resultset.getInt("FieldId"));
+        // returnField.setProjectId(projectId);
+        // returnField.setTitle(title);
+        returnField.setKnownData(resultset.getString("KnownData"));
+        returnField.setHelpURL(resultset.getString("HelpURL"));
+        returnField.setXCoord(resultset.getInt("XCoordinate"));
+        returnField.setWidth(resultset.getInt("Width"));
+        returnField.setColNum(resultset.getInt("ColumnNumber"));
+
+        // if (resultset.next())
+        // throw new DatabaseException("Read more than one field with projectId: " + projectId
+        // + " from database...");
+
+        return returnField;
+      }
+    } catch (SQLException e) {
+      throw new DatabaseException("retrieving field with ProjectId " + projectId, e);
     }
-    return returnField;
   }
 
   /**

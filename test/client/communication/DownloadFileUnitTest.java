@@ -1,7 +1,7 @@
 /**
  * DownloadFileUnitTest.java
  * JRE v1.8.0_40
- * 
+ *
  * Created by William Myers on Mar 24, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
@@ -15,8 +15,7 @@ import java.util.logging.Logger;
 
 import org.junit.*;
 
-import client.ClientException;
-
+import server.ServerException;
 import server.database.DatabaseException;
 
 import shared.communication.DownloadFileRequest;
@@ -70,7 +69,7 @@ public class DownloadFileUnitTest {
         didDownload = true;
       }
       assertTrue(didDownload);
-    } catch (ClientException e) {
+    } catch (ServerException e) {
       logger.log(Level.SEVERE, "STACKTRACE: ", e);
     }
   }
@@ -90,7 +89,7 @@ public class DownloadFileUnitTest {
         didDownload = true;
       }
       assertTrue(didDownload);
-    } catch (ClientException e) {
+    } catch (ServerException e) {
       logger.log(Level.SEVERE, "STACKTRACE: ", e);
     }
   }
@@ -110,7 +109,7 @@ public class DownloadFileUnitTest {
         didDownload = true;
       }
       assertTrue(didDownload);
-    } catch (ClientException e) {
+    } catch (ServerException e) {
       logger.log(Level.SEVERE, "STACKTRACE: ", e);
     }
   }
@@ -130,7 +129,7 @@ public class DownloadFileUnitTest {
         didDownload = true;
       }
       assertFalse(didDownload);
-    } catch (ClientException e) {
+    } catch (ServerException e) {
       logger.log(Level.SEVERE, "STACKTRACE: ", e);
     }
   }
@@ -149,7 +148,7 @@ public class DownloadFileUnitTest {
         didDownload = true;
       }
       assertFalse(didDownload);
-    } catch (ClientException e) {
+    } catch (ServerException e) {
       logger.log(Level.SEVERE, "STACKTRACE: ", e);
     }
   }

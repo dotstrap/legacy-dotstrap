@@ -37,7 +37,7 @@ public class BatchDAO {
    * @param db the db
    */
   public BatchDAO(Database db) {
-    this.db = db;
+        this.db = db;
   }
 
   /**
@@ -134,7 +134,7 @@ public class BatchDAO {
    * @throws DatabaseException
    */
   public Batch read(int batchId) throws DatabaseException {
-    String query = "SELECT * FROM batches WHERE BatchId = ?";
+    String query = "SELECT * FROM Batch WHERE BatchId = ?";
 
     try (PreparedStatement pstmt = db.getConnection().prepareStatement(query)) {
       pstmt.setInt(1, batchId);
@@ -152,9 +152,9 @@ public class BatchDAO {
         resultBatch.setStatus(resultset.getInt("Status"));
         resultBatch.setCurrUserId(resultset.getInt("CurrentUserId"));
 
-        if (resultset.next())
-          throw new DatabaseException("Read more than one username: " + batchId
-              + " from database...");
+        //if (resultset.next())
+          //throw new DatabaseException("Read more than one batch: " + batchId
+              //+ " from database...");
 
         // if (resultBatch.getFilePath() == "") {
         // return null;
@@ -163,7 +163,7 @@ public class BatchDAO {
         return resultBatch;
       }
     } catch (SQLException e) {
-      throw new DatabaseException("Error retrieving batch from database by id", e);
+      throw new DatabaseException("retrieving batch with BatchId " + batchId, e);
     }
   }
 
@@ -196,9 +196,9 @@ public class BatchDAO {
         resultBatch.setStatus(resultset.getInt("Status"));
         // resultBatch.setCurrUserId(resultset.getInt("CurrentUserId"));
 
-        if (resultset.next())
-          throw new DatabaseException("Read more than one  with projectId: " + projectId
-              + " from database...");
+        //if (resultset.next())
+          //throw new DatabaseException("Read more than one batch with projectId: " + projectId
+              //+ " from database...");
 
         // if (resultBatch.getFilePath() == "") {
         // return null;
@@ -238,9 +238,9 @@ public class BatchDAO {
         resultBatch.setStatus(resultset.getInt("Status"));
         resultBatch.setCurrUserId(resultset.getInt("CurrentUserId"));
 
-        if (resultset.next())
-          throw new DatabaseException("Read more than one  with projectId: " + projectId
-              + " from database...");
+        //if (resultset.next())
+          //throw new DatabaseException("Read more than one  with projectId: " + projectId
+              //+ " from database...");
 
         // if (resultBatch.getFilePath() == "") {
         // return null;

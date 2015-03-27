@@ -164,7 +164,6 @@ public class RecordDAO {
   public List<Record> search(List<Integer> searchFieldIds, List<String> searchRecords)
       throws DatabaseException {
     ArrayList<Record> searchResult = new ArrayList<Record>();
-    PreparedStatement pstmt = null;
     ResultSet resultset = null;
 
     StringBuilder fieldString = new StringBuilder();
@@ -186,14 +185,14 @@ public class RecordDAO {
       recordString.append("Record = '" + searchRecords.get(i) + "' ");
     }
 
+    String query =
+        "SELECT * FROM Records " + "WHERE " + fieldString + "AND " + recordString
+        + "COLLATE NOCASE";
+
     fieldString.append(") ");
     recordString.append(") ");
 
-    try {
-      String query =
-          "SELECT * FROM Records " + "WHERE " + fieldString + "AND " + recordString
-              + "COLLATE NOCASE";
-      pstmt = db.getConnection().prepareStatement(query);
+    try (PreparedStatement pstmt = db.getConnection().prepareStatement(query)) {
       resultset = pstmt.executeQuery();
 
       while (resultset.next()) {
@@ -212,7 +211,6 @@ public class RecordDAO {
     } catch (SQLException err) {
       throw new DatabaseException("Unable to get all records", err);
     } finally {
-      Database.closeSafely(pstmt);
       Database.closeSafely(resultset);
     }
     return searchResult;

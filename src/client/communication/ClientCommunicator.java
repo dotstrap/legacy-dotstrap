@@ -12,6 +12,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 import org.apache.commons.io.IOUtils;
@@ -31,7 +32,7 @@ public class ClientCommunicator {
   /** The logger used throughout the project. */
   private static Logger logger;
   static {
-    logger = Logger.getLogger("client");
+    logger = Logger.getLogger("server");
   }
 
   private XStream       xs = new XStream(new DomDriver());
@@ -62,7 +63,7 @@ public class ClientCommunicator {
    */
   public ClientCommunicator() {
     host = "localhost";
-    port = 50080;
+    port = 39640;
     URL_PREFIX = String.format("http://%s:%d", host, port);
   }
 
@@ -114,8 +115,7 @@ public class ClientCommunicator {
    * @return the sample batch
    * @throws ServerException the client exception
    */
-  public GetSampleBatchResponse getSampleBatch(GetSampleBatchRequest params)
-      throws ServerException {
+  public GetSampleBatchResponse getSampleBatch(GetSampleBatchRequest params) throws ServerException {
     GetSampleBatchResponse result = null;
     try {
       result = (GetSampleBatchResponse) doPost("/GetSampleImage", params);

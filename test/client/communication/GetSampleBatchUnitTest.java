@@ -16,8 +16,7 @@ import java.util.logging.Logger;
 
 import org.junit.*;
 
-import client.ClientException;
-
+import server.ServerException;
 import server.database.Database;
 import server.database.DatabaseException;
 import server.database.dao.*;
@@ -167,7 +166,7 @@ public class GetSampleBatchUnitTest {
     GetSampleBatchResponse result = null;
     try {
       result = clientComm.getSampleBatch(new GetSampleBatchRequest("userTest1", "pass1", 1));
-    } catch (ClientException e) {
+    } catch (ServerException e) {
       logger.log(Level.SEVERE, "STACKTRACE: ", e);
     }
     assertTrue(testBatch1.equals(result.getSampleBatch()));
@@ -182,7 +181,7 @@ public class GetSampleBatchUnitTest {
     boolean shouldPass = false;
     try {
       result = clientComm.getSampleBatch(new GetSampleBatchRequest("INVALID", "pass1", 1));
-    } catch (ClientException e) {
+    } catch (ServerException e) {
       shouldPass = true; // invalid creds will trigger an exception before we reach server facade
       logger.log(Level.SEVERE, "STACKTRACE: ", e);
     }
@@ -200,7 +199,7 @@ public class GetSampleBatchUnitTest {
     boolean shouldPass = false;
     try {
       result = clientComm.getSampleBatch(new GetSampleBatchRequest("userTest1", "pass1", 9999));
-    } catch (ClientException e) {
+    } catch (ServerException e) {
       shouldPass = true;
       logger.log(Level.SEVERE, "STACKTRACE: ", e);
     }

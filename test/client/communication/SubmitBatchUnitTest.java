@@ -14,8 +14,7 @@ import java.util.logging.Logger;
 
 import org.junit.*;
 
-import client.ClientException;
-
+import server.ServerException;
 import server.database.Database;
 import server.database.DatabaseException;
 import server.database.dao.*;
@@ -200,7 +199,7 @@ public class SubmitBatchUnitTest {
       result =
           clientComm.submitBatch(new SubmitBatchRequest("userTest1", "pass1", testBatch1
               .getBatchId(), ";"));
-    } catch (ClientException e) {
+    } catch (ServerException e) {
       isValidInput = false;
 
       // logger.log(Level.SEVERE, "STACKTRACE: ", e);

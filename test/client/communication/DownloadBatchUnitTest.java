@@ -13,8 +13,7 @@ import java.util.List;
 
 import org.junit.*;
 
-import client.ClientException;
-
+import server.ServerException;
 import server.database.Database;
 import server.database.DatabaseException;
 import server.database.dao.BatchDAO;
@@ -160,7 +159,7 @@ public class DownloadBatchUnitTest {
     boolean isValid = true;
     try {
       clientComm.downloadBatch(new DownloadBatchRequest("userTest1", "INVALID", 1));
-    } catch (ClientException e) {
+    } catch (ServerException e) {
       isValid = false;
     }
     assertEquals(false, isValid);
@@ -176,7 +175,7 @@ public class DownloadBatchUnitTest {
     DownloadBatchResponse result2 = new DownloadBatchResponse();
     try {
       result2 = clientComm.downloadBatch(new DownloadBatchRequest("userTest2", "pass2", 100));
-    } catch (ClientException e) {
+    } catch (ServerException e) {
 
     }
     assertEquals(null, result2.getFields());

@@ -124,6 +124,6 @@ public abstract class IndexerServerHandler implements HttpHandler {
     // ServerFacade.validateUser(auth);
     // logger.warning("INVALID: username: " + username + " & password: " + password + "...");
 
-    return (ServerFacade.validateUser(auth) != null);
+    return (ServerFacade.validateUser(auth).getUser() != null);
   }
 }

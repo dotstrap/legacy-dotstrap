@@ -39,8 +39,8 @@ public class DownloadBatchHandler extends IndexerServerHandler {
 
       this.setResponse(response);
     } else {
-      statusCode = HttpURLConnection.HTTP_UNAUTHORIZED;
-      this.setResponse(null); // TODO: should I do this?
+        statusCode = HttpURLConnection.HTTP_OK;
+        this.setResponse(null);
     }
     return statusCode;
   }

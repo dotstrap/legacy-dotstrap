@@ -15,6 +15,7 @@ import server.facade.ServerFacade;
 import server.httphandler.IndexerServerHandler;
 
 import shared.communication.SubmitBatchRequest;
+import shared.communication.SubmitBatchResponse;
 
 /**
  * The Class SubmitBatchHandler.
@@ -29,16 +30,18 @@ public class SubmitBatchHandler extends IndexerServerHandler {
   @Override
   protected int doRequest() throws ServerException, DatabaseException {
     SubmitBatchRequest request = (SubmitBatchRequest) getRequest();
+    SubmitBatchResponse response;
 
     int statusCode;
     if (IndexerServerHandler.authenticate(request.getUsername(), request.getPassword())) {
       statusCode = HttpURLConnection.HTTP_OK;
 
-      ServerFacade.submitBatch(request);
+      response = ServerFacade.submitBatch(request);
 
+      this.setResponse(response);
     } else {
-      statusCode = HttpURLConnection.HTTP_UNAUTHORIZED;
-      this.setResponse(null); // TODO: should I do this?
+        statusCode = HttpURLConnection.HTTP_OK;
+        this.setResponse(null);
     }
     return statusCode;
   }

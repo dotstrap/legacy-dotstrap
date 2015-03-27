@@ -21,7 +21,6 @@ import shared.communication.ValidateUserResponse;
  * The Class ValidateUserHandler.
  */
 public class ValidateUserHandler extends IndexerServerHandler {
-  // TODO: try to use the authentication method for this??
   /*
    * (non-Javadoc)
    *

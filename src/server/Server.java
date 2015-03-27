@@ -8,6 +8,7 @@
 
 package server;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -35,17 +36,24 @@ public class Server {
    * @param args the port to run the indexer server on
    */
   public static void main(String[] args) {
+    File logDir = new File("logs");
+    if (!logDir.exists()) {
+      try {
+        logDir.mkdir();
+      } catch (SecurityException e) {
+        System.out.println("ERROR: do not have permission to create log directory...");
+      }
+    }
+
     int portNum = DEFAULT_PORT;
     try {
       FileInputStream is = new FileInputStream("logging.properties");
       LogManager.getLogManager().readConfiguration(is);
       logger = Logger.getLogger("server");
     } catch (IOException e) {
-      Logger.getAnonymousLogger().severe(
-          "ERROR: unable to load logging properties file from " + Server.class.getSimpleName());
-      Logger.getAnonymousLogger().severe(e.getMessage());
+      System.out.println("ERROR: unable to load logging properties file...");
     }
-   logger.info("===============Initialized " + logger.getName() + " log...");
+    logger.info("===============Initialized " + logger.getName() + " log...");
 
     if (args == null) {
       logger.info("No port number specified; using default port: " + DEFAULT_PORT + "....");
@@ -69,6 +77,9 @@ public class Server {
       logger.log(Level.SEVERE, "STACKTRACE: ", e);
     }
   }
+
+
+
 
 
 

@@ -16,8 +16,7 @@ import java.util.logging.Logger;
 
 import org.junit.*;
 
-import client.ClientException;
-
+import server.ServerException;
 import server.database.Database;
 import server.database.dao.*;
 
@@ -172,7 +171,7 @@ public class GetFieldsUnitTest {
       result1 =
           clientComm.getFields(new GetFieldsRequest("userTest1", "pass1", testProject1
               .getProjectId()));
-    } catch (ClientException e) {
+    } catch (ServerException e) {
       fail("ERROR: failed vaild test...");
       logger.log(Level.SEVERE, "STACKTRACE: ", e);
     }
