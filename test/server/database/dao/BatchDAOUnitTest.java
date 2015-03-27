@@ -46,9 +46,9 @@ public class BatchDAOUnitTest {
 
   private Database db;
   private BatchDAO testBatchDAO;
-  Batch            batchTest1;
-  Batch            batchTest2;
-  Batch            batchTest3;
+  Batch batchTest1;
+  Batch batchTest2;
+  Batch batchTest3;
 
   /**
    * Sets the database up.

@@ -29,13 +29,12 @@ public class GetSampleBatchHandler extends IndexerServerHandler {
   @Override
   protected int doRequest() throws ServerException, DatabaseException {
     GetSampleBatchRequest request = (GetSampleBatchRequest) getRequest();
-    GetSampleBatchResponse response = new GetSampleBatchResponse();
 
     int statusCode;
     if (IndexerServerHandler.authenticate(request.getUsername(), request.getPassword())) {
       statusCode = HttpURLConnection.HTTP_OK;
 
-      response = ServerFacade.getSampleBatch(request);
+      GetSampleBatchResponse response = ServerFacade.getSampleBatch(request);
 
       setResponse(response);
     } else {

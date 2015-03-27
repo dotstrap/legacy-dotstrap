@@ -7,32 +7,31 @@ import servertester.controllers.*;
 @SuppressWarnings("serial")
 public class BasePanel extends JPanel {
 
-	private IController _controller;
-	
-	public BasePanel() {
-		super();
-	}
+  private IController _controller;
 
-	public BasePanel(LayoutManager layout) {
-		super(layout);
-	}
+  public BasePanel() {
+    super();
+  }
 
-	public BasePanel(boolean isDoubleBuffered) {
-		super(isDoubleBuffered);
-	}
+  public BasePanel(LayoutManager layout) {
+    super(layout);
+  }
 
-	public BasePanel(LayoutManager layout, boolean isDoubleBuffered, IController controller) {
-		super(layout, isDoubleBuffered);
-		setController(controller);
-	}
-	
-	public IController getController() {
-		return _controller;
-	}
-	
-	public void setController(IController value) {
-		_controller = value;
-	}
+  public BasePanel(boolean isDoubleBuffered) {
+    super(isDoubleBuffered);
+  }
+
+  public BasePanel(LayoutManager layout, boolean isDoubleBuffered, IController controller) {
+    super(layout, isDoubleBuffered);
+    setController(controller);
+  }
+
+  public IController getController() {
+    return _controller;
+  }
+
+  public void setController(IController value) {
+    _controller = value;
+  }
 
 }
-

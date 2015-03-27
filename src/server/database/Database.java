@@ -2,7 +2,7 @@
  * Database.java
  * JRE v1.8.0_40
  *
- * Created by William Myers on Mar 24, 2015.
+ * Created by William Myers on Mar 27, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package server.database;
@@ -18,31 +18,17 @@ import server.database.dao.*;
  * The Class Database.
  */
 public class Database {
-
-// @formatter:off
-  /** The database name. */
-  public static String DB_NAME            = "IndexerServer.sqlite";
-
-  /** The database directory. */
-  public static String DB_DIRECTORY       = "database";
-
-  /** The database file. */
-  public static String DB_FILE            = DB_DIRECTORY + File.separator + DB_NAME;
-
-  /** The database template. */
-  public static String DB_TEMPLATE        = DB_DIRECTORY + File.separator + "template"
-      + File.separator + DB_NAME;
-  private static String DB_CONNECTION_URL = "jdbc:sqlite:" + DB_DIRECTORY + File.separator
-      + DB_NAME;
+  private static String DB_DIR            = "database";
+  private static String DB_NAME           = "IndexerServer.sqlite";
+  public static String  DB_FILE           = DB_DIR + File.separator + DB_NAME;
+  private static String DB_CONNECTION_URL = "jdbc:sqlite:" + DB_DIR + File.separator + DB_NAME;
 
   /** The logger used throughout the project. */
   private static Logger logger;
   static {
     logger = Logger.getLogger("server");
-
   }
 
-  // @formatter:on
   // DataBase Access //////////////////
   /** The database driver connection. */
   private Connection    connection;
@@ -59,8 +45,10 @@ public class Database {
    * The project DataBaseAccess. interfaces with the database to modify the project table
    */
   private ProjectDAO    projectDAO;
-  /*
-   * * The record DataBaseAccess. interfaces with the database to modify the record table
+  /**
+   * The record DataBaseAccess.
+   *
+   * interfaces with the database to modify the record table
    */
   private RecordDAO     recordDAO;
   /**

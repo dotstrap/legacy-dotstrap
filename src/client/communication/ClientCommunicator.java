@@ -8,12 +8,9 @@
 package client.communication;
 
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.net.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.LogManager;
-import java.util.logging.Logger;
 
 import org.apache.commons.io.IOUtils;
 
@@ -23,18 +20,11 @@ import com.thoughtworks.xstream.io.xml.DomDriver;
 import server.ServerException;
 
 import shared.communication.*;
-import shared.model.Record;
 
 /**
  * The Class ClientCommunicator.
  */
 public class ClientCommunicator {
-  /** The logger used throughout the project. */
-  private static Logger logger;
-  static {
-    logger = Logger.getLogger("server");
-  }
-
   private XStream       xs = new XStream(new DomDriver());
 
   private String        URL_PREFIX;
@@ -86,8 +76,7 @@ public class ClientCommunicator {
    * @return the validate user response
    */
   public ValidateUserResponse validateUser(ValidateUserRequest params) throws ServerException {
-    ValidateUserResponse result = (ValidateUserResponse) doPost("/ValidateUser", params);
-    return result;
+    return (ValidateUserResponse) doPost("/ValidateUser", params);
   }
 
   /**
@@ -98,14 +87,7 @@ public class ClientCommunicator {
    * @throws ServerException the client exception
    */
   public GetProjectsResponse getProjects(GetProjectsRequest creds) throws ServerException {
-    GetProjectsResponse result = null;
-    try {
-      result = (GetProjectsResponse) doPost("/GetProjects", creds);
-    } catch (Exception e) {
-      // logger.log(Level.SEVERE, "STACKTRACE: ", e);
-      throw new ServerException(e);
-    }
-    return result;
+    return (GetProjectsResponse) doPost("/GetProjects", creds);
   }
 
   /**
@@ -114,17 +96,13 @@ public class ClientCommunicator {
    * @param params the params
    * @return the sample batch
    * @throws ServerException the client exception
+   * @throws MalformedURLException
    */
-  public GetSampleBatchResponse getSampleBatch(GetSampleBatchRequest params) throws ServerException {
-    GetSampleBatchResponse result = null;
-    try {
-      result = (GetSampleBatchResponse) doPost("/GetSampleImage", params);
-      URL url = new URL(URL_PREFIX);
-      result.setUrlPrefix(url);
-    } catch (Exception e) {
-      // logger.log(Level.SEVERE, "STACKTRACE: ", e);
-      throw new ServerException(e);
-    }
+  public GetSampleBatchResponse getSampleBatch(GetSampleBatchRequest params)
+      throws ServerException, MalformedURLException {
+    GetSampleBatchResponse result = (GetSampleBatchResponse) doPost("/GetSampleImage", params);
+    URL url = new URL(URL_PREFIX);
+    result.setUrlPrefix(url);
     return result;
   }
 
@@ -134,17 +112,13 @@ public class ClientCommunicator {
    * @param params the params
    * @return the download batch response
    * @throws ServerException the client exception
+   * @throws MalformedURLException
    */
-  public DownloadBatchResponse downloadBatch(DownloadBatchRequest params) throws ServerException {
-    DownloadBatchResponse result = null;
-    try {
-      result = (DownloadBatchResponse) doPost("/DownloadBatch", params);
-      URL url = new URL(URL_PREFIX);
-      result.setUrlPrefix(url);
-    } catch (Exception e) {
-      // logger.log(Level.SEVERE, "STACKTRACE: ", e);
-      throw new ServerException(e);
-    }
+  public DownloadBatchResponse downloadBatch(DownloadBatchRequest params) throws ServerException,
+      MalformedURLException {
+    DownloadBatchResponse result = (DownloadBatchResponse) doPost("/DownloadBatch", params);
+    URL url = new URL(URL_PREFIX);
+    result.setUrlPrefix(url);
     return result;
   }
 
@@ -156,14 +130,7 @@ public class ClientCommunicator {
    * @throws ServerException the client exception
    */
   public SubmitBatchResponse submitBatch(SubmitBatchRequest params) throws ServerException {
-    SubmitBatchResponse result = null;
-    try {
-      result = (SubmitBatchResponse) doPost("/SubmitBatch", params);
-    } catch (Exception e) {
-      // logger.log(Level.SEVERE, "STACKTRACE: ", e);
-      throw new ServerException(e);
-    }
-    return result;
+    return (SubmitBatchResponse) doPost("/SubmitBatch", params);
   }
 
   /**
@@ -174,14 +141,7 @@ public class ClientCommunicator {
    * @throws ServerException the client exception
    */
   public GetFieldsResponse getFields(GetFieldsRequest params) throws ServerException {
-    GetFieldsResponse result = null;
-    try {
-      result = (GetFieldsResponse) doPost("/GetFields", params);
-    } catch (Exception e) {
-      // logger.log(Level.SEVERE, "STACKTRACE: ", e);
-      throw new ServerException(e);
-    }
-    return result;
+    return (GetFieldsResponse) doPost("/GetFields", params);
   }
 
   /**
@@ -192,22 +152,14 @@ public class ClientCommunicator {
    * @throws ServerException the client exception
    */
   public SearchResponse search(SearchRequest params) throws ServerException {
-    SearchResponse result;
-    System.out.println("HELLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLOOOOOOOOOOOOOOOOOO ");
-    try {
-      result = (SearchResponse) doPost("/Search", params);
-      List<URL> urls = new ArrayList<URL>();
-      for (Record r : result.getFoundRecords()) {
-        URL url = new URL(URL_PREFIX + "/" + r.getBatchURL());
-        urls.add(url);
-      }
-      result.setUrls(urls);
-    } catch (Exception e) {
-
-    System.out.println("HELLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLOOOOOOOOOOOOOOOOOO ");
-      // logger.log(Level.SEVERE, "STACKTRACE: ", e);
-      throw new ServerException(e);
+    SearchResponse result = (SearchResponse) doPost("/Search", params);
+    List<String> urls = new ArrayList<String>();
+    for (String s : result.getUrls()) {
+      String url = URL_PREFIX + "/" + s;
+      urls.add(url);
+      System.out.println(s);
     }
+    result.setUrls(urls);
     return result;
   }
 
@@ -244,7 +196,6 @@ public class ClientCommunicator {
         response.close();
       }
     } catch (Exception e) {
-      // logger.log(Level.SEVERE, "STACKTRACE: ", e);
       throw new ServerException(e);
     }
     return result;

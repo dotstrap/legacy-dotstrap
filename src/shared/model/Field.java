@@ -7,7 +7,6 @@
  */
 package shared.model;
 
-
 /**
  * The Class Field.
  */
@@ -157,7 +156,7 @@ public class Field {
     }
 
     Field other = (Field) o;
-        return ((projectId == other.getProjectId()) // @formatter:off
+    return ((projectId == other.getProjectId()) // @formatter:off
         && title.equals(other.getTitle())
         && (xCoord == other.getXCoord())
         && (width == other.getWidth())

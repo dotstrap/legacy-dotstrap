@@ -19,7 +19,6 @@ import server.database.DatabaseException;
 
 import shared.model.Field;
 
-
 /**
  * The Class FieldDAOUnitTest.
  */
@@ -49,9 +48,9 @@ public class FieldDAOUnitTest {
 
   private Database db;
   private FieldDAO testFieldDAO;
-  private Field    fieldTest1 = null;
-  private Field    fieldTest2 = null;
-  private Field    fieldTest3 = null;
+  private Field fieldTest1 = null;
+  private Field fieldTest2 = null;
+  private Field fieldTest3 = null;
 
   /**
    * Sets the database up.

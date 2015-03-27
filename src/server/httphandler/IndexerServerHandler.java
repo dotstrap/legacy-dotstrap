@@ -32,26 +32,24 @@ import shared.communication.*;
 public abstract class IndexerServerHandler implements HttpHandler {
 
   /** The logger used throughout the project. */
-  private static Logger logger;
+  private static Logger   logger;
   static {
     logger = Logger.getLogger("server");
-
-  } // @formatter:off
+  }
 
   /** The server. */
-  protected static String SERVER = HttpServer.class.getName() + " ("
-      + System.getProperty("os.name") + ")";
-
+  protected static String SERVER       = HttpServer.class.getName() + " ("
+                                           + System.getProperty("os.name") + ")";
   /** The content type. */
   protected static String CONTENT_TYPE = "text/xml";
 
   /** The x stream. */
-  protected XStream xStream = new XStream(new DomDriver());
+  protected XStream       xStream      = new XStream(new DomDriver());
 
-  private Request  request;
-  private Response response;
+  private Request         request;
+  private Response        response;
 
-  private String   urlPrefix; // @formatter:on
+  private String          urlPrefix;
 
   @Override
   public void handle(HttpExchange exchange) throws IOException {
@@ -116,8 +114,8 @@ public abstract class IndexerServerHandler implements HttpHandler {
    * @param password the password
    * @return True if credentials are valid, false otherwise
    */
-  public static boolean authenticate(String username, String password) throws DatabaseException,
-      ServerException {
+  public static boolean authenticate(String username, String password)// @formatter:off
+      throws DatabaseException, ServerException { // @formatter:on
     ValidateUserRequest auth = new ValidateUserRequest();
     auth.setUsername(username);
     auth.setPassword(password);

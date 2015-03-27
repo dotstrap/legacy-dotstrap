@@ -9,12 +9,11 @@ package shared.communication;
 
 import shared.model.User;
 
-
 /**
  * The Class ValidateUserResponse.
  */
 public class ValidateUserResponse implements Response {
-  private User    user;
+  private User user;
 
   /**
    * Instantiates a new validate user result.

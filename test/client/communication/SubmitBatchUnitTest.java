@@ -23,16 +23,13 @@ import shared.communication.SubmitBatchRequest;
 import shared.communication.SubmitBatchResponse;
 import shared.model.*;
 
-
 /**
  * The Class SubmitBatchUnitTest.
  */
 public class SubmitBatchUnitTest {
 
-
-
   /** The logger used throughout the project. */
-  private static Logger logger; // @formatter:off
+  private static Logger logger; // @formatter:on
   static {
     logger = Logger.getLogger("server");
   }
@@ -45,15 +42,15 @@ public class SubmitBatchUnitTest {
   private static BatchDAO   testBatchDAO;
   private static ProjectDAO testProjectDAO;
 
-  private static User     testUser1;
-  private static User     testUser2;
-  private static User     testUser3;
-  private static Batch    testBatch1;
-  private static Batch    testBatch2;
-  private static Batch    testBatch3;
-  private static Project  testProject1;
-  private static Project  testProject2;
-  private static Project  testProject3;  // @formatter:on
+  private static User       testUser1;
+  private static User       testUser2;
+  private static User       testUser3;
+  private static Batch      testBatch1;
+  private static Batch      testBatch2;
+  private static Batch      testBatch3;
+  private static Project    testProject1;
+  private static Project    testProject2;
+  private static Project    testProject3;  // @formatter:on
 
   /**
    * Sets the up before class.
@@ -123,6 +120,7 @@ public class SubmitBatchUnitTest {
 
   /**
    * Tear down after class.
+   *
    * @throws DatabaseException
    */
   @AfterClass

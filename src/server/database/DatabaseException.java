@@ -7,7 +7,6 @@
  */
 package server.database;
 
-
 /**
  * The Class DatabaseException.
  */

@@ -29,18 +29,17 @@ public class DownloadBatchHandler extends IndexerServerHandler {
   @Override
   protected int doRequest() throws ServerException, DatabaseException {
     DownloadBatchRequest request = (DownloadBatchRequest) getRequest();
-    DownloadBatchResponse response;
 
     int statusCode;
     if (IndexerServerHandler.authenticate(request.getUsername(), request.getPassword())) {
       statusCode = HttpURLConnection.HTTP_OK;
 
-      response = ServerFacade.downloadBatch(request);
+      DownloadBatchResponse response = ServerFacade.downloadBatch(request);
 
       this.setResponse(response);
     } else {
-        statusCode = HttpURLConnection.HTTP_OK;
-        this.setResponse(null);
+      statusCode = HttpURLConnection.HTTP_OK;
+      this.setResponse(null);
     }
     return statusCode;
   }

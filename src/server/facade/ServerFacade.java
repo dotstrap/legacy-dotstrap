@@ -41,7 +41,7 @@ public class ServerFacade {
     try {
       Database.initDriver();
     } catch (DatabaseException e) {
-      throw new ServerException(e);
+      throw new ServerException("ERROR while initializing database: " + e);
     }
   }
 
@@ -60,12 +60,11 @@ public class ServerFacade {
     try {
       db.startTransaction();
       user = db.getUserDAO().read(request.getUsername(), request.getPassword());
-    } catch (DatabaseException e) {
-      logger.log(Level.SEVERE, "STACKTRACE: ", e);
-      throw new ServerException("ERROR reading from database to validate username: "
-          + request.getUsername());
-    } finally {
       db.endTransaction(true);
+    } catch (DatabaseException e) {
+      db.endTransaction(false);
+      throw new ServerException("while reading from database to validate username: "
+          + request.getUsername(), e);
     }
 
     ValidateUserResponse result = new ValidateUserResponse(user);
@@ -88,8 +87,8 @@ public class ServerFacade {
       projects = db.getProjectDAO().getAll();
       db.endTransaction(true);
     } catch (DatabaseException e) {
-      logger.log(Level.SEVERE, "STACKTRACE: ", e);
-      throw new ServerException(e);
+      db.endTransaction(false);
+      throw new ServerException("while attempting to get all projects ", e);
     }
 
     GetProjectsResponse result = new GetProjectsResponse();
@@ -114,7 +113,8 @@ public class ServerFacade {
       sampleBatch = db.getBatchDAO().getSampleBatch(request.getProjectId());
       db.endTransaction(true);
     } catch (DatabaseException e) {
-      throw new ServerException(e);
+      db.endTransaction(false);
+      throw new ServerException("while attempting to get a sample batch ", e);
     }
 
     GetSampleBatchResponse result = new GetSampleBatchResponse();
@@ -132,7 +132,7 @@ public class ServerFacade {
    * @throws DatabaseException the database exception
    */
   public static DownloadBatchResponse downloadBatch(DownloadBatchRequest request)
-      throws ServerException, DatabaseException {
+      throws ServerException, DatabaseException { // TODO: clean this method up
     Database db = new Database();
     int projectId = request.getProjectId();
 
@@ -167,7 +167,8 @@ public class ServerFacade {
 
       db.endTransaction(true);
     } catch (DatabaseException e) {
-      throw new ServerException(e);
+      db.endTransaction(false);
+      throw new ServerException("while attempting to download batch ", e);
     }
 
     DownloadBatchResponse result = new DownloadBatchResponse();
@@ -213,9 +214,10 @@ public class ServerFacade {
    *
    * @param request the request
    * @return the submit batch response
+   * @throws ServerException
    */
   public static SubmitBatchResponse submitBatch(SubmitBatchRequest request)
-      throws DatabaseException {
+      throws DatabaseException, ServerException {
     SubmitBatchResponse result = new SubmitBatchResponse();
     Database db = new Database();
     try {
@@ -249,7 +251,7 @@ public class ServerFacade {
       }
     } catch (Exception e) {
       db.endTransaction(false);
-      logger.log(Level.SEVERE, "STACKTRACE: ", e);
+      throw new ServerException("while attempting to submit batch ", e);
     }
     db.endTransaction(true);
     return result;
@@ -272,6 +274,7 @@ public class ServerFacade {
       fields = projectId > 0 ? db.getFieldDAO().getAll(projectId) : db.getFieldDAO().getAll();
       db.endTransaction(true);
     } catch (DatabaseException e) {
+      db.endTransaction(false);
       throw new ServerException(e);
     }
 
@@ -292,19 +295,34 @@ public class ServerFacade {
    * @throws ServerException the server exception
    */
   public static SearchResponse search(SearchRequest request) throws ServerException {
+    System.out.println("\n========INSIDE SEARCH==============");
     Database db = new Database();
-    List<Record> records = null;
+    SearchResponse result = new SearchResponse();
+    ArrayList<Record> records = new ArrayList<Record>();
+    ArrayList<String> links = new ArrayList<String>();
 
     try {
       db.startTransaction();
-      records = db.getRecordDAO().search(request.getFieldIds(), request.getSearchQueries());
-      db.endTransaction(true);
+
+      for (Integer i : request.getFieldIds()) {
+        System.out.println("\nOUTSIDE FIELD ID: " + i);
+        for (String s : request.getSearchQueries()) {
+          System.out.println("\nFIELD ID: " + i + "\nQUERY:" + s);
+          records.addAll(db.getRecordDAO().search(i, s));
+        }
+      }
+      for (Record r : records) {
+        links.add(db.getBatchDAO().read(r.getBatchId()).getFilePath());
+      }
+      result.setUrls(links);
+      result.setFoundRecords(records);
     } catch (DatabaseException e) {
-      throw new ServerException(e);
+      System.out.println("\n========DB EXCEPTION==============");
+      db.endTransaction(false);
+      throw new ServerException("while attempting to search database ", e);
     }
 
-    SearchResponse result = new SearchResponse();
-    result.setFoundRecords(records);
+    db.endTransaction(true);
     return result;
   }
 
@@ -325,7 +343,7 @@ public class ServerFacade {
       data = IOUtils.toByteArray(is);
       is.close();
     } catch (Exception e) {
-      throw new ServerException(e);
+      throw new ServerException("while attempting to download file ", e);
     }
     return new DownloadFileResponse(data);
   }

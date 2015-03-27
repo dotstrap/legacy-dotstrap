@@ -7,7 +7,6 @@
  */
 package shared.communication;
 
-
 /**
  * The Class DownloadBatchParameters.
  */

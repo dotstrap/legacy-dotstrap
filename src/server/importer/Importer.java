@@ -85,11 +85,6 @@ public class Importer {
       db.initTables();
       db.endTransaction(true);
 
-      logger.info("Creating new database from template: " + Database.DB_TEMPLATE);
-      File activeDB = new File(Database.DB_FILE);
-      File templateDB = new File(Database.DB_TEMPLATE);
-      FileUtils.copyFile(activeDB, templateDB);
-
       DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
       DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
       Document doc = docBuilder.parse(xmlImportFile);
@@ -305,9 +300,9 @@ public class Importer {
       ArrayList<Element> children = getChildElements(batchElem);
       records = getChildElements(children.get(1));
 
-      int rowNum = 1;
+      int colNum = 1;
       for (Element curr : records) {
-        loadRecords(curr, projectId, batchId, batchUrl, rowNum++);
+        loadRecords(curr, projectId, batchId, batchUrl, colNum++);
       }
     }
   }
@@ -335,7 +330,6 @@ public class Importer {
 
         db.endTransaction(true);
       } catch (DatabaseException e) {
-
         logger.log(Level.SEVERE, "STACKTRACE: ", e);
       }
     }

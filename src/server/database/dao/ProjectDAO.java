@@ -17,7 +17,6 @@ import server.database.DatabaseException;
 
 import shared.model.Project;
 
-
 /**
  * The Class ProjectDAO.
  */
@@ -49,8 +48,8 @@ public class ProjectDAO {
   public void initTable() throws DatabaseException {
     Statement stmt1 = null;
     Statement stmt2 = null;
-    // @formatter:off
-    String dropProjectTable = "DROP TABLE IF EXISTS Project";
+
+    String dropProjectTable = "DROP TABLE IF EXISTS Project";// @formatter:off
     String createProjectTable =
         "CREATE TABLE Project ("
             + "ProjectId INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE, "

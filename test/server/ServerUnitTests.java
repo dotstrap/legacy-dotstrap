@@ -17,13 +17,12 @@ import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.Test;
 
-
 /**
  * The Class ServerUnitTests.
  */
 public class ServerUnitTests {
   /** The logger. */
-  private static Logger      logger;
+  private static Logger logger;
   public final static String LOG_NAME = "serverTest";
 
   /**

@@ -26,17 +26,13 @@ import shared.communication.GetProjectsResponse;
 import shared.model.Project;
 import shared.model.User;
 
-
 /**
  * The Class GetProjectsUnitTest.
  */
 public class GetProjectsUnitTest {
 
-
-
-
   /** The logger used throughout the project. */
-  private static Logger logger; // @formatter:off
+  private static Logger logger;// @formatter:off
   static {
     logger = Logger.getLogger("server");
   }
@@ -44,8 +40,10 @@ public class GetProjectsUnitTest {
    private ClientCommunicator clientComm;
 
    private Database   db;
+
    private UserDAO    testUserDAO;
    private ProjectDAO testProjectDAO;
+
    private User       testUser1;
    private User       testUser2;
    private User       testUser3;
@@ -66,6 +64,7 @@ public class GetProjectsUnitTest {
 
   /**
    * Tear down after class.
+   *
    * @throws DatabaseException
    */
   @AfterClass
@@ -122,7 +121,7 @@ public class GetProjectsUnitTest {
    */
   @After
   public void tearDown() throws Exception {
-   // empty db and restore it to its original state
+    // empty db and restore it to its original state
     db.startTransaction();
     db.initTables();
     db.endTransaction(true);
@@ -149,7 +148,7 @@ public class GetProjectsUnitTest {
   public void validProjectTest() throws ServerException {
     GetProjectsResponse result =
         clientComm.getProjects(new GetProjectsRequest("userTest1", "pass1"));
-     assertEquals(3, result.getProjects().size());
+    assertEquals(3, result.getProjects().size());
   }
 
   /**

@@ -24,16 +24,13 @@ import shared.communication.GetFieldsRequest;
 import shared.communication.GetFieldsResponse;
 import shared.model.*;
 
-
 /**
  * The Class GetFieldsUnitTest.
  */
 public class GetFieldsUnitTest {
 
-
-
   /** The logger used throughout the project. */
-  static private Logger logger; // @formatter:off
+  static private Logger logger;// @formatter:off
   static {
     logger = Logger.getLogger("server");
   }
@@ -41,9 +38,11 @@ public class GetFieldsUnitTest {
    private ClientCommunicator clientComm;
 
    private Database   db;
+
    private UserDAO    testUserDAO;
    private ProjectDAO testProjectDAO;
    private FieldDAO   testFieldDAO;
+
    private User       testUser1;
    private User       testUser2;
    private User       testUser3;

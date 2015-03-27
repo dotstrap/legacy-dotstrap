@@ -18,7 +18,6 @@ import server.database.DatabaseException;
 
 import shared.model.Record;
 
-
 /**
  * The Class RecordDAOUnitTest.
  */
@@ -47,7 +46,7 @@ public class RecordDAOUnitTest {
     return;
   }
 
-  private Database  db;
+  private Database db;
   private RecordDAO testRecDAO;
 
   /**

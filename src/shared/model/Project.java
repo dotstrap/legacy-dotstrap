@@ -7,7 +7,6 @@
  */
 package shared.model;
 
-
 /**
  * The Class Project.
  */

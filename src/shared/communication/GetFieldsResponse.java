@@ -12,7 +12,6 @@ import java.util.List;
 import shared.model.Field;
 import shared.model.User;
 
-
 /**
  * The Class GetFieldsResponse.
  */

@@ -26,3 +26,4 @@ RecordIndexer.tar.gz
 .classpath
 .project
 data
+/bin/

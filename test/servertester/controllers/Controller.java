@@ -1,5 +1,13 @@
+/**
+ * Controller.java
+ * JRE v1.8.0_40
+ *
+ * Created by William Myers on Mar 27, 2015.
+ * Copyright (c) 2015 William Myers. All Rights reserved.
+ */
 package servertester.controllers;
 
+import java.net.MalformedURLException;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -121,8 +129,8 @@ public class Controller implements IController {
 
       getView().setResponse(result.toString());
     } catch (ServerException e) {
-      logger.log(Level.SEVERE, "STACKTRACE: ", e);
       getView().setResponse("FAILED\n");
+      logger.log(Level.SEVERE, "STACKTRACE: ", e);
     } finally {
       getView().setRequest(printUserInput(args));
     }
@@ -138,8 +146,8 @@ public class Controller implements IController {
       getView().setRequest(printUserInput(args));
       getView().setResponse(result.toString());
     } catch (Exception e) {
-      logger.log(Level.SEVERE, "STACKTRACE: ", e);
       getView().setResponse("FAILED\n");
+      logger.log(Level.SEVERE, "STACKTRACE: ", e);
     } finally {
       getView().setRequest(printUserInput(args));
     }
@@ -155,9 +163,9 @@ public class Controller implements IController {
 
       getView().setRequest(printUserInput(args));
       getView().setResponse(result.toString());
-    } catch (NumberFormatException | ServerException e) {
-      logger.log(Level.SEVERE, "STACKTRACE: ", e);
+    } catch (NumberFormatException | ServerException | MalformedURLException e) {
       getView().setResponse("FAILED\n");
+      logger.log(Level.SEVERE, "STACKTRACE: ", e);
     } finally {
       getView().setRequest(printUserInput(args));
     }
@@ -172,9 +180,9 @@ public class Controller implements IController {
       DownloadBatchResponse result = clientComm.downloadBatch(params);
 
       getView().setResponse(result.toString());
-    } catch (NumberFormatException | ServerException e) {
-      logger.log(Level.SEVERE, "STACKTRACE: ", e);
+    } catch (NumberFormatException | ServerException | MalformedURLException e) {
       getView().setResponse("FAILED\n");
+      logger.log(Level.SEVERE, "STACKTRACE: ", e);
     } finally {
       getView().setRequest(printUserInput(args));
     }
@@ -201,8 +209,8 @@ public class Controller implements IController {
       getView().setRequest(printUserInput(args));
       getView().setResponse(result.toString());
     } catch (NumberFormatException | ServerException e) {
-      logger.log(Level.SEVERE, "STACKTRACE: ", e);
       getView().setResponse("FAILED\n");
+      logger.log(Level.SEVERE, "STACKTRACE: ", e);
     } finally {
       getView().setRequest(printUserInput(args));
     }
@@ -218,8 +226,8 @@ public class Controller implements IController {
 
       getView().setResponse(result.toString());
     } catch (NumberFormatException | ServerException e) {
-      logger.log(Level.SEVERE, "STACKTRACE: ", e);
       getView().setResponse("FAILED\n");
+      logger.log(Level.SEVERE, "STACKTRACE: ", e);
     } finally {
       getView().setRequest(printUserInput(args));
     }
@@ -227,45 +235,61 @@ public class Controller implements IController {
 
   private void search() {
     String[] args = getView().getParameterValues();
-    ArrayList<Integer> fieldList = new ArrayList<Integer>();
-    ArrayList<String> searchList = new ArrayList<String>();
-    String fieldId = args[2];
 
+    ArrayList<Integer> fieldList = new ArrayList<Integer>();
     try {
-      // FIXME: fields wont parse if 1,2,3 and it returns a server error 500 if just one digit
-      List<String> tmpFieldIds = Arrays.asList(fieldId.split(",|;", -1));
+      String fieldIdParams = args[2];
+      List<String> tmpFieldIds = Arrays.asList(fieldIdParams.split(", |,", 0));
       for (String s : tmpFieldIds) {
         if (!fieldList.contains(Integer.parseInt(s))) {
           fieldList.add(Integer.parseInt(s));
+          System.out.println("CURR INT: " + s);
         }
       }
+    } catch (NumberFormatException e) {
+      getView().setResponse("FAILED\n");
+      return;
+    } finally {
+      getView().setRequest(printUserInput(args));
+    }
 
-      String search = args[3];
-      List<String> searchQuery = Arrays.asList(search.split(",|;", -1));
-      for (String s : searchQuery) {
-        s = s.toUpperCase();
-        if (!searchList.contains(s)) {
-          searchList.add(s);
-        }
+    ArrayList<String> searchList = new ArrayList<String>();
+    String queryParams = args[3];
+    List<String> searchQuery = Arrays.asList(queryParams.split(", |,", 0));
+    for (String s : searchQuery) {
+      s = s.toUpperCase();
+      if (!searchList.contains(s)) {
+        System.out.println("CURR S: " + s);
+        searchList.add(s);
       }
+    }
+
+    try {
+      System.out.println(fieldList.toString());
+      System.out.println("\n" + searchQuery.toString());
 
       SearchRequest params = new SearchRequest(args[0], args[1], fieldList, searchList);
       SearchResponse result = clientComm.search(params);
 
       getView().setResponse(result.toString());
     } catch (Exception e) {
-      getView().setResponse(e.toString());
-      logger.log(Level.SEVERE, "STACKTRACE: ", e);
       getView().setResponse("FAILED\n");
+      logger.log(Level.SEVERE, "STACKTRACE: ", e);
     } finally {
       getView().setRequest(printUserInput(args));
     }
   }
 
+  /**
+   * Prints the user input.
+   *
+   * @param args the user input to print out
+   * @return the string with formatted output
+   */
   private String printUserInput(String[] args) {
     StringBuilder sb = new StringBuilder();
-    for (String each : args) {
-      sb.append(each.toString() + "\n");
+    for (String s : args) {
+      sb.append(s.toString() + "\n");
     }
     return sb.toString();
   }

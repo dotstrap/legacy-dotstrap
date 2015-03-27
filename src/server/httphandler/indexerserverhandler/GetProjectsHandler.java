@@ -23,7 +23,7 @@ import shared.communication.GetProjectsResponse;
 public class GetProjectsHandler extends IndexerServerHandler {
   /*
    * (non-Javadoc)
-   *
+   * 
    * @see server.httphandler.IndexerServerHandler#doRequest()
    */
   @Override

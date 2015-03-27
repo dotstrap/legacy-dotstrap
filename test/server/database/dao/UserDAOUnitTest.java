@@ -44,10 +44,10 @@ public class UserDAOUnitTest {
   }
 
   private Database db;
-  private UserDAO  testUserDAO;
-  User             userTest1;
-  User             userTest2;
-  User             userTest3;
+  private UserDAO testUserDAO;
+  User userTest1;
+  User userTest2;
+  User userTest3;
 
   /**
    * Sets the database up.

@@ -29,13 +29,12 @@ public class GetFieldsHandler extends IndexerServerHandler {
   @Override
   protected int doRequest() throws ServerException, DatabaseException {
     GetFieldsRequest request = (GetFieldsRequest) getRequest();
-    GetFieldsResponse response;
 
     int statusCode;
     if (IndexerServerHandler.authenticate(request.getUsername(), request.getPassword())) {
       statusCode = HttpURLConnection.HTTP_OK;
 
-      response = ServerFacade.getFields(request);
+      GetFieldsResponse response = ServerFacade.getFields(request);
 
       this.setResponse(response);
     } else {

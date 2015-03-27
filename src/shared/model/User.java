@@ -1,13 +1,12 @@
 /**
  * User.java
  * JRE v1.8.0_40
- * 
+ *
  * Created by William Myers on Mar 24, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 
 package shared.model;
-
 
 /**
  * The Class User.
@@ -164,14 +163,13 @@ public class User {
     }
 
     User other = (User) o;
-    // @formatter:off
-    return ((userId == other.getUserId())
+
+    return ((userId == other.getUserId()) // @formatter:off
         && username.equals(other.getUsername())
         && password.equals(other.getPassword())
         && first.equals(other.getFirst())
         && last.equals(other.getLast())
-        && email.equals(other.getEmail()));
-    // @formatter:on
+        && email.equals(other.getEmail()));  // @formatter:on
   }
 
   @Override

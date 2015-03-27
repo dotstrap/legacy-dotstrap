@@ -18,7 +18,6 @@ import server.importer.Importer;
 
 import shared.model.*;
 
-
 /**
  * The Class ImporterUnitTest.
  */

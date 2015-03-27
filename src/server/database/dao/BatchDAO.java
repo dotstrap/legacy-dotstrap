@@ -37,7 +37,7 @@ public class BatchDAO {
    * @param db the db
    */
   public BatchDAO(Database db) {
-        this.db = db;
+    this.db = db;
   }
 
   /**
@@ -74,7 +74,6 @@ public class BatchDAO {
         ArrayList<Batch> allBatches = new ArrayList<Batch>();
         while (resultset.next()) {
           Batch resultBatch = new Batch();
-
 
           resultBatch.setBatchId(resultset.getInt("BatchId"));
           resultBatch.setFilePath(resultset.getString("Filepath"));
@@ -152,9 +151,9 @@ public class BatchDAO {
         resultBatch.setStatus(resultset.getInt("Status"));
         resultBatch.setCurrUserId(resultset.getInt("CurrentUserId"));
 
-        //if (resultset.next())
-          //throw new DatabaseException("Read more than one batch: " + batchId
-              //+ " from database...");
+        // if (resultset.next())
+        // throw new DatabaseException("Read more than one batch: " + batchId
+        // + " from database...");
 
         // if (resultBatch.getFilePath() == "") {
         // return null;
@@ -196,9 +195,9 @@ public class BatchDAO {
         resultBatch.setStatus(resultset.getInt("Status"));
         // resultBatch.setCurrUserId(resultset.getInt("CurrentUserId"));
 
-        //if (resultset.next())
-          //throw new DatabaseException("Read more than one batch with projectId: " + projectId
-              //+ " from database...");
+        // if (resultset.next())
+        // throw new DatabaseException("Read more than one batch with projectId: " + projectId
+        // + " from database...");
 
         // if (resultBatch.getFilePath() == "") {
         // return null;
@@ -238,9 +237,9 @@ public class BatchDAO {
         resultBatch.setStatus(resultset.getInt("Status"));
         resultBatch.setCurrUserId(resultset.getInt("CurrentUserId"));
 
-        //if (resultset.next())
-          //throw new DatabaseException("Read more than one  with projectId: " + projectId
-              //+ " from database...");
+        // if (resultset.next())
+        // throw new DatabaseException("Read more than one  with projectId: " + projectId
+        // + " from database...");
 
         // if (resultBatch.getFilePath() == "") {
         // return null;

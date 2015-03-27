@@ -49,8 +49,8 @@ public class RecordDAO {
   public void initTable() throws DatabaseException {
     Statement stmt1 = null;
     Statement stmt2 = null;
-    // @formatter:off
-    String dropRecordTable = "DROP TABLE IF EXISTS Record";
+
+    String dropRecordTable = "DROP TABLE IF EXISTS Record";// @formatter:off
     String createRecordTable =
         "CREATE TABLE Record ("
             + "RecordId INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE, "
@@ -155,47 +155,20 @@ public class RecordDAO {
   /**
    * Searches the records table for a string.
    *
-   * @param searchFieldIds the search field ids
-   * @param searchRecords the search records
+   * @param i the search field ids
+   * @param s the search records
    * @return the records that contain the string
    * @throws DatabaseException the database exception
    */
-  public List<Record> search(List<Integer> searchFieldIds, List<String> searchRecords)
-      throws DatabaseException {
+  public List<Record> search(int fieldId, String dataValue) throws DatabaseException {
     ArrayList<Record> searchResult = new ArrayList<Record>();
 
-    StringBuilder fieldString = new StringBuilder();
-    fieldString.append("(");
-    StringBuilder recordString = new StringBuilder();
-    recordString.append("(");
-
-    System.out.println("IN DA SEARCH=========================" + searchFieldIds.size());
-    for (int i = 0; i < searchFieldIds.size(); i++) {
-      if (i > 0) {
-        fieldString.append("OR ");
-      }
-      System.out.println("\n\nFIELD IDs: " + searchFieldIds.get(i));
-      fieldString.append("FieldId = " + searchFieldIds.get(i) + " ");
-    }
-
-    for (int i = 0; i < searchRecords.size(); i++) {
-      if (i > 0) {
-        recordString.append("OR ");
-      }
-      System.out.println("\n\nrecords: " + searchRecords.get(i));
-      recordString.append("Record = '" + searchRecords.get(i) + "' ");
-    }
-
-    String query =
-        "SELECT * FROM Record " + "WHERE " + fieldString + "AND " + recordString
-            + "COLLATE NOCASE";
-
-    System.out.println("\n\n\n======================QUERY: " + query + "\n\n\n");
-
-    fieldString.append(") ");
-    recordString.append(") ");
+    String query = "SELECT * from Record WHERE FieldId = ? AND Data = ?";;
 
     try (PreparedStatement pstmt = db.getConnection().prepareStatement(query)) {
+      pstmt.setInt(1, fieldId);
+      pstmt.setString(2, dataValue);
+
       try (ResultSet resultset = pstmt.executeQuery()) {
 
         while (resultset.next()) {
@@ -203,7 +176,7 @@ public class RecordDAO {
 
           resultRecord.setRecordId(resultset.getInt(1));
           resultRecord.setFieldId(resultset.getInt(2));
-          resultRecord.setBatchId(3);
+          resultRecord.setBatchId(resultset.getInt(3));
           resultRecord.setBatchURL(resultset.getString(4));
           resultRecord.setData(resultset.getString(5));
           resultRecord.setRowNum(resultset.getInt(6));
@@ -213,7 +186,7 @@ public class RecordDAO {
         }
       }
     } catch (SQLException e) {
-      throw new DatabaseException("unable to search all records...", e);
+      throw new DatabaseException("unable to search records...", e);
     }
     return searchResult;
   }
@@ -230,8 +203,8 @@ public class RecordDAO {
     ResultSet resultset = null;
     try {
       String query =
-          "insert into Record" + "(FieldId, BatchId, BatchURL, Data, RowNumber, ColumnNumber) "
-              + "values (?, ?, ?, ?, ?, ?)";
+          "INSERT into Record" + "(FieldId, BatchId, BatchURL, Data, RowNumber, ColumnNumber) "
+              + "VALUES (?, ?, ?, ?, ?, ?)";
       pstmt = db.getConnection().prepareStatement(query);
 
       pstmt.setInt(1, newRecord.getFieldId());
@@ -248,7 +221,7 @@ public class RecordDAO {
         int id = resultset.getInt(1);
         newRecord.setRecordId(id);
       } else {
-        throw new DatabaseException("Unable to insert new record into database.");
+        throw new DatabaseException("unable to insert new record into database.");
       }
     } catch (SQLException e) {
       logger.log(Level.SEVERE, e.toString());
@@ -288,6 +261,7 @@ public class RecordDAO {
       resultRecord.setData(resultset.getString("Data"));
       resultRecord.setRowNum(resultset.getInt("RowNumber"));
       resultRecord.setColNum(resultset.getInt("ColumnNumber"));
+
     } catch (Exception e) {
       logger.log(Level.SEVERE, e.toString());
       throw new DatabaseException(e);

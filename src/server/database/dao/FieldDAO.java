@@ -131,7 +131,6 @@ public class FieldDAO {
     }
   }
 
-
   /**
    * Gets the id for the field of a project at a certain column.
    *

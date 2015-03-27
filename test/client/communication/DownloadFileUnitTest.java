@@ -21,13 +21,12 @@ import server.database.DatabaseException;
 import shared.communication.DownloadFileRequest;
 import shared.communication.DownloadFileResponse;
 
-
 /**
  * The Class DownloadFileUnitTest.
  */
 public class DownloadFileUnitTest {
   /** The logger used throughout the project. */
-  private static Logger      logger;
+  private static Logger logger;
   static {
     logger = Logger.getLogger("server");
   }

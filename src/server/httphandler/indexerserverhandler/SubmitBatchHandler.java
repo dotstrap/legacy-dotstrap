@@ -24,7 +24,7 @@ public class SubmitBatchHandler extends IndexerServerHandler {
 
   /*
    * (non-Javadoc)
-   *
+   * 
    * @see server.httphandler.IndexerServerHandler#doRequest()
    */
   @Override
@@ -40,8 +40,8 @@ public class SubmitBatchHandler extends IndexerServerHandler {
 
       this.setResponse(response);
     } else {
-        statusCode = HttpURLConnection.HTTP_OK;
-        this.setResponse(null);
+      statusCode = HttpURLConnection.HTTP_OK;
+      this.setResponse(null);
     }
     return statusCode;
   }

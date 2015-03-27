@@ -25,13 +25,12 @@ import shared.communication.GetSampleBatchRequest;
 import shared.communication.GetSampleBatchResponse;
 import shared.model.*;
 
-
 /**
  * The Class GetSampleBatchUnitTest.
  */
 public class GetSampleBatchUnitTest {
   /** The logger used throughout the project. */
-  private static Logger logger; // @formatter:off
+  private static Logger logger;// @formatter:off
   static {
     logger = Logger.getLogger("server");
   }
@@ -39,9 +38,11 @@ public class GetSampleBatchUnitTest {
   private  ClientCommunicator clientComm;
 
   private  Database   db;
+
   private  ProjectDAO testProjectDAO;
   private  BatchDAO   testBatchDAO;
   private  UserDAO    testUserDAO;
+
   private  Project    testProject1;
   private  Project    testProject2;
   private  Project    testProject3;
@@ -58,7 +59,7 @@ public class GetSampleBatchUnitTest {
    * @throws Exception the exception
    */
   @BeforeClass
-  public static  void setUpBeforeClass() throws Exception {
+  public static void setUpBeforeClass() throws Exception {
     // Load database driver
     Database.initDriver();
 
@@ -70,7 +71,7 @@ public class GetSampleBatchUnitTest {
    * @throws Exception the exception
    */
   @AfterClass
-  public  static void tearDownAfterClass() throws Exception {}
+  public static void tearDownAfterClass() throws Exception {}
 
   /**
    * Sets the up.
@@ -132,7 +133,7 @@ public class GetSampleBatchUnitTest {
    */
   @After
   public void tearDown() throws Exception {
-     // empty db and restore it to its original state
+    // empty db and restore it to its original state
     db.startTransaction();
     db.initTables();
     db.endTransaction(true);

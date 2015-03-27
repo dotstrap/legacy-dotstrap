@@ -77,12 +77,6 @@ public class Server {
   }
 
 
-
-
-
-
-
-
   // The server //@formatter:off
   private HttpServer server;
   // Handler objects ////////////////////////////////
@@ -122,7 +116,6 @@ public class Server {
     try {
       ServerFacade.initialize();
     } catch (ServerException e) {
-      logger.log(Level.SEVERE, "STACKTRACE: ", e);
       throw new ServerException(e);
     }
 
@@ -131,7 +124,6 @@ public class Server {
       server = HttpServer.create(new InetSocketAddress(portNum), MAX_WAITING_CONNECTIONS);
     } catch (IOException e) {
       logger.log(Level.SEVERE, "Failed to initialize server on port: " + portNum + "...");
-      logger.log(Level.SEVERE, "STACKTRACE: ", e);
       throw new ServerException(e);
     }
 

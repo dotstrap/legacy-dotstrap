@@ -22,7 +22,7 @@ import shared.communication.DownloadFileResponse;
  * The Class DownloadFileHandler.
  */
 public class DownloadFileHandler implements HttpHandler {
-   @Override
+  @Override
   public void handle(HttpExchange exchange) throws IOException {
     String url = new File("").getAbsolutePath() + exchange.getRequestURI().getPath();
     DownloadFileRequest request = new DownloadFileRequest(url);
@@ -35,7 +35,7 @@ public class DownloadFileHandler implements HttpHandler {
 
       response.write(result.getFileBytes());
     } catch (Exception e) {
-        throw new IOException("while handling file download: " + e);
+      throw new IOException("while handling file download: " + e);
     } finally {
       exchange.close();
     }

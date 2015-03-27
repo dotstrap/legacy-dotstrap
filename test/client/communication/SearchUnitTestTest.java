@@ -16,15 +16,10 @@ import java.util.logging.Logger;
 
 import org.junit.*;
 
-import server.ServerException;
 import server.database.Database;
-import server.database.DatabaseException;
 import server.database.dao.*;
 
-import shared.communication.SearchRequest;
-import shared.communication.SearchResponse;
 import shared.model.*;
-
 
 /**
  * The Class SearchUnitTestTest.
@@ -33,30 +28,32 @@ import shared.model.*;
  */
 public class SearchUnitTestTest {
   /** The logger used throughout the project. */
-  static private Logger logger; // @formatter:off
+  static private Logger      logger; // @formatter:off
   static {
     logger = Logger.getLogger("server");
   }
 
-   private ClientCommunicator clientComm;
+  private ClientCommunicator clientComm;
 
-   private Database   db;
-   private UserDAO    testUserDAO;
-   private ProjectDAO testProjectDAO;
-   private FieldDAO   testFieldDAO;
-   private User       testUser1;
-   private User       testUser2;
-   private User       testUser3;
-   private Field      fieldTest1;
-   private Field      fieldTest2;
-   private Field      fieldTest3;
-   private Project    testProject1;
-   private Project    testProject2;
-   private Project    testProject3;  // @formatter:on
-   private List<Integer> fieldIDs;
-   private List<Integer> badFieldIDs;
-   private List<String> values;
-   private List<String> badValues;
+  private Database      db;
+
+  private UserDAO       testUserDAO;
+  private ProjectDAO    testProjectDAO;
+  private FieldDAO      testFieldDAO;
+
+  private User          testUser1;
+  private User          testUser2;
+  private User          testUser3;
+  private Field         fieldTest1;
+  private Field         fieldTest2;
+  private Field         fieldTest3;
+  private Project       testProject1;
+  private Project       testProject2;
+  private Project       testProject3;
+  private List<Integer> fieldIDs;
+  private List<Integer> badFieldIDs;
+  private List<String>  values;
+  private List<String>  badValues; // @formatter:on
 
   /**
    * Sets the up before class.
@@ -175,27 +172,27 @@ public class SearchUnitTestTest {
 
   @Test
   public void quickTest() {
-      assertEquals(true, true);
+    assertEquals(true, true);
   }
 
-  //@Test
-  //public void validUserTest() throws ServerException, DatabaseException {
-    //SearchResponse result =
-        //clientComm.search(new SearchRequest("userTest1", "pass1", fieldIDs, values));
-    //assertEquals(result.getFoundRecords().size(), 1);
-  //}
+  // @Test
+  // public void validUserTest() throws ServerException, DatabaseException {
+  // SearchResponse result =
+  // clientComm.search(new SearchRequest("userTest1", "pass1", fieldIDs, values));
+  // assertEquals(result.getFoundRecords().size(), 1);
+  // }
 
-  //@Test
-  //public void invalidFieldIdTest() throws ServerException, DatabaseException {
-    //SearchResponse result =
-        //clientComm.search(new SearchRequest("userTest1", "pass1", badFieldIDs, values));
-    //assertEquals(result.getUrls().size(), 0);
-  //}
+  // @Test
+  // public void invalidFieldIdTest() throws ServerException, DatabaseException {
+  // SearchResponse result =
+  // clientComm.search(new SearchRequest("userTest1", "pass1", badFieldIDs, values));
+  // assertEquals(result.getUrls().size(), 0);
+  // }
 
-  //@Test
-  //public void invalidValuesTest() throws ServerException, DatabaseException {
-    //SearchResponse result =
-        //clientComm.search(new SearchRequest("userTest1", "pass1", fieldIDs, badValues));
-    //assertEquals(result.getFoundRecords().size(), 0);
-  //}
+  // @Test
+  // public void invalidValuesTest() throws ServerException, DatabaseException {
+  // SearchResponse result =
+  // clientComm.search(new SearchRequest("userTest1", "pass1", fieldIDs, badValues));
+  // assertEquals(result.getFoundRecords().size(), 0);
+  // }
 }

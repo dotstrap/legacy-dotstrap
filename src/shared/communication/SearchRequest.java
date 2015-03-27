@@ -10,15 +10,14 @@ package shared.communication;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
  * The Class SearchRequest.
  */
 public class SearchRequest implements Request {
-  private String            username;
-  private String            password;
-  private List<Integer>     fieldIds;
-  private ArrayList<String> searchQueries;
+  private String             username;
+  private String             password;
+  private ArrayList<Integer> fieldIds;
+  private ArrayList<String>  searchQueries;
 
   /**
    * Instantiates a new search parameters.
@@ -32,30 +31,18 @@ public class SearchRequest implements Request {
    *
    * @param name the name
    * @param password the password
-   * @param fieldId the field id
-   * @param search the search
+   * @param newFieldIds the field id
+   * @param searchQ the search
    */
-  public SearchRequest(String name, String password, ArrayList<Integer> fieldId,
-      ArrayList<String> search) {//@formatter:off
-    username      = name;
-    this.password = password;
-    searchQueries = search;
-  }
+  public SearchRequest(String name, String password, ArrayList<Integer> newFieldIds,
+      ArrayList<String> newSearchQs) {//@formatter:off
+    System.out.println("\n=========FIELD IN CONST: " + newFieldIds.toString());
+    System.out.println("\n=========SEARCH PARAM IN CONST: " + newSearchQs.toString());
 
-  /**
-   * Instantiates a new search request.
-   *
-   * @param name the name
-   * @param password the password
-   * @param fieldIds the field ids
-   * @param searchQuery the search query
-   */
-  public SearchRequest(String name, String password,
-      List<Integer> fieldIds, ArrayList<String> searchQuery) {
     username      = name;
     this.password = password;
-    this.fieldIds = fieldIds;
-    searchQueries = searchQuery; //@formatter:on
+    this.fieldIds = newFieldIds;
+    searchQueries = newSearchQs;
   }
 
   /**
@@ -104,7 +91,7 @@ public class SearchRequest implements Request {
   /**
    * @param fieldIds the fieldIds to set
    */
-  public void setFieldIds(List<Integer> fieldIds) {
+  public void setFieldIds(ArrayList<Integer> fieldIds) {
     this.fieldIds = fieldIds;
   }
 
@@ -127,8 +114,10 @@ public class SearchRequest implements Request {
   }
 
   @Override
-  public String toString() {
-    return this.username + "\n" + this.password + "\n" + this.fieldIds + "\n" + this.searchQueries
-        + "\n";
+  public String toString() {// @formatter:off
+    return this.username + "\n"
+         + this.password + "\n"
+         + this.fieldIds + "\n"
+         + this.searchQueries + "\n"; // @formatter:on
   }
 }

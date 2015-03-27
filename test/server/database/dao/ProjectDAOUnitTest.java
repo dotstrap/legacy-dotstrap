@@ -18,7 +18,6 @@ import server.database.DatabaseException;
 
 import shared.model.Project;
 
-
 /**
  * The Class ProjectDAOUnitTest.
  */
@@ -47,8 +46,6 @@ public class ProjectDAOUnitTest {
     // "tearDownAfterClass");
     return;
   }
-
-
 
   // @formatter:off
   private Database   db;

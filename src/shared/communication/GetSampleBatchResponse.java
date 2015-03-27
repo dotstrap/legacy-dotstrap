@@ -11,7 +11,6 @@ import java.net.URL;
 
 import shared.model.Batch;
 
-
 /**
  * The Class GetSampleBatchResponse.
  */

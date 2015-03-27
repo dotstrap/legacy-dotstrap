@@ -7,7 +7,6 @@
  */
 package server;
 
-
 /**
  * The Class ServerException.
  */

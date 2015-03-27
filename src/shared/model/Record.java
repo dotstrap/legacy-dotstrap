@@ -7,7 +7,6 @@
  */
 package shared.model;
 
-
 /**
  * The Class Record.
  */
@@ -249,13 +248,13 @@ public class Record {
 
     Record other = (Record) o;
 
-   //if (shouldCompareIds) {
-      //if (recordId != other.getRecordId()) {
-        //return false;
-      //}
-    //}
+    // if (shouldCompareIds) {
+    // if (recordId != other.getRecordId()) {
+    // return false;
+    // }
+    // }
 
-    return ( // @formatter:off
+    return (// @formatter:off
          (batchId == other.getBatchId())
         && batchURL.equals(other.getBatchURL())
         && this.getData().equals(other.getData())

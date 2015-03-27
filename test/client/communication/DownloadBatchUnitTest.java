@@ -24,23 +24,18 @@ import shared.communication.DownloadBatchResponse;
 import shared.model.Batch;
 import shared.model.User;
 
-
 /**
  * The Class DownloadBatchUnitTest.
  */
 public class DownloadBatchUnitTest {
 
-//  /** The logger used throughout the project. */
-//  private static Logger logger; // @formatter:off
-//  static {
-//    logger = Logger.getLogger("server");
-//  }
-
   private static ClientCommunicator clientComm;
 
   private static Database db;
+
   private static UserDAO  testUserDAO;
   private static BatchDAO testBatchDAO;
+
   private static User     testUser1;
   private static User     testUser2;
   private static User     testUser3;
