@@ -1,7 +1,7 @@
 /**
  * GetSampleBatchResponse.java
  * JRE v1.8.0_40
- * 
+ *
  * Created by William Myers on Mar 24, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
@@ -15,15 +15,18 @@ import shared.model.Batch;
  * The Class GetSampleBatchResponse.
  */
 public class GetSampleBatchResponse implements Response {
-  private URL     urlPrefix;
-  private Batch   sampleBatch;
-  private boolean validUser;
+  private URL   urlPrefix;
+  private Batch sampleBatch;
 
   /**
    * Instantiates a new gets the sample image result.
    */
   public GetSampleBatchResponse() {
-    validUser = false;
+    sampleBatch = null;
+  }
+
+  public GetSampleBatchResponse(Batch sampleBatch) {
+      this.sampleBatch = sampleBatch;
   }
 
   /**
@@ -59,24 +62,6 @@ public class GetSampleBatchResponse implements Response {
   }
 
   /**
-   * Checks if is valid user.
-   *
-   * @return true, if is valid user
-   */
-  public boolean isValidUser() {
-    return validUser;
-  }
-
-  /**
-   * Sets the valid user.
-   *
-   * @param validUser the new valid user
-   */
-  public void setValidUser(boolean validUser) {
-    this.validUser = validUser;
-  }
-
-  /**
    *
    * (non-Javadoc).
    *
@@ -86,7 +71,11 @@ public class GetSampleBatchResponse implements Response {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append(urlPrefix + "/" + sampleBatch.getFilePath() + "\n");
+    if (sampleBatch != null) {
+      sb.append(urlPrefix + "/" + sampleBatch.getFilePath() + "\n");
+    } else {
+      sb.append("FAILED\n");
+    }
     return sb.toString();
   }
 }

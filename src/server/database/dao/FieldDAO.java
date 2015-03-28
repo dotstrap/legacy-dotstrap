@@ -9,6 +9,7 @@ package server.database.dao;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -98,21 +99,21 @@ public class FieldDAO {
     }
   }
 
-  public ArrayList<Field> getAll(int projectId) throws DatabaseException {
+  public List<Field> getAll(int projectId) throws DatabaseException {
     String query = "SELECT * from Field WHERE ProjectId = ?";
 
     try (PreparedStatement pstmt = db.getConnection().prepareStatement(query)) {
 
-      try (ResultSet resultset = pstmt.executeQuery()) {
         pstmt.setInt(1, projectId);
+      try (ResultSet resultset = pstmt.executeQuery()) {
 
-        ArrayList<Field> allFields = new ArrayList<Field>();
+        List<Field> allFields = new ArrayList<Field>();
         while (resultset.next()) {
           Field resultField = new Field();
-
+System.out.println("curr project: " + projectId);
           resultField.setFieldId(resultset.getInt("FieldId"));
-          // resultField.setProjectId(projectId);
-          resultField.setProjectId(resultset.getInt("ProjectId"));
+           resultField.setProjectId(projectId);
+          //resultField.setProjectId(resultset.getInt("ProjectId"));
           resultField.setTitle(resultset.getString("Title"));
 
           resultField.setKnownData(resultset.getString("KnownData"));

@@ -82,12 +82,12 @@ public class ClientCommunicator {
   /**
    * Gets the projects.
    *
-   * @param creds the creds
+   * @param params the creds
    * @return the projects
    * @throws ServerException the client exception
    */
-  public GetProjectsResponse getProjects(GetProjectsRequest creds) throws ServerException {
-    return (GetProjectsResponse) doPost("/GetProjects", creds);
+  public GetProjectsResponse getProjects(GetProjectsRequest params) throws ServerException {
+    return (GetProjectsResponse) doPost("/GetProjects", params);
   }
 
   /**

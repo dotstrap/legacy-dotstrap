@@ -9,6 +9,7 @@ package client.communication;
 
 import static org.junit.Assert.assertEquals;
 
+import java.net.MalformedURLException;
 import java.util.List;
 
 import org.junit.*;
@@ -150,7 +151,7 @@ public class DownloadBatchUnitTest {
    * @throws DatabaseException the database exception
    */
   @Test
-  public void invalidUserTest() throws DatabaseException {
+  public void invalidUserTest() throws DatabaseException, ServerException, MalformedURLException {
     boolean isValid = true;
     try {
       clientComm.downloadBatch(new DownloadBatchRequest("userTest1", "INVALID", 1));
@@ -166,13 +167,10 @@ public class DownloadBatchUnitTest {
    * @throws DatabaseException the database exception
    */
   @Test
-  public void invalidProjectIdTest() throws DatabaseException {
+  public void invalidProjectIdTest() throws DatabaseException, ServerException, MalformedURLException {
     DownloadBatchResponse result2 = new DownloadBatchResponse();
-    try {
       result2 = clientComm.downloadBatch(new DownloadBatchRequest("userTest2", "pass2", 100));
-    } catch (ServerException e) {
 
-    }
     assertEquals(null, result2.getFields());
   }
 }

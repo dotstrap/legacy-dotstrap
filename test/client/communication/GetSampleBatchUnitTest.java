@@ -10,6 +10,7 @@ package client.communication;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.net.MalformedURLException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -163,7 +164,7 @@ public class GetSampleBatchUnitTest {
    * Valid user test.
    */
   @Test
-  public void validUserTest() throws DatabaseException {
+  public void validUserTest() throws DatabaseException, MalformedURLException {
     GetSampleBatchResponse result = null;
     try {
       result = clientComm.getSampleBatch(new GetSampleBatchRequest("userTest1", "pass1", 1));
@@ -177,7 +178,7 @@ public class GetSampleBatchUnitTest {
    * Invalid username test.
    */
   @Test
-  public void invalidUsernameTest() throws DatabaseException {
+  public void invalidUsernameTest() throws DatabaseException, MalformedURLException {
     GetSampleBatchResponse result = null;
     boolean shouldPass = false;
     try {
@@ -195,7 +196,7 @@ public class GetSampleBatchUnitTest {
    * Invalidtest project.
    */
   @Test
-  public void invalidtestProject() throws DatabaseException {
+  public void invalidtestProject() throws DatabaseException, MalformedURLException {
     GetSampleBatchResponse result = null;
     boolean shouldPass = false;
     try {

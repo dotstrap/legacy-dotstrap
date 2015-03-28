@@ -241,9 +241,9 @@ public class BatchDAO {
         // throw new DatabaseException("Read more than one  with projectId: " + projectId
         // + " from database...");
 
-        // if (resultBatch.getFilePath() == "") {
-        // return null;
-        // }
+        //if (resultBatch.getFilePath() == "") {
+          //return null;
+        //}
 
         return resultBatch;
       }

@@ -163,7 +163,7 @@ public class Controller implements IController {
 
       getView().setRequest(printUserInput(args));
       getView().setResponse(result.toString());
-    } catch (NumberFormatException | ServerException | MalformedURLException e) {
+    } catch (Exception e) {
       getView().setResponse("FAILED\n");
       logger.log(Level.SEVERE, "STACKTRACE: ", e);
     } finally {
@@ -180,12 +180,29 @@ public class Controller implements IController {
       DownloadBatchResponse result = clientComm.downloadBatch(params);
 
       getView().setResponse(result.toString());
-    } catch (NumberFormatException | ServerException | MalformedURLException e) {
+    } catch (Exception e) {
       getView().setResponse("FAILED\n");
       logger.log(Level.SEVERE, "STACKTRACE: ", e);
     } finally {
       getView().setRequest(printUserInput(args));
     }
+  }
+
+  private void submitBatch() {
+      String[] args = getView().getParameterValues();
+
+      try {
+          SubmitBatchRequest params =
+              new SubmitBatchRequest(args[0], args[1], Integer.parseInt(args[2]), args[3]);
+          SubmitBatchResponse result = clientComm.submitBatch(params);
+
+          getView().setResponse(result.toString());
+      } catch (Exception e) {
+          getView().setResponse("FAILED\n");
+          logger.log(Level.SEVERE, "STACKTRACE: ", e);
+      } finally {
+          getView().setRequest(printUserInput(args));
+      }
   }
 
   private void getFields() {
@@ -206,26 +223,8 @@ public class Controller implements IController {
       GetFieldsRequest params = new GetFieldsRequest(args[0], args[1], projectId);
       GetFieldsResponse result = clientComm.getFields(params);
 
-      getView().setRequest(printUserInput(args));
       getView().setResponse(result.toString());
-    } catch (NumberFormatException | ServerException e) {
-      getView().setResponse("FAILED\n");
-      logger.log(Level.SEVERE, "STACKTRACE: ", e);
-    } finally {
-      getView().setRequest(printUserInput(args));
-    }
-  }
-
-  private void submitBatch() {
-    String[] args = getView().getParameterValues();
-
-    try {
-      SubmitBatchRequest params =
-          new SubmitBatchRequest(args[0], args[1], Integer.parseInt(args[2]), args[3]);
-      SubmitBatchResponse result = clientComm.submitBatch(params);
-
-      getView().setResponse(result.toString());
-    } catch (NumberFormatException | ServerException e) {
+    } catch (Exception e) {
       getView().setResponse("FAILED\n");
       logger.log(Level.SEVERE, "STACKTRACE: ", e);
     } finally {

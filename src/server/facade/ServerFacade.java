@@ -180,8 +180,8 @@ public class ServerFacade {
 
   private static ArrayList<Integer> getFieldIDs(Batch batch, Database db) throws DatabaseException {
     ArrayList<Integer> fields = new ArrayList<Integer>();
-    ArrayList<Field> holder = db.getFieldDAO().getAll();
-    for (Field f : holder) {
+    ArrayList<Field> allFields = db.getFieldDAO().getAll();
+    for (Field f : allFields) {
       if (f.getProjectId() == batch.getProjectId()) {
         fields.add(f.getFieldId());
       }
@@ -269,18 +269,20 @@ public class ServerFacade {
     int projectId = request.getProjectId();
     List<Field> fields = null;
 
+    System.out.println("BEFORE curr project: " + projectId);
     try {
+        System.out.println("BEFORE2 curr project: " + projectId);
       db.startTransaction();
       fields = projectId > 0 ? db.getFieldDAO().getAll(projectId) : db.getFieldDAO().getAll();
       db.endTransaction(true);
     } catch (DatabaseException e) {
       db.endTransaction(false);
-      throw new ServerException(e);
+      throw new ServerException("while attempting to read all fields from the database...", e);
     }
 
-    if (fields.isEmpty()) {
-      throw new ServerException("Requested projectId (" + projectId + ") does not exist...");
-    }
+    //if (fields.isEmpty()) {
+      //throw new ServerException("Requested projectId (" + projectId + ") does not exist...");
+    //}
 
     GetFieldsResponse result = new GetFieldsResponse();
     result.setFields(fields);

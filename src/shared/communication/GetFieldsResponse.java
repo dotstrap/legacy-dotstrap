@@ -1,12 +1,13 @@
 /**
  * GetFieldsResponse.java
  * JRE v1.8.0_40
- * 
+ *
  * Created by William Myers on Mar 24, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package shared.communication;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import shared.model.Field;
@@ -31,7 +32,7 @@ public class GetFieldsResponse implements Response {
    *
    * @param fields the fields
    */
-  public GetFieldsResponse(List<Field> fields) {
+  public GetFieldsResponse(ArrayList<Field> fields) {
     this.fields = fields;
   }
 
