@@ -113,7 +113,7 @@ public class DownloadBatchResponse implements Response {
       sb.append(project.getRecordHeight() + "\n");
       sb.append(project.getRecordsPerBatch() + "\n");
       sb.append(fields.size() + "\n");
-      int i = 1;
+      int i = 0;
       for (Field f : fields) {
         sb.append(f.getFieldId() + "\n");
         sb.append(i + "\n");

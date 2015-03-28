@@ -107,6 +107,7 @@ public class BatchDAO {
       pstmt.setInt(2, newBatch.getProjectId());
       pstmt.setInt(3, newBatch.getStatus());
       pstmt.setInt(4, newBatch.getCurrUserId());
+
       if (pstmt.executeUpdate() == 1) {
 
         try (Statement stmt = db.getConnection().createStatement();

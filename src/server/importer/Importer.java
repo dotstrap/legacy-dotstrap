@@ -223,15 +223,15 @@ public class Importer {
     // Get project fields and images
     ArrayList<Element> children = getChildElements(projectElem);
     ArrayList<Element> fields = getChildElements(children.get(4));
-    ArrayList<Element> images = getChildElements(children.get(5));
+    ArrayList<Element> batches = getChildElements(children.get(5));
 
     // Add fields to database
-    int colNum = 1;
+    int colNum = 0;
     for (Element curr : fields) {
       loadFields(curr, projectId, colNum++);
     }
     // Add images to database
-    for (Element curr : images) {
+    for (Element curr : batches) {
       loadBatches(curr, projectId);
     }
   }
@@ -300,7 +300,7 @@ public class Importer {
       ArrayList<Element> children = getChildElements(batchElem);
       records = getChildElements(children.get(1));
 
-      int colNum = 1;
+      int colNum = 0;
       for (Element curr : records) {
         loadRecords(curr, projectId, batchId, batchUrl, colNum++);
       }
@@ -315,7 +315,7 @@ public class Importer {
     ArrayList<Element> children = getChildElements(recordElem);
     ArrayList<Element> records = getChildElements(children.get(0));
 
-    int colNum = 1;
+    int colNum = 0;
     for (Element curr : records) {
       String recordData = getValue(curr);
       Database db = new Database();
@@ -332,6 +332,7 @@ public class Importer {
       } catch (DatabaseException e) {
         logger.log(Level.SEVERE, "STACKTRACE: ", e);
       }
+      colNum++;
     }
   }
 }

@@ -231,7 +231,7 @@ public class Record {
   /**
    * Equals.
    *
-   * @param o the o
+   * @param o the object
    * @param shouldCompareIds the should compare ids
    * @return true, if successful
    */

@@ -192,7 +192,7 @@ public class ServerFacade {
   private static void addRecords(String input, Project project, Batch batch, Database db,
       ArrayList<Integer> fields) throws DatabaseException {
     List<String> rows = Arrays.asList(input.split(";", -1));
-    int row = 1;
+    int row = 0;
     for (String s : rows) {
       int i = 0;
       List<String> values = Arrays.asList(s.split(",", -1));
@@ -269,9 +269,7 @@ public class ServerFacade {
     int projectId = request.getProjectId();
     List<Field> fields = null;
 
-    System.out.println("BEFORE curr project: " + projectId);
     try {
-        System.out.println("BEFORE2 curr project: " + projectId);
       db.startTransaction();
       fields = projectId > 0 ? db.getFieldDAO().getAll(projectId) : db.getFieldDAO().getAll();
       db.endTransaction(true);
@@ -297,7 +295,6 @@ public class ServerFacade {
    * @throws ServerException the server exception
    */
   public static SearchResponse search(SearchRequest request) throws ServerException {
-    System.out.println("\n========INSIDE SEARCH==============");
     Database db = new Database();
     SearchResponse result = new SearchResponse();
     ArrayList<Record> records = new ArrayList<Record>();
@@ -307,9 +304,7 @@ public class ServerFacade {
       db.startTransaction();
 
       for (Integer i : request.getFieldIds()) {
-        System.out.println("\nOUTSIDE FIELD ID: " + i);
         for (String s : request.getSearchQueries()) {
-          System.out.println("\nFIELD ID: " + i + "\nQUERY:" + s);
           records.addAll(db.getRecordDAO().search(i, s));
         }
       }
@@ -319,7 +314,6 @@ public class ServerFacade {
       result.setUrls(links);
       result.setFoundRecords(records);
     } catch (DatabaseException e) {
-      System.out.println("\n========DB EXCEPTION==============");
       db.endTransaction(false);
       throw new ServerException("while attempting to search database ", e);
     }

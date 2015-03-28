@@ -56,8 +56,8 @@ public class FieldDAO {
             + "KnownData TEXT NOT NULL, "
             + "HelpURL TEXT NOT NULL, "
             + "XCoordinate INTEGER NOT NULL, "
-            + "Width INTEGER NOT NULL, "
-            + "ColumnNumber INTEGER NOT NULL)";     // @formatter:on
+            + "Width INTEGER, "
+            + "ColumnNumber INTEGER)";     // @formatter:on
     try (Statement stmt1 = db.getConnection().createStatement();
         Statement stmt2 = db.getConnection().createStatement()) {
       stmt1.executeUpdate(dropTable);
@@ -104,16 +104,15 @@ public class FieldDAO {
 
     try (PreparedStatement pstmt = db.getConnection().prepareStatement(query)) {
 
-        pstmt.setInt(1, projectId);
+      pstmt.setInt(1, projectId);
       try (ResultSet resultset = pstmt.executeQuery()) {
 
         List<Field> allFields = new ArrayList<Field>();
         while (resultset.next()) {
           Field resultField = new Field();
-System.out.println("curr project: " + projectId);
           resultField.setFieldId(resultset.getInt("FieldId"));
-           resultField.setProjectId(projectId);
-          //resultField.setProjectId(resultset.getInt("ProjectId"));
+          resultField.setProjectId(projectId);
+          // resultField.setProjectId(resultset.getInt("ProjectId"));
           resultField.setTitle(resultset.getString("Title"));
 
           resultField.setKnownData(resultset.getString("KnownData"));
@@ -141,29 +140,27 @@ System.out.println("curr project: " + projectId);
    * @throws DatabaseException the database exception
    */
   public int getFieldId(int projectId, int colNum) throws DatabaseException {
-
-    int fieldId = -1;
-    PreparedStatement pstmt = null;
-    ResultSet resultset = null;
-    try {
       String query = "SELECT FieldId FROM Field WHERE ProjectId = ? AND ColumnNumber = ?";
-      pstmt = db.getConnection().prepareStatement(query);
 
-      pstmt.setInt(1, projectId);
-      pstmt.setInt(2, colNum);
-      resultset = pstmt.executeQuery();
+    int fieldId = 0;
+    try (PreparedStatement pstmt = db.getConnection().prepareStatement(query)) {
+        pstmt.setInt(1, projectId);
+        pstmt.setInt(2, colNum);
 
-      resultset.next();
-      fieldId = resultset.getInt("FieldId");
-      assert (fieldId > 0);
+      try (ResultSet resultset = pstmt.executeQuery()) {
+
+        if (!resultset.next()) {
+          return 0;
+        }
+
+        fieldId = resultset.getInt("FieldId");
+
+        return fieldId;
+      }
     } catch (SQLException e) {
       logger.log(Level.SEVERE, e.toString());
       throw new DatabaseException(e);
-    } finally {
-      Database.closeSafely(pstmt);
-      Database.closeSafely(resultset);
     }
-    return fieldId;
   }
 
   /**
@@ -174,18 +171,12 @@ System.out.println("curr project: " + projectId);
    * @throws DatabaseException the database exception
    */
   public int create(Field newField) throws DatabaseException {
+    String query =
+        "INSERT INTO Field (" + "ProjectId, Title, KnownData, HelpURL, "
+            + "XCoordinate, Width, ColumnNumber)" + "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-    PreparedStatement pstmt = null;
-    ResultSet resultset = null;
-    try {
-      // @formatter:off
-      String query =
-          "INSERT INTO Field ("
-              + "ProjectId, Title, KnownData, HelpURL, "
-              + "XCoordinate, Width, ColumnNumber)"
-              + "VALUES (?, ?, ?, ?, ?, ?, ?)";
-      // @formatter:on
-      pstmt = db.getConnection().prepareStatement(query);
+    try (PreparedStatement pstmt = db.getConnection().prepareStatement(query)) {
+
       pstmt.setInt(1, newField.getProjectId());
       pstmt.setString(2, newField.getTitle());
       pstmt.setString(3, newField.getKnownData());
@@ -195,20 +186,19 @@ System.out.println("curr project: " + projectId);
       pstmt.setInt(7, newField.getColNum());
 
       if (pstmt.executeUpdate() == 1) {
-        Statement stmt = db.getConnection().createStatement();
-        resultset = stmt.executeQuery("SELECT last_insert_rowid()");
-        resultset.next();
-        int fieldId = resultset.getInt(1);
-        newField.setFieldId(fieldId);
+
+        try (Statement stmt = db.getConnection().createStatement();
+            ResultSet resultset = stmt.executeQuery("SELECT last_insert_rowid()")) {
+          resultset.next();
+          int fieldId = resultset.getInt(1);
+          newField.setFieldId(fieldId);
+        }
+
       } else {
         throw new DatabaseException("Unable to insert field into database.");
       }
     } catch (SQLException e) {
-      logger.log(Level.SEVERE, e.toString());
       throw new DatabaseException(e);
-    } finally {
-      Database.closeSafely(pstmt);
-      Database.closeSafely(resultset);
     }
     return newField.getFieldId();
   }
