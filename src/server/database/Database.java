@@ -157,13 +157,11 @@ public class Database {
           connection.commit();
         } else {
           connection.rollback();
-        }
+         }
+         connection.close();
       } catch (SQLException e) {
         logger.log(Level.SEVERE, "STACKTRACE: ", e);
         // throw new DatabaseException(e.toString()); // FIXME: should this through a db exception?
-      } finally {
-        closeSafely(connection);
-        connection = null;
       }
     }
   }
@@ -183,67 +181,6 @@ public class Database {
     } catch (Exception e) {
       logger.log(Level.SEVERE, "STACKTRACE: ", e);
       throw new DatabaseException(e.toString());
-    }
-  }
-
-  // TODO: how to make these into one generic method?
-  /**
-   * Close safely.
-   *
-   * @param c the database connection
-   */
-  public static void closeSafely(Connection c) {
-    if (c != null) {
-      try {
-        c.close();
-      } catch (SQLException e) {
-        logger.log(Level.SEVERE, "STACKTRACE: ", e);
-      }
-    }
-  }
-
-  /**
-   * Close safely.
-   *
-   * @param stmt the stmt
-   */
-  public static void closeSafely(Statement stmt) {
-    if (stmt != null) {
-      try {
-        stmt.close();
-      } catch (SQLException e) {
-        logger.log(Level.SEVERE, "STACKTRACE: ", e);
-      }
-    }
-  }
-
-  /**
-   * Close safely.
-   *
-   * @param pstmt the pstmt
-   */
-  public static void closeSafely(PreparedStatement pstmt) {
-    if (pstmt != null) {
-      try {
-        pstmt.close();
-      } catch (SQLException e) {
-        logger.log(Level.SEVERE, "STACKTRACE: ", e);
-      }
-    }
-  }
-
-  /**
-   * Close safely.
-   *
-   * @param rs the rs
-   */
-  public static void closeSafely(ResultSet rs) {
-    if (rs != null) {
-      try {
-        rs.close();
-      } catch (SQLException e) {
-        logger.log(Level.SEVERE, "STACKTRACE: ", e);
-      }
     }
   }
 }

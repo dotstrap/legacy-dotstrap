@@ -106,10 +106,9 @@ public class UserDAO {
    * @throws DatabaseException the database exception
    */
   public int create(User newUser) throws DatabaseException {
-    String query = "INSERT INTO User ("  //@formatter:off
-          + "Username, Password, FirstName, LastName, "
-          + "Email, RecordCount, CurrentBatchId)"
-          + "VALUES (?, ?, ?, ?, ?, ?, ?)";  //@formatter:on
+    String query =
+        "INSERT INTO User (Username, Password, FirstName, LastName, "
+            + "Email, RecordCount, CurrentBatchId) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
     try (PreparedStatement pstmt = db.getConnection().prepareStatement(query)) {
       pstmt.setString(1, newUser.getUsername());
@@ -121,16 +120,14 @@ public class UserDAO {
       pstmt.setInt(7, newUser.getCurrBatch());
 
       if (pstmt.executeUpdate() == 1) {
-
         try (Statement stmt = db.getConnection().createStatement();
             ResultSet resultset = stmt.executeQuery("SELECT last_insert_rowid()")) {
           resultset.next();
           int userid = resultset.getInt(1);
           newUser.setUserId(userid);
         }
-
       } else {
-        throw new DatabaseException("Unable to insert user into database.");
+        throw new DatabaseException("Unable to insert username " + newUser.getUsername());
       }
     } catch (SQLException e) {
       throw new DatabaseException(e);
@@ -151,6 +148,7 @@ public class UserDAO {
     try (PreparedStatement pstmt = db.getConnection().prepareStatement(query)) {
       pstmt.setString(1, username);
       pstmt.setString(2, password);
+
       try (ResultSet resultset = pstmt.executeQuery()) {
         User returnUser = new User();
 
@@ -186,9 +184,9 @@ public class UserDAO {
    * @throws DatabaseException the database exception
    */
   public void update(User user) throws DatabaseException {
-    String query = "UPDATE User SET FirstName = ?, LastName = ?, "//@formatter:off
-        + "Email = ?, RecordCount = ?, CurrentBatchId = ?"
-        + "WHERE Username = ? AND Password = ?";  //@formatter:on
+    String query =
+        "UPDATE User SET FirstName = ?, LastName = ?, Email = ?, RecordCount = ?, CurrentBatchId = ?"
+            + "WHERE Username = ? AND Password = ?";
 
     try (PreparedStatement pstmt = db.getConnection().prepareStatement(query)) {
       pstmt.setString(1, user.getFirst());
@@ -271,7 +269,7 @@ public class UserDAO {
       pstmt.setString(2, user.getPassword());
 
       pstmt.executeUpdate();
-    } catch (Exception e) {
+    } catch (SQLException e) {
       throw new DatabaseException(e);
     }
   }

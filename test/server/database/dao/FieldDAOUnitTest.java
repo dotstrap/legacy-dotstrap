@@ -115,12 +115,12 @@ public class FieldDAOUnitTest {
         return false;
       }
     }
-    return (safeEquals(a.getProjectId(), b.getProjectId()) // @formatter:off
-        && safeEquals(a.getTitle(), b.getTitle())
-        && safeEquals(a.getKnownData(), b.getKnownData())
-        && safeEquals(a.getHelpURL(), b.getHelpURL())
-        && safeEquals(a.getXCoord(), b.getXCoord())
-        && safeEquals(a.getWidth(), b.getWidth()));
+    return (safeEquals(a.getProjectId(), b.getProjectId()) // @formatter:off &&
+            safeEquals(a.getTitle(), b.getTitle()) &&
+            safeEquals(a.getKnownData(), b.getKnownData()) &&
+            safeEquals(a.getHelpURL(), b.getHelpURL()) &&
+            safeEquals(a.getXCoord(), b.getXCoord()) &&
+            safeEquals(a.getWidth(), b.getWidth()));
   } // @formatter:on
 
   /**

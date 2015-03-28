@@ -33,7 +33,7 @@ public class ServerFacade {
   }
 
   /**
-   * Initialize.
+   * Initialize the database driver.
    *
    * @throws ServerException the server exception
    */
@@ -278,9 +278,9 @@ public class ServerFacade {
       throw new ServerException("while attempting to read all fields from the database...", e);
     }
 
-    //if (fields.isEmpty()) {
-      //throw new ServerException("Requested projectId (" + projectId + ") does not exist...");
-    //}
+    // if (fields.isEmpty()) {
+    // throw new ServerException("Requested projectId (" + projectId + ") does not exist...");
+    // }
 
     GetFieldsResponse result = new GetFieldsResponse();
     result.setFields(fields);

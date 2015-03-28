@@ -102,7 +102,6 @@ public class BatchDAO {
         "INSERT INTO Batch (FilePath, ProjectId, Status, CurrentUserId) VALUES (?, ?, ?, ?)";
 
     try (PreparedStatement pstmt = db.getConnection().prepareStatement(query)) {
-
       pstmt.setString(1, newBatch.getFilePath());
       pstmt.setInt(2, newBatch.getProjectId());
       pstmt.setInt(3, newBatch.getStatus());
@@ -238,13 +237,13 @@ public class BatchDAO {
         resultBatch.setStatus(resultset.getInt("Status"));
         resultBatch.setCurrUserId(resultset.getInt("CurrentUserId"));
 
-        // if (resultset.next())
-        // throw new DatabaseException("Read more than one  with projectId: " + projectId
-        // + " from database...");
-
-        //if (resultBatch.getFilePath() == "") {
-          //return null;
-        //}
+        if (resultset.next()){
+          throw new DatabaseException("Read more than one  with projectId: " + projectId
+              + " from database...");
+        }
+        // if (resultBatch.getFilePath() == "") {
+        // return null;
+        // }
 
         return resultBatch;
       }

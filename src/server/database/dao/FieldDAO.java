@@ -140,12 +140,12 @@ public class FieldDAO {
    * @throws DatabaseException the database exception
    */
   public int getFieldId(int projectId, int colNum) throws DatabaseException {
-      String query = "SELECT FieldId FROM Field WHERE ProjectId = ? AND ColumnNumber = ?";
+    String query = "SELECT FieldId FROM Field WHERE ProjectId = ? AND ColumnNumber = ?";
 
     int fieldId = 0;
     try (PreparedStatement pstmt = db.getConnection().prepareStatement(query)) {
-        pstmt.setInt(1, projectId);
-        pstmt.setInt(2, colNum);
+      pstmt.setInt(1, projectId);
+      pstmt.setInt(2, colNum);
 
       try (ResultSet resultset = pstmt.executeQuery()) {
 
@@ -213,6 +213,7 @@ public class FieldDAO {
    */
   public Field read(int projectId, String title) throws DatabaseException {
     String query = "SELECT * from Field WHERE ProjectId = ? AND Title = ?";
+
     try (PreparedStatement pstmt = db.getConnection().prepareStatement(query)) {
       pstmt.setInt(1, projectId);
       pstmt.setString(2, title);
@@ -251,29 +252,21 @@ public class FieldDAO {
    * @throws DatabaseException the database exception
    */
   public void update(Field field) throws DatabaseException {
+String query =
+    "UPDATE Field SET KnownData = ?, HelpURL = ?, XCoordinate = ?, Width = ? "
+        + "WHERE ProjectId = ? AND Title = ?";
 
-    PreparedStatement pstmt = null;
-    try {
-      String query =
-          "UPDATE Field SET KnownData = ?, HelpURL = ?, XCoordinate = ?, Width = ? "
-              + "WHERE ProjectId = ? AND Title = ?";
-
-      pstmt = db.getConnection().prepareStatement(query);
-
+    try (PreparedStatement pstmt = db.getConnection().prepareStatement(query)) {
       pstmt.setString(1, field.getKnownData());
       pstmt.setString(2, field.getHelpURL());
       pstmt.setInt(3, field.getXCoord());
       pstmt.setInt(4, field.getWidth());
-
       pstmt.setString(5, field.getTitle());
       pstmt.setInt(6, field.getColNum());
 
       pstmt.executeUpdate();
-    } catch (Exception e) {
-      logger.log(Level.SEVERE, e.toString());
-      throw new DatabaseException(e);
-    } finally {
-      Database.closeSafely(pstmt);
+    } catch (SQLException e) {
+        throw new DatabaseException("occurred updating field: " + field.getTitle(), e);
     }
   }
 
@@ -284,21 +277,15 @@ public class FieldDAO {
    * @throws DatabaseException the database exception
    */
   public void delete(Field field) throws DatabaseException {
+    String query = "DELETE from Field WHERE ProjectId = ? AND Title = ?";
 
-    PreparedStatement pstmt = null;
-    try {
-      String query = "DELETE from Field WHERE ProjectId = ? AND Title = ?";
-
-      pstmt = db.getConnection().prepareStatement(query);
+    try (PreparedStatement pstmt = db.getConnection().prepareStatement(query)) {
       pstmt.setInt(1, field.getProjectId());
       pstmt.setString(2, field.getTitle());
 
       pstmt.executeUpdate();
-    } catch (Exception e) {
-      logger.log(Level.SEVERE, e.toString());
-      throw new DatabaseException(e);
-    } finally {
-      Database.closeSafely(pstmt);
+    } catch (SQLException e) {
+      throw new DatabaseException("occurred deleting field: " + field.getTitle(), e);
     }
   }
 }

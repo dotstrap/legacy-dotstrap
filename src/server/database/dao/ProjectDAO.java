@@ -46,108 +46,89 @@ public class ProjectDAO {
    * @throws DatabaseException the database exception
    */
   public void initTable() throws DatabaseException {
-    Statement stmt1 = null;
-    Statement stmt2 = null;
+    String dropTable = "DROP TABLE IF EXISTS Project";// @formatter:off
+      String createTable =
+          "CREATE TABLE Project ("
+          + "ProjectId INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE, "
+          + "Title TEXT NOT NULL, "
+          + "RecordsPerBatch INTEGER NOT NULL, "
+          + "FirstYCoord INTEGER NOT NULL, "
+          + "RecordHeight INTEGER NOT NULL)"; // @formatter:on
+    try (Statement stmt1 = db.getConnection().createStatement();
+        Statement stmt2 = db.getConnection().createStatement()) {
+      stmt1.executeUpdate(dropTable);
 
-    String dropProjectTable = "DROP TABLE IF EXISTS Project";// @formatter:off
-    String createProjectTable =
-        "CREATE TABLE Project ("
-            + "ProjectId INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE, "
-            + "Title TEXT NOT NULL, "
-            + "RecordsPerBatch INTEGER NOT NULL, "
-            + "FirstYCoord INTEGER NOT NULL, "
-            + "RecordHeight INTEGER NOT NULL)"; // @formatter:on
-    try {
-      stmt1 = db.getConnection().createStatement();
-      stmt1.executeUpdate(dropProjectTable);
-
-      stmt2 = db.getConnection().createStatement();
-      stmt2.executeUpdate(createProjectTable);
-    } catch (Exception e) {
-      logger.log(Level.SEVERE, e.toString());
+      stmt2.executeUpdate(createTable);
+    } catch (SQLException e) {
       throw new DatabaseException(e);
-    } finally {
-      Database.closeSafely(stmt1);
-      Database.closeSafely(stmt2);
     }
   }
 
   /**
    * Returns all Projects in an array.
    *
-   * @return -> project array if found, else return null
-   * @throws DatabaseException
+   * @return project array if found, else return null
+   * @throws DatabaseException the database exception
    */
   public ArrayList<Project> getAll() throws DatabaseException {
-    ArrayList<Project> allProjects = new ArrayList<Project>();
-    PreparedStatement pstmt = null;
-    ResultSet resultset = null;
-    try {
-      String query = "SELECT * from Project";
-      pstmt = db.getConnection().prepareStatement(query);
+    String query = "SELECT * from Project";
 
-      resultset = pstmt.executeQuery();
-      while (resultset.next()) {
-        Project resultProject = new Project();
+    try (PreparedStatement pstmt = db.getConnection().prepareStatement(query)) {
 
-        resultProject.setProjectId(resultset.getInt("ProjectId"));
-        resultProject.setTitle(resultset.getString("Title"));
-        resultProject.setRecordsPerBatch(resultset.getInt("RecordsPerBatch"));
-        resultProject.setFirstYCoord(resultset.getInt("FirstYCoord"));
-        resultProject.setRecordHeight(resultset.getInt("RecordHeight"));
+      try (ResultSet resultset = pstmt.executeQuery()) {
 
-        allProjects.add(resultProject);
+        ArrayList<Project> allProjectes = new ArrayList<Project>();
+        while (resultset.next()) {
+          Project resultProject = new Project();
+
+          resultProject.setProjectId(resultset.getInt("ProjectId"));
+          resultProject.setTitle(resultset.getString("Title"));
+          resultProject.setRecordsPerBatch(resultset.getInt("RecordsPerBatch"));
+          resultProject.setFirstYCoord(resultset.getInt("FirstYCoord"));
+          resultProject.setRecordHeight(resultset.getInt("RecordHeight"));
+
+          allProjectes.add(resultProject);
+        }
+        return allProjectes;
       }
-    } catch (Exception e) {
-      logger.log(Level.SEVERE, e.toString());
+    } catch (SQLException e) {
       throw new DatabaseException(e);
-    } finally {
-      Database.closeSafely(pstmt);
-      Database.closeSafely(resultset);
     }
-    return allProjects;
   }
 
   /**
-   * Inserts the given project to the database.
+   * Creates a new project.
    *
-   * @param project the project
-   * @return the int
+   * @param newProject the project
+   * @return the int ProjectId of the project
    * @throws DatabaseException the database exception
    */
-  public int create(Project project) throws DatabaseException {
-    PreparedStatement pstmt = null;
-    Statement stmt = null;
-    ResultSet resultset = null;
-    try {
-      String query =// @formatter:off
-          "INSERT INTO Project ("
-              + "Title, RecordsPerBatch, FirstYCoord, RecordHeight)"
-              + "VALUES (?, ?, ?, ?)"; // @formatter:on
-      pstmt = db.getConnection().prepareStatement(query);
+  public int create(Project newProject) throws DatabaseException {
+    String query =
+        "INSERT INTO Project (Title, RecordsPerBatch, FirstYCoord, RecordHeight)"
+            + "VALUES (?, ?, ?, ?)";
 
-      pstmt.setString(1, project.getTitle());
-      pstmt.setInt(2, project.getRecordsPerBatch());
-      pstmt.setInt(3, project.getFirstYCoord());
-      pstmt.setInt(4, project.getRecordHeight());
+    try (PreparedStatement pstmt = db.getConnection().prepareStatement(query)) {
+      pstmt.setString(1, newProject.getTitle());
+      pstmt.setInt(2, newProject.getRecordsPerBatch());
+      pstmt.setInt(3, newProject.getFirstYCoord());
+      pstmt.setInt(4, newProject.getRecordHeight());
 
       if (pstmt.executeUpdate() == 1) {
-        stmt = db.getConnection().createStatement();
-        resultset = stmt.executeQuery("SELECT last_insert_rowid()");
-        resultset.next();
-        int projectId = resultset.getInt(1);
-        project.setProjectId(projectId);
+        try (Statement stmt = db.getConnection().createStatement();
+            ResultSet resultset = stmt.executeQuery("SELECT last_insert_rowid()")) {
+          resultset.next();
+          int id = resultset.getInt(1);
+          newProject.setProjectId(id);
+        }
       } else {
-        throw new DatabaseException("Unable to insert new project into database.");
+        throw new DatabaseException("ERROR occurred while inserting project: "
+            + newProject.toString());
       }
     } catch (SQLException e) {
-      logger.log(Level.SEVERE, e.toString());
-      throw new DatabaseException(e);
-    } finally {
-      Database.closeSafely(pstmt);
-      Database.closeSafely(resultset);
+      throw new DatabaseException("occurred while inserting project: " + newProject.toString());
     }
-    return project.getProjectId();
+    return newProject.getProjectId();
   }
 
   /**
