@@ -1,7 +1,7 @@
 /**
  * FieldDAOUnitTest.java
  * JRE v1.8.0_40
- * 
+ *
  * Created by William Myers on Mar 24, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
@@ -42,7 +42,6 @@ public class FieldDAOUnitTest {
    */
   @AfterClass
   public static void tearDownAfterClass() throws Exception {
-    // "tearDownAfterClass");
     return;
   }
 
@@ -110,21 +109,19 @@ public class FieldDAOUnitTest {
     }
   }
 
-  // @formatter:off
   private boolean areEqual(Field a, Field b, boolean shouldCompareIds) {
     if (shouldCompareIds) {
       if (a.getFieldId() != b.getFieldId()) {
         return false;
       }
     }
-    return (safeEquals(a.getProjectId(), b.getProjectId())
+    return (safeEquals(a.getProjectId(), b.getProjectId()) // @formatter:off
         && safeEquals(a.getTitle(), b.getTitle())
         && safeEquals(a.getKnownData(), b.getKnownData())
         && safeEquals(a.getHelpURL(), b.getHelpURL())
         && safeEquals(a.getXCoord(), b.getXCoord())
         && safeEquals(a.getWidth(), b.getWidth()));
-  }
-  // @formatter:on
+  } // @formatter:on
 
   /**
    * Test get all.
