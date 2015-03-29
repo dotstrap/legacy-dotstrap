@@ -18,20 +18,20 @@ public class Batch {
   /** Code for a batch that has been indexed. */
   public static int COMPLETE   = 2;
 
-  private int       batchId;
-  private String    filePath;
-  private int       projectId;
-  private int       status;
-  private int       currUserId;
+  private int       batchId;// @formatter:off
+  private String filePath;
+  private int    projectId;
+  private int    status;
+  private int    currUserId;
 
   /**
    * Instantiates a new Batch without params.
    */
   public Batch() {
-    batchId = -1;
-    filePath = "filePath";
-    projectId = -1;
-    status = INCOMPLETE;
+    batchId    = -1;
+    filePath   = "filePath";
+    projectId  = -1;
+    status     = INCOMPLETE;
     currUserId = -1;
   }
 
@@ -43,11 +43,11 @@ public class Batch {
    * @param status the status
    */
   public Batch(String filePath, int projectId, int status) {
-    batchId = -1;
-    this.filePath = filePath;
-    this.projectId = projectId;
-    this.status = status;
-    currUserId = -1;
+    this.batchId    = -1;
+    this.filePath   = filePath;
+    this.projectId  = projectId;
+    this.status     = status;
+    this.currUserId = -1;
   }
 
   /**
@@ -59,10 +59,10 @@ public class Batch {
    * @param currUserId the curr user id
    */
   public Batch(String filePath, int projectId, int status, int currUserId) {
-    batchId = -1;
-    this.filePath = filePath;
-    this.projectId = projectId;
-    this.status = status;
+    this.batchId    = -1;
+    this.filePath   = filePath;
+    this.projectId  = projectId;
+    this.status     = status;
     this.currUserId = currUserId;
   }
 
@@ -76,11 +76,11 @@ public class Batch {
    * @param currUserId the curr user id
    */
   public Batch(int batchId, String filePath, int projectId, int status, int currUserId) {
-    this.batchId = batchId;
-    this.filePath = filePath;
-    this.projectId = projectId;
-    this.status = status;
-    this.currUserId = currUserId;
+    this.batchId    = batchId;
+    this.filePath   = filePath;
+    this.projectId  = projectId;
+    this.status     = status;
+    this.currUserId = currUserId;// @formatter:on
   }
 
   public int getBatchId() {

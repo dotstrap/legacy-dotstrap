@@ -30,7 +30,6 @@ public class FieldDAOUnitTest {
    */
   @BeforeClass
   public static void setUpBeforeClass() throws Exception {
-
     // Load database driver
     Database.initDriver();
   }
@@ -64,9 +63,9 @@ public class FieldDAOUnitTest {
     testFieldDAO = db.getFieldDAO();
     testFieldDAO.initTable();
 
-    fieldTest1 = new Field(100, 111, "fieldTest1", "KnownData1", "helpURL1", 1, 1, 1);
-    fieldTest2 = new Field(200, 222, "fieldTest2", "KnownData2", "helpURL2", 2, 2, 2);
-    fieldTest3 = new Field(300, 333, "fieldTest3", "KnownData3", "helpURL3", 3, 3, 3);
+    fieldTest1 = new Field(100, 111, "fieldTest1", "knownData1", "helpURL1", 1, 1, 1);
+    fieldTest2 = new Field(200, 222, "fieldTest2", "knownData2", "helpURL2", 2, 2, 2);
+    fieldTest3 = new Field(300, 333, "fieldTest3", "knownData3", "helpURL3", 3, 3, 3);
 
     testFieldDAO.create(fieldTest1);
     testFieldDAO.create(fieldTest2);
@@ -83,7 +82,6 @@ public class FieldDAOUnitTest {
    */
   @After
   public void tearDown() throws Exception {
-
     // Roll back this transaction so changes are undone
     db.endTransaction(false);
     db = null;
@@ -93,35 +91,6 @@ public class FieldDAOUnitTest {
     fieldTest2 = null;
     fieldTest3 = null;
   }
-
-  /**
-   * Safe equals.
-   *
-   * @param a the a
-   * @param b the b
-   * @return true, if successful
-   */
-  private boolean safeEquals(Object a, Object b) {
-    if ((a == null) || (b == null)) {
-      return ((a == null) && (b == null));
-    } else {
-      return a.equals(b);
-    }
-  }
-
-  private boolean areEqual(Field a, Field b, boolean shouldCompareIds) {
-    if (shouldCompareIds) {
-      if (a.getFieldId() != b.getFieldId()) {
-        return false;
-      }
-    }
-    return (safeEquals(a.getProjectId(), b.getProjectId()) && // @formatter:off
-            safeEquals(a.getTitle(), b.getTitle()) &&
-            safeEquals(a.getKnownData(), b.getKnownData()) &&
-            safeEquals(a.getHelpURL(), b.getHelpURL()) &&
-            safeEquals(a.getXCoord(), b.getXCoord()) &&
-            safeEquals(a.getWidth(), b.getWidth()));
-  } // @formatter:on
 
   /**
    * Test get all.
@@ -152,13 +121,13 @@ public class FieldDAOUnitTest {
     for (Field curr : all) {
       assertFalse(curr.getFieldId() == -1);
       if (!hasFoundField1) {
-        hasFoundField1 = areEqual(curr, fieldTest1, false);
+        hasFoundField1 = curr.equals(fieldTest1);
       }
       if (!hasFoundField2) {
-        hasFoundField2 = areEqual(curr, fieldTest2, false);
+          hasFoundField2 = curr.equals(fieldTest2);
       }
       if (!hasFoundField3) {
-        hasFoundField3 = areEqual(curr, fieldTest3, false);
+          hasFoundField3 = curr.equals(fieldTest3);
       }
     }
   }

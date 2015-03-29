@@ -20,7 +20,6 @@ import shared.model.Record;
  * The Class RecordDAO.
  */
 public class RecordDAO {
-  /** The db. */
   private Database db;
 
   /**

@@ -31,13 +31,8 @@ import shared.model.User;
  */
 public class GetProjectsUnitTest {
 
-  /** The logger used throughout the project. */
-  private static Logger logger;// @formatter:off
-  static {
-    logger = Logger.getLogger("server");
-  }
 
-   private ClientCommunicator clientComm;
+   private ClientCommunicator clientComm;// @formatter:off
 
    private Database   db;
 
@@ -87,7 +82,8 @@ public class GetProjectsUnitTest {
     testProjectDAO = db.getProjectDAO();
     clientComm = new ClientCommunicator();
 
-    db.initTables();
+    testUserDAO.initTable();
+    testProjectDAO.initTable();
 
     testUser1 = new User("userTest1", "pass1", "first1", "last1", "email1", 1, 1);
     testUser2 = new User("userTest2", "pass2", "first2", "last2", "email2", 2, 2);
@@ -122,10 +118,11 @@ public class GetProjectsUnitTest {
   @After
   public void tearDown() throws Exception {
     // empty db and restore it to its original state
-    db.startTransaction();
-    db.initTables();
-    db.endTransaction(true);
-
+    // db.startTransaction();
+    // testUserDAO.initTable();
+    // testProjectDAO.initTable();
+    // db.endTransaction(true);
+    // FIXME: why cant i erase the db at the end?
     testUser1 = null;
     testUser2 = null;
     testUser3 = null;
@@ -155,48 +152,30 @@ public class GetProjectsUnitTest {
    * Invalid password test.
    */
   @Test
-  public void invalidPasswordTest() {
-    boolean isValidPassword = true;
-    try {
-      isValidPassword = true;
-      clientComm.getProjects(new GetProjectsRequest("userTest2", "INVALID"));
-    } catch (Exception e) {
-      isValidPassword = false;
-      logger.log(Level.SEVERE, "STACKTRACE: ", e);
-    }
-    assertEquals(false, isValidPassword);
+  public void invalidPasswordTest() throws ServerException {
+    GetProjectsResponse result =
+        clientComm.getProjects(new GetProjectsRequest("userTest2", "INVALID"));
+    assertEquals(0, result.getProjects().size());
   }
 
   /**
    * Mis matched password test.
    */
   @Test
-  public void misMatchedPasswordTest() {
-    boolean isValidPassword = true;
-    try {
-      clientComm.getProjects(new GetProjectsRequest("userTest2", "pass3"));
-      isValidPassword = true;
-    } catch (Exception e) {
-      isValidPassword = false;
-      logger.log(Level.SEVERE, "STACKTRACE: ", e);
-    }
-    assertEquals(false, isValidPassword);
+  public void misMatchedPasswordTest() throws ServerException {
+    GetProjectsResponse result =
+        clientComm.getProjects(new GetProjectsRequest("userTest2", "pass3"));
+    assertEquals(0, result.getProjects().size());
   }
 
   /**
    * Invalid username test.
    */
   @Test
-  public void invalidUsernameTest() {
-    boolean isValidUsername = true;
-    try {
-      clientComm.getProjects(new GetProjectsRequest("pass3", "userTest3"));
-      isValidUsername = true;
-    } catch (Exception e) {
-      isValidUsername = false;
-      logger.log(Level.SEVERE, "STACKTRACE: ", e);
-    }
-    assertEquals(false, isValidUsername);
+  public void invalidUsernameTest() throws ServerException {
+    GetProjectsResponse result =
+        clientComm.getProjects(new GetProjectsRequest("pass3", "userTest3"));
+    assertEquals(0, result.getProjects().size());
   }
 
   /**
@@ -210,8 +189,8 @@ public class GetProjectsUnitTest {
       isValidCreds = true;
     } catch (Exception e) {
       isValidCreds = false;
-      logger.log(Level.SEVERE, "STACKTRACE: ", e);
     }
     assertEquals(false, isValidCreds);
   }
+
 }

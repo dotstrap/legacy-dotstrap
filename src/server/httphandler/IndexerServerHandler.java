@@ -87,7 +87,7 @@ public abstract class IndexerServerHandler implements HttpHandler {
     } finally {
       exchange.close();
     }
-    logger.info("HTTP status code: " + statusCode + " @ " + this.getClass().getSimpleName());
+    logger.fine("HTTP status code: " + statusCode + " @ " + this.getClass().getSimpleName());
   }
 
   /**

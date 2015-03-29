@@ -15,7 +15,6 @@ import shared.model.Project;
  * The Class GetProjectsResponse.
  */
 public class GetProjectsResponse implements Response {
-  /** The projects. */
   private List<Project> projects;
 
   /**

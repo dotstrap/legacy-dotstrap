@@ -11,8 +11,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.junit.*;
 
@@ -28,13 +26,6 @@ import shared.model.*;
  * The Class GetFieldsUnitTest.
  */
 public class GetFieldsUnitTest {
-
-  /** The logger used throughout the project. */
-  static private Logger logger;// @formatter:off
-  static {
-    logger = Logger.getLogger("server");
-  }
-
    private ClientCommunicator clientComm;
 
    private Database   db;
@@ -91,10 +82,6 @@ public class GetFieldsUnitTest {
     testFieldDAO = db.getFieldDAO();
     clientComm = new ClientCommunicator();
 
-    // ensure tables we are going to use are empty
-    // testUserDAO.initTable();
-    // testProjectDAO.initTable();
-    // testFieldDAO.initTable();
     db.initTables();
 
     testUser1 = new User("userTest1", "pass1", "first1", "last1", "email1", 1, 1);
@@ -172,7 +159,6 @@ public class GetFieldsUnitTest {
               .getProjectId()));
     } catch (ServerException e) {
       fail("ERROR: failed vaild test...");
-      logger.log(Level.SEVERE, "STACKTRACE: ", e);
     }
     assertEquals(1, result1.getFields().size());
   }
@@ -187,7 +173,6 @@ public class GetFieldsUnitTest {
       result2 = clientComm.getFields(new GetFieldsRequest("userTest1", "pass1"));
     } catch (Exception e) {
       fail("ERROR: failed vaild test...");
-      logger.log(Level.SEVERE, "STACKTRACE: ", e);
     }
     assertEquals(3, result2.getFields().size());
   }
@@ -203,7 +188,6 @@ public class GetFieldsUnitTest {
       isValidPassword = true;
     } catch (Exception e) {
       isValidPassword = false;
-      logger.log(Level.SEVERE, "STACKTRACE: ", e);
     }
     assertEquals(false, isValidPassword);
   }
@@ -219,7 +203,6 @@ public class GetFieldsUnitTest {
       isValidPassword = true;
     } catch (Exception e) {
       isValidPassword = false;
-      logger.log(Level.SEVERE, "STACKTRACE: ", e);
     }
     assertEquals(false, isValidPassword);
   }
@@ -235,7 +218,6 @@ public class GetFieldsUnitTest {
       isValidUsername = true;
     } catch (Exception e) {
       isValidUsername = false;
-      logger.log(Level.SEVERE, "STACKTRACE: ", e);
     }
     assertEquals(false, isValidUsername);
   }
@@ -251,7 +233,6 @@ public class GetFieldsUnitTest {
       isValidCreds = true;
     } catch (Exception e) {
       isValidCreds = false;
-      logger.log(Level.SEVERE, "STACKTRACE: ", e);
     }
     assertEquals(false, isValidCreds);
   }
@@ -267,7 +248,6 @@ public class GetFieldsUnitTest {
       isValidUser = true;
     } catch (Exception e) {
       isValidUser = false;
-      logger.log(Level.SEVERE, "STACKTRACE: ", e);
     }
     assertEquals(false, isValidUser);
   }
@@ -283,7 +263,6 @@ public class GetFieldsUnitTest {
       isValidProject = true;
     } catch (Exception e) {
       isValidProject = false;
-      logger.log(Level.SEVERE, "STACKTRACE: ", e);
     }
     assertEquals(false, isValidProject);
   }

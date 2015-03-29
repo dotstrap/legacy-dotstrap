@@ -70,23 +70,6 @@ public class Database {
     userDAO    = new UserDAO(this);
   }
 
-  /**
-   * Instantiates a new Database.
-   *
-   * @param bDao the b dao
-   * @param fDao the f dao
-   * @param pDao the dao
-   * @param rDao the r dao
-   */
-  public Database(BatchDAO bDao, FieldDAO fDao, ProjectDAO pDao, RecordDAO rDao) {
-    connection      = null;
-
-    this.batchDAO   = bDao;
-    this.fieldDAO   = fDao;
-    this.projectDAO = pDao;
-    this.recordDAO  = rDao;
-  }
-
   public Connection getConnection() {
     return connection;
   }
@@ -110,7 +93,7 @@ public class Database {
   public UserDAO getUserDAO() {
     return userDAO;
   }
-  //@formatter:on
+
   /**
    * Initializes the Java SQL driver.
    *
@@ -157,11 +140,11 @@ public class Database {
           connection.commit();
         } else {
           connection.rollback();
-         }
-         connection.close();
+        }
+        connection.close();
       } catch (SQLException e) {
         logger.log(Level.SEVERE, "STACKTRACE: ", e);
-         //throw new DatabaseException(e.toString()); // FIXME: should this through a db exception?
+        // throw new DatabaseException(e.toString()); // FIXME: should this through a db exception?
       }
     }
   }

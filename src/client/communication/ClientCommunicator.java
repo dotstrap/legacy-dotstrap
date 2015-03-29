@@ -157,7 +157,6 @@ public class ClientCommunicator {
     for (String s : result.getUrls()) {
       String url = URL_PREFIX + "/" + s;
       urls.add(url);
-      System.out.println(s);
     }
     result.setUrls(urls);
     return result;

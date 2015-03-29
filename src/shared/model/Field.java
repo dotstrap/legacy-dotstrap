@@ -24,15 +24,15 @@ public class Field {
    * Instantiates a new Field.
    *
    */
-  public Field() {
-    fieldId = -1;
-    projectId = -1;
-    title = null;
-    knownData = null;
-    helpURL = null;
-    xCoord = -1;
-    width = -1;
-    colNum = -1;
+  public Field() {// @formatter:off
+    this.fieldId = -1;
+    this.projectId = -1;
+    this.title = null;
+    this.knownData = null;
+    this.helpURL = null;
+    this.xCoord = -1;
+    this.width = -1;
+    this.colNum = -1;
   }
 
   /**
@@ -58,15 +58,14 @@ public class Field {
     //System.out.println(colNum);
     //System.out.println("-----------------");
 
-
-    fieldId = -1;
+    this.fieldId   = -1;
     this.projectId = projectId;
-    this.title = title;
+    this.title     = title;
     this.knownData = knownData;
-    this.helpURL = helpURL;
-    this.xCoord = xCoord;
-    this.width = width;
-    this.colNum = colNum;
+    this.helpURL   = helpURL;
+    this.xCoord    = xCoord;
+    this.width     = width;
+    this.colNum    = colNum;
   }
 
   /**
@@ -93,16 +92,15 @@ public class Field {
       //System.out.println(colNum);
       //System.out.println("-----------------");
 
-
-    this.fieldId = fieldId;
+    this.fieldId   = fieldId;
     this.projectId = projectId;
-    this.title = title;
+    this.title     = title;
     this.knownData = knownData;
-    this.helpURL = helpURL;
-    this.xCoord = xCoord;
-    this.width = width;
-    this.colNum = colNum;
-  }
+    this.helpURL   = helpURL;
+    this.xCoord    = xCoord;
+    this.width     = width;
+    this.colNum    = colNum;
+  }// @formatter:on
 
   public int getFieldId() {
     return fieldId;
@@ -187,27 +185,27 @@ public class Field {
         && (colNum == other.getColNum()));  // @formatter:on
   }
 
-  @Override
-  public String toString() {
-    String s = "";
+  // @Override
+  // public String toString() {
+  // String s = "";
 
-    s += this.fieldId;
-    s += "\n";
-    s += this.projectId;
-    s += "\n";
-    s += this.title.toString();
-    s += "\n";
-    s += this.knownData.toString();
-    s += "\n";
-    s += this.helpURL.toString();
-    s += "\n";
-    s += this.xCoord;
-    s += "\n";
-    s += this.width;
-    s += "\n";
-    s += this.colNum;
-    s += "\n";
-    s += "-----------\n";
-    return s;
-  }
+  // s += this.fieldId;
+  // s += "\n";
+  // s += this.projectId;
+  // s += "\n";
+  // s += this.title.toString();
+  // s += "\n";
+  // s += this.knownData.toString();
+  // s += "\n";
+  // s += this.helpURL.toString();
+  // s += "\n";
+  // s += this.xCoord;
+  // s += "\n";
+  // s += this.width;
+  // s += "\n";
+  // s += this.colNum;
+  // s += "\n";
+  // s += "-----------\n";
+  // return s;
+  // }
 }

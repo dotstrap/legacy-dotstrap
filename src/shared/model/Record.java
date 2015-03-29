@@ -11,104 +11,26 @@ package shared.model;
  * The Class Record.
  */
 public class Record {
-
-  /**
-   * The Class Value.
-   */
-  public static class Value {
-    private int    valueId;
-    private String data;
-
-    /**
-     * Default constructor
-     */
-    public Value() {
-      valueId = -1;
-      data = null;
-    }
-
-    /**
-     * Initializes the value model with the specified data
-     *
-     * @param value The literal value or "cell" contents in db
-     */
-    public Value(String value) {
-      this(-1, value);
-    }
-
-    /**
-     * Initializes the value model with the specified data.
-     *
-     * @param id the id
-     * @param value The literal value or "cell" contents in db
-     */
-    public Value(int id, String value) {
-      valueId = id;
-      data = value;
-    }
-
-    public int getValueId() {
-      return valueId;
-    }
-
-    public void setValueId(int valueId) {
-      this.valueId = valueId;
-    }
-
-    public String getData() {
-      return data;
-    }
-
-    public void setData(String data) {
-      this.data = data;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-      if (this == obj) {
-        return true;
-      }
-      if (obj == null) {
-        return false;
-      }
-      if (getClass() != obj.getClass()) {
-        return false;
-      }
-      Value other = (Value) obj;
-      if (data == null) {
-        if (other.data != null) {
-          return false;
-        }
-      } else if (!data.equals(other.data)) {
-        return false;
-      }
-      if (valueId != other.valueId) {
-        return false;
-      }
-      return true;
-    }
-  }
-
   private int    recordId;
   private int    fieldId;
   private int    batchId;
   private String batchURL;
-  private Value  data = new Value();
-  private int    RowNum;
-  private int    ColNum;
+  private String data;
+  private int    rowNum;
+  private int    colNum;
 
   /**
    * Instantiates a new Record.
    *
    */
   public Record() {
-    recordId = -1;
-    fieldId = -1;
-    batchId = -1;
+    recordId = -1;// @formatter:off
+    fieldId  = -1;
+    batchId  = -1;
     batchURL = "";
-    data.setData(null);
-    RowNum = -1;
-    ColNum = -1;
+    data     = "";
+    rowNum   = -1;
+    colNum   = -1;
   }
 
   /**
@@ -121,13 +43,13 @@ public class Record {
    * @param data the data
    */
   public Record(int recId, int fieldId, int batchId, String batchURL, String data) {
-    recordId = recId;
-    this.fieldId = fieldId;
-    this.batchId = batchId;
+    recordId      = recId;
+    this.fieldId  = fieldId;
+    this.batchId  = batchId;
     this.batchURL = batchURL;
-    this.data.setData(data);
-    RowNum = -1;
-    ColNum = -1;
+    this.data     = data;
+    this.rowNum   = -1;
+    this.colNum   = -1;
   }
 
   /**
@@ -141,13 +63,13 @@ public class Record {
    * @param colNum the col num
    */
   public Record(int fieldId, int batchId, String batchURL, String data, int rowNum, int colNum) {
-    recordId = -1;
-    this.fieldId = fieldId;
-    this.batchId = batchId;
+    this.recordId = -1;
+    this.fieldId  = fieldId;
+    this.batchId  = batchId;
     this.batchURL = batchURL;
-    this.data.setData(data);
-    RowNum = rowNum;
-    ColNum = colNum;
+    this.data     = data;
+    this.rowNum   = rowNum;
+    this.colNum   = colNum;
   }
 
   /**
@@ -163,13 +85,13 @@ public class Record {
    */
   public Record(int recId, int fieldId, int batchId, String batchURL, String data, int rowNum,
       int colNum) {
-    recordId = recId;
-    this.fieldId = fieldId;
-    this.batchId = batchId;
+    this.recordId = recId;
+    this.fieldId  = fieldId;
+    this.batchId  = batchId;
     this.batchURL = batchURL;
-    this.data.setData(data);
-    RowNum = rowNum;
-    ColNum = colNum;
+    this.data     = data;
+    this.rowNum   = rowNum;
+    this.colNum    = colNum;// @formatter:on
   }
 
   public int getRecordId() {
@@ -205,27 +127,27 @@ public class Record {
   }
 
   public String getData() {
-    return data.getData();
+    return data;
   }
 
   public void setData(String data) {
-    this.data.setData(data);
+    this.data = data;
   }
 
   public int getRowNum() {
-    return RowNum;
+    return this.rowNum;
   }
 
   public void setRowNum(int rowNum) {
-    RowNum = rowNum;
+    this.rowNum = rowNum;
   }
 
   public int getColNum() {
-    return ColNum;
+    return this.colNum;
   }
 
   public void setColNum(int colNum) {
-    ColNum = colNum;
+    this.colNum = colNum;
   }
 
   /**
@@ -248,18 +170,18 @@ public class Record {
 
     Record other = (Record) o;
 
-    // if (shouldCompareIds) {
-    // if (recordId != other.getRecordId()) {
-    // return false;
-    // }
-    // }
+    if (shouldCompareIds) {
+      if (recordId != other.getRecordId()) {
+        return false;
+      }
+    }
 
     return (// @formatter:off
          (batchId == other.getBatchId())
         && batchURL.equals(other.getBatchURL())
-        && this.getData().equals(other.getData())
-        && (RowNum == other.getRowNum())
-        && (ColNum == other.getColNum())); // @formatter:on
+        && data == other.getData()
+        && (rowNum == other.getRowNum())
+        && (colNum == other.getColNum())); // @formatter:on
   }
 
 }

@@ -24,19 +24,18 @@ public class User {
   private int    recordCount;
   private int    currentBatchId;
 
-  //@formatter:off
   /**
    * Instantiates a new User.
    */
-  public User() {
-    userId         = -1;
-    username       = "username";
-    password       = "password";
-    first          = "first";
-    last           = "last";
-    email          = "email";
-    recordCount    = -1;
-    currentBatchId = -1;
+  public User() { //@formatter:off
+    this.userId         = -1;
+    this.username       = "username";
+    this.password       = "password";
+    this.first          = "first";
+    this.last           = "last";
+    this.email          = "email";
+    this.recordCount    = -1;
+    this.currentBatchId = -1;
   }
 
   /**
@@ -59,32 +58,7 @@ public class User {
     this.email          = email;
     this.recordCount    = recordCount;
     this.currentBatchId = currBatch;
-  }
-
-  /**
-   * Instantiates a new User.
-   *
-   * @param id the id
-   * @param username the username
-   * @param password the password
-   * @param first the first
-   * @param last the last
-   * @param email the email
-   * @param recordCount the record count
-   * @param currBatch the curr batch
-   */
-  public User(int id, String username, String password, String first,
-      String last, String email, int recordCount, int currBatch) {
-    this.userId         = id;
-    this.username       = username;
-    this.password       = password;
-    this.first          = first;
-    this.last           = last;
-    this.email          = email;
-    this.recordCount    = recordCount;
-    this.currentBatchId = currBatch;
-  }
-  //@formatter:on
+  }// @formatter:on
 
   public int getUserId() {
     return userId;
@@ -139,7 +113,6 @@ public class User {
   }
 
   public void setRecordCount(int recordCount) {
-    System.out.println("rec count: " + recordCount);
     this.recordCount = recordCount;
   }
 
@@ -148,7 +121,6 @@ public class User {
   }
 
   public void setCurrBatch(int currBatch) {
-      System.out.println("batch id: " + currBatch);
     currentBatchId = currBatch;
   }
 
@@ -174,20 +146,20 @@ public class User {
         && email.equals(other.getEmail()));  // @formatter:on
   }
 
-  @Override
-  public String toString() {
-    StringBuilder output = new StringBuilder();
+  //@Override
+  //public String toString() {
+    //StringBuilder output = new StringBuilder();
 
-    output.append("User ID: " + userId + "\n");
-    output.append("Username: " + username + "\n");
-    output.append("Password: " + password + "\n");
-    output.append("First Name: " + first + "\n");
-    output.append("Last Name: " + last + "\n");
-    output.append("Email: " + email + "\n");
-    output.append("Indexed Records: " + recordCount + "\n");
-    output.append("Current Batch ID: " + currentBatchId + "\n");
+    //output.append("User ID: " + userId + "\n");
+    //output.append("Username: " + username + "\n");
+    //output.append("Password: " + password + "\n");
+    //output.append("First Name: " + first + "\n");
+    //output.append("Last Name: " + last + "\n");
+    //output.append("Email: " + email + "\n");
+    //output.append("Indexed Records: " + recordCount + "\n");
+    //output.append("Current Batch ID: " + currentBatchId + "\n");
 
-    return output.toString();
-  }
+    //return output.toString();
+  //}
 
 }

@@ -56,8 +56,8 @@ public class ServerFacade {
       throws ServerException {
     Database db = new Database();
     User user = null;
-    System.out.println("=========BEFORE db read in validate user in facade\n");
-    System.out.println("USERNAME: " + request.getUsername() + "PASS: " + request.getPassword());
+    //System.out.println("=========BEFORE db read in validate user in facade\n");
+    //System.out.println("USERNAME: " + request.getUsername() + "PASS: " + request.getPassword());
     try {
       db.startTransaction();
       user = db.getUserDAO().read(request.getUsername(), request.getPassword());
@@ -68,10 +68,10 @@ public class ServerFacade {
           + request.getUsername(), e);
     }
 
-    System.out.println("=========AFTER db read in validate user in facade\n");
-    if (user != null) {
-      System.out.println(user.toString());
-    }
+    //System.out.println("=========AFTER db read in validate user in facade\n");
+    //if (user != null) {
+      //System.out.println(user.toString());
+    //}
     ValidateUserResponse result = new ValidateUserResponse(user);
     return result;
   }
