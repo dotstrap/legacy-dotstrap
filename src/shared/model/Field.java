@@ -48,6 +48,17 @@ public class Field {
    */
   public Field(int projectId, String title, String knownData, String helpURL, int xCoord,
       int width, int colNum) {
+    //System.out.println("-1");
+    //System.out.println(projectId);
+    //System.out.println(title.toString());
+    //System.out.println(knownData.toString());
+    //System.out.println(helpURL.toString());
+    //System.out.println(xCoord);
+    //System.out.println(width);
+    //System.out.println(colNum);
+    //System.out.println("-----------------");
+
+
     fieldId = -1;
     this.projectId = projectId;
     this.title = title;
@@ -72,6 +83,17 @@ public class Field {
    */
   public Field(int fieldId, int projectId, String title, String knownData, String helpURL,
       int xCoord, int width, int colNum) {
+      //System.out.println(fieldId);
+      //System.out.println(projectId);
+      //System.out.println(title.toString());
+      //System.out.println(knownData.toString());
+      //System.out.println(helpURL.toString());
+      //System.out.println(xCoord);
+      //System.out.println(width);
+      //System.out.println(colNum);
+      //System.out.println("-----------------");
+
+
     this.fieldId = fieldId;
     this.projectId = projectId;
     this.title = title;
@@ -163,5 +185,29 @@ public class Field {
         && helpURL.equals(other.getHelpURL())
         && knownData.equals(other.getKnownData())
         && (colNum == other.getColNum()));  // @formatter:on
+  }
+
+  @Override
+  public String toString() {
+    String s = "";
+
+    s += this.fieldId;
+    s += "\n";
+    s += this.projectId;
+    s += "\n";
+    s += this.title.toString();
+    s += "\n";
+    s += this.knownData.toString();
+    s += "\n";
+    s += this.helpURL.toString();
+    s += "\n";
+    s += this.xCoord;
+    s += "\n";
+    s += this.width;
+    s += "\n";
+    s += this.colNum;
+    s += "\n";
+    s += "-----------\n";
+    return s;
   }
 }

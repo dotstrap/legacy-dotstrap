@@ -82,13 +82,11 @@ public class FieldDAO {
           resultField.setFieldId(resultset.getInt("FieldId"));
           resultField.setProjectId(resultset.getInt("ProjectId"));
           resultField.setTitle(resultset.getString("Title"));
-
           resultField.setKnownData(resultset.getString("KnownData"));
           resultField.setHelpURL(resultset.getString("HelpURL"));
-
           resultField.setXCoord(resultset.getInt("XCoordinate"));
           resultField.setWidth(resultset.getInt("Width"));
-          resultField.setWidth(resultset.getInt("ColumnNumber"));
+          resultField.setColNum(resultset.getInt("ColumnNumber"));
 
           allFields.add(resultField);
         }
@@ -110,17 +108,15 @@ public class FieldDAO {
         List<Field> allFields = new ArrayList<Field>();
         while (resultset.next()) {
           Field resultField = new Field();
-          resultField.setFieldId(resultset.getInt("FieldId"));
-          resultField.setProjectId(projectId);
-          // resultField.setProjectId(resultset.getInt("ProjectId"));
-          resultField.setTitle(resultset.getString("Title"));
 
+          resultField.setFieldId(resultset.getInt("FieldId"));
+          resultField.setProjectId(resultset.getInt("ProjectId"));
+          resultField.setTitle(resultset.getString("Title"));
           resultField.setKnownData(resultset.getString("KnownData"));
           resultField.setHelpURL(resultset.getString("HelpURL"));
-
           resultField.setXCoord(resultset.getInt("XCoordinate"));
           resultField.setWidth(resultset.getInt("Width"));
-          resultField.setWidth(resultset.getInt("ColumnNumber"));
+          resultField.setColNum(resultset.getInt("ColumnNumber"));
 
           allFields.add(resultField);
         }

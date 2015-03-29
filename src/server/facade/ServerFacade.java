@@ -56,7 +56,8 @@ public class ServerFacade {
       throws ServerException {
     Database db = new Database();
     User user = null;
-
+    System.out.println("=========BEFORE db read in validate user in facade\n");
+    System.out.println("USERNAME: " + request.getUsername() + "PASS: " + request.getPassword());
     try {
       db.startTransaction();
       user = db.getUserDAO().read(request.getUsername(), request.getPassword());
@@ -67,6 +68,10 @@ public class ServerFacade {
           + request.getUsername(), e);
     }
 
+    System.out.println("=========AFTER db read in validate user in facade\n");
+    if (user != null) {
+      System.out.println(user.toString());
+    }
     ValidateUserResponse result = new ValidateUserResponse(user);
     return result;
   }
@@ -134,23 +139,20 @@ public class ServerFacade {
   public static DownloadBatchResponse downloadBatch(DownloadBatchRequest request)
       throws ServerException, DatabaseException { // TODO: clean this method up
     Database db = new Database();
-    int projectId = request.getProjectId();
 
-    Batch batchToDownload = null;
-    Project project = null;
-    List<Field> fields = null;
     try {
       db.startTransaction();
 
-      // update the batch & user to reflect downloaded batch
-      User currUser = db.getUserDAO().read(request.getUsername(), request.getPassword());
-      int currUserId = currUser.getUserId();
+      DownloadBatchResponse result = new DownloadBatchResponse();
 
-      if (currUser.getCurrBatch() < 1) {
-        batchToDownload = db.getBatchDAO().getIncompleteBatch(projectId);
+      User currUser = db.getUserDAO().read(request.getUsername(), request.getPassword());
+      if (currUser.getCurrBatch() <= 0) {
+        int projectId = request.getProjectId();
+        Batch batchToDownload = db.getBatchDAO().getIncompleteBatch(projectId);
         int currBatchId = batchToDownload.getBatchId();
 
         // update the user and batch models
+        int currUserId = currUser.getUserId();
         currUser.setCurrBatch(currBatchId);
         batchToDownload.setCurrUserId(currUserId);
 
@@ -158,24 +160,29 @@ public class ServerFacade {
         db.getUserDAO().updateCurrentBatchId(currUserId, currBatchId);
         db.getBatchDAO().assignBatchToUser(currBatchId, currUserId);
 
-        project = db.getProjectDAO().read(projectId);
-        fields = db.getFieldDAO().getAll(projectId);
+        Project currProject = db.getProjectDAO().read(projectId);
+        List<Field> fields = db.getFieldDAO().getAll(projectId);
+
+        System.out.println("PRINTING FIELDS IN SUBMIT BATCH: \n");
+        for (Field f : fields) {
+          System.out.println(f.toString());
+        }
+
+        result.setBatch(batchToDownload);
+        result.setProject(currProject);
+        result.setFields(fields);
+
+        db.endTransaction(true);
+        return result;
       } else {
         db.endTransaction(false);
         logger.log(Level.WARNING, "user already has a batch checked out...");
+        return result; // should have all null values
       }
-
-      db.endTransaction(true);
     } catch (DatabaseException e) {
       db.endTransaction(false);
       throw new ServerException("while attempting to download batch ", e);
     }
-
-    DownloadBatchResponse result = new DownloadBatchResponse();
-    result.setBatch(batchToDownload);
-    result.setProject(project);
-    result.setFields(fields);
-    return result;
   }
 
   private static ArrayList<Integer> getFieldIDs(Batch batch, Database db) throws DatabaseException {
@@ -191,11 +198,11 @@ public class ServerFacade {
 
   private static void addRecords(String input, Project project, Batch batch, Database db,
       ArrayList<Integer> fields) throws DatabaseException {
-    List<String> rows = Arrays.asList(input.split(";", -1));
-    int row = 0;
+    List<String> rows = Arrays.asList(input.split(";| ;", 0));
+    int row = 1;
     for (String s : rows) {
       int i = 0;
-      List<String> values = Arrays.asList(s.split(",", -1));
+      List<String> values = Arrays.asList(s.split(",| ,", 0));
       for (String currVal : values) {
         currVal = currVal.toUpperCase();
         Record record =
@@ -229,31 +236,26 @@ public class ServerFacade {
         Batch batch = db.getBatchDAO().read(request.getBatchID());
         Project project = db.getProjectDAO().read(batch.getProjectId());
         ArrayList<Integer> fields = getFieldIDs(batch, db);
-        int size = fields.size();
-        if (size > 0) {
+        if (fields.size() > 0) {
 
           addRecords(input, project, batch, db, fields);
 
-          user.setCurrBatch(0);
+          user.setCurrBatch(-1);
           int count = (user.getRecordCount() + project.getRecordsPerBatch());
           user.setRecordCount(count);
           db.getUserDAO().update(user);
+
           result.setSuccess(true);
-        } else {
-          result.setSuccess(false);
-          db.endTransaction(false);
+          db.endTransaction(true);
           return result;
         }
-      } else {
-        result.setSuccess(false);
-        db.endTransaction(false);
-        return result;
       }
     } catch (Exception e) {
       db.endTransaction(false);
       throw new ServerException("while attempting to submit batch ", e);
     }
-    db.endTransaction(true);
+    result.setSuccess(false);
+    db.endTransaction(false);
     return result;
   }
 

@@ -58,7 +58,7 @@ public class User {
     this.last           = last;
     this.email          = email;
     this.recordCount    = recordCount;
-    currentBatchId = currBatch;
+    this.currentBatchId = currBatch;
   }
 
   /**
@@ -75,14 +75,14 @@ public class User {
    */
   public User(int id, String username, String password, String first,
       String last, String email, int recordCount, int currBatch) {
-    userId         = id;
+    this.userId         = id;
     this.username       = username;
     this.password       = password;
     this.first          = first;
     this.last           = last;
     this.email          = email;
     this.recordCount    = recordCount;
-    currentBatchId = currBatch;
+    this.currentBatchId = currBatch;
   }
   //@formatter:on
 
@@ -139,6 +139,7 @@ public class User {
   }
 
   public void setRecordCount(int recordCount) {
+    System.out.println("rec count: " + recordCount);
     this.recordCount = recordCount;
   }
 
@@ -147,6 +148,7 @@ public class User {
   }
 
   public void setCurrBatch(int currBatch) {
+      System.out.println("batch id: " + currBatch);
     currentBatchId = currBatch;
   }
 
@@ -183,7 +185,7 @@ public class User {
     output.append("Last Name: " + last + "\n");
     output.append("Email: " + email + "\n");
     output.append("Indexed Records: " + recordCount + "\n");
-    output.append("Current Image ID: " + currentBatchId + "\n");
+    output.append("Current Batch ID: " + currentBatchId + "\n");
 
     return output.toString();
   }

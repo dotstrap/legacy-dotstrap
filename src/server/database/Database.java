@@ -161,7 +161,7 @@ public class Database {
          connection.close();
       } catch (SQLException e) {
         logger.log(Level.SEVERE, "STACKTRACE: ", e);
-        // throw new DatabaseException(e.toString()); // FIXME: should this through a db exception?
+         //throw new DatabaseException(e.toString()); // FIXME: should this through a db exception?
       }
     }
   }

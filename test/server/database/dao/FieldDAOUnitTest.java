@@ -115,7 +115,7 @@ public class FieldDAOUnitTest {
         return false;
       }
     }
-    return (safeEquals(a.getProjectId(), b.getProjectId()) // @formatter:off &&
+    return (safeEquals(a.getProjectId(), b.getProjectId()) && // @formatter:off
             safeEquals(a.getTitle(), b.getTitle()) &&
             safeEquals(a.getKnownData(), b.getKnownData()) &&
             safeEquals(a.getHelpURL(), b.getHelpURL()) &&

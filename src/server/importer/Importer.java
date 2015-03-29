@@ -195,13 +195,13 @@ public class Importer {
   private void loadProjects(Element projectElem) {
     // Get Project Elements
     Element titleElem = (Element) projectElem.getElementsByTagName("title").item(0);
-    Element recPerImgElem = (Element) projectElem.getElementsByTagName("recordsperimage").item(0);
+    Element recPerBatch = (Element) projectElem.getElementsByTagName("recordsperimage").item(0);
     Element firstYElem = (Element) projectElem.getElementsByTagName("firstycoord").item(0);
     Element recordElem = (Element) projectElem.getElementsByTagName("recordheight").item(0);
 
     // Get Project primitives from Project elements
     String title = titleElem.getTextContent();
-    int recordsPerImage = Integer.parseInt(recPerImgElem.getTextContent());
+    int recordsPerBatch = Integer.parseInt(recPerBatch.getTextContent());
     int firstYCoord = Integer.parseInt(firstYElem.getTextContent());
     int recordHeight = Integer.parseInt(recordElem.getTextContent());
 
@@ -211,7 +211,7 @@ public class Importer {
     try {
       db.startTransaction();
 
-      Project newProject = new Project(title, recordsPerImage, firstYCoord, recordHeight);
+      Project newProject = new Project(title, recordsPerBatch, firstYCoord, recordHeight);
       projectId = db.getProjectDAO().create(newProject);
       assert (projectId > 0);
 

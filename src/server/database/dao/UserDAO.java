@@ -173,7 +173,7 @@ public class UserDAO {
         return returnUser;
       }
     } catch (SQLException e) {
-      throw new DatabaseException("ERROR username: " + username + " from database...", e);
+      throw new DatabaseException("reading username: " + username + " from database...", e);
     }
   }
 
