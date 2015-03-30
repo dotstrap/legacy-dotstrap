@@ -16,8 +16,8 @@ import java.util.List;
 public class SearchRequest implements Request {
   private String             username;
   private String             password;
-  private ArrayList<Integer> fieldIds;
-  private ArrayList<String>  searchQueries;
+  private List<Integer> fieldIds;
+  private List<String>  searchQueries;
 
   /**
    * Instantiates a new search parameters.
@@ -34,15 +34,15 @@ public class SearchRequest implements Request {
    * @param newFieldIds the field id
    * @param searchQ the search
    */
-  public SearchRequest(String name, String password, ArrayList<Integer> newFieldIds,
-      ArrayList<String> newSearchQs) {//@formatter:off
-    System.out.println("\n=========FIELD IN CONST: " + newFieldIds.toString());
-    System.out.println("\n=========SEARCH PARAM IN CONST: " + newSearchQs.toString());
+  public SearchRequest(String name, String password, List<Integer> newFieldIds,
+      List<String> newSearchQs) {//@formatter:off
+    //System.out.println("\n=========FIELD IN CONST: " + newFieldIds.toString());
+    //System.out.println("\n=========SEARCH PARAM IN CONST: " + newSearchQs.toString());
 
-    username      = name;
-    this.password = password;
-    this.fieldIds = newFieldIds;
-    searchQueries = newSearchQs;
+    this.username      = name;
+    this.password      = password;
+    this.fieldIds      = newFieldIds;
+    this.searchQueries = newSearchQs; // formatter:on
   }
 
   /**
@@ -91,7 +91,7 @@ public class SearchRequest implements Request {
   /**
    * @param fieldIds the fieldIds to set
    */
-  public void setFieldIds(ArrayList<Integer> fieldIds) {
+  public void setFieldIds(List<Integer> fieldIds) {
     this.fieldIds = fieldIds;
   }
 
@@ -100,7 +100,7 @@ public class SearchRequest implements Request {
    *
    * @return the search
    */
-  public ArrayList<String> getSearchQueries() {
+  public List<String> getSearchQueries() {
     return searchQueries;
   }
 
@@ -109,7 +109,7 @@ public class SearchRequest implements Request {
    *
    * @param search the new search
    */
-  public void setSearchQueries(ArrayList<String> search) {
+  public void setSearchQueries(List<String> search) {
     searchQueries = search;
   }
 

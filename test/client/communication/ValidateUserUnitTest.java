@@ -10,11 +10,10 @@ package client.communication;
 import static org.junit.Assert.assertEquals;
 
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.junit.*;
 
+import server.ServerException;
 import server.database.Database;
 import server.database.dao.UserDAO;
 
@@ -25,11 +24,10 @@ import shared.model.User;
  * The Class ValidateUserUnitTest.
  */
 public class ValidateUserUnitTest {
-  /** The logger used throughout the project. */
-  private static Logger logger;
-  static {
-    logger = Logger.getLogger("server");
-  }
+
+
+
+
 
   static private ClientCommunicator clientComm;// @formatter:off
 
@@ -67,16 +65,16 @@ public class ValidateUserUnitTest {
    */
   @Before
   public void setUp() throws Exception {
-    // Empty & populate db for each test (even though it is slower) case to prevent against possible
+    // Empty & populate db for each test case (even though it is slower) to prevent against possible
     // db locking
     db = new Database();
     db.startTransaction();
-    db.initTables();
 
     // Empty and prepare database for test case
     testUserDAO = db.getUserDAO();
     clientComm = new ClientCommunicator();
-    // testUserDAO.initTable();
+
+    db.initTables();
 
     testUser1 = new User("userTest1", "pass1", "first1", "last1", "email1", 1, 1);
     testUser2 = new User("userTest2", "pass2", "first2", "last2", "email2", 2, 2);
@@ -99,11 +97,6 @@ public class ValidateUserUnitTest {
    */
   @After
   public void tearDown() throws Exception {
-    // empty db and restore it to its original state
-    db.startTransaction();
-    db.initTables();
-    db.endTransaction(true);
-
     testUser1 = null;
     testUser2 = null;
     testUser3 = null;
@@ -112,118 +105,64 @@ public class ValidateUserUnitTest {
     db = null;
 
     clientComm = null;
+
+    // rollback this db transaction so changes aren't permanent
+    db = new Database();
+    db.startTransaction(); // FIXME: I wish there was a way to just roll this back
+    db.initTables(); // but I need to save the db each testcase
+    db.endTransaction(true);
+    db = null;
   }
 
   /**
    * Invalid password test.
+   *
+   * @throws ServerException
    */
   @Test
-  public void invalidPasswordTest() {
-    boolean isValidPassword = false;
-    try {
-      clientComm.validateUser(new ValidateUserRequest("userTest2", "INVALID"));
-      isValidPassword = true;
-    } catch (Exception e) {
-      isValidPassword = false;
-      logger.log(Level.SEVERE, "STACKTRACE: ", e);
-    }
-    assertEquals(false, isValidPassword);
+  public void invalidPasswordTest() throws ServerException {
+    assertEquals(null, clientComm.validateUser(new ValidateUserRequest("userTest2", "INVALID"))
+        .getUser());
   }
 
   /**
    * Mis matched password test.
+   *
+   * @throws ServerException
    */
   @Test
-  public void misMatchedPasswordTest() {
-    boolean isValidPassword = false;
-    try {
-      clientComm.validateUser(new ValidateUserRequest("userTest2", "pass3"));
-      isValidPassword = true;
-    } catch (Exception e) {
-      isValidPassword = false;
-      logger.log(Level.SEVERE, "STACKTRACE: ", e);
-    }
-    assertEquals(false, isValidPassword);
+  public void misMatchedPasswordTest() throws ServerException {
+    assertEquals("FALSE\n", clientComm.validateUser(new ValidateUserRequest("userTest2", "pass3"))
+        .toString());
   }
 
   /**
    * Invalid username test.
+   *
+   * @throws ServerException
    */
   @Test
-  public void invalidUsernameTest() {
-    boolean isValidUsername = false;
-    try {
-      clientComm.validateUser(new ValidateUserRequest("pass3", "userTest3"));
-      isValidUsername = true;
-    } catch (Exception e) {
-      isValidUsername = false;
-      logger.log(Level.SEVERE, "STACKTRACE: ", e);
-    }
-    assertEquals(false, isValidUsername);
+  public void invalidUsernameTest() throws ServerException {
+    assertEquals(null, clientComm.validateUser(new ValidateUserRequest("pass3", "userTest3"))
+        .getUser());
   }
 
   /**
    * Invalid creds test.
+   *
+   * @throws ServerException
    */
   @Test
-  public void invalidCredsTest() {
-    // invalid credentials test
-    boolean isValidCreds = false;
-    try {
-      clientComm.validateUser(new ValidateUserRequest("userTest2", "userTest2"));
-      isValidCreds = true;
-    } catch (Exception e) {
-      isValidCreds = false;
-      logger.log(Level.SEVERE, "STACKTRACE: ", e);
-    }
-    assertEquals(false, isValidCreds);
-  }
-
-  /**
-   * Null password test.
-   */
-  @Test
-  public void nullPasswordTest() {
-    boolean isValidCreds = true;
-    try {
-      clientComm.validateUser(new ValidateUserRequest("userTest2", ""));
-      isValidCreds = true;
-    } catch (Exception e) {
-      isValidCreds = false;
-      logger.log(Level.SEVERE, "STACKTRACE: ", e);
-    }
-    assertEquals(false, isValidCreds);
-  }
-
-  /**
-   * Null username test.
-   */
-  @Test
-  public void nullUsernameTest() {
-    boolean isValidCreds = true;
-    try {
-      clientComm.validateUser(new ValidateUserRequest("", "pass3"));
-      isValidCreds = true;
-    } catch (Exception e) {
-      isValidCreds = false;
-      logger.log(Level.SEVERE, "STACKTRACE: ", e);
-    }
-    assertEquals(false, isValidCreds);
+  public void invalidCredsTest() throws ServerException {
+    assertEquals("FALSE\n",
+        clientComm.validateUser(new ValidateUserRequest("10101001", "%$$%&^$%^*")).toString());
   }
 
   /**
    * Null creds test.
    */
   @Test
-  public void nullCredsTest() {
-    boolean isValidCreds = true;
-    try {
-      clientComm.validateUser(new ValidateUserRequest("", ""));
-      isValidCreds = true;
-    } catch (Exception e) {
-      isValidCreds = false;
-      logger.log(Level.SEVERE, "STACKTRACE: ", e);
-    }
-    assertEquals(false, isValidCreds);
+  public void nullCredsTest() throws ServerException {
+    assertEquals(null, clientComm.validateUser(new ValidateUserRequest("", "")).getUser());
   }
 }

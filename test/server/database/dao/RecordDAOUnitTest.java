@@ -1,7 +1,7 @@
 /**
  * RecordDAOUnitTest.java
  * JRE v1.8.0_40
- * 
+ *
  * Created by William Myers on Mar 24, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
@@ -29,7 +29,6 @@ public class RecordDAOUnitTest {
    */
   @BeforeClass
   public static void setUpBeforeClass() throws Exception {
-
     // Load database drivers
     Database.initDriver();
   }
@@ -41,8 +40,6 @@ public class RecordDAOUnitTest {
    */
   @AfterClass
   public static void tearDownAfterClass() throws Exception {
-    // "tearDownAfterClass");
-    // "tearDownAfterClass");
     return;
   }
 
@@ -56,7 +53,6 @@ public class RecordDAOUnitTest {
    */
   @Before
   public void setUp() throws Exception {
-
     // Prepare database for test case
     db = new Database();
     db.startTransaction();
@@ -71,7 +67,6 @@ public class RecordDAOUnitTest {
    */
   @After
   public void tearDown() throws Exception {
-
     // Roll back this transaction so changes are undone
     db.endTransaction(false);
     db = null;
@@ -85,18 +80,10 @@ public class RecordDAOUnitTest {
    */
   @Test
   public void testGetAll() throws DatabaseException {
-
     List<Record> allRecords = testRecDAO.getAll();
     assertEquals(0, allRecords.size());
   }
 
-  // FIXME: separate this into different methods without too much code
-  // duplication
-  /*
-   * TestCRUD throws the kitchen sink at the records table
-   * 
-   * @throws DatabaseException the database exception
-   */
   /**
    * Test create.
    *
@@ -104,7 +91,6 @@ public class RecordDAOUnitTest {
    */
   @Test
   public void testCreate() throws DatabaseException {
-
     int fieldId1 = 1;
     int fieldId2 = 2;
     int fieldId3 = 3;
@@ -160,20 +146,20 @@ public class RecordDAOUnitTest {
     recordTest2.setRecordId(testRecordId12);
 
     // Ensure database contains all the new records by testing read
-    assertTrue(recordTest1.equals(testRecDAO.read(testRecordId1), false));
-    assertTrue(recordTest2.equals(testRecDAO.read(testRecordId2), false));
-    assertTrue(recordTest3.equals(testRecDAO.read(testRecordId3), false));
-    assertTrue(recordTest4.equals(testRecDAO.read(testRecordId4), false));
+    assertTrue(recordTest1.equals(testRecDAO.read(testRecordId1)));
+    assertTrue(recordTest2.equals(testRecDAO.read(testRecordId2)));
+    assertTrue(recordTest3.equals(testRecDAO.read(testRecordId3)));
+    assertTrue(recordTest4.equals(testRecDAO.read(testRecordId4)));
 
-    assertTrue(recordTest5.equals(testRecDAO.read(testRecordId5), false));
-    assertTrue(recordTest6.equals(testRecDAO.read(testRecordId6), false));
-    assertTrue(recordTest7.equals(testRecDAO.read(testRecordId7), false));
-    assertTrue(recordTest8.equals(testRecDAO.read(testRecordId8), false));
+    assertTrue(recordTest5.equals(testRecDAO.read(testRecordId5)));
+    assertTrue(recordTest6.equals(testRecDAO.read(testRecordId6)));
+    assertTrue(recordTest7.equals(testRecDAO.read(testRecordId7)));
+    assertTrue(recordTest8.equals(testRecDAO.read(testRecordId8)));
 
-    assertTrue(recordTest9.equals(testRecDAO.read(testRecordId9), false));
-    assertTrue(recordTest10.equals(testRecDAO.read(testRecordId10), false));
-    assertTrue(recordTest11.equals(testRecDAO.read(testRecordId11), false));
-    assertTrue(recordTest12.equals(testRecDAO.read(testRecordId12), false));
+    assertTrue(recordTest9.equals(testRecDAO.read(testRecordId9)));
+    assertTrue(recordTest10.equals(testRecDAO.read(testRecordId10)));
+    assertTrue(recordTest11.equals(testRecDAO.read(testRecordId11)));
+    assertTrue(recordTest12.equals(testRecDAO.read(testRecordId12)));
 
     // Ensure table contains 12 records
     List<Record> allRecords = testRecDAO.getAll();
@@ -186,16 +172,16 @@ public class RecordDAOUnitTest {
     for (Record curr : allRecords) {
       assertFalse(curr.getRecordId() == -1);
       if (!hasFoundRecord1) {
-        hasFoundRecord1 = curr.equals(recordTest1, false);
+        hasFoundRecord1 = curr.equals(recordTest1);
       }
       if (!hasFoundRecord2) {
-        hasFoundRecord2 = curr.equals(recordTest2, false);
+        hasFoundRecord2 = curr.equals(recordTest2);
       }
       if (!hasFoundRecord3) {
-        hasFoundRecord3 = curr.equals(recordTest3, false);
+        hasFoundRecord3 = curr.equals(recordTest3);
       }
       if (!hasFoundRecord4) {
-        hasFoundRecord4 = curr.equals(recordTest4, false);
+        hasFoundRecord4 = curr.equals(recordTest4);
       }
     }
     assertTrue(hasFoundRecord1 && hasFoundRecord2 && hasFoundRecord3 && hasFoundRecord4);
@@ -208,7 +194,6 @@ public class RecordDAOUnitTest {
    */
   @Test
   public void testDelete() throws DatabaseException {
-
     int batchId1 = 1;
     int fieldId1 = 1;
     int fieldId2 = 2;

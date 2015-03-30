@@ -89,6 +89,8 @@ public class DownloadBatchUnitTest {
 
     List<Batch> allBatches = testBatchDAO.getAll();
     assertEquals(3, allBatches.size());
+
+    db.endTransaction(true);
   }
 
   /**
@@ -98,8 +100,6 @@ public class DownloadBatchUnitTest {
    */
   @AfterClass
   public static void tearDownAfterClass() throws Exception {
-    db.endTransaction(false);
-
     testUser1 = null;
     testUser2 = null;
     testUser3 = null;
@@ -111,7 +111,11 @@ public class DownloadBatchUnitTest {
     testUserDAO = null;
     testBatchDAO = null;
 
-    db = null;
+
+    db = new Database();
+    db.startTransaction(); // FIXME: I wish there was a way to just roll this back
+    db.initTables(); // but I need to save the db each testcase
+    db.endTransaction(true);
     return;
   }
 

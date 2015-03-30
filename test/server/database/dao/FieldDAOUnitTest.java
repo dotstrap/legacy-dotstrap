@@ -9,6 +9,7 @@ package server.database.dao;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
@@ -99,7 +100,6 @@ public class FieldDAOUnitTest {
    */
   @Test
   public void testGetAll() throws DatabaseException {
-
     List<Field> allFields = testFieldDAO.getAll();
     assertEquals(3, allFields.size());
   }
@@ -111,14 +111,13 @@ public class FieldDAOUnitTest {
    */
   @Test
   public void testCreate() throws DatabaseException {
-
-    List<Field> all = testFieldDAO.getAll();
-    assertEquals(3, all.size());
+    List<Field> allFields = testFieldDAO.getAll();
+    assertEquals(3, allFields.size());
 
     boolean hasFoundField1 = false;
     boolean hasFoundField2 = false;
     boolean hasFoundField3 = false;
-    for (Field curr : all) {
+    for (Field curr : allFields) {
       assertFalse(curr.getFieldId() == -1);
       if (!hasFoundField1) {
         hasFoundField1 = curr.equals(fieldTest1);
@@ -130,6 +129,7 @@ public class FieldDAOUnitTest {
           hasFoundField3 = curr.equals(fieldTest3);
       }
     }
+    assertTrue(hasFoundField1 && hasFoundField2 && hasFoundField3);
   }
 
   /**
@@ -139,19 +139,19 @@ public class FieldDAOUnitTest {
    */
   @Test
   public void testDelete() throws DatabaseException {
-    List<Field> allFieldes = testFieldDAO.getAll();
-    assertEquals(3, allFieldes.size());
+    List<Field> allFields = testFieldDAO.getAll();
+    assertEquals(3, allFields.size());
 
     testFieldDAO.delete(fieldTest1);
-    allFieldes = testFieldDAO.getAll();
-    assertEquals(2, allFieldes.size());
-
-    testFieldDAO.delete(fieldTest3);
-    allFieldes = testFieldDAO.getAll();
-    assertEquals(1, allFieldes.size());
+    allFields = testFieldDAO.getAll();
+    assertEquals(2, allFields.size());
 
     testFieldDAO.delete(fieldTest2);
-    allFieldes = testFieldDAO.getAll();
-    assertEquals(0, allFieldes.size());
+    allFields = testFieldDAO.getAll();
+    assertEquals(1, allFields.size());
+
+    testFieldDAO.delete(fieldTest3);
+    allFields = testFieldDAO.getAll();
+    assertEquals(0, allFields.size());
   }
 }

@@ -30,9 +30,7 @@ import shared.model.User;
  * The Class GetProjectsUnitTest.
  */
 public class GetProjectsUnitTest {
-
-
-   private ClientCommunicator clientComm;// @formatter:off
+   private ClientCommunicator clientComm; // @formatter:off
 
    private Database   db;
 
@@ -82,8 +80,7 @@ public class GetProjectsUnitTest {
     testProjectDAO = db.getProjectDAO();
     clientComm = new ClientCommunicator();
 
-    testUserDAO.initTable();
-    testProjectDAO.initTable();
+    db.initTables();
 
     testUser1 = new User("userTest1", "pass1", "first1", "last1", "email1", 1, 1);
     testUser2 = new User("userTest2", "pass2", "first2", "last2", "email2", 2, 2);
@@ -93,8 +90,8 @@ public class GetProjectsUnitTest {
     testUserDAO.create(testUser2);
     testUserDAO.create(testUser3);
 
-    List<User> allUseres = testUserDAO.getAll();
-    assertEquals(3, allUseres.size());
+    List<User> allUsers = testUserDAO.getAll();
+    assertEquals(3, allUsers.size());
 
     testProject1 = new Project("testProject1", 10, 11, 12);
     testProject2 = new Project("testProject2", 20, 21, 22);
@@ -104,8 +101,8 @@ public class GetProjectsUnitTest {
     testProjectDAO.create(testProject2);
     testProjectDAO.create(testProject3);
 
-    List<Project> allProjectes = testProjectDAO.getAll();
-    assertEquals(3, allProjectes.size());
+    List<Project> allProjects = testProjectDAO.getAll();
+    assertEquals(3, allProjects.size());
 
     db.endTransaction(true);
   }
@@ -117,24 +114,21 @@ public class GetProjectsUnitTest {
    */
   @After
   public void tearDown() throws Exception {
-    // empty db and restore it to its original state
-    // db.startTransaction();
-    // testUserDAO.initTable();
-    // testProjectDAO.initTable();
-    // db.endTransaction(true);
-    // FIXME: why cant i erase the db at the end?
-    testUser1 = null;
-    testUser2 = null;
-    testUser3 = null;
+    testUser1      = null; // @formatter:off
+    testUser2      = null;
+    testUser3      = null;
+    testProject1   = null;
+    testProject2   = null;
+    testProject3   = null;
+    testUserDAO    = null;
+    testProjectDAO = null;// @formatter:on
 
-    testProject1 = null;
-    testProject2 = null;
-    testProject3 = null;
+    db = null;
 
-    testUserDAO = null;
-    testProjectDAO = null;
-    clientComm = null;
-
+    db = new Database();
+    db.startTransaction(); // FIXME: I wish there was a way to just roll this back
+    db.initTables(); // but I need to save the db each testcase
+    db.endTransaction(true);
     db = null;
   }
 
@@ -142,55 +136,67 @@ public class GetProjectsUnitTest {
    * Valid project test.
    */
   @Test
-  public void validProjectTest() throws ServerException {
+  public void validProjectTest() throws ServerException, DatabaseException {
     GetProjectsResponse result =
         clientComm.getProjects(new GetProjectsRequest("userTest1", "pass1"));
+
     assertEquals(3, result.getProjects().size());
+
+    assertEquals(1, result.getProjects().get(0).getProjectId());
+    assertEquals(2, result.getProjects().get(1).getProjectId());
+    assertEquals(3, result.getProjects().get(2).getProjectId());
+
+    assertEquals("testProject1", result.getProjects().get(0).getTitle());
+    assertEquals("testProject2", result.getProjects().get(1).getTitle());
+    assertEquals("testProject3", result.getProjects().get(2).getTitle());
   }
 
   /**
    * Invalid password test.
+   *
+   * @throws ServerException
    */
   @Test
   public void invalidPasswordTest() throws ServerException {
-    GetProjectsResponse result =
-        clientComm.getProjects(new GetProjectsRequest("userTest2", "INVALID"));
-    assertEquals(0, result.getProjects().size());
+    assertEquals(null, clientComm.getProjects(new GetProjectsRequest("userTest2", "INVALID")));
   }
 
   /**
    * Mis matched password test.
+   *
+   * @throws ServerException
    */
   @Test
   public void misMatchedPasswordTest() throws ServerException {
-    GetProjectsResponse result =
-        clientComm.getProjects(new GetProjectsRequest("userTest2", "pass3"));
-    assertEquals(0, result.getProjects().size());
+    assertEquals(null, clientComm.getProjects(new GetProjectsRequest("userTest2", "pass3")));
   }
 
   /**
    * Invalid username test.
+   *
+   * @throws ServerException
    */
   @Test
   public void invalidUsernameTest() throws ServerException {
-    GetProjectsResponse result =
-        clientComm.getProjects(new GetProjectsRequest("pass3", "userTest3"));
-    assertEquals(0, result.getProjects().size());
+    assertEquals(null, clientComm.getProjects(new GetProjectsRequest("pass3", "userTest3")));
   }
 
   /**
    * Invalid creds test.
+   *
+   * @throws ServerException
    */
   @Test
-  public void invalidCredsTest() {
-    boolean isValidCreds = true;
-    try {
-      clientComm.getProjects(new GetProjectsRequest("userTest2", "userTest2"));
-      isValidCreds = true;
-    } catch (Exception e) {
-      isValidCreds = false;
-    }
-    assertEquals(false, isValidCreds);
+  public void invalidCredsTest() throws ServerException {
+    assertEquals(null, clientComm.getProjects(new GetProjectsRequest("10101001", "%$$%&^$%^*")));
+  }
+
+  /**
+   * Null creds test.
+   */
+  @Test
+  public void nullCredsTest() throws ServerException {
+    assertEquals(null, clientComm.getProjects(new GetProjectsRequest("", "")));
   }
 
 }

@@ -190,6 +190,7 @@ public class RecordDAO {
           resultset.next();
           int id = resultset.getInt(1);
           newRecord.setRecordId(id);
+          return id;
         }
       } else {
         throw new DatabaseException("ERROR occurred while inserting record: "
@@ -198,7 +199,6 @@ public class RecordDAO {
     } catch (SQLException e) {
       throw new DatabaseException("occurred while inserting record: " + newRecord.toString());
     }
-    return newRecord.getRecordId();
   }
 
   /**

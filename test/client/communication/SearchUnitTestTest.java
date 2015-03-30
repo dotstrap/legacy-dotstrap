@@ -16,9 +16,13 @@ import java.util.logging.Logger;
 
 import org.junit.*;
 
+import server.ServerException;
 import server.database.Database;
+import server.database.DatabaseException;
 import server.database.dao.*;
 
+import shared.communication.SearchRequest;
+import shared.communication.SearchResponse;
 import shared.model.*;
 
 /**
@@ -27,6 +31,8 @@ import shared.model.*;
  * @author wm
  */
 public class SearchUnitTestTest {
+
+
   /** The logger used throughout the project. */
   static private Logger      logger; // @formatter:off
   static {
@@ -150,11 +156,6 @@ public class SearchUnitTestTest {
    */
   @After
   public void tearDown() throws Exception {
-    // empty db and restore it to its original state
-    db.startTransaction();
-    db.initTables();
-    db.endTransaction(true);
-
     db = null;
 
     clientComm = null;
@@ -168,6 +169,11 @@ public class SearchUnitTestTest {
     fieldTest1 = null;
     fieldTest2 = null;
     fieldTest3 = null;
+
+    db = new Database();
+    db.startTransaction(); // FIXME: I wish there was a way to just roll this back
+    db.initTables(); // but I need to save the db each testcase
+    db.endTransaction(true);
   }
 
   @Test
@@ -175,24 +181,24 @@ public class SearchUnitTestTest {
     assertEquals(true, true);
   }
 
-  // @Test
-  // public void validUserTest() throws ServerException, DatabaseException {
-  // SearchResponse result =
-  // clientComm.search(new SearchRequest("userTest1", "pass1", fieldIDs, values));
-  // assertEquals(result.getFoundRecords().size(), 1);
-  // }
+  @Test
+  public void validUserTest() throws ServerException, DatabaseException {
+    SearchResponse result =
+        clientComm.search(new SearchRequest("userTest1", "pass1", fieldIDs, values));
+    assertEquals(result.getFoundRecords().size(), 1);
+  }
 
-  // @Test
-  // public void invalidFieldIdTest() throws ServerException, DatabaseException {
-  // SearchResponse result =
-  // clientComm.search(new SearchRequest("userTest1", "pass1", badFieldIDs, values));
-  // assertEquals(result.getUrls().size(), 0);
-  // }
+  @Test
+  public void invalidFieldIdTest() throws ServerException, DatabaseException {
+    SearchResponse result =
+        clientComm.search(new SearchRequest("userTest1", "pass1", badFieldIDs, values));
+    assertEquals(result.getUrls().size(), 0);
+  }
 
-  // @Test
-  // public void invalidValuesTest() throws ServerException, DatabaseException {
-  // SearchResponse result =
-  // clientComm.search(new SearchRequest("userTest1", "pass1", fieldIDs, badValues));
-  // assertEquals(result.getFoundRecords().size(), 0);
-  // }
+  @Test
+  public void invalidValuesTest() throws ServerException, DatabaseException {
+    SearchResponse result =
+        clientComm.search(new SearchRequest("userTest1", "pass1", fieldIDs, badValues));
+    assertEquals(result.getFoundRecords().size(), 0);
+  }
 }

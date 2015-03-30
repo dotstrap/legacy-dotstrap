@@ -91,7 +91,7 @@ public class Record {
     this.batchURL = batchURL;
     this.data     = data;
     this.rowNum   = rowNum;
-    this.colNum    = colNum;// @formatter:on
+    this.colNum   = colNum;// @formatter:on
   }
 
   public int getRecordId() {
@@ -154,10 +154,9 @@ public class Record {
    * Equals.
    *
    * @param o the object
-   * @param shouldCompareIds the should compare ids
    * @return true, if successful
    */
-  public boolean equals(Object o, boolean shouldCompareIds) {
+  public boolean equals(Object o) {
     if (o == null) {
       return false;
     }
@@ -169,19 +168,11 @@ public class Record {
     }
 
     Record other = (Record) o;
-
-    if (shouldCompareIds) {
-      if (recordId != other.getRecordId()) {
-        return false;
-      }
-    }
-
-    return (// @formatter:off
-         (batchId == other.getBatchId())
-        && batchURL.equals(other.getBatchURL())
-        && data == other.getData()
-        && (rowNum == other.getRowNum())
-        && (colNum == other.getColNum())); // @formatter:on
+    return ((this.batchId == other.getBatchId()) //@formatter:off
+        && (this.batchURL.equals(other.getBatchURL()))
+        && (this.data.equals(other.getData()))
+        && (this.rowNum == other.getRowNum())
+        && (this.colNum == other.getColNum())); // @formatter:on
   }
 
 }

@@ -9,6 +9,7 @@ package client.communication;
 
 import static org.junit.Assert.assertEquals;
 
+import java.net.MalformedURLException;
 import java.util.List;
 
 import org.junit.*;
@@ -18,6 +19,7 @@ import server.database.Database;
 import server.database.DatabaseException;
 import server.database.dao.*;
 
+import shared.communication.DownloadBatchRequest;
 import shared.communication.SubmitBatchRequest;
 import shared.model.*;
 
@@ -25,6 +27,8 @@ import shared.model.*;
  * The Class SubmitBatchUnitTest.
  */
 public class SubmitBatchUnitTest {
+
+
   private ClientCommunicator clientComm;    // @formatter:off
   private Database   db;
   private UserDAO    testUserDAO;
@@ -68,58 +72,58 @@ public class SubmitBatchUnitTest {
    */
   @Before
   public void setUp() throws Exception {
-      db = new Database();
-      db.startTransaction();
+    db = new Database();
+    db.startTransaction();
 
-      testUserDAO = db.getUserDAO();
-      testBatchDAO = db.getBatchDAO();
-      testProjectDAO = db.getProjectDAO();
-      clientComm = new ClientCommunicator();
+    testUserDAO = db.getUserDAO();
+    testBatchDAO = db.getBatchDAO();
+    testProjectDAO = db.getProjectDAO();
+    clientComm = new ClientCommunicator();
 
-      testUserDAO.initTable();
-      testBatchDAO.initTable();
-      testProjectDAO.initTable();
+    testUserDAO.initTable();
+    testBatchDAO.initTable();
+    testProjectDAO.initTable();
 
-      testUser1 = new User("userTest1", "pass1", "first1", "last1", "email1", 1, 1);
-      testUser2 = new User("userTest2", "pass2", "first2", "last2", "email2", 2, 2);
-      testUser3 = new User("userTest3", "pass3", "first3", "last3", "email3", 3, 3);
+    testUser1 = new User("userTest1", "pass1", "first1", "last1", "email1", 1, 1);
+    testUser2 = new User("userTest2", "pass2", "first2", "last2", "email2", 2, 2);
+    testUser3 = new User("userTest3", "pass3", "first3", "last3", "email3", 3, 3);
 
-      testUserDAO.create(testUser1);
-      testUserDAO.create(testUser2);
-      testUserDAO.create(testUser3);
+    testUserDAO.create(testUser1);
+    testUserDAO.create(testUser2);
+    testUserDAO.create(testUser3);
 
-      List<User> allUseres = testUserDAO.getAll();
-      assertEquals(3, allUseres.size());
+    List<User> allUseres = testUserDAO.getAll();
+    assertEquals(3, allUseres.size());
 
-      testProject1 = new Project("testProject1", 10, 11, 12);
-      testProject2 = new Project("testProject2", 20, 21, 22);
-      testProject3 = new Project("testProject3", 30, 31, 32);
+    testProject1 = new Project("testProject1", 10, 11, 12);
+    testProject2 = new Project("testProject2", 20, 21, 22);
+    testProject3 = new Project("testProject3", 30, 31, 32);
 
-      testProjectDAO.create(testProject1);
-      testProjectDAO.create(testProject2);
-      testProjectDAO.create(testProject3);
+    testProjectDAO.create(testProject1);
+    testProjectDAO.create(testProject2);
+    testProjectDAO.create(testProject3);
 
-      List<Project> allProjectes = testProjectDAO.getAll();
-      assertEquals(3, allProjectes.size());
+    List<Project> allProjectes = testProjectDAO.getAll();
+    assertEquals(3, allProjectes.size());
 
-      testBatch1 =
-          new Batch(1, "someTestPath/batchTest1", testProject1.getProjectId(), Batch.INCOMPLETE,
-                  testUser1.getUserId());
-      testBatch2 =
-          new Batch(2, "someTestPath/batchTest2", testProject2.getProjectId(), Batch.INCOMPLETE,
-                  testUser2.getUserId());
-      testBatch3 =
-          new Batch(3, "someTestPath/batchTest3", testProject3.getProjectId(), Batch.INCOMPLETE,
-                  testUser3.getUserId());
+    testBatch1 =
+        new Batch(1, "someTestPath/batchTest1", testProject1.getProjectId(), Batch.INCOMPLETE,
+            testUser1.getUserId());
+    testBatch2 =
+        new Batch(2, "someTestPath/batchTest2", testProject2.getProjectId(), Batch.INCOMPLETE,
+            testUser2.getUserId());
+    testBatch3 =
+        new Batch(3, "someTestPath/batchTest3", testProject3.getProjectId(), Batch.INCOMPLETE,
+            testUser3.getUserId());
 
-      testBatchDAO.create(testBatch1);
-      testBatchDAO.create(testBatch2);
-      testBatchDAO.create(testBatch3);
+    testBatchDAO.create(testBatch1);
+    testBatchDAO.create(testBatch2);
+    testBatchDAO.create(testBatch3);
 
-      List<Batch> allBatches = testBatchDAO.getAll();
-      assertEquals(3, allBatches.size());
+    List<Batch> allBatches = testBatchDAO.getAll();
+    assertEquals(3, allBatches.size());
 
-      db.endTransaction(true);
+    db.endTransaction(true);
   }
 
   /**
@@ -129,42 +133,104 @@ public class SubmitBatchUnitTest {
    */
   @After
   public void tearDown() throws Exception {
-      // empty db and restore it to its original state
-      db.startTransaction();
-      db.initTables();
-      db.endTransaction(true);
+    testUser1      = null;// @formatter:off
+    testUser2      = null;
+    testUser3      = null;
+    testBatch1     = null;
+    testBatch2     = null;
+    testBatch3     = null;
+    testProject1   = null;
+    testProject2   = null;
+    testProject3   = null;
+    testUserDAO    = null;
+    testBatchDAO   = null;
+    testProjectDAO = null;// @formatter:on
 
-      testUser1 = null;
-      testUser2 = null;
-      testUser3 = null;
-      testBatch1 = null;
-      testBatch2 = null;
-      testBatch3 = null;
-      testProject1 = null;
-      testProject2 = null;
-      testProject3 = null;
+    db = null;
 
-      testUserDAO = null;
-      testBatchDAO = null;
-      testProjectDAO = null;
+    clientComm = null;
 
-      db = null;
+    // rollback this db transaction so changes aren't permanent
+    db = new Database();
+    db.startTransaction(); // FIXME: I wish there was a way to just roll this back
+    db.initTables(); // but I need to save the db each testcase
+    db.endTransaction(true);
+    db = null;
 
-      clientComm = null;
   }
 
   /**
-   * Bad input test.
+   * Valid input test.
    */
   @Test
-  public void badInputTest() {
-    boolean isValidInput = true;
-    try {
-      isValidInput = true;
-      clientComm.submitBatch(new SubmitBatchRequest("userTest1", "pass1", 1, ";"));
-    } catch (ServerException e) {
-      isValidInput = false;
-    }
-    assertEquals(false, isValidInput);
+  public void validInputTest() throws ServerException, MalformedURLException {
+    assertEquals(
+        "FAILED\n", // FIXME: is this failing because the controller isn't parsing the input string?
+        clientComm.submitBatch(
+            new SubmitBatchRequest("userTest1", "pass1", 1,
+                "Jones,Fred,13;Rogers,Susan,42;,,;,,;Van Fleet,Bill,23")).toString());
+    // TODO: read db to see if the above info was saved & test that the models were updated too
   }
+
+  /**
+   * Null input test.
+   */
+  @Test
+  public void nullInputTest() throws ServerException {
+    assertEquals("FAILED\n",
+        clientComm.submitBatch(new SubmitBatchRequest("userTest1", "pass1", 1, ";")).toString());
+  }
+
+  /**
+   * Invalid password test.
+   *
+   * @throws ServerException
+   */
+  @Test
+  public void invalidPasswordTest() throws ServerException {
+    assertEquals(null,
+        clientComm.submitBatch(new SubmitBatchRequest("userTest2", "INVALID", 2, "TEST,")));
+  }
+
+  /**
+   * Mis matched password test.
+   *
+   * @throws ServerException
+   */
+  @Test
+  public void misMatchedPasswordTest() throws ServerException {
+    assertEquals(null,
+        clientComm.submitBatch(new SubmitBatchRequest("userTest2", "pass3", 2, "TEST,")));
+  }
+
+  /**
+   * Invalid username test.
+   *
+   * @throws ServerException
+   */
+  @Test
+  public void invalidUsernameTest() throws ServerException {
+    assertEquals(null,
+        clientComm.submitBatch(new SubmitBatchRequest("pass3", "userTest3", 2, "TEST,")));
+  }
+
+  /**
+   * Invalid creds test.
+   *
+   * @throws ServerException
+   */
+  @Test
+  public void invalidCredsTest() throws ServerException {
+    assertEquals(null,
+        clientComm.submitBatch(new SubmitBatchRequest("10101001", "%$$%&^$%^*", 2, "TEST,")));
+  }
+
+  /**
+   * Null creds test.
+   */
+  @Test
+  public void nullCredsTest() throws ServerException {
+    assertEquals(null, clientComm.submitBatch(new SubmitBatchRequest("", "", 2, "TEST,")));
+  }
+
 }

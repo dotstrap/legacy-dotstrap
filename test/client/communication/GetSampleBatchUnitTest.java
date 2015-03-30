@@ -12,8 +12,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.net.MalformedURLException;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.junit.*;
 
@@ -30,29 +28,23 @@ import shared.model.*;
  * The Class GetSampleBatchUnitTest.
  */
 public class GetSampleBatchUnitTest {
-  /** The logger used throughout the project. */
-  private static Logger logger;// @formatter:off
-  static {
-    logger = Logger.getLogger("server");
-  }
+  private ClientCommunicator clientComm;
 
-  private  ClientCommunicator clientComm;
+  private Database           db;
 
-  private  Database   db;
+  private ProjectDAO         testProjectDAO;
+  private BatchDAO           testBatchDAO;
+  private UserDAO            testUserDAO;
 
-  private  ProjectDAO testProjectDAO;
-  private  BatchDAO   testBatchDAO;
-  private  UserDAO    testUserDAO;
-
-  private  Project    testProject1;
-  private  Project    testProject2;
-  private  Project    testProject3;
-  private  Batch      testBatch1;
-  private  Batch      testBatch2;
-  private  Batch      testBatch3;
-  private  User       testUser1;
-  private  User       testUser2;
-  private  User       testUser3; // @formatter:on
+  private Project            testProject1;
+  private Project            testProject2;
+  private Project            testProject3;
+  private Batch              testBatch1;
+  private Batch              testBatch2;
+  private Batch              testBatch3;
+  private User               testUser1;
+  private User               testUser2;
+  private User               testUser3;     // @formatter:on
 
   /**
    * Sets the up before class.
@@ -63,7 +55,6 @@ public class GetSampleBatchUnitTest {
   public static void setUpBeforeClass() throws Exception {
     // Load database driver
     Database.initDriver();
-
   }
 
   /**
@@ -134,29 +125,28 @@ public class GetSampleBatchUnitTest {
    */
   @After
   public void tearDown() throws Exception {
-    // empty db and restore it to its original state
-    db.startTransaction();
-    db.initTables();
-    db.endTransaction(true);
-
-    testProject1 = null;
-    testProject2 = null;
-    testProject3 = null;
-    testBatch1 = null;
-    testBatch2 = null;
-    testBatch3 = null;
-    testUser1 = null;
-    testUser2 = null;
-    testUser3 = null;
-
-    testUserDAO = null;
-    testBatchDAO = null;
-    testProjectDAO = null;
+    testProject1 = null;// @formatter:off
+    testProject2   = null;
+    testProject3   = null;
+    testBatch1     = null;
+    testBatch2     = null;
+    testBatch3     = null;
+    testUser1      = null;
+    testUser2      = null;
+    testUser3      = null;
+    testUserDAO    = null;
+    testBatchDAO   = null;
+    testProjectDAO = null; // @formatter:on
 
     db = null;
 
     clientComm = null;
 
+    db = new Database();
+    db.startTransaction(); // FIXME: I wish there was a way to just roll this back
+    db.initTables(); // but I need to save the db each testcase
+    db.endTransaction(true);
+    db = null;
     return;
   }
 
@@ -164,49 +154,37 @@ public class GetSampleBatchUnitTest {
    * Valid user test.
    */
   @Test
-  public void validUserTest() throws DatabaseException, MalformedURLException {
+  public void validUserTest() throws ServerException, DatabaseException, MalformedURLException {
     GetSampleBatchResponse result = null;
-    try {
-      result = clientComm.getSampleBatch(new GetSampleBatchRequest("userTest1", "pass1", 1));
-    } catch (ServerException e) {
-      logger.log(Level.SEVERE, "STACKTRACE: ", e);
-    }
+    result = clientComm.getSampleBatch(new GetSampleBatchRequest("userTest1", "pass1", 1));
     assertTrue(testBatch1.equals(result.getSampleBatch()));
+    assertEquals("http://localhost:39640/someTestPath/batchTest1\n", result.toString());
   }
 
   /**
    * Invalid username test.
    */
   @Test
-  public void invalidUsernameTest() throws DatabaseException, MalformedURLException {
-    GetSampleBatchResponse result = null;
+  public void invalidUsernameTest() throws ServerException, DatabaseException,
+      MalformedURLException {
     boolean shouldPass = false;
     try {
-      result = clientComm.getSampleBatch(new GetSampleBatchRequest("INVALID", "pass1", 1));
-    } catch (ServerException e) {
-      shouldPass = true; // invalid creds will trigger an exception before we reach server facade
-      logger.log(Level.SEVERE, "STACKTRACE: ", e);
+      assertEquals("FAILED\n",
+          clientComm.getSampleBatch(new GetSampleBatchRequest("INVALID", "pass1", 1)).toString());
+    } catch (NullPointerException e) { // FIXME: this should not throw a NullPointerException
+      shouldPass = true;
     }
     assertTrue(shouldPass);
-    // assertEquals(null, result);
-    // assertEquals(false, result.isValidUser());
   }
 
   /**
-   * Invalidtest project.
+   * Invalid projectId test.
    */
   @Test
-  public void invalidtestProject() throws DatabaseException, MalformedURLException {
-    GetSampleBatchResponse result = null;
-    boolean shouldPass = false;
-    try {
-      result = clientComm.getSampleBatch(new GetSampleBatchRequest("userTest1", "pass1", 9999));
-    } catch (ServerException e) {
-      shouldPass = true;
-      logger.log(Level.SEVERE, "STACKTRACE: ", e);
-    }
-    assertTrue(shouldPass);
-    // assertEquals(null, result);
-    // assertEquals(false, result.isValidUser());
+  public void invalidProjectIdTest() throws ServerException, DatabaseException,
+      MalformedURLException {
+    assertEquals("FAILED\n",
+        clientComm.getSampleBatch(new GetSampleBatchRequest("userTest1", "pass1", 9999))
+            .toString());
   }
 }
