@@ -1,9 +1,7 @@
 /**
- * Database.java
- * JRE v1.8.0_40
+ * Database.java JRE v1.8.0_40
  *
- * Created by William Myers on Mar 27, 2015.
- * Copyright (c) 2015 William Myers. All Rights reserved.
+ * Created by William Myers on Mar 27, 2015. Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package server.database;
 
@@ -18,9 +16,9 @@ import server.database.dao.*;
  * The Class Database.
  */
 public class Database {
-  private static String DB_DIR            = "database";
-  private static String DB_NAME           = "IndexerServer.sqlite";
-  public static String  DB_FILE           = DB_DIR + File.separator + DB_NAME;
+  private static String DB_DIR = "database";
+  private static String DB_NAME = "IndexerServer.sqlite";
+  public static String DB_FILE = DB_DIR + File.separator + DB_NAME;
   private static String DB_CONNECTION_URL = "jdbc:sqlite:" + DB_DIR + File.separator + DB_NAME;
 
   /** The logger used throughout the project. */
@@ -31,43 +29,43 @@ public class Database {
 
   // DataBase Access //////////////////
   /** The database driver connection. */
-  private Connection    connection;
+  private Connection connection;
 
   /**
    * The batch DataBaseAccess. interfaces with the database to modify the batch (image) table
    */
-  private BatchDAO      batchDAO;
+  private BatchDAO batchDAO;
   /**
    * The field DataBaseAccess. interfaces with the database to modify the field table
    */
-  private FieldDAO      fieldDAO;
+  private FieldDAO fieldDAO;
   /**
    * The project DataBaseAccess. interfaces with the database to modify the project table
    */
-  private ProjectDAO    projectDAO;
+  private ProjectDAO projectDAO;
   /**
    * The record DataBaseAccess.
    *
    * interfaces with the database to modify the record table
    */
-  private RecordDAO     recordDAO;
+  private RecordDAO recordDAO;
   /**
    * The user DataBaseAccess. interfaces with the database to modify the user table
    */
-  private UserDAO       userDAO;
+  private UserDAO userDAO;
 
-  //@formatter:off
+  // @formatter:off
   /**
    * Instantiates a new database.
    */
   public Database() {
     connection = null;
 
-    batchDAO   = new BatchDAO(this);
-    fieldDAO   = new FieldDAO(this);
+    batchDAO = new BatchDAO(this);
+    fieldDAO = new FieldDAO(this);
     projectDAO = new ProjectDAO(this);
-    recordDAO  = new RecordDAO(this);
-    userDAO    = new UserDAO(this);
+    recordDAO = new RecordDAO(this);
+    userDAO = new UserDAO(this);
   }
 
   public Connection getConnection() {
@@ -115,14 +113,19 @@ public class Database {
    * @throws DatabaseException the database exception
    */
   public void startTransaction() throws DatabaseException {
-    // Open a connection to the database and start a transaction
-    try {
-      assert (connection == null);
-      connection = DriverManager.getConnection(DB_CONNECTION_URL);
-      connection.setAutoCommit(false);
-    } catch (Exception e) {
-      logger.log(Level.SEVERE, "STACKTRACE: ", e);
-      throw new DatabaseException(e.toString());
+    System.out.println("*****************STARTING TRANSACTION***********************");
+    if (connection == null) {
+      // Open a connection to the database and start a transaction
+      try {
+        assert (connection == null);
+        connection = DriverManager.getConnection(DB_CONNECTION_URL);
+        connection.setAutoCommit(false);
+      } catch (Exception e) {
+        logger.log(Level.SEVERE, "STACKTRACE: ", e);
+        throw new DatabaseException(e.toString());
+      }
+    } else {
+      logger.log(Level.SEVERE, "connection already open...");
     }
   }
 
@@ -133,6 +136,7 @@ public class Database {
    * @throws DatabaseException
    */
   public void endTransaction(boolean shouldCommit) {
+    System.out.println("#####################ENDING TRANSACTION### SHOULDCOMMIT: " + shouldCommit);
     // Commit or rollback the transaction and finally close the connection
     if (connection != null) {
       try {
@@ -144,7 +148,7 @@ public class Database {
         connection.close();
       } catch (SQLException e) {
         logger.log(Level.SEVERE, "STACKTRACE: ", e);
-        // throw new DatabaseException(e.toString()); // FIXME: should this through a db exception?
+        // throw new DatabaseException(e.toString()); // FIXME: should this throw a db exception?
       }
     }
   }

@@ -30,7 +30,7 @@ import shared.model.User;
  */
 public class DownloadBatchUnitTest {
 
-  private static ClientCommunicator clientComm;
+  private static ClientCommunicator clientComm; // @formatter:off
 
   private static Database db;
 
@@ -51,6 +51,27 @@ public class DownloadBatchUnitTest {
    */
   @BeforeClass
   public static void setUpBeforeClass() throws Exception {
+      // Load database driver
+      Database.initDriver();
+  }
+
+  /**
+   * Tear down after class.
+   *
+   * @throws DatabaseException
+   */
+  @AfterClass
+  public static void tearDownAfterClass() throws DatabaseException {
+      return;
+}
+
+  /**
+   * Sets the up before class.
+   *
+   * @throws Exception the exception
+   */
+  @Before
+  public void setUp() throws Exception {
     // Load database driver
     Database.initDriver();
 
@@ -98,8 +119,8 @@ public class DownloadBatchUnitTest {
    *
    * @throws Exception the exception
    */
-  @AfterClass
-  public static void tearDownAfterClass() throws Exception {
+  @After
+  public void tearDown() throws Exception {
     testUser1 = null;
     testUser2 = null;
     testUser3 = null;
@@ -120,36 +141,6 @@ public class DownloadBatchUnitTest {
   }
 
   /**
-   * Sets the up.
-   *
-   * @throws Exception the exception
-   */
-  @Before
-  public void setUp() throws Exception {
-    // quick checks to ensure size hasn't changed for some reason
-    List<User> allUseres = testUserDAO.getAll();
-    assertEquals(3, allUseres.size());
-
-    List<Batch> allBatches = testBatchDAO.getAll();
-    assertEquals(3, allBatches.size());
-  }
-
-  /**
-   * Tear down.
-   *
-   * @throws Exception the exception
-   */
-  @After
-  public void tearDown() throws Exception {
-    // quick checks to ensure size hasn't changed for some reason
-    List<User> allUseres = testUserDAO.getAll();
-    assertEquals(3, allUseres.size());
-
-    List<Batch> allBatches = testBatchDAO.getAll();
-    assertEquals(3, allBatches.size());
-  }
-
-  /**
    * Invalid user test.
    *
    * @throws DatabaseException the database exception
@@ -159,7 +150,7 @@ public class DownloadBatchUnitTest {
     boolean isValid = true;
     try {
       clientComm.downloadBatch(new DownloadBatchRequest("userTest1", "INVALID", 1));
-    } catch (ServerException e) {
+    } catch (Exception e) {
       isValid = false;
     }
     assertEquals(false, isValid);

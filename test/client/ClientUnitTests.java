@@ -25,11 +25,11 @@ public class ClientUnitTests {
     final String[] testClasses = new String[] {"client.ClientUnitTests",
         "client.communication.ValidateUserUnitTest",
         "client.communication.GetProjectsUnitTest",
-        //"client.communication.GetSampleBatchUnitTest",
-        //"client.communication.SubmitBatchUnitTest",
-        //"client.communication.DownloadBatchUnitTest",
-        //"client.communication.DownloadFileUnitTest",
-        //"client.communication.GetFieldsUnitTest",
+        "client.communication.GetSampleBatchUnitTest",
+        "client.communication.SubmitBatchUnitTest",
+        "client.communication.DownloadBatchUnitTest",
+        "client.communication.DownloadFileUnitTest",
+        "client.communication.GetFieldsUnitTest",
         //"client.communication.SearchUnitTest",
     }; // @formatter:on
     org.junit.runner.JUnitCore.main(testClasses);

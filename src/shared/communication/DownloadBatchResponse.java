@@ -26,7 +26,12 @@ public class DownloadBatchResponse implements Response {
   /**
    * Instantiates a new download batch result.
    */
-  public DownloadBatchResponse() {}
+  public DownloadBatchResponse() {
+   this.batch = null;
+   this.project = null;
+   this.fields = null;
+   this.urlPrefix = null;
+  }
 
   // @formatter:off
   /**

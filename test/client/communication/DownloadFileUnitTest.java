@@ -69,7 +69,7 @@ public class DownloadFileUnitTest {
       }
       assertTrue(didDownload);
     } catch (ServerException e) {
-      logger.log(Level.SEVERE, "STACKTRACE: ", e);
+      //logger.log(Level.SEVERE, "STACKTRACE: ", e);
     }
   }
 
@@ -89,7 +89,7 @@ public class DownloadFileUnitTest {
       }
       assertTrue(didDownload);
     } catch (ServerException e) {
-      logger.log(Level.SEVERE, "STACKTRACE: ", e);
+      //logger.log(Level.SEVERE, "STACKTRACE: ", e);
     }
   }
 
@@ -129,7 +129,7 @@ public class DownloadFileUnitTest {
       }
       assertFalse(didDownload);
     } catch (ServerException e) {
-      logger.log(Level.SEVERE, "STACKTRACE: ", e);
+      //logger.log(Level.SEVERE, "STACKTRACE: ", e);
     }
   }
 
@@ -148,7 +148,7 @@ public class DownloadFileUnitTest {
       }
       assertFalse(didDownload);
     } catch (ServerException e) {
-      logger.log(Level.SEVERE, "STACKTRACE: ", e);
+      //logger.log(Level.SEVERE, "STACKTRACE: ", e);
     }
   }
 }

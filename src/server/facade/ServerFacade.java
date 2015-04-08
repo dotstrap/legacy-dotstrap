@@ -1,9 +1,7 @@
 /**
- * ServerFacade.java
- * JRE v1.8.0_40
+ * ServerFacade.java JRE v1.8.0_40
  *
- * Created by William Myers on Mar 24, 2015.
- * Copyright (c) 2015 William Myers. All Rights reserved.
+ * Created by William Myers on Mar 24, 2015. Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package server.facade;
 
@@ -56,8 +54,8 @@ public class ServerFacade {
       throws ServerException {
     Database db = new Database();
     User user = null;
-    //System.out.println("=========BEFORE db read in validate user in facade\n");
-    //System.out.println("USERNAME: " + request.getUsername() + "PASS: " + request.getPassword());
+    // System.out.println("=========BEFORE db read in validate user in facade\n");
+    // System.out.println("USERNAME: " + request.getUsername() + "PASS: " + request.getPassword());
     try {
       db.startTransaction();
       user = db.getUserDAO().read(request.getUsername(), request.getPassword());
@@ -68,10 +66,10 @@ public class ServerFacade {
           + request.getUsername(), e);
     }
 
-    //System.out.println("=========AFTER db read in validate user in facade\n");
-    //if (user != null) {
-      //System.out.println(user.toString());
-    //}
+    // System.out.println("=========AFTER db read in validate user in facade\n");
+    // if (user != null) {
+    // System.out.println(user.toString());
+    // }
     ValidateUserResponse result = new ValidateUserResponse(user);
     return result;
   }
@@ -140,10 +138,10 @@ public class ServerFacade {
       throws ServerException, DatabaseException { // TODO: clean this method up
     Database db = new Database();
 
+    DownloadBatchResponse result = new DownloadBatchResponse();
+
     try {
       db.startTransaction();
-
-      DownloadBatchResponse result = new DownloadBatchResponse();
 
       User currUser = db.getUserDAO().read(request.getUsername(), request.getPassword());
       if (currUser.getCurrBatch() <= 0) {
@@ -163,10 +161,10 @@ public class ServerFacade {
         Project currProject = db.getProjectDAO().read(projectId);
         List<Field> fields = db.getFieldDAO().getAll(projectId);
 
-        System.out.println("PRINTING FIELDS IN SUBMIT BATCH: \n");
-        for (Field f : fields) {
-          System.out.println(f.toString());
-        }
+        // System.out.println("PRINTING FIELDS IN SUBMIT BATCH: \n");
+        // for (Field f : fields) {
+        // System.out.println(f.toString());
+        // }
 
         result.setBatch(batchToDownload);
         result.setProject(currProject);
@@ -175,14 +173,17 @@ public class ServerFacade {
         db.endTransaction(true);
         return result;
       } else {
-        db.endTransaction(false);
         logger.log(Level.WARNING, "user already has a batch checked out...");
-        return result; // should have all null values
       }
     } catch (DatabaseException e) {
       db.endTransaction(false);
       throw new ServerException("while attempting to download batch ", e);
+    } catch (Exception e) {
+      db.endTransaction(false);
+      throw new ServerException("unknown error while attempting to download batch ", e);
     }
+    db.endTransaction(false);
+    return result; // should have all null values if we made it to here
   }
 
   private static ArrayList<Integer> getFieldIDs(Batch batch, Database db) throws DatabaseException {

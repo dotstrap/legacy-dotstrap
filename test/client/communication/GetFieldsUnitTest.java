@@ -127,11 +127,6 @@ public class GetFieldsUnitTest {
    */
   @After
   public void tearDown() throws Exception {
-    // empty db and restore it to its original state
-    db.startTransaction();
-    db.initTables();
-    db.endTransaction(true);
-
     db = null;
 
     clientComm = null;
@@ -145,6 +140,12 @@ public class GetFieldsUnitTest {
     fieldTest1 = null;
     fieldTest2 = null;
     fieldTest3 = null;
+
+    db = new Database();
+    db.startTransaction(); // FIXME: I wish there was a way to just roll this back
+    db.initTables(); // but I need to save the db each testcase
+    db.endTransaction(true);
+
   }
 
   /**
@@ -181,15 +182,16 @@ public class GetFieldsUnitTest {
    * Invalid password test.
    */
   @Test
-  public void invalidPasswordTest() {
-    boolean isValidPassword = false;
-    try {
-      clientComm.getFields(new GetFieldsRequest("userTest2", "INVALID"));
-      isValidPassword = true;
-    } catch (Exception e) {
-      isValidPassword = false;
-    }
-    assertEquals(false, isValidPassword);
+  public void invalidPasswordTest() throws ServerException {
+      assertEquals("FAILED\n", clientComm.getFields(new GetFieldsRequest("userTest2", "INVALID")).toString());
+    //boolean isValidPassword = false;
+    //try {
+      //clientComm.getFields(new GetFieldsRequest("userTest2", "INVALID"));
+      //isValidPassword = true;
+    //} catch (Exception e) {
+      //isValidPassword = false;
+    //}
+    //assertEquals(false, isValidPassword);
   }
 
   /**

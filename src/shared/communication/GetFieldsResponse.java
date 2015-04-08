@@ -61,6 +61,10 @@ public class GetFieldsResponse implements Response {
    */
   @Override
   public String toString() {
+    //if (this.user == null || this.fields == null || this.fields.isEmpty()) {
+      //return "FAILED\n";
+    //}
+
     StringBuilder sb = new StringBuilder();
     for (Field f : fields) {
       sb.append(f.getProjectId() + "\n");

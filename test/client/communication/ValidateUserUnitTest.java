@@ -155,7 +155,7 @@ public class ValidateUserUnitTest {
   @Test
   public void invalidCredsTest() throws ServerException {
     assertEquals("FALSE\n",
-        clientComm.validateUser(new ValidateUserRequest("10101001", "%$$%&^$%^*")).toString());
+        clientComm.validateUser(new ValidateUserRequest("10101001", "%$asdf$%&^$%^*")).toString());
   }
 
   /**
