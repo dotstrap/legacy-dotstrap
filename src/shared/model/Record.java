@@ -42,15 +42,15 @@ public class Record {
    * @param batchURL the batch url
    * @param data the data
    */
-  public Record(int recId, int fieldId, int batchId, String batchURL, String data) {
-    recordId      = recId;
-    this.fieldId  = fieldId;
-    this.batchId  = batchId;
-    this.batchURL = batchURL;
-    this.data     = data;
-    this.rowNum   = -1;
-    this.colNum   = -1;
-  }
+  //public Record(int recId, int fieldId, int batchId, String batchURL, String data) {
+    //recordId      = recId;
+    //this.fieldId  = fieldId;
+    //this.batchId  = batchId;
+    //this.batchURL = batchURL;
+    //this.data     = data;
+    //this.rowNum   = -1;
+    //this.colNum   = -1;
+  //}
 
   /**
    * Instantiates a new Record.
@@ -83,16 +83,16 @@ public class Record {
    * @param rowNum the row num
    * @param colNum the col num
    */
-  public Record(int recId, int fieldId, int batchId, String batchURL, String data, int rowNum,
-      int colNum) {
-    this.recordId = recId;
-    this.fieldId  = fieldId;
-    this.batchId  = batchId;
-    this.batchURL = batchURL;
-    this.data     = data;
-    this.rowNum   = rowNum;
-    this.colNum   = colNum;// @formatter:on
-  }
+  //public Record(int recId, int fieldId, int batchId, String batchURL, String data, int rowNum,
+      //int colNum) {
+    //this.recordId = recId;
+    //this.fieldId  = fieldId;
+    //this.batchId  = batchId;
+    //this.batchURL = batchURL;
+    //this.data     = data;
+    //this.rowNum   = rowNum;
+    //this.colNum   = colNum;
+  //}// @formatter:on
 
   public int getRecordId() {
     return recordId;

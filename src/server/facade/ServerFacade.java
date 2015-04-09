@@ -200,16 +200,16 @@ public class ServerFacade {
   private static void addRecords(String input, Project project, Batch batch, Database db,
       ArrayList<Integer> fields) throws DatabaseException {
     List<String> rows = Arrays.asList(input.split(";| ;", 0));
-    int row = 1;
+    int row = 0;
     for (String s : rows) {
-      int i = 0;
-      List<String> values = Arrays.asList(s.split(",| ,", 0));
-      for (String currVal : values) {
-        currVal = currVal.toUpperCase();
+      int col = 0;
+      List<String> allData = Arrays.asList(s.split(",| ,", 0));
+      for (String currData : allData) {
+        currData = currData.toUpperCase();
         Record record =
-            new Record(row, fields.get(i), batch.getBatchId(), batch.getFilePath(), currVal);
+            new Record(fields.get(col), batch.getBatchId(), batch.getFilePath(), currData, row, col);
         db.getRecordDAO().create(record);
-        i++;
+        col++;
       }
       row++;
     }
@@ -281,9 +281,9 @@ public class ServerFacade {
       throw new ServerException("while attempting to read all fields from the database...", e);
     }
 
-    // if (fields.isEmpty()) {
-    // throw new ServerException("Requested projectId (" + projectId + ") does not exist...");
-    // }
+    if (fields.isEmpty()) {
+      throw new ServerException("Requested projectId (" + projectId + ") does not exist...");
+    }
 
     GetFieldsResponse result = new GetFieldsResponse();
     result.setFields(fields);
@@ -311,10 +311,10 @@ public class ServerFacade {
           records.addAll(db.getRecordDAO().search(i, s));
         }
       }
-      //for (Record r : records) {
-        //urls.add(db.getBatchDAO().read(r.getBatchId()).getFilePath());
-      //}
-      //result.setUrls(urls);
+      // for (Record r : records) {
+      // urls.add(db.getBatchDAO().read(r.getBatchId()).getFilePath());
+      // }
+      // result.setUrls(urls);
       result.setFoundRecords(records);
     } catch (DatabaseException e) {
       db.endTransaction(false);

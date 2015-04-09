@@ -300,9 +300,9 @@ public class Importer {
       ArrayList<Element> children = getChildElements(batchElem);
       records = getChildElements(children.get(1));
 
-      int colNum = 0;
+      int rowNum = 0;
       for (Element curr : records) {
-        loadRecords(curr, projectId, batchId, batchUrl, colNum++);
+        loadRecords(curr, projectId, batchId, batchUrl, rowNum++);
       }
     }
   }
