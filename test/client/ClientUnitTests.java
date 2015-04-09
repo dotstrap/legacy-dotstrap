@@ -30,7 +30,7 @@ public class ClientUnitTests {
         "client.communication.DownloadBatchUnitTest",
         "client.communication.DownloadFileUnitTest",
         "client.communication.GetFieldsUnitTest",
-        //"client.communication.SearchUnitTest",
+        "client.communication.SearchUnitTest",
     }; // @formatter:on
     org.junit.runner.JUnitCore.main(testClasses);
   }

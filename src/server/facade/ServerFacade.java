@@ -301,7 +301,7 @@ public class ServerFacade {
     Database db = new Database();
     SearchResponse result = new SearchResponse();
     ArrayList<Record> records = new ArrayList<Record>();
-    ArrayList<String> links = new ArrayList<String>();
+    ArrayList<String> urls = new ArrayList<String>();
 
     try {
       db.startTransaction();
@@ -311,10 +311,10 @@ public class ServerFacade {
           records.addAll(db.getRecordDAO().search(i, s));
         }
       }
-      for (Record r : records) {
-        links.add(db.getBatchDAO().read(r.getBatchId()).getFilePath());
-      }
-      result.setUrls(links);
+      //for (Record r : records) {
+        //urls.add(db.getBatchDAO().read(r.getBatchId()).getFilePath());
+      //}
+      //result.setUrls(urls);
       result.setFoundRecords(records);
     } catch (DatabaseException e) {
       db.endTransaction(false);

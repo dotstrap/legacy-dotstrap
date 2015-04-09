@@ -242,7 +242,7 @@ public class Controller implements IController {
       for (String s : tmpFieldIds) {
         if (!fieldList.contains(Integer.parseInt(s))) {
           fieldList.add(Integer.parseInt(s));
-          System.out.println("CURR INT: " + s);
+          //System.out.println("CURR INT: " + s);
         }
       }
     } catch (NumberFormatException e) {
@@ -258,14 +258,14 @@ public class Controller implements IController {
     for (String s : searchQuery) {
       s = s.toUpperCase();
       if (!searchList.contains(s)) {
-        System.out.println("CURR S: " + s);
+        //System.out.println("CURR S: " + s);
         searchList.add(s);
       }
     }
 
     try {
-      System.out.println(fieldList.toString());
-      System.out.println("\n" + searchQuery.toString());
+      //System.out.println(fieldList.toString());
+      //System.out.println("\n" + searchQuery.toString());
 
       SearchRequest params = new SearchRequest(args[0], args[1], fieldList, searchList);
       SearchResponse result = clientComm.search(params);

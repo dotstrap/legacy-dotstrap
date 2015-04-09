@@ -1,9 +1,7 @@
 /**
- * ClientCommunicator.java
- * JRE v1.8.0_40
+ * ClientCommunicator.java JRE v1.8.0_40
  *
- * Created by William Myers on Mar 24, 2015.
- * Copyright (c) 2015 William Myers. All Rights reserved.
+ * Created by William Myers on Mar 24, 2015. Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package client.communication;
 
@@ -25,11 +23,11 @@ import shared.communication.*;
  * The Class ClientCommunicator.
  */
 public class ClientCommunicator {
-  private XStream       xs = new XStream(new DomDriver());
+  private XStream xs = new XStream(new DomDriver());
 
-  private String        URL_PREFIX;
-  private String        host;
-  private int           port;
+  private String URL_PREFIX;
+  private String host;
+  private int port;
 
   public String getHost() {
     return host;
@@ -151,14 +149,10 @@ public class ClientCommunicator {
    * @return the search response
    * @throws ServerException the client exception
    */
-  public SearchResponse search(SearchRequest params) throws ServerException {
+  public SearchResponse search(SearchRequest params) throws ServerException, MalformedURLException {
     SearchResponse result = (SearchResponse) doPost("/Search", params);
-    List<String> urls = new ArrayList<String>();
-    for (String s : result.getUrls()) {
-      String url = URL_PREFIX + "/" + s;
-      urls.add(url);
-    }
-    result.setUrls(urls);
+    URL url = new URL(URL_PREFIX);
+    result.setUrlPrefix(url);
     return result;
   }
 

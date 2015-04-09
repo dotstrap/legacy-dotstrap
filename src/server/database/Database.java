@@ -113,7 +113,7 @@ public class Database {
    * @throws DatabaseException the database exception
    */
   public void startTransaction() throws DatabaseException {
-    System.out.println("*****************STARTING TRANSACTION***********************");
+    //System.out.println("*****************STARTING TRANSACTION***********************");
     if (connection == null) {
       // Open a connection to the database and start a transaction
       try {
@@ -136,7 +136,7 @@ public class Database {
    * @throws DatabaseException
    */
   public void endTransaction(boolean shouldCommit) {
-    System.out.println("#####################ENDING TRANSACTION### SHOULDCOMMIT: " + shouldCommit);
+    //System.out.println("#####################ENDING TRANSACTION### SHOULDCOMMIT: " + shouldCommit);
     // Commit or rollback the transaction and finally close the connection
     if (connection != null) {
       try {

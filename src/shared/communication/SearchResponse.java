@@ -1,12 +1,11 @@
 /**
- * SearchResponse.java
- * JRE v1.8.0_40
+ * SearchResponse.java JRE v1.8.0_40
  *
- * Created by William Myers on Mar 27, 2015.
- * Copyright (c) 2015 William Myers. All Rights reserved.
+ * Created by William Myers on Mar 27, 2015. Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package shared.communication;
 
+import java.net.URL;
 import java.util.List;
 
 import shared.model.Record;
@@ -16,7 +15,7 @@ import shared.model.Record;
  */
 public class SearchResponse implements Response {
   private List<Record> foundRecords;
-  private List<String> urls;
+  private URL urlPrefix;
 
   /**
    * Instantiates a new SearchResponse.
@@ -49,12 +48,18 @@ public class SearchResponse implements Response {
     this.foundRecords = foundRecords;
   }
 
-  public List<String> getUrls() {
-    return urls;
+  /**
+   * @return the urlPrefix
+   */
+  public URL getUrlPrefix() {
+    return urlPrefix;
   }
 
-  public void setUrls(List<String> urls) {
-    this.urls = urls;
+  /**
+   * @param urlPrefix the urlPrefix to set
+   */
+  public void setUrlPrefix(URL urlPrefix) {
+    this.urlPrefix = urlPrefix;
   }
 
   /**
@@ -69,7 +74,7 @@ public class SearchResponse implements Response {
     if (foundRecords.size() > 0) {
       for (int i = 0; i < foundRecords.size(); ++i) {
         sb.append(foundRecords.get(i).getBatchId() + "\n");
-        sb.append(urls.get(i) + "\n");
+        sb.append(urlPrefix + "/" + foundRecords.get(i).getBatchURL() + "\n");
         sb.append(foundRecords.get(i).getRowNum() + "\n");
         sb.append(foundRecords.get(i).getFieldId() + "\n");
       }

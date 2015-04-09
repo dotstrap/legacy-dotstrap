@@ -10,6 +10,7 @@ package client.communication;
 
 import static org.junit.Assert.assertEquals;
 
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -27,19 +28,9 @@ import shared.model.*;
 
 /**
  * The Class SearchUnitTestTest.
- *
- * @author wm
  */
-public class SearchUnitTestTest {
-
-
-  /** The logger used throughout the project. */
-  static private Logger      logger; // @formatter:off
-  static {
-    logger = Logger.getLogger("server");
-  }
-
-  private ClientCommunicator clientComm;
+public class SearchUnitTest {
+  private ClientCommunicator clientComm; // @formatter:off
 
   private Database      db;
 
@@ -182,21 +173,21 @@ public class SearchUnitTestTest {
   }
 
   @Test
-  public void validUserTest() throws ServerException, DatabaseException {
+  public void validUserTest() throws ServerException, DatabaseException, MalformedURLException {
     SearchResponse result =
         clientComm.search(new SearchRequest("userTest1", "pass1", fieldIDs, values));
     assertEquals(result.getFoundRecords().size(), 1);
   }
 
   @Test
-  public void invalidFieldIdTest() throws ServerException, DatabaseException {
+  public void invalidFieldIdTest() throws ServerException, DatabaseException, MalformedURLException {
     SearchResponse result =
         clientComm.search(new SearchRequest("userTest1", "pass1", badFieldIDs, values));
     assertEquals(result.getUrls().size(), 0);
   }
 
   @Test
-  public void invalidValuesTest() throws ServerException, DatabaseException {
+  public void invalidValuesTest() throws ServerException, DatabaseException, MalformedURLException {
     SearchResponse result =
         clientComm.search(new SearchRequest("userTest1", "pass1", fieldIDs, badValues));
     assertEquals(result.getFoundRecords().size(), 0);
