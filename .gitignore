@@ -27,3 +27,6 @@ RecordIndexer.tar.gz
 .project
 data
 /bin/
+.idea
+RecordIndexer.iml
+demo

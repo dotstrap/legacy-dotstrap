@@ -173,7 +173,7 @@
 	<!-- EXAMPLE: ant client -->
 	<target name="client" depends="compile"
 		description="run client using server on specified host and port">
-		<java classname="THE NAME OF YOUR CLIENT CLASS GOES HERE" fork="yes">
+		<java classname="client.Client" fork="yes">
 			<classpath>
 				<path refid="all-classpath" />
 			</classpath>

@@ -13,7 +13,7 @@ import shared.model.User;
  * The Class ValidateUserResponse.
  */
 public class ValidateUserResponse implements Response {
-  private User user;
+  private User    user;
 
   /**
    * Instantiates a new validate user result.
@@ -37,6 +37,10 @@ public class ValidateUserResponse implements Response {
 
   public void setUser(User user) {
     this.user = user;
+  }
+
+  public boolean isValidated() {
+    return this.user != null;
   }
 
   /**
