@@ -1,17 +1,24 @@
 package client;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.EventQueue;
 
-import javax.swing.*;
-
+import client.util.ClientLogManager;
 import client.view.LoginDialog;
+import client.view.IndexerFrame;
 
 public class Client {
+
+  /**
+   * Entry point for the Indexer Server program.
+   *
+   * @param args the port to run the indexer server on
+   */
   public static void main(String[] args) {
+    ClientLogManager.initLogs();
+
     EventQueue.invokeLater(new Runnable() {
       public void run() {
-        LoginDialog loginDialog = new LoginDialog("Record Indexer");
+        new LoginDialog("Record Indexer");
       }
     });
   }

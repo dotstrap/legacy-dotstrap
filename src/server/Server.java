@@ -39,7 +39,7 @@ public class Server {
       try {
         logDir.mkdir();
       } catch (SecurityException e) {
-        System.out.println("ERROR: do not have permission to create log directory...");
+        System.out.println("ERROR: unable to create log directory...");
       }
     }
 

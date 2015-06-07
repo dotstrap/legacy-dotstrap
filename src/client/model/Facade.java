@@ -1,128 +1,72 @@
 package client.model;
 
-import java.io.IOException;
+import java.util.logging.Level;
 
-import shared.communication.*;
-
-import client.ClientException;
-import client.communication.*;
+import client.communication.ClientCommunicator;
+import client.util.ClientLogManager;
 import client.view.IndexerFrame;
 
-import server.ServerException;
+import shared.communication.ValidateUserRequest;
+import shared.communication.ValidateUserResponse;
+import shared.model.User;
 
-public class Facade {
-  private String             address;
-  private String             port;
-  private String             firstname;
-  private String             lastname;
-  private String             username;
-  private char[]             password;
-  private IndexerFrame       mainframe;
-  private BatchState         batchState;
-  private int                completedRecordCount;
+//@formatter:off
+/**
+ * Client Facade (Singleton)
+ *
+ * communicates with the server via the ClientCommunicator class
+ */
+public enum Facade {
+  INSTANCE;
 
-  private ClientCommunicator clientComm;
+  private static User         user;
+  private static String       address;
+  private static String       port;
+  private static IndexerFrame mainframe;
+  private static BatchState   batchState;
+  private static ClientCommunicator clientComm = new ClientCommunicator();
+  //@formatter:on
 
   /**
-   * Instantiates a new Facade.
+   * Validates the user's credentials with the server
    *
-   * @param address
-   * @param port
+   * @param u the user's username
+   * @param p the user's password
+   * @return true/false if authentication was successful
    */
-  public Facade(String address, String port) {
-    this.address = address;
-    this.port = port;
-    this.clientComm = new ClientCommunicator(address, port);
-  }
-
-  public boolean validateUser(String u, char[] p) {
+  public static boolean validateUser(String u, char[] p) {
     try {
-      this.username = u;
-      this.password = p;
-
       ValidateUserResponse response =
-          this.clientComm.validateUser(new ValidateUserRequest(username, new String(password)));
-
-      this.firstname = response.getUser().getFirst();
-      this.lastname = response.getUser().getLast();
-      this.completedRecordCount = response.getUser().getRecordCount();
-
+          clientComm.validateUser(new ValidateUserRequest(u, String.valueOf(p)));
+      user = response.getUser();
       return response.isValidated();
-    } catch (ServerException e) {
-      e.printStackTrace();
+    } catch (Exception e) {
+      ClientLogManager.getLogger().log(Level.FINE, "STACKTRACE: ", e);
+      return false;
     }
-    return false;
   }
 
-  public String getAddress() {
-    return this.address;
+  public static User getUser() {
+    return user;
   }
 
-  public void setAddress(String address) {
-    this.address = address;
+  public static String getAddress() {
+    return address;
   }
 
-  public String getPort() {
-    return this.port;
+  public static String getPort() {
+    return port;
   }
 
-  public void setPort(String port) {
-    this.port = port;
+  public static IndexerFrame getMainframe() {
+    return mainframe;
   }
 
-  public String getFirstname() {
-    return this.firstname;
+  public static BatchState getBatchState() {
+    return batchState;
   }
 
-  public void setFirstname(String firstname) {
-    this.firstname = firstname;
-  }
-
-  public String getLastname() {
-    return this.lastname;
-  }
-
-  public void setLastname(String lastname) {
-    this.lastname = lastname;
-  }
-
-  public String getUsername() {
-    return this.username;
-  }
-
-  public void setUsername(String username) {
-    this.username = username;
-  }
-
-  public char[] getPassword() {
-    return this.password;
-  }
-
-  public void setPassword(char[] password) {
-    this.password = password;
-  }
-
-  public IndexerFrame getMainframe() {
-    return this.mainframe;
-  }
-
-  public void setMainframe(IndexerFrame mainframe) {
-    this.mainframe = mainframe;
-  }
-
-  public BatchState getBatchState() {
-    return this.batchState;
-  }
-
-  public void setBatchState(BatchState batchState) {
-    this.batchState = batchState;
-  }
-
-  public int getCompletedRecordCount() {
-    return this.completedRecordCount;
-  }
-
-  public void setCompletedRecordCount(int completedRecordCount) {
-    this.completedRecordCount = completedRecordCount;
+  public static ClientCommunicator getClientComm() {
+    return clientComm;
   }
 }
