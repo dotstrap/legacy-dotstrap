@@ -71,6 +71,7 @@ public class LoginDialog extends JDialog {
     passwordField.setMaximumSize(passwordField.getPreferredSize());
     passwordbox.add(new JLabel("Password:"));
     passwordbox.add(Box.createRigidArea(new Dimension(5, 5)));
+    passwordField.addActionListener(loginAction); // respond to enter key
     passwordbox.add(passwordField);
     return passwordbox;
   }
@@ -101,31 +102,47 @@ public class LoginDialog extends JDialog {
     return this.passwordField;
   }
 
-  private ActionListener loginListener = new ActionListener() {//@formatter:off
+  private void processLogin() {
+    String username = usernameField.getText();
+    char[] password = passwordField.getPassword();
+    if (Facade.validateUser(username, password)) {
+      // TODO: implement load data
+      // IndexerFrame.getInstance().loadData();
+      JOptionPane.showMessageDialog(LoginDialog.instance, "Welcome " + Facade.getUser().getFirst()
+          + " " + Facade.getUser().getLast() + "\nYou have indexed: "
+          + Facade.getUser().getRecordCount() + " records!", "Record Indexer",
+          JOptionPane.PLAIN_MESSAGE);
+      instance.setVisible(false);
+      new IndexerFrame("Record Indexer");
+    } else {
+      ClientLogManager.getLogger().log(
+          Level.FINEST,
+          "Incorrect credentials entered: Username: " + username + " Password: "
+              + String.valueOf(password));
+      JOptionPane.showMessageDialog(LoginDialog.instance,
+          "Incorrect username or password.\nPlease try again.", "Invalid Credentials",
+          JOptionPane.PLAIN_MESSAGE);
+    }
+  }
+
+
+
+  private Action loginAction = new AbstractAction() {//@formatter:off
+    @Override
     public void actionPerformed(ActionEvent e) {
-      String username = usernameField.getText();
-      char[] password = passwordField.getPassword();
-      if (Facade.validateUser(username, password)) {
-        // IndexerFrame.getInstance().loadData();
-        JOptionPane.showMessageDialog(LoginDialog.instance, "Welcome " + Facade.getUser().getFirst()
-            + "\nYou have indexed: " + Facade.getUser().getRecordCount() + " records!",
-            "Record Indexer", JOptionPane.PLAIN_MESSAGE);
-        instance.setVisible(false);
-        //IndexerFrame mainWindow = new IndexerFrame("Record Indexer");
-        new IndexerFrame("Record Indexer");
-      } else {
-        ClientLogManager.getLogger().log(
-            Level.FINEST,
-            "Incorrect credentials entered: Username: " + username + " Password: "
-                + String.valueOf(password));
-        JOptionPane.showMessageDialog(LoginDialog.instance,
-            "Incorrect username or password.\nPlease try again.", "Invalid Credentials",
-            JOptionPane.PLAIN_MESSAGE);
-      }
+      processLogin();
+    }
+  };
+
+  private ActionListener loginListener = new ActionListener() {
+    @Override
+    public void actionPerformed(ActionEvent e) {
+      processLogin();
     }
   };
 
   private ActionListener exitListener = new ActionListener() {
+    @Override
     public void actionPerformed(ActionEvent e) {
       System.exit(0);
     }
