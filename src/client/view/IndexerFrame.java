@@ -1,14 +1,33 @@
 package client.view;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.HeadlessException;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JSplitPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JToolBar;
 
 import client.model.BatchState;
-import client.view.indexer.BatchPanel;
+import client.view.indexerframe.BatchPanel;
+import client.view.indexerframe.DownloadBatchDialog;
+import client.view.indexerframe.FieldHelpTab;
+import client.view.indexerframe.FormEntryTab;
+import client.view.indexerframe.ImageNavigationTab;
+import client.view.indexerframe.TableEntryTab;
 
 public class IndexerFrame extends JFrame {
   private static final long serialVersionUID = -597878704594774809L;
@@ -28,36 +47,22 @@ public class IndexerFrame extends JFrame {
   private JButton           saveButton;
   private JButton           submitButton;
 
-  private BatchPanel batchPanel;
-  private JPanel bottomPanel;
-
-  // private UrlPanel urlPanel;
-  // private FavPanel favPanel;
-  // private HtmlPanel htmlPanel;
-
   public IndexerFrame(String title) throws HeadlessException {
     // Initalize
     addWindowListener(windowAdapter);
-    setSize(new Dimension(900, 700));
-    // setSize(new Dimension(1024,840));
+    setSize(new Dimension(1000, 800));
 
-    setJMenuBar(createMenu());
-    this.add(createToolBar(), BorderLayout.NORTH);
-
-    batchPanel = new BatchPanel();
-    bottomPanel = new JPanel();
-
-    JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, batchPanel, bottomPanel);
+    setJMenuBar(initMenu());
+    this.add(initToolBar(), BorderLayout.NORTH);
 
     JPanel rootPanel = new JPanel(new BorderLayout());
-    // rootPanel.add(urlPanel, BorderLayout.NORTH);
-     rootPanel.add(splitPane, BorderLayout.CENTER);
+    rootPanel.add(initSplitPane());
 
     this.add(rootPanel);
     this.setVisible(true);
   }
 
-  private JMenuBar createMenu() {
+  private JMenuBar initMenu() {
     JMenuBar menuBar = new JMenuBar();
 
     JMenu menu = new JMenu("File");
@@ -80,7 +85,8 @@ public class IndexerFrame extends JFrame {
     return menuBar;
   }
 
-  private JToolBar createToolBar() {
+  // TODO: clean this code up
+  private JToolBar initToolBar() {
     JToolBar toolBar = new JToolBar();
 
     zoomInButton = new JButton("Zoom In");
@@ -110,7 +116,7 @@ public class IndexerFrame extends JFrame {
       toolBar.add(button);
     }
 
-    //toolBar.addSeparator();
+    // toolBar.addSeparator();
     toolBar.setFloatable(false);
     toolBar.setRollover(true);
     toolBar.setEnabled(false);
@@ -118,8 +124,35 @@ public class IndexerFrame extends JFrame {
     return toolBar;
   }
 
+  private JSplitPane initSplitPane() {
+    // data entry components
+    JTabbedPane entryTabs = new JTabbedPane();
+    entryTabs.add("Table Entry", new TableEntryTab());
+    entryTabs.add("Form Entry",  new FormEntryTab());
+
+    // field help and image navigation
+    JTabbedPane navTabs = new JTabbedPane();
+    navTabs.add("Field Help", new FieldHelpTab());
+    navTabs.add("Navigation", new ImageNavigationTab());
+
+    // horizontal split
+    JSplitPane hSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+    hSplit.setResizeWeight(0.5);
+    hSplit.add(entryTabs);
+    hSplit.add(navTabs);
+
+    // vertical split
+    BatchPanel batchPanel = new BatchPanel();
+    JSplitPane vSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+    vSplit.setResizeWeight(0.5);
+    vSplit.add(batchPanel);
+    vSplit.add(hSplit);
+
+    return vSplit;
+  }
+
   private void processDownloadBatch() {
-    // TODO: download batch
+    new DownloadBatchDialog(IndexerFrame.this);
   }
 
   private void processLogout() {
@@ -144,7 +177,7 @@ public class IndexerFrame extends JFrame {
     }
   };
 
-  private ActionListener menuListener = new ActionListener() {//@formatter:off
+  private ActionListener menuListener = new ActionListener() {
     public void actionPerformed(ActionEvent e) {
       if (e.getSource() == downloadBatchMenuItem) {
         processDownloadBatch();

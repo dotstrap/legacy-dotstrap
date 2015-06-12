@@ -1,11 +1,25 @@
 package client.view;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Frame;
+import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.logging.Level;
 
-import javax.swing.*;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+import javax.swing.WindowConstants;
 
 import client.model.Facade;
 import client.util.ClientLogManager;
@@ -17,6 +31,7 @@ public class LoginDialog extends JDialog {
   private JTextField         usernameField;
   private JPasswordField     passwordField;
 
+  //TODO: clean this code up
   /**
    * Instantiates a new LoginDialog.
    *
@@ -27,29 +42,29 @@ public class LoginDialog extends JDialog {
     instance = this;
 
     // Initialize
-    setSize(new Dimension(370, 125));
+    setSize(new Dimension(370, 120));
     setLocationRelativeTo(null);
     setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
     setLayout(new BorderLayout());
     setResizable(false);
 
-    createMainPanel();
+    initRootPanel();
 
     setVisible(true);
   }
 
-  private void createMainPanel() {
-    JPanel mainpanel = new JPanel();
-    mainpanel.setLayout(new BoxLayout(mainpanel, BoxLayout.PAGE_AXIS));
-    mainpanel.add(Box.createRigidArea(new Dimension(0, 5)));
-    mainpanel.add(createUserBox());
-    mainpanel.add(Box.createRigidArea(new Dimension(0, 10)));
-    mainpanel.add(createPasswordBox());
-    mainpanel.add(createButtonBox());
-    this.add(mainpanel);
+  private void initRootPanel() {
+    JPanel rootPanel = new JPanel();
+    rootPanel.setLayout(new BoxLayout(rootPanel, BoxLayout.PAGE_AXIS));
+    rootPanel.add(Box.createRigidArea(new Dimension(0, 5)));
+    rootPanel.add(initUserBox());
+    rootPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+    rootPanel.add(initPasswordBox());
+    rootPanel.add(initButtonBox());
+    this.add(rootPanel);
   }
 
-  private Box createUserBox() {
+  private Box initUserBox() {
     Box userbox = Box.createHorizontalBox();
     usernameField = new JTextField();
     usernameField.setName("UsernameField");
@@ -62,7 +77,7 @@ public class LoginDialog extends JDialog {
     return userbox;
   }
 
-  private Box createPasswordBox() {
+  private Box initPasswordBox() {
     Box passwordbox = Box.createHorizontalBox();
     passwordField = new JPasswordField();
     passwordField.setName("PasswordField");
@@ -76,7 +91,7 @@ public class LoginDialog extends JDialog {
     return passwordbox;
   }
 
-  private Box createButtonBox() {
+  private Box initButtonBox() {
     Box buttonbox = Box.createHorizontalBox();
     JButton LoginButton = new JButton("Login");
     LoginButton.addActionListener(loginListener);
@@ -103,8 +118,11 @@ public class LoginDialog extends JDialog {
   }
 
   private void processLogin() {
-    String username = usernameField.getText();
-    char[] password = passwordField.getPassword();
+    //String username = usernameField.getText();
+    //char[] password = passwordField.getPassword();
+    //TODO: remember to not hardcode sheila!
+    String username = "sheila";
+    char[] password = {'p', 'a', 'r','k','e','r'};
     if (Facade.validateUser(username, password)) {
       // TODO: implement load data
       // IndexerFrame.getInstance().loadData();
@@ -124,7 +142,6 @@ public class LoginDialog extends JDialog {
           JOptionPane.PLAIN_MESSAGE);
     }
   }
-
 
 
   private Action loginAction = new AbstractAction() {//@formatter:off

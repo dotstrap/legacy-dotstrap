@@ -99,4 +99,9 @@ public class Project {
   public void setRecordHeight(int recordHeight) {
     this.recordHeight = recordHeight;
   }
+
+  @Override
+  public String toString() {
+    return title;
+  }
 }

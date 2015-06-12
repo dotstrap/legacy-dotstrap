@@ -1,4 +1,8 @@
 package client.view.indexerframe;
 
-public class FormEntryTab {
+import javax.swing.JPanel;
+
+public class FormEntryTab extends JPanel {
+
+  private static final long serialVersionUID = 1L;
 }

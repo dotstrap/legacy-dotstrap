@@ -1,13 +1,17 @@
 package client.model;
 
+import java.util.List;
 import java.util.logging.Level;
 
 import client.communication.ClientCommunicator;
 import client.util.ClientLogManager;
 import client.view.IndexerFrame;
 
+import shared.communication.GetProjectsRequest;
+import shared.communication.GetProjectsResponse;
 import shared.communication.ValidateUserRequest;
 import shared.communication.ValidateUserResponse;
+import shared.model.Project;
 import shared.model.User;
 
 //@formatter:off
@@ -43,6 +47,17 @@ public enum Facade {
     } catch (Exception e) {
       ClientLogManager.getLogger().log(Level.FINE, "STACKTRACE: ", e);
       return false;
+    }
+  }
+
+  public static Project[] getProjects() {
+    try {
+      GetProjectsResponse response =
+          clientComm.getProjects(new GetProjectsRequest(user.getUsername(), user.getPassword()));
+      return response.getProjects().toArray(new Project[response.getProjects().size()]);
+    } catch (Exception e) {
+      ClientLogManager.getLogger().log(Level.FINE, "STACKTRACE: ", e);
+      return null;
     }
   }
 

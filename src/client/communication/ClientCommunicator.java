@@ -194,6 +194,15 @@ public class ClientCommunicator {
     return result;
   }
 
+  /**
+   * Does and HTTP post using the postCommand to the server
+   *
+   * @param postCommand
+   * @param request the type of post request
+   * @return
+   *
+   * @throws ServerException
+   */
   private Response doPost(String postCommand, Request request) throws ServerException {
     assert postCommand != null;
     assert request != null;
