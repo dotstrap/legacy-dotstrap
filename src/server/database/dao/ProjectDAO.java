@@ -158,7 +158,7 @@ public class ProjectDAO {
         resultProject.setRecordHeight(resultset.getInt("RecordHeight"));
 
         // if (resultset.next())
-        // throw new DatabaseException("Read more than one project: " + projectId
+        // throw new DatabaseException("Readore than one project: " + projectId
         // + " from database...");
 
         return resultProject;

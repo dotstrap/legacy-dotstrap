@@ -5,19 +5,41 @@
  */
 package client.communication;
 
-import java.io.*;
-import java.net.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.File;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.logging.Level;
 
 import org.apache.commons.io.IOUtils;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 
+import client.util.ClientLogManager;
+
 import server.ServerException;
 
-import shared.communication.*;
+import shared.communication.DownloadBatchRequest;
+import shared.communication.DownloadBatchResponse;
+import shared.communication.DownloadFileRequest;
+import shared.communication.DownloadFileResponse;
+import shared.communication.GetFieldsRequest;
+import shared.communication.GetFieldsResponse;
+import shared.communication.GetProjectsRequest;
+import shared.communication.GetProjectsResponse;
+import shared.communication.GetSampleBatchRequest;
+import shared.communication.GetSampleBatchResponse;
+import shared.communication.Request;
+import shared.communication.Response;
+import shared.communication.SearchRequest;
+import shared.communication.SearchResponse;
+import shared.communication.SubmitBatchRequest;
+import shared.communication.SubmitBatchResponse;
+import shared.communication.ValidateUserRequest;
+import shared.communication.ValidateUserResponse;
 
 /**
  * The Class ClientCommunicator.
@@ -25,9 +47,9 @@ import shared.communication.*;
 public class ClientCommunicator {
   private XStream xs = new XStream(new DomDriver());
 
-  private String URL_PREFIX;
-  private String host;
-  private int port;
+  private String  URL_PREFIX;
+  private String  host;
+  private int     port;
 
   public String getHost() {
     return host;
@@ -101,6 +123,8 @@ public class ClientCommunicator {
     GetSampleBatchResponse result = (GetSampleBatchResponse) doPost("/GetSampleImage", params);
     URL url = new URL(URL_PREFIX);
     result.setUrlPrefix(url);
+    ClientLogManager.getLogger().log(Level.FINER,
+        url.toString() + "/" + result.getSampleBatch().getFilePath());
     return result;
   }
 
@@ -117,6 +141,8 @@ public class ClientCommunicator {
     DownloadBatchResponse result = (DownloadBatchResponse) doPost("/DownloadBatch", params);
     URL url = new URL(URL_PREFIX);
     result.setUrlPrefix(url);
+    ClientLogManager.getLogger().log(Level.FINER,
+        url.toString() + "/" + result.getBatch().getFilePath());
     return result;
   }
 

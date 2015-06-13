@@ -1,6 +1,6 @@
 package client.model;
 
-import java.util.List;
+import java.net.URL;
 import java.util.logging.Level;
 
 import client.communication.ClientCommunicator;
@@ -9,6 +9,8 @@ import client.view.IndexerFrame;
 
 import shared.communication.GetProjectsRequest;
 import shared.communication.GetProjectsResponse;
+import shared.communication.GetSampleBatchRequest;
+import shared.communication.GetSampleBatchResponse;
 import shared.communication.ValidateUserRequest;
 import shared.communication.ValidateUserResponse;
 import shared.model.Project;
@@ -55,6 +57,18 @@ public enum Facade {
       GetProjectsResponse response =
           clientComm.getProjects(new GetProjectsRequest(user.getUsername(), user.getPassword()));
       return response.getProjects().toArray(new Project[response.getProjects().size()]);
+    } catch (Exception e) {
+      ClientLogManager.getLogger().log(Level.FINE, "STACKTRACE: ", e);
+      return null;
+    }
+  }
+
+  public static URL getSampleBatch(int projId) {
+    try {
+      GetSampleBatchResponse response =
+          clientComm.getSampleBatch(new GetSampleBatchRequest(user.getUsername(), user.getPassword(), projId));
+      String batchUrl = response.getURL().toString() + "/" + response.getSampleBatch().getFilePath();
+      return new URL(batchUrl);
     } catch (Exception e) {
       ClientLogManager.getLogger().log(Level.FINE, "STACKTRACE: ", e);
       return null;

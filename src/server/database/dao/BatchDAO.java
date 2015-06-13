@@ -237,10 +237,10 @@ public class BatchDAO {
         resultBatch.setStatus(resultset.getInt("Status"));
         resultBatch.setCurrUserId(resultset.getInt("CurrentUserId"));
 
-        if (resultset.next()){
-          throw new DatabaseException("Read more than one  with projectId: " + projectId
-              + " from database...");
-        }
+        //if (resultset.next()){
+          //throw new DatabaseException("Read more than one  with projectId: " + projectId
+              //+ " from database...");
+        //}
         // if (resultBatch.getFilePath() == "") {
         // return null;
         // }

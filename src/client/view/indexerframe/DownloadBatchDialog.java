@@ -6,6 +6,8 @@ import java.awt.Frame;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.URL;
+import java.util.logging.Level;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -14,21 +16,22 @@ import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
 import javax.swing.WindowConstants;
+
+import client.model.Facade;
+import client.util.ClientLogManager;
 
 import shared.model.Batch;
 import shared.model.Project;
-import client.model.Facade;
-import client.util.ClientLogManager;
 
 @SuppressWarnings("serial")
 public class DownloadBatchDialog extends JDialog {
   private Frame              parent;
 
   private JComboBox<Project> projectList;
-
+  private JButton            cancelButton;
+  private JButton            downloadButton;
+  private JButton            sampleButton;
   private Project            selectedProject;
   private Batch              batch;
 
@@ -48,24 +51,25 @@ public class DownloadBatchDialog extends JDialog {
     setLayout(new BorderLayout());
     setResizable(false);
 
-    createRootPanel();
+    initRootPanel();
 
     setVisible(true);
   }
 
-  private void createRootPanel() {
+  private void initRootPanel() {
     JPanel rootPanel = new JPanel();
     rootPanel.setLayout(new BoxLayout(rootPanel, BoxLayout.PAGE_AXIS));
     rootPanel.add(Box.createRigidArea(new Dimension(0, 5)));
-    rootPanel.add(createProjectPanel());
-    rootPanel.add(createButtonBox());
+    rootPanel.add(initProjectPanel());
+    rootPanel.add(initButtonBox());
     this.add(rootPanel);
   }
 
-  private JPanel createProjectPanel() {
+  private JPanel initProjectPanel() {
     JPanel projectPanel = new JPanel();
 
     projectList = new JComboBox<Project>(Facade.getProjects());
+    projectList.addActionListener(downloadBatchButtonListener);
     selectedProject = (Project) projectList.getSelectedItem();
     projectPanel.setLayout(new BoxLayout(projectPanel, BoxLayout.X_AXIS));
     projectPanel.add(Box.createHorizontalGlue());
@@ -74,7 +78,7 @@ public class DownloadBatchDialog extends JDialog {
     projectPanel.add(projectList);
 
     projectPanel.add(Box.createRigidArea(new Dimension(5, 0)));
-    JButton sampleButton = new JButton("View Sample");
+    sampleButton = new JButton("View Sample");
     sampleButton.addActionListener(downloadBatchButtonListener);
     projectPanel.add(sampleButton);
     projectPanel.add(Box.createHorizontalGlue());
@@ -82,26 +86,28 @@ public class DownloadBatchDialog extends JDialog {
     return projectPanel;
   }
 
-  private Box createButtonBox() {
-    Box buttonbox = Box.createHorizontalBox();
-    JButton cancelButton = new JButton("Cancel");
+  private Box initButtonBox() {
+    Box buttonBox = Box.createHorizontalBox();
+    cancelButton = new JButton("Cancel");
     cancelButton.addActionListener(downloadBatchButtonListener);
-    JButton downloadButton = new JButton("Download");
+    downloadButton = new JButton("Download");
     downloadButton.addActionListener(downloadBatchButtonListener);
-    buttonbox.add(Box.createGlue());
-    buttonbox.add(cancelButton);
-    buttonbox.add(Box.createRigidArea(new Dimension(5, 5)));
-    buttonbox.add(downloadButton);
-    buttonbox.add(Box.createGlue());
-    return buttonbox;
+    buttonBox.add(Box.createGlue());
+    buttonBox.add(cancelButton);
+    buttonBox.add(Box.createRigidArea(new Dimension(5, 5)));
+    buttonBox.add(downloadButton);
+    buttonBox.add(Box.createGlue());
+    return buttonBox;
   }
 
-  private void processViewSample() {
-     String image_path = Facade.getSampleBatch(project_id);
-     new SampleImageViewer().initialize(image_path, facade);
+  private void processViewSample(Project p) {
+    URL batchUrl = Facade.getSampleBatch(p.getProjectId());
+    new SampleBatchDialog(this, batchUrl, selectedProject.getTitle());
   }
 
   private void processDownloadBatch() {
+    // TODO: check if null- if so display dialog because user already has a batch checked out or
+    // something went wrong...
     // Facade.createBatchState(project_id);
     // Facade.executeLoadBatch();
     // subscriber.dispatchEvent(new WindowEvent(subscriber, WindowEvent.WINDOW_CLOSING));
@@ -109,19 +115,15 @@ public class DownloadBatchDialog extends JDialog {
   }
 
   private ActionListener downloadBatchButtonListener = new ActionListener() {//@formatter:off
+    @Override
     public void actionPerformed(ActionEvent e) {
-      switch(((JButton)e.getSource()).getText()){
-        case "View Sample":
-          processViewSample();
-          break;
-        case "Cancel":
-          //subscriber.dispatchEvent(new WindowEvent(subscriber, WindowEvent.WINDOW_CLOSING));
+      if (e.getSource() == sampleButton) {
+        processViewSample((Project) projectList.getSelectedItem());
+      } else if (e.getSource() == cancelButton) {
           batch = null;
-          setVisible(false);
-          break;
-        case "Download":
+          dispose();
+      } else if (e.getSource() == downloadButton) {
           processDownloadBatch();
-          break;
       }
     }
   };//@formatter:on
