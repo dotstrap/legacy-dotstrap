@@ -141,8 +141,7 @@ public class ClientCommunicator {
     DownloadBatchResponse result = (DownloadBatchResponse) doPost("/DownloadBatch", params);
     URL url = new URL(URL_PREFIX);
     result.setUrlPrefix(url);
-    ClientLogManager.getLogger().log(Level.FINER,
-        url.toString() + "/" + result.getBatch().getFilePath());
+    ClientLogManager.getLogger().log(Level.FINER, url.toString() + "/" + result.getBatch().getFilePath());
     return result;
   }
 

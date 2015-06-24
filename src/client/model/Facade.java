@@ -83,7 +83,7 @@ public enum Facade {
   public static BufferedImage downloadBatch(int projId) {
     try {
       DownloadBatchResponse response =
-          clientComm.downloadBatch(new DownloadBatchRequest (user.getUsername(), user.getPassword(), projId));
+          clientComm.downloadBatch(new DownloadBatchRequest(user.getUsername(), user.getPassword(), projId));
       String batchUrl = response.getUrlPrefix().toString() + "/" + response.getBatch().getFilePath();
       return ImageIO.read(new URL(batchUrl));
     } catch (Exception e) {

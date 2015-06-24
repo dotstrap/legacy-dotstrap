@@ -7,7 +7,6 @@ import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.net.URL;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -25,23 +24,26 @@ import shared.model.Project;
 
 @SuppressWarnings("serial")
 public class DownloadBatchDialog extends JDialog {
-  private Frame              indexerFrame;
+  private Frame indexerFrame;
+  private BatchComponent batchViewer;
 
   private JComboBox<Project> projectList;
-  private JButton            cancelButton;
-  private JButton            downloadButton;
-  private JButton            sampleButton;
-  private Project            selectedProject;
-  //private Batch              batch;
+  private JButton cancelButton;
+  private JButton downloadButton;
+  private JButton sampleButton;
+  private Project selectedProject;
+
+  // private Batch batch;
 
   /**
    * Instantiates a new DownloadBatchDialog.
    *
    */
-  public DownloadBatchDialog(Frame p) throws HeadlessException {
+  public DownloadBatchDialog(Frame p, BatchComponent b) throws HeadlessException {
     super(p, "Download Batch", true);
 
     this.indexerFrame = p;
+    this.batchViewer = b;
 
     // Initialize
     setSize(new Dimension(400, 110));
@@ -108,8 +110,9 @@ public class DownloadBatchDialog extends JDialog {
     BufferedImage batch = Facade.downloadBatch(p.getProjectId());
     if (batch != null) {
       dispose();
-      //new BatchComponent(indexerFrame, batch);
-    }else {
+        batchViewer.setBatch(batch);
+        batchViewer.displayBatch();
+    } else {
       JOptionPane.showMessageDialog(this,
           "A Batch could not be downloaded for this project. Please try another project.",
           "Unable to Download Batch", JOptionPane.WARNING_MESSAGE);

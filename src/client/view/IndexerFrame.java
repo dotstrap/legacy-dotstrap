@@ -21,7 +21,6 @@ import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
 
-import client.model.BatchState;
 import client.view.indexerframe.BatchComponent;
 import client.view.indexerframe.DownloadBatchDialog;
 import client.view.indexerframe.FieldHelpTab;
@@ -31,8 +30,9 @@ import client.view.indexerframe.TableEntryTab;
 
 @SuppressWarnings("serial")
 public class IndexerFrame extends JFrame {
-  // private RecordViewer recordViewer;
   //private BatchState        bs;
+
+  private BatchComponent batchViewer;
 
   private JMenuItem         downloadBatchMenuItem;
   private JMenuItem         logoutMenuItem;
@@ -142,17 +142,17 @@ public class IndexerFrame extends JFrame {
     hSplit.add(navTabs);
 
     // vertical split
-    BatchComponent batchComponent = new BatchComponent();
+    batchViewer = new BatchComponent();
     JSplitPane vSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
     vSplit.setResizeWeight(0.5);
-    vSplit.add(batchComponent);
+    vSplit.add(batchViewer);
     vSplit.add(hSplit);
 
     return vSplit;
   }
 
   private void processDownloadBatch() {
-    new DownloadBatchDialog(IndexerFrame.this);
+    new DownloadBatchDialog(IndexerFrame.this, batchViewer);
   }
 
   private void processLogout() {
