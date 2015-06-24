@@ -29,7 +29,7 @@ public class SampleBatchDialog extends JDialog {
    * Instantiates a new SampleBatchDialog.
    *
    */
-  public SampleBatchDialog(JDialog p, URL batchUrl, String projName) {
+  public SampleBatchDialog(JDialog p, BufferedImage sampleBatch, String projName) {
     // Initialize
     super(p, "Sample Batch from " + projName, true);
     parent = p;
@@ -40,7 +40,7 @@ public class SampleBatchDialog extends JDialog {
     setResizable(false);
     setModal(true);
 
-    add(initSampleBatch(batchUrl), BorderLayout.CENTER);
+    add(initSampleBatch(sampleBatch), BorderLayout.CENTER);
 
     add(initButtonBox(), BorderLayout.SOUTH);
 
@@ -54,13 +54,12 @@ public class SampleBatchDialog extends JDialog {
    * @param batchUrl the URL to load the image from
    * @return
    */
-  private JLabel initSampleBatch(URL batchUrl) {
-    BufferedImage sampleBatch = loadImage(batchUrl);
+  private JLabel initSampleBatch(BufferedImage sampleBatch) {
     int x = sampleBatch.getWidth() / 2;
     int y = sampleBatch.getHeight() / 2;
     ImageIcon scaledSampleBatch =
         new ImageIcon(sampleBatch.getScaledInstance(x, y, BufferedImage.SCALE_SMOOTH));
-    ClientLogManager.getLogger().log(Level.FINEST, "loaded sample batch: " + batchUrl.toString());
+    //ClientLogManager.getLogger().log(Level.FINEST, "loaded sample batch: " + batchUrl.toString());
    return new JLabel(scaledSampleBatch);
   }
 
@@ -80,14 +79,14 @@ public class SampleBatchDialog extends JDialog {
    * @param batchUrl
    * @return the unscaled BufferedImage | an empty image if we encounter an error
    */
-  private BufferedImage loadImage(URL batchUrl) {
-    try {
-      return ImageIO.read(batchUrl);
-    } catch (IOException e) {
-      ClientLogManager.getLogger().log(Level.FINE, "STACKTRACE: ", e);
-      return NULL_IMAGE;
-    }
-  }
+  //private BufferedImage loadImage(URL batchUrl) {
+    //try {
+      //return ImageIO.read(batchUrl);
+    //} catch (IOException e) {
+      //ClientLogManager.getLogger().log(Level.FINE, "STACKTRACE: ", e);
+      //return NULL_IMAGE;
+    //}
+  //}
 
   private ActionListener closeActionListener = new ActionListener() {//@formatter:off
     public void actionPerformed(ActionEvent e) {

@@ -1,12 +1,17 @@
 package client.model;
 
+import java.awt.image.BufferedImage;
 import java.net.URL;
 import java.util.logging.Level;
+
+import javax.imageio.ImageIO;
 
 import client.communication.ClientCommunicator;
 import client.util.ClientLogManager;
 import client.view.IndexerFrame;
 
+import shared.communication.DownloadBatchRequest;
+import shared.communication.DownloadBatchResponse;
 import shared.communication.GetProjectsRequest;
 import shared.communication.GetProjectsResponse;
 import shared.communication.GetSampleBatchRequest;
@@ -63,12 +68,24 @@ public enum Facade {
     }
   }
 
-  public static URL getSampleBatch(int projId) {
+  public static BufferedImage getSampleBatch(int projId) {
     try {
       GetSampleBatchResponse response =
           clientComm.getSampleBatch(new GetSampleBatchRequest(user.getUsername(), user.getPassword(), projId));
       String batchUrl = response.getURL().toString() + "/" + response.getSampleBatch().getFilePath();
-      return new URL(batchUrl);
+      return ImageIO.read(new URL(batchUrl));
+    } catch (Exception e) {
+      ClientLogManager.getLogger().log(Level.FINE, "STACKTRACE: ", e);
+      return null;
+    }
+  }
+
+  public static BufferedImage downloadBatch(int projId) {
+    try {
+      DownloadBatchResponse response =
+          clientComm.downloadBatch(new DownloadBatchRequest (user.getUsername(), user.getPassword(), projId));
+      String batchUrl = response.getUrlPrefix().toString() + "/" + response.getBatch().getFilePath();
+      return ImageIO.read(new URL(batchUrl));
     } catch (Exception e) {
       ClientLogManager.getLogger().log(Level.FINE, "STACKTRACE: ", e);
       return null;

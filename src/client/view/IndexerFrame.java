@@ -22,23 +22,23 @@ import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
 
 import client.model.BatchState;
-import client.view.indexerframe.BatchPanel;
+import client.view.indexerframe.BatchComponent;
 import client.view.indexerframe.DownloadBatchDialog;
 import client.view.indexerframe.FieldHelpTab;
 import client.view.indexerframe.FormEntryTab;
 import client.view.indexerframe.ImageNavigationTab;
 import client.view.indexerframe.TableEntryTab;
 
+@SuppressWarnings("serial")
 public class IndexerFrame extends JFrame {
-  private static final long serialVersionUID = -597878704594774809L;
   // private RecordViewer recordViewer;
-  private BatchState        bs;
+  //private BatchState        bs;
 
   private JMenuItem         downloadBatchMenuItem;
   private JMenuItem         logoutMenuItem;
   private JMenuItem         exitMenuItem;
 
-  private JToolBar          toolBar;
+  //private JToolBar          toolBar;
   private List<JButton>     toolBarButtons;
   private JButton           zoomInButton;
   private JButton           zoomOutButton;
@@ -142,10 +142,10 @@ public class IndexerFrame extends JFrame {
     hSplit.add(navTabs);
 
     // vertical split
-    BatchPanel batchPanel = new BatchPanel();
+    BatchComponent batchComponent = new BatchComponent();
     JSplitPane vSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
     vSplit.setResizeWeight(0.5);
-    vSplit.add(batchPanel);
+    vSplit.add(batchComponent);
     vSplit.add(hSplit);
 
     return vSplit;

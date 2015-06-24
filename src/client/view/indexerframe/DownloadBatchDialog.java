@@ -6,8 +6,8 @@ import java.awt.Frame;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.net.URL;
-import java.util.logging.Level;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -15,25 +15,24 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
 import client.model.Facade;
-import client.util.ClientLogManager;
 
-import shared.model.Batch;
 import shared.model.Project;
 
 @SuppressWarnings("serial")
 public class DownloadBatchDialog extends JDialog {
-  private Frame              parent;
+  private Frame              indexerFrame;
 
   private JComboBox<Project> projectList;
   private JButton            cancelButton;
   private JButton            downloadButton;
   private JButton            sampleButton;
   private Project            selectedProject;
-  private Batch              batch;
+  //private Batch              batch;
 
   /**
    * Instantiates a new DownloadBatchDialog.
@@ -42,11 +41,11 @@ public class DownloadBatchDialog extends JDialog {
   public DownloadBatchDialog(Frame p) throws HeadlessException {
     super(p, "Download Batch", true);
 
-    this.parent = p;
+    this.indexerFrame = p;
 
     // Initialize
     setSize(new Dimension(400, 110));
-    setLocationRelativeTo(parent);
+    setLocationRelativeTo(indexerFrame);
     setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
     setLayout(new BorderLayout());
     setResizable(false);
@@ -100,30 +99,33 @@ public class DownloadBatchDialog extends JDialog {
     return buttonBox;
   }
 
-  private void processViewSample(Project p) {
-    URL batchUrl = Facade.getSampleBatch(p.getProjectId());
-    new SampleBatchDialog(this, batchUrl, selectedProject.getTitle());
+  private void processViewSampleBatch(Project p) {
+    BufferedImage sampleBatch = Facade.getSampleBatch(p.getProjectId());
+    new SampleBatchDialog(this, sampleBatch, p.getTitle());
   }
 
-  private void processDownloadBatch() {
-    // TODO: check if null- if so display dialog because user already has a batch checked out or
-    // something went wrong...
-    // Facade.createBatchState(project_id);
-    // Facade.executeLoadBatch();
-    // subscriber.dispatchEvent(new WindowEvent(subscriber, WindowEvent.WINDOW_CLOSING));
-    // close dialog
+  private void processDownloadBatch(Project p) {
+    BufferedImage batch = Facade.downloadBatch(p.getProjectId());
+    if (batch != null) {
+      dispose();
+      //new BatchComponent(indexerFrame, batch);
+    }else {
+      JOptionPane.showMessageDialog(this,
+          "A Batch could not be downloaded for this project. Please try another project.",
+          "Unable to Download Batch", JOptionPane.WARNING_MESSAGE);
+    }
   }
 
   private ActionListener downloadBatchButtonListener = new ActionListener() {//@formatter:off
     @Override
     public void actionPerformed(ActionEvent e) {
       if (e.getSource() == sampleButton) {
-        processViewSample((Project) projectList.getSelectedItem());
+        processViewSampleBatch((Project) projectList.getSelectedItem());
       } else if (e.getSource() == cancelButton) {
-          batch = null;
+          //batch = null;
           dispose();
       } else if (e.getSource() == downloadButton) {
-          processDownloadBatch();
+          processDownloadBatch((Project) projectList.getSelectedItem());
       }
     }
   };//@formatter:on
