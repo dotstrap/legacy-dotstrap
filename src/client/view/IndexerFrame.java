@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +22,7 @@ import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
 
+import client.model.BatchState;
 import client.view.indexerframe.BatchComponent;
 import client.view.indexerframe.DownloadBatchDialog;
 import client.view.indexerframe.FieldHelpTab;
@@ -28,27 +30,29 @@ import client.view.indexerframe.FormEntryTab;
 import client.view.indexerframe.ImageNavigationTab;
 import client.view.indexerframe.TableEntryTab;
 
-@SuppressWarnings("serial")
-public class IndexerFrame extends JFrame {
-  //private BatchState        bs;
+import shared.model.Batch;
+import shared.model.Field;
 
+@SuppressWarnings("serial")
+public class IndexerFrame extends JFrame implements BatchState.Observer {
   private BatchComponent batchViewer;
 
-  private JMenuItem         downloadBatchMenuItem;
-  private JMenuItem         logoutMenuItem;
-  private JMenuItem         exitMenuItem;
+  private JMenuItem downloadBatchMenuItem;
+  private JMenuItem logoutMenuItem;
+  private JMenuItem exitMenuItem;
 
-  //private JToolBar          toolBar;
-  private List<JButton>     toolBarButtons;
-  private JButton           zoomInButton;
-  private JButton           zoomOutButton;
-  private JButton           invertImageButton;
-  private JButton           toggleHighlightsButton;
-  private JButton           saveButton;
-  private JButton           submitButton;
+  private JToolBar toolBar;
+  private List<JButton> toolBarButtons;
+  private JButton zoomInButton;
+  private JButton zoomOutButton;
+  private JButton invertImageButton;
+  private JButton toggleHighlightsButton;
+  private JButton saveButton;
+  private JButton submitButton;
 
   public IndexerFrame(String title) throws HeadlessException {
     // Initalize
+
     addWindowListener(windowAdapter);
     setSize(new Dimension(1000, 800));
 
@@ -60,6 +64,7 @@ public class IndexerFrame extends JFrame {
 
     this.add(rootPanel);
     this.setVisible(true);
+    BatchState.addObserver(this);
   }
 
   private JMenuBar initMenu() {
@@ -69,7 +74,6 @@ public class IndexerFrame extends JFrame {
     menu.setMnemonic('c');
     menuBar.add(menu);
 
-    // TODO: only show this when user is NOT currently indexing a batch
     downloadBatchMenuItem = new JMenuItem("Download Batch", KeyEvent.VK_D);
     downloadBatchMenuItem.addActionListener(menuListener);
     menu.add(downloadBatchMenuItem);
@@ -87,8 +91,6 @@ public class IndexerFrame extends JFrame {
 
   // TODO: clean this code up
   private JToolBar initToolBar() {
-    JToolBar toolBar = new JToolBar();
-
     zoomInButton = new JButton("Zoom In");
     zoomOutButton = new JButton("Zoom Out");
     invertImageButton = new JButton("Invert Image");
@@ -128,7 +130,7 @@ public class IndexerFrame extends JFrame {
     // data entry components
     JTabbedPane entryTabs = new JTabbedPane();
     entryTabs.add("Table Entry", new TableEntryTab());
-    entryTabs.add("Form Entry",  new FormEntryTab());
+    entryTabs.add("Form Entry", new FormEntryTab());
 
     // field help and image navigation
     JTabbedPane navTabs = new JTabbedPane();
@@ -149,10 +151,6 @@ public class IndexerFrame extends JFrame {
     vSplit.add(hSplit);
 
     return vSplit;
-  }
-
-  private void processDownloadBatch() {
-    new DownloadBatchDialog(IndexerFrame.this, batchViewer);
   }
 
   private void processLogout() {
@@ -180,7 +178,7 @@ public class IndexerFrame extends JFrame {
   private ActionListener menuListener = new ActionListener() {
     public void actionPerformed(ActionEvent e) {
       if (e.getSource() == downloadBatchMenuItem) {
-        processDownloadBatch();
+        new DownloadBatchDialog(IndexerFrame.this, batchViewer);
       } else if (e.getSource() == logoutMenuItem) {
         processLogout();
       } else if (e.getSource() == exitMenuItem) {
@@ -194,4 +192,75 @@ public class IndexerFrame extends JFrame {
         processExit();
     }
   };//@formatter:on
+
+  /* (non-Javadoc)
+   * @see client.model.BatchState.Observer#cellWasSelected(int, int)
+   */
+  @Override
+  public void cellWasSelected(int x, int y) {
+    // TODO Auto-generated method stub
+
+  }
+
+  /* (non-Javadoc)
+   * @see client.model.BatchState.Observer#didHighlight(boolean)
+   */
+  @Override
+  public void didHighlight(boolean hasHighlight) {
+    // TODO Auto-generated method stub
+
+  }
+
+  /* (non-Javadoc)
+   * @see client.model.BatchState.Observer#didZoom(double)
+   */
+  @Override
+  public void didZoom(double zoomAmt) {
+    // TODO Auto-generated method stub
+
+  }
+
+  /* (non-Javadoc)
+   * @see client.model.BatchState.Observer#didInvert(boolean)
+   */
+  @Override
+  public void didInvert(boolean isInverted) {
+    // TODO Auto-generated method stub
+
+  }
+
+  /* (non-Javadoc)
+   * @see client.model.BatchState.Observer#dataWasInput(java.lang.String, int, int)
+   */
+  @Override
+  public void dataWasInput(String data, int x, int y) {
+    // TODO Auto-generated method stub
+
+  }
+
+  /* (non-Javadoc)
+   * @see client.model.BatchState.Observer#didChangeValue(int, shared.model.Field, java.lang.String)
+   */
+  @Override
+  public void didChangeValue(int record, Field field, String value) {
+    // TODO Auto-generated method stub
+
+  }
+
+  /* (non-Javadoc)
+   * @see client.model.BatchState.Observer#didDownload(shared.model.Batch)
+   */
+  @Override
+  public void didDownload(BufferedImage b) {
+    toolBar.setEnabled(true);
+    downloadBatchMenuItem.setEnabled(false);
+  }
+
+  /* (non-Javadoc)
+   * @see client.model.BatchState.Observer#didSubmit(shared.model.Batch)
+   */
+  @Override
+  public void didSubmit(Batch b) {
+    downloadBatchMenuItem.setEnabled(true);
+  }
 }

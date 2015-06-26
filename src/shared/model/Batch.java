@@ -18,7 +18,7 @@ public class Batch {
   /** Code for a batch that has been indexed. */
   public static int COMPLETE   = 2;
 
-  private int       batchId;// @formatter:off
+  private int    batchId;// @formatter:off
   private String filePath;
   private int    projectId;
   private int    status;

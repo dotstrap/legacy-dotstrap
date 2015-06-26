@@ -18,19 +18,19 @@ import shared.model.*;
 public class DownloadBatchResponse implements Response {
 
   /** The batch. */
-  public Batch        batch;
-  private Project     project;
+  public Batch batch;
+  private Project project;
   private List<Field> fields;
-  private URL         urlPrefix;
+  private URL urlPrefix;
 
   /**
    * Instantiates a new download batch result.
    */
   public DownloadBatchResponse() {
-   this.batch = null;
-   this.project = null;
-   this.fields = null;
-   this.urlPrefix = null;
+    this.batch = null;
+    this.project = null;
+    this.fields = null;
+    this.urlPrefix = null;
   }
 
   // @formatter:off

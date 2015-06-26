@@ -2,7 +2,6 @@ package client.view.indexerframe;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.Frame;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,14 +17,15 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
+import client.model.BatchState;
 import client.model.Facade;
+import client.view.IndexerFrame;
 
 import shared.model.Project;
 
 @SuppressWarnings("serial")
 public class DownloadBatchDialog extends JDialog {
-  private Frame indexerFrame;
-  private BatchComponent batchViewer;
+  private IndexerFrame indexerFrame;
 
   private JComboBox<Project> projectList;
   private JButton cancelButton;
@@ -39,11 +39,10 @@ public class DownloadBatchDialog extends JDialog {
    * Instantiates a new DownloadBatchDialog.
    *
    */
-  public DownloadBatchDialog(Frame p, BatchComponent b) throws HeadlessException {
+  public DownloadBatchDialog(IndexerFrame p, BatchComponent b) throws HeadlessException {
     super(p, "Download Batch", true);
 
     this.indexerFrame = p;
-    this.batchViewer = b;
 
     // Initialize
     setSize(new Dimension(400, 110));
@@ -110,8 +109,7 @@ public class DownloadBatchDialog extends JDialog {
     BufferedImage batch = Facade.downloadBatch(p.getProjectId());
     if (batch != null) {
       dispose();
-        batchViewer.setBatch(batch);
-        batchViewer.displayBatch();
+      BatchState.setCurrentBatch(batch);
     } else {
       JOptionPane.showMessageDialog(this,
           "A Batch could not be downloaded for this project. Please try another project.",

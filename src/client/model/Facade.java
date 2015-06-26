@@ -2,13 +2,13 @@ package client.model;
 
 import java.awt.image.BufferedImage;
 import java.net.URL;
+import java.util.List;
 import java.util.logging.Level;
 
 import javax.imageio.ImageIO;
 
 import client.communication.ClientCommunicator;
 import client.util.ClientLogManager;
-import client.view.IndexerFrame;
 
 import shared.communication.DownloadBatchRequest;
 import shared.communication.DownloadBatchResponse;
@@ -18,10 +18,11 @@ import shared.communication.GetSampleBatchRequest;
 import shared.communication.GetSampleBatchResponse;
 import shared.communication.ValidateUserRequest;
 import shared.communication.ValidateUserResponse;
+import shared.model.Batch;
+import shared.model.Field;
 import shared.model.Project;
 import shared.model.User;
 
-//@formatter:off
 /**
  * Client Facade (Singleton)
  *
@@ -30,13 +31,15 @@ import shared.model.User;
 public enum Facade {
   INSTANCE;
 
-  private static User         user;
-  private static String       address;
-  private static String       port;
-  private static IndexerFrame mainframe;
-  private static BatchState   batchState;
   private static ClientCommunicator clientComm = new ClientCommunicator();
-  //@formatter:on
+  private static String address;
+  private static String port;
+
+  private static User user;
+  private static Batch batch;
+  private static Project project;
+  private static List<Field> fields;
+  private static URL batchUrl;
 
   /**
    * Validates the user's credentials with the server
@@ -71,8 +74,10 @@ public enum Facade {
   public static BufferedImage getSampleBatch(int projId) {
     try {
       GetSampleBatchResponse response =
-          clientComm.getSampleBatch(new GetSampleBatchRequest(user.getUsername(), user.getPassword(), projId));
-      String batchUrl = response.getURL().toString() + "/" + response.getSampleBatch().getFilePath();
+          clientComm.getSampleBatch(new GetSampleBatchRequest(user.getUsername(), user
+              .getPassword(), projId));
+      String batchUrl =
+          response.getURL().toString() + "/" + response.getSampleBatch().getFilePath();
       return ImageIO.read(new URL(batchUrl));
     } catch (Exception e) {
       ClientLogManager.getLogger().log(Level.FINE, "STACKTRACE: ", e);
@@ -83,9 +88,18 @@ public enum Facade {
   public static BufferedImage downloadBatch(int projId) {
     try {
       DownloadBatchResponse response =
-          clientComm.downloadBatch(new DownloadBatchRequest(user.getUsername(), user.getPassword(), projId));
-      String batchUrl = response.getUrlPrefix().toString() + "/" + response.getBatch().getFilePath();
-      return ImageIO.read(new URL(batchUrl));
+          clientComm.downloadBatch(new DownloadBatchRequest(user.getUsername(), user.getPassword(),
+              projId));
+      String batchUrl =
+          response.getUrlPrefix().toString() + "/" + response.getBatch().getFilePath();
+
+      URL u = new URL(batchUrl);
+      Facade.batchUrl = u;
+      Facade.batch = response.getBatch();
+      Facade.project = response.getProject();
+      Facade.fields = response.getFields();
+
+      return ImageIO.read(u);
     } catch (Exception e) {
       ClientLogManager.getLogger().log(Level.FINE, "STACKTRACE: ", e);
       return null;
@@ -102,14 +116,6 @@ public enum Facade {
 
   public static String getPort() {
     return port;
-  }
-
-  public static IndexerFrame getMainframe() {
-    return mainframe;
-  }
-
-  public static BatchState getBatchState() {
-    return batchState;
   }
 
   public static ClientCommunicator getClientComm() {
