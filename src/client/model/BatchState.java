@@ -13,8 +13,8 @@ public enum BatchState {
   public interface Observer {//@formatter:off
     public void cellWasSelected(int x, int y);
     public void didHighlight(boolean hasHighlight);
-    public void didZoom(double zoomAmt);
-    public void didInvert(boolean isInverted);
+    public void didZoom(double zoomDirection);
+    public void didToggleInvert();
     public void dataWasInput(String data, int x, int y);
     public void didChangeValue(int record, Field field, String value);
     public void didDownload(BufferedImage b);
@@ -29,9 +29,7 @@ public enum BatchState {
 
   private static int scrollPositionX;
   private static int scrollPositionY;
-  private static double zoomAmt;
   private static boolean isHighlighted;
-  private static boolean isBatchInverted;
 
   public static List<Observer> getCurrentObservers() {
     return currentObservers;
@@ -66,6 +64,18 @@ public enum BatchState {
     }
   }
 
+  public static void notifyDidZoom(double zoomAmt) {
+    for (Observer o : currentObservers) {
+      o.didZoom(zoomAmt);
+    }
+  }
+
+  public static void notifyToggleInvert() {
+      for (Observer o : currentObservers) {
+        o.didToggleInvert();
+      }
+  }
+
   public static BufferedImage getCurrentBatch() {
     return currentBatch;
   }
@@ -80,66 +90,7 @@ public enum BatchState {
     }
   }
 
-  public static Field getCurrentField() {
-    return currentField;
-  }
-
-  public static void setCurrentField(Field currentField) {
-    BatchState.currentField = currentField;
-  }
-
-  public static int getCurrentRecord() {
-    return currentRecord;
-  }
-
-  public static void setCurrentRecord(int currentRecord) {
-    BatchState.currentRecord = currentRecord;
-  }
-
-  public static int getScrollPositionX() {
-    return scrollPositionX;
-  }
-
-  public static void setScrollPositionX(int scrollPositionX) {
-    BatchState.scrollPositionX = scrollPositionX;
-  }
-
-  public static int getScrollPositionY() {
-    return scrollPositionY;
-  }
-
-  public static void setScrollPositionY(int scrollPositionY) {
-    BatchState.scrollPositionY = scrollPositionY;
-  }
-
-  public static double getZoomAmt() {
-    return zoomAmt;
-  }
-
-  public static void setZoomAmt(double zoomAmt) {
-    BatchState.zoomAmt = zoomAmt;
-    for (Observer o : currentObservers) {
-      o.didZoom(zoomAmt);
-    }
-  }
-
-  public static boolean isHighlighted() {
-    return isHighlighted;
-  }
-
-  public static void setHighlighted(boolean isHighlighted) {
-    BatchState.isHighlighted = isHighlighted;
-  }
-
-  public static boolean isBatchInverted() {
-    return isBatchInverted;
-  }
-
-  public static void setBatchInverted(boolean isBatchInverted) {
-    BatchState.isBatchInverted = isBatchInverted;
-  }
-
-  // public void setBatchPosition(int positionX, int positionY) {
+   // public void setBatchPosition(int positionX, int positionY) {
   // scrollPositionX = positionX;
   // scrollPositionY = positionY;
 

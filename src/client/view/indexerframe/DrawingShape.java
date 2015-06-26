@@ -99,13 +99,4 @@ class DrawingImage implements DrawingShape {
     public Rectangle2D getBounds(Graphics2D g2) {
     return rect.getBounds2D();
   }
-
-  public DrawingImage invert(){
-    BufferedImage bimage = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_ARGB);
-      Graphics2D bGr = bimage.createGraphics();
-      bGr.drawImage(image, 0, 0, null);
-      bGr.dispose();
-      //image = Utils.invertBufferedImage(bimage);
-    return this;
-  }
 }

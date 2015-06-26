@@ -29,9 +29,10 @@ import shared.model.Field;
 public class BatchComponent extends JComponent implements BatchState.Observer {
 
   private static final Color HIGHLIGHT_COLOR = new Color(0, 100, 255, 90);
-  private static final double ZOOM_SCALE_FACTOR = 0.02;
-
-  private static BufferedImage NULL_IMAGE = new BufferedImage(10, 10, BufferedImage.TYPE_INT_ARGB);
+  //private static BufferedImage NULL_IMAGE = new BufferedImage(10, 10, BufferedImage.TYPE_INT_ARGB);
+  private static final double ZOOM_SCALE_FACTOR = 0.09;
+  private static final double MAX_ZOOM_AMT = 95.0;
+  private static final double MIN_ZOOM_AMT = 0.01;
 
   private BufferedImage batch;
   private Rectangle2D rectangle;
@@ -57,8 +58,6 @@ public class BatchComponent extends JComponent implements BatchState.Observer {
   private int wDragStartOriginX;
   private int wDragStartOriginY;
 
-  private RescaleOp invertFilter;
-
   /**
    * Instantiates a new BatchComponent.
    */
@@ -68,13 +67,14 @@ public class BatchComponent extends JComponent implements BatchState.Observer {
     rectangle = new Rectangle2D.Double();
     shapes = new ArrayList<DrawingShape>();
 
-    invertFilter = new RescaleOp(-1.0f, 255f, null);
+    isInverted = false;
 
-    dCenterX = getWidth() / 2;
-    dCenterY = getHeight() / 2;
+    dCenterX = getWidth()/2;
+    dCenterY = getHeight()/2;
 
     this.addMouseListener(mouseAdapter);
     this.addMouseMotionListener(mouseAdapter);
+    this.addMouseWheelListener(mouseAdapter);
     // this.addComponentListener(componentAdapter);
 
     initDrag();
@@ -86,16 +86,6 @@ public class BatchComponent extends JComponent implements BatchState.Observer {
     return this.batch;
   }
 
-  public void setBatch(BufferedImage batch) {
-    this.batch = batch;
-    if (batch != null) {
-      dCenterX = batch.getWidth(null) / 2;
-      dCenterY = batch.getHeight(null) / 2;
-      shapes.add(new DrawingImage(batch, new Rectangle2D.Double(-dCenterX, -dCenterY, batch
-          .getWidth(null), batch.getHeight(null))));
-    }
-    repaint();
-  }
 
   public double getScale() {
     return this.scale;
@@ -122,7 +112,7 @@ public class BatchComponent extends JComponent implements BatchState.Observer {
 
     Graphics2D g2 = (Graphics2D) g;
     drawBackground(g2);
-
+    g2.translate(getWidth()/2.0, getHeight()/2.0);
     g2.scale(scale, scale);
     g2.translate(-wOriginX, -wOriginY);
 
@@ -218,9 +208,8 @@ public class BatchComponent extends JComponent implements BatchState.Observer {
 
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
-      double scaleAmt = -e.getWheelRotation() * 0.03;
-      scale *= (1 + scaleAmt);
-      BatchState.setZoomAmt(scale);
+      double scaleAmt = -e.getWheelRotation() * ZOOM_SCALE_FACTOR;
+      BatchState.notifyDidZoom(scaleAmt);
     }
   };
 
@@ -230,6 +219,23 @@ public class BatchComponent extends JComponent implements BatchState.Observer {
     wDragStartY = 0;
     wDragStartOriginX = 0;
     wDragStartOriginY = 0;
+  }
+
+  private void redrawBatch(BufferedImage batch) {
+      shapes.add(new DrawingImage(batch, new Rectangle2D.Double(-dCenterX, -dCenterY, batch
+          .getWidth(null), batch.getHeight(null))));
+    repaint();
+  }
+
+  private void initBatch(BufferedImage batch) {
+    this.batch = batch;
+    if (batch != null) {
+      dCenterX = batch.getWidth(null) / 2;
+      dCenterY = batch.getHeight(null) / 2;
+      shapes.add(new DrawingImage(batch, new Rectangle2D.Double(-dCenterX, -dCenterY, batch
+          .getWidth(null), batch.getHeight(null))));
+    }
+    repaint();
   }
 
   /* (non-Javadoc)
@@ -254,18 +260,30 @@ public class BatchComponent extends JComponent implements BatchState.Observer {
    * @see client.model.BatchState.Observer#didZoom(double)
    */
   @Override
-  public void didZoom(double zoomAmt) {
-    // TODO Auto-generated method stub
+  public void didZoom(double zoomDirection) {
+    zoomDirection *= ZOOM_SCALE_FACTOR;
+    this.scale *= (1 + zoomDirection);
 
+    if (this.scale > MAX_ZOOM_AMT)
+      this.scale = MAX_ZOOM_AMT;
+    if (this.scale < MIN_ZOOM_AMT)
+      this.scale = MIN_ZOOM_AMT;
+
+    this.setScale(scale);
   }
 
   /* (non-Javadoc)
    * @see client.model.BatchState.Observer#didInvert(boolean)
    */
   @Override
-  public void didInvert(boolean isInverted) {
-    // TODO Auto-generated method stub
-
+  public void didToggleInvert() {
+    this.isInverted = !this.isInverted;
+    if (this.isInverted) {
+      BufferedImage negative = new RescaleOp(-1.0f, 255f, null).filter(batch, null);
+      this.redrawBatch(negative);
+    } else {
+      this.redrawBatch(batch);
+    }
   }
 
   /* (non-Javadoc)
@@ -291,7 +309,7 @@ public class BatchComponent extends JComponent implements BatchState.Observer {
    */
   @Override
   public void didDownload(BufferedImage b) {
-    setBatch(b);
+    initBatch(b);
     repaint();
     //generateImageCells();
 

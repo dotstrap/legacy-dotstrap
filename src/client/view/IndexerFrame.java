@@ -50,9 +50,10 @@ public class IndexerFrame extends JFrame implements BatchState.Observer {
   private JButton saveButton;
   private JButton submitButton;
 
+  private static final double ZOOM_SCALE_FACTOR = 0.04;
+
   public IndexerFrame(String title) throws HeadlessException {
     // Initalize
-
     addWindowListener(windowAdapter);
     setSize(new Dimension(1000, 800));
 
@@ -64,6 +65,7 @@ public class IndexerFrame extends JFrame implements BatchState.Observer {
 
     this.add(rootPanel);
     this.setVisible(true);
+
     BatchState.addObserver(this);
   }
 
@@ -165,13 +167,13 @@ public class IndexerFrame extends JFrame implements BatchState.Observer {
   private ActionListener toolBarListener = new ActionListener() {//@formatter:off
     // TODO: implement toolbar and make it look better...!
     public void actionPerformed(ActionEvent e) {
-      //if (e.getSource() == downloadBatchMenuItem) {
-        //processDownloadBatch();
-      //} else if (e.getSource() == logoutMenuItem) {
-        //processLogout();
-      //} else if (e.getSource() == exitMenuItem) {
-        //processExit();
-      //}
+      if (e.getSource() == zoomInButton) {
+        BatchState.notifyDidZoom(1.0);
+      } else if (e.getSource() == zoomOutButton) {
+        BatchState.notifyDidZoom(-1.0);
+      } else if (e.getSource() == invertImageButton) {
+        BatchState.notifyToggleInvert();
+      }
     }
   };
 
@@ -224,7 +226,7 @@ public class IndexerFrame extends JFrame implements BatchState.Observer {
    * @see client.model.BatchState.Observer#didInvert(boolean)
    */
   @Override
-  public void didInvert(boolean isInverted) {
+  public void didToggleInvert() {
     // TODO Auto-generated method stub
 
   }
