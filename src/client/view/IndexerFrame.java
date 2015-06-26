@@ -50,11 +50,8 @@ public class IndexerFrame extends JFrame implements BatchState.Observer {
   private JButton saveButton;
   private JButton submitButton;
 
-  private static final double ZOOM_SCALE_FACTOR = 0.04;
-
   public IndexerFrame(String title) throws HeadlessException {
     // Initalize
-    addWindowListener(windowAdapter);
     setSize(new Dimension(1000, 800));
 
     setJMenuBar(initMenu());
@@ -65,6 +62,8 @@ public class IndexerFrame extends JFrame implements BatchState.Observer {
 
     this.add(rootPanel);
     this.setVisible(true);
+
+    this.addWindowListener(windowAdapter);
 
     BatchState.addObserver(this);
   }
@@ -155,10 +154,6 @@ public class IndexerFrame extends JFrame implements BatchState.Observer {
     return vSplit;
   }
 
-  private void processLogout() {
-    // TODO: save work
-  }
-
   private void processExit() {
     // TODO: save work
     System.exit(0);
@@ -173,6 +168,8 @@ public class IndexerFrame extends JFrame implements BatchState.Observer {
         BatchState.notifyDidZoom(-1.0);
       } else if (e.getSource() == invertImageButton) {
         BatchState.notifyToggleInvert();
+      } else if (e.getSource() == toggleHighlightsButton) {
+        BatchState.notifyToggleHighlight();
       }
     }
   };
@@ -182,7 +179,9 @@ public class IndexerFrame extends JFrame implements BatchState.Observer {
       if (e.getSource() == downloadBatchMenuItem) {
         new DownloadBatchDialog(IndexerFrame.this, batchViewer);
       } else if (e.getSource() == logoutMenuItem) {
-        processLogout();
+        dispose();
+        new LoginDialog();
+        //BatchState.nfyDidLogout();
       } else if (e.getSource() == exitMenuItem) {
         processExit();
       }
@@ -205,10 +204,19 @@ public class IndexerFrame extends JFrame implements BatchState.Observer {
   }
 
   /* (non-Javadoc)
-   * @see client.model.BatchState.Observer#didHighlight(boolean)
+   * @see client.model.BatchState.Observer#didChangeOrigin(int, int)
    */
   @Override
-  public void didHighlight(boolean hasHighlight) {
+  public void didChangeOrigin(int x, int y) {
+    // TODO Auto-generated method stub
+
+  }
+
+  /* (non-Javadoc)
+   * @see client.model.BatchState.Observer#didToggleHighlight()
+   */
+  @Override
+  public void didToggleHighlight() {
     // TODO Auto-generated method stub
 
   }
@@ -266,4 +274,5 @@ public class IndexerFrame extends JFrame implements BatchState.Observer {
   public void didSubmit(Batch b) {
     downloadBatchMenuItem.setEnabled(true);
   }
+
 }

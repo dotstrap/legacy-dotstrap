@@ -6,6 +6,7 @@ import java.awt.Frame;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.util.logging.Level;
 
 import javax.swing.AbstractAction;
@@ -21,25 +22,27 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 
+import client.model.BatchState;
 import client.model.Facade;
 import client.util.ClientLogManager;
 
+import shared.model.Batch;
+import shared.model.Field;
+
 @SuppressWarnings("serial")
-public class LoginDialog extends JDialog {
+public class LoginDialog extends JDialog implements BatchState.Observer {
 
-  private static LoginDialog instance;
-  private JTextField         usernameField;
-  private JPasswordField     passwordField;
+  private JTextField usernameField;
+  private JPasswordField passwordField;
 
-  //TODO: clean this code up
+  // TODO: clean this code up
   /**
    * Instantiates a new LoginDialog.
    *
    * @param title
    */
-  public LoginDialog(String title) throws HeadlessException {
-    super((Frame) null, title, true);
-    instance = this;
+  public LoginDialog() throws HeadlessException {
+    super((Frame) null, "Login", true);
 
     // Initialize
     setSize(new Dimension(370, 120));
@@ -49,8 +52,9 @@ public class LoginDialog extends JDialog {
     setResizable(false);
 
     initRootPanel();
-
     setVisible(true);
+
+    BatchState.addObserver(this);
   }
 
   private void initRootPanel() {
@@ -105,10 +109,6 @@ public class LoginDialog extends JDialog {
     return buttonbox;
   }
 
-  public static LoginDialog getInstance() {
-    return instance;
-  }
-
   public JTextField getUsernameField() {
     return this.usernameField;
   }
@@ -118,31 +118,103 @@ public class LoginDialog extends JDialog {
   }
 
   private void processLogin() {
-    //String username = usernameField.getText();
-    //char[] password = passwordField.getPassword();
-    //TODO: remember to not hardcode sheila!
+    // String username = usernameField.getText();
+    // char[] password = passwordField.getPassword();
+    // TODO: remember to not hardcode sheila!
     String username = "sheila";
-    char[] password = {'p', 'a', 'r','k','e','r'};
+    char[] password = {'p', 'a', 'r', 'k', 'e', 'r'};
     if (Facade.validateUser(username, password)) {
       // TODO: implement load data
       // IndexerFrame.getInstance().loadData();
-      JOptionPane.showMessageDialog(LoginDialog.instance, "Welcome " + Facade.getUser().getFirst()
+      JOptionPane.showMessageDialog(this, "Welcome " + Facade.getUser().getFirst()
           + " " + Facade.getUser().getLast() + "\nYou have indexed: "
           + Facade.getUser().getRecordCount() + " records!", "Record Indexer",
           JOptionPane.PLAIN_MESSAGE);
-      instance.setVisible(false);
+      dispose();
       new IndexerFrame("Record Indexer");
+      //BatchState.notifyDidLogin();
     } else {
       ClientLogManager.getLogger().log(
           Level.FINEST,
           "Incorrect credentials entered: Username: " + username + " Password: "
               + String.valueOf(password));
-      JOptionPane.showMessageDialog(LoginDialog.instance,
+      JOptionPane.showMessageDialog(this,
           "Incorrect username or password.\nPlease try again.", "Invalid Credentials",
           JOptionPane.PLAIN_MESSAGE);
     }
   }
 
+  /*
+   * (non-Javadoc)
+   *
+   * @see client.model.BatchState.Observer#cellWasSelected(int, int)
+   */
+  @Override
+  public void cellWasSelected(int x, int y) {}
+
+  /*
+   * (non-Javadoc)
+   *
+   * @see client.model.BatchState.Observer#didChangeOrigin(int, int)
+   */
+  @Override
+  public void didChangeOrigin(int x, int y) {}
+
+  /*
+   * (non-Javadoc)
+   *
+   * @see client.model.BatchState.Observer#didToggleHighlight()
+   */
+  @Override
+  public void didToggleHighlight() {}
+
+  /*
+   * (non-Javadoc)
+   *
+   * @see client.model.BatchState.Observer#didZoom(double)
+   */
+  @Override
+  public void didZoom(double zoomDirection) {}
+
+  /*
+   * (non-Javadoc)
+   *
+   * @see client.model.BatchState.Observer#didToggleInvert()
+   */
+  @Override
+  public void didToggleInvert() {}
+
+  /*
+   * (non-Javadoc)
+   *
+   * @see client.model.BatchState.Observer#dataWasInput(java.lang.String, int, int)
+   */
+  @Override
+  public void dataWasInput(String data, int x, int y) {}
+
+  /*
+   * (non-Javadoc)
+   *
+   * @see client.model.BatchState.Observer#didChangeValue(int, shared.model.Field, java.lang.String)
+   */
+  @Override
+  public void didChangeValue(int record, Field field, String value) {}
+
+  /*
+   * (non-Javadoc)
+   *
+   * @see client.model.BatchState.Observer#didDownload(java.awt.image.BufferedImage)
+   */
+  @Override
+  public void didDownload(BufferedImage b) {}
+
+  /*
+   * (non-Javadoc)
+   *
+   * @see client.model.BatchState.Observer#didSubmit(shared.model.Batch)
+   */
+  @Override
+  public void didSubmit(Batch b) {}
 
   private Action loginAction = new AbstractAction() {//@formatter:off
     @Override

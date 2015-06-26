@@ -90,12 +90,25 @@ public class ClientCommunicator {
   }
 
   /**
+   * Instantiates a new client communicator.
+   *
+   * @param host the host
+   * @param port the port
+   */
+  public ClientCommunicator(String host, int port) {
+    this.port = port;
+    this.host = host;
+    URL_PREFIX = String.format("http://%s:%s", host, port);
+  }
+
+  /**
    * Validate user.
    *
    * @param params the params
    * @return the validate user response
    */
   public ValidateUserResponse validateUser(ValidateUserRequest params) throws ServerException {
+    ClientLogManager.getLogger().log(Level.FINER, host + ":" + port);
     return (ValidateUserResponse) doPost("/ValidateUser", params);
   }
 

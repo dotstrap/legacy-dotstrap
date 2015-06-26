@@ -16,13 +16,11 @@ import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 
 import javax.swing.JComponent;
 
 import client.model.BatchState;
 import client.model.Facade;
-import client.util.ClientLogManager;
 
 import shared.model.Batch;
 import shared.model.Field;
@@ -31,7 +29,7 @@ import shared.model.Project;
 @SuppressWarnings("serial")
 public class BatchComponent extends JComponent implements BatchState.Observer {
 
-  private static final Color HIGHLIGHT_COLOR = new Color(0, 100, 255, 90);
+  private static final Color HIGHLIGHT_COLOR = new Color(0, 255, 245, 80);
   // private static BufferedImage NULL_IMAGE = new BufferedImage(10, 10,
   // BufferedImage.TYPE_INT_ARGB);
   private static final double ZOOM_SCALE_FACTOR = 0.09;
@@ -114,8 +112,11 @@ public class BatchComponent extends JComponent implements BatchState.Observer {
 
   @Override
   public void cellWasSelected(int x, int y) {
-    // TODO Auto-generated method stub
-
+      Point cell = getCellAt(x, y);
+      if (cell != null) {
+        highlightCell(cell.x, cell.y);
+        repaint();
+      }
   }
 
   @Override
@@ -150,6 +151,8 @@ public class BatchComponent extends JComponent implements BatchState.Observer {
   public void didToggleInvert() {
     this.isInverted = !this.isInverted;
 
+    // TODO: preserve highlights??
+    // FIXME: after multiple toggles you can then highlight more than one cell
     // TODO: why do I have to check for this if the toolbar should be disabled
     // when there is no batch downloaded?
     if (shapes.size() < 1)
@@ -209,7 +212,7 @@ public class BatchComponent extends JComponent implements BatchState.Observer {
     dCenterX = batch.getWidth(null) / 2;
     dCenterY = batch.getHeight(null) / 2;
 
-    //generateBatchCells();
+    generateBatchCells();
 
     redrawBatch(batch);
   }
@@ -220,56 +223,63 @@ public class BatchComponent extends JComponent implements BatchState.Observer {
     repaint();
   }
 
-  //private void generateBatchCells() {
-    //List<Field> fields = Facade.getFields();
-    //Project project = Facade.getProject();
-    //int recordCount = project.getRecordsPerBatch();
-    //int firstY = project.getFirstYCoord();
-    //int recordHeight = project.getRecordHeight();
-    //cells = new Rectangle2D[recordCount][fields.size()];
-    //for (int record = 0; record < recordCount; record++) {
-      //for (int field = 0; field < fields.size(); field++) {
-        //Field fieldData = fields.get(field);
-        //double x = fieldData.getXCoord() - dCenterX;
-        //double y = (firstY + recordHeight * record) - dCenterY;
-        //double w = fieldData.getWidth();
-        //double h = recordHeight;
-        //Rectangle2D rect = new Rectangle2D.Double(x, y, w, h);
-        //cells[record][field] = rect;
-      //}
-    //}
-  //}
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // TODO!!! XXX CLEANUP THE CELL HIGHLIGHT CODE ///////////////////////////////////////////////////////////////
+  // //////////////////////////////////////////////////////////////////////////////////////////////////////////
+  private void generateBatchCells() {
+    List<Field> fields = Facade.getFields();
+    Project project = Facade.getProject();
+    int recordCount = project.getRecordsPerBatch();
+    int firstY = project.getFirstYCoord();
+    int recordHeight = project.getRecordHeight();
+    cells = new Rectangle2D[recordCount][fields.size()];
+    for (int record = 0; record < recordCount; record++) {
+      for (int field = 0; field < fields.size(); field++) {
+        Field fieldData = fields.get(field);
+        double x = fieldData.getXCoord() - dCenterX;
+        double y = (firstY + recordHeight * record) - dCenterY;
+        double w = fieldData.getWidth();
+        double h = recordHeight;
+        Rectangle2D rect = new Rectangle2D.Double(x, y, w, h);
+        cells[record][field] = rect;
+      }
+    }
+  }
 
-  //public Point getCellAt(double x, double y) {
-    //for (int i = 0; i < cells.length; i++) {
-      //for (int j = 0; j < cells[i].length; j++) {
-        //if (cells[i][j].contains(x, y)) {
-          //return new Point(i, j);
-        //}
-      //}
-    //}
-    //return null;
-  //}
+  public Point getCellAt(double x, double y) {
+    for (int i = 0; i < cells.length; i++) {
+      for (int j = 0; j < cells[i].length; j++) {
+        if (cells[i][j].contains(x, y)) {
+          return new Point(i, j);
+        }
+      }
+    }
+    return null;
+  }
 
   //public interface HighlightListener {
     //public void updateSelectedCells(int row, int column);
   //}
 
-  //public void highlightCell(int row, int column) {
-    //// if no selected column then select first column
-    //if (column == -1)
-      //column = 0;
-    //// if rectangle already exists, change it. Else add rectangle
-    //if (shapes.size() == 2)
-      //((DrawingRect) shapes.get(1)).setRect(cells[row][column]);
-    //else
-      //shapes.add(new DrawingRect(cells[row][column], HIGHLIGHT_COLOR));
-    //// notify listeners
+  public void highlightCell(int row, int column) {
+    // if no selected column then select first column
+    if (column == -1)
+      column = 0;
+    // if rectangle already exists, change it. Else add rectangle
+    if (shapes.size() == 2) {
+      isHighlighted = true;
+      ((DrawingRect) shapes.get(1)).setRect(cells[row][column]);
+    }
+    else {
+      isHighlighted = true;
+      shapes.add(new DrawingRect(cells[row][column], HIGHLIGHT_COLOR));
+    }
+    // notify listeners
     //for (HighlightListener e : highlightlisteners) {
       //e.updateSelectedCells(row, column);
     //}
-    //repaint();
-  //}
+    repaint();
+  }
 
   @Override
   protected void paintComponent(Graphics g) {
@@ -333,11 +343,8 @@ public class BatchComponent extends JComponent implements BatchState.Observer {
         wDragStartOriginX = wOriginX;
         wDragStartOriginY = wOriginY;
       }
-      //Point cell = getCellAt(wX, wY);
-      //if (cell != null) {
-        //highlightCell(cell.x, cell.y);
-        //repaint();
-      //}
+
+      BatchState.notifyCellWasSelected(wX, wY);
     }
 
     @Override

@@ -31,9 +31,7 @@ import shared.model.User;
 public enum Facade {
   INSTANCE;
 
-  private static ClientCommunicator clientComm = new ClientCommunicator();
-  private static String address;
-  private static String port;
+  private static ClientCommunicator clientComm;
 
   private static User user;
   private static Batch batch;
@@ -106,6 +104,14 @@ public enum Facade {
     }
   }
 
+  public static ClientCommunicator getClientCommunicator() {
+    return Facade.clientComm;
+  }
+
+  public static void setClientCommunicator(ClientCommunicator clientComm) {
+    Facade.clientComm = clientComm;
+  }
+
   public static User getUser() {
     return user;
   }
@@ -146,7 +152,4 @@ public enum Facade {
     Facade.batchUrl = batchUrl;
   }
 
-  public static String getAddress() {
-    return address;
-  }
- }
+}

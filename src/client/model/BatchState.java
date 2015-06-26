@@ -24,7 +24,6 @@ public enum BatchState {
 
   private static transient List<Observer> currentObservers;
 
-  private static BufferedImage currentBatch;
   private static Field currentField;
   private static int currentRecord;
 
@@ -64,6 +63,24 @@ public enum BatchState {
     }
   }
 
+  public static void notifyCellWasSelected(int positionX, int positionY) {
+    for (Observer o : currentObservers) {
+      o.cellWasSelected(positionX, positionY);
+    }
+  }
+
+  public static void notifyOriginChanged(int positionX, int positionY) {
+    for (Observer o : currentObservers) {
+      o.didChangeOrigin(positionX, positionY);
+    }
+  }
+
+  public static void notifyToggleHighlight() {
+    for (Observer o : currentObservers) {
+      o.didToggleHighlight();
+    }
+  }
+
   public static void notifyDidZoom(double zoomAmt) {
     for (Observer o : currentObservers) {
       o.didZoom(zoomAmt);
@@ -76,23 +93,11 @@ public enum BatchState {
     }
   }
 
-  public static BufferedImage getCurrentBatch() {
-    return currentBatch;
-  }
-
-  public static void setCurrentBatch(BufferedImage currentBatch) {
-    BatchState.currentBatch = currentBatch;
-
-    if (currentObservers != null) {
-      for (Observer o : currentObservers) {
-        o.didDownload(currentBatch);
-      }
-    }
-  }
-
-  public static void notifyOriginChanged(int positionX, int positionY) {
+  public static void notifyDidDownload(BufferedImage newBatch) {
     for (Observer o : currentObservers) {
-      o.didChangeOrigin(positionX, positionY);
+      o.didDownload(newBatch);
     }
   }
+
+
 }

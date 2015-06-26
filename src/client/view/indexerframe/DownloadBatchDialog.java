@@ -109,7 +109,7 @@ public class DownloadBatchDialog extends JDialog {
     BufferedImage batch = Facade.downloadBatch(p.getProjectId());
     if (batch != null) {
       dispose();
-      BatchState.setCurrentBatch(batch);
+      BatchState.notifyDidDownload(batch);
     } else {
       JOptionPane.showMessageDialog(this,
           "A Batch could not be downloaded for this project. Please try another project.",
