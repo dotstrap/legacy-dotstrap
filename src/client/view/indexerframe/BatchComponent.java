@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.HeadlessException;
+import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
@@ -14,22 +15,25 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 
 import javax.swing.JComponent;
 
 import client.model.BatchState;
-import client.model.BatchState.Observer;
+import client.model.Facade;
 import client.util.ClientLogManager;
 
 import shared.model.Batch;
 import shared.model.Field;
+import shared.model.Project;
 
 @SuppressWarnings("serial")
 public class BatchComponent extends JComponent implements BatchState.Observer {
 
   private static final Color HIGHLIGHT_COLOR = new Color(0, 100, 255, 90);
-  //private static BufferedImage NULL_IMAGE = new BufferedImage(10, 10, BufferedImage.TYPE_INT_ARGB);
+  // private static BufferedImage NULL_IMAGE = new BufferedImage(10, 10,
+  // BufferedImage.TYPE_INT_ARGB);
   private static final double ZOOM_SCALE_FACTOR = 0.09;
   private static final double MAX_ZOOM_AMT = 95.0;
   private static final double MIN_ZOOM_AMT = 0.01;
@@ -58,6 +62,9 @@ public class BatchComponent extends JComponent implements BatchState.Observer {
   private int wDragStartOriginX;
   private int wDragStartOriginY;
 
+  //private List<HighlightListener> highlightlisteners = new ArrayList<HighlightListener>();
+  private Rectangle2D[][] cells;
+
   /**
    * Instantiates a new BatchComponent.
    */
@@ -69,8 +76,8 @@ public class BatchComponent extends JComponent implements BatchState.Observer {
 
     isInverted = false;
 
-    dCenterX = getWidth()/2;
-    dCenterY = getHeight()/2;
+    dCenterX = getWidth() / 2;
+    dCenterY = getHeight() / 2;
 
     this.addMouseListener(mouseAdapter);
     this.addMouseMotionListener(mouseAdapter);
@@ -85,7 +92,6 @@ public class BatchComponent extends JComponent implements BatchState.Observer {
   public BufferedImage getBatch() {
     return this.batch;
   }
-
 
   public double getScale() {
     return this.scale;
@@ -107,12 +113,171 @@ public class BatchComponent extends JComponent implements BatchState.Observer {
   }
 
   @Override
+  public void cellWasSelected(int x, int y) {
+    // TODO Auto-generated method stub
+
+  }
+
+  @Override
+  public void didChangeOrigin(int x, int y) {
+    setOrigin(x,y);
+  }
+
+  @Override
+  public void didToggleHighlight() {
+    this.isHighlighted = !this.isHighlighted;
+    if (shapes.size() == 2) {
+      DrawingRect rect = (DrawingRect) shapes.get(1);
+      shapes.set(1, rect.setVisible(isHighlighted));
+      repaint();
+    }
+  }
+
+  @Override
+  public void didZoom(double zoomDirection) {
+    zoomDirection *= ZOOM_SCALE_FACTOR;
+    this.scale *= (1 + zoomDirection);
+
+    if (this.scale > MAX_ZOOM_AMT)
+      this.scale = MAX_ZOOM_AMT;
+    if (this.scale < MIN_ZOOM_AMT)
+      this.scale = MIN_ZOOM_AMT;
+
+    this.setScale(scale);
+  }
+
+  @Override
+  public void didToggleInvert() {
+    this.isInverted = !this.isInverted;
+
+    // TODO: why do I have to check for this if the toolbar should be disabled
+    // when there is no batch downloaded?
+    if (shapes.size() < 1)
+      return;
+
+    if (this.isInverted) {
+      this.redrawBatch(new RescaleOp(-1.0f, 255f, null).filter(batch, null));
+    } else {
+      this.redrawBatch(batch);
+    }
+  }
+
+  @Override
+  public void dataWasInput(String data, int x, int y) {
+    // TODO Auto-generated method stub
+
+  }
+
+  @Override
+  public void didChangeValue(int record, Field field, String value) {
+    // TODO Auto-generated method stub
+
+  }
+
+  @Override
+  public void didDownload(BufferedImage b) {
+    initBatch(b);
+    repaint();
+    // generateImageCells();
+
+  }
+
+  /*
+   * (non-Javadoc)
+   *
+   * @see client.model.BatchState.Observer#didSubmit(shared.model.Batch)
+   */
+  @Override
+  public void didSubmit(Batch b) {
+    // TODO Auto-generated method stub
+
+  }
+
+  private void initDrag() {
+    isDragging = false;
+    wDragStartX = 0;
+    wDragStartY = 0;
+    wDragStartOriginX = 0;
+    wDragStartOriginY = 0;
+  }
+
+  private void initBatch(BufferedImage batch) {
+    if (batch == null)
+      return;
+
+    this.batch = batch;
+    dCenterX = batch.getWidth(null) / 2;
+    dCenterY = batch.getHeight(null) / 2;
+
+    //generateBatchCells();
+
+    redrawBatch(batch);
+  }
+
+  private void redrawBatch(BufferedImage batch) {
+    shapes.add(new DrawingImage(batch, new Rectangle2D.Double(-dCenterX, -dCenterY, batch
+        .getWidth(null), batch.getHeight(null))));
+    repaint();
+  }
+
+  //private void generateBatchCells() {
+    //List<Field> fields = Facade.getFields();
+    //Project project = Facade.getProject();
+    //int recordCount = project.getRecordsPerBatch();
+    //int firstY = project.getFirstYCoord();
+    //int recordHeight = project.getRecordHeight();
+    //cells = new Rectangle2D[recordCount][fields.size()];
+    //for (int record = 0; record < recordCount; record++) {
+      //for (int field = 0; field < fields.size(); field++) {
+        //Field fieldData = fields.get(field);
+        //double x = fieldData.getXCoord() - dCenterX;
+        //double y = (firstY + recordHeight * record) - dCenterY;
+        //double w = fieldData.getWidth();
+        //double h = recordHeight;
+        //Rectangle2D rect = new Rectangle2D.Double(x, y, w, h);
+        //cells[record][field] = rect;
+      //}
+    //}
+  //}
+
+  //public Point getCellAt(double x, double y) {
+    //for (int i = 0; i < cells.length; i++) {
+      //for (int j = 0; j < cells[i].length; j++) {
+        //if (cells[i][j].contains(x, y)) {
+          //return new Point(i, j);
+        //}
+      //}
+    //}
+    //return null;
+  //}
+
+  //public interface HighlightListener {
+    //public void updateSelectedCells(int row, int column);
+  //}
+
+  //public void highlightCell(int row, int column) {
+    //// if no selected column then select first column
+    //if (column == -1)
+      //column = 0;
+    //// if rectangle already exists, change it. Else add rectangle
+    //if (shapes.size() == 2)
+      //((DrawingRect) shapes.get(1)).setRect(cells[row][column]);
+    //else
+      //shapes.add(new DrawingRect(cells[row][column], HIGHLIGHT_COLOR));
+    //// notify listeners
+    //for (HighlightListener e : highlightlisteners) {
+      //e.updateSelectedCells(row, column);
+    //}
+    //repaint();
+  //}
+
+  @Override
   protected void paintComponent(Graphics g) {
     super.paintComponent(g);
 
     Graphics2D g2 = (Graphics2D) g;
     drawBackground(g2);
-    g2.translate(getWidth()/2.0, getHeight()/2.0);
+    g2.translate(getWidth() / 2.0, getHeight() / 2.0);
     g2.scale(scale, scale);
     g2.translate(-wOriginX, -wOriginY);
 
@@ -137,6 +302,7 @@ public class BatchComponent extends JComponent implements BatchState.Observer {
       int dY = e.getY();
 
       AffineTransform transform = new AffineTransform();
+      transform.translate(getWidth() / 2.0, getHeight() / 2.0);
       transform.scale(scale, scale);
       transform.translate(-wOriginX, -wOriginY);
 
@@ -167,6 +333,11 @@ public class BatchComponent extends JComponent implements BatchState.Observer {
         wDragStartOriginX = wOriginX;
         wDragStartOriginY = wOriginY;
       }
+      //Point cell = getCellAt(wX, wY);
+      //if (cell != null) {
+        //highlightCell(cell.x, cell.y);
+        //repaint();
+      //}
     }
 
     @Override
@@ -176,6 +347,7 @@ public class BatchComponent extends JComponent implements BatchState.Observer {
         int dY = e.getY();
 
         AffineTransform transform = new AffineTransform();
+        transform.translate(getWidth() / 2.0, getHeight() / 2.0);
         transform.scale(scale, scale);
         transform.translate(-wDragStartOriginX, -wDragStartOriginY);
 
@@ -184,7 +356,6 @@ public class BatchComponent extends JComponent implements BatchState.Observer {
         try {
           transform.inverseTransform(dPt, wPt);
         } catch (NoninvertibleTransformException ex) {
-          ClientLogManager.getLogger().log(Level.FINE, "STACKTRACE: ", e);
           return;
         }
         int wX = (int) wPt.getX();
@@ -196,13 +367,15 @@ public class BatchComponent extends JComponent implements BatchState.Observer {
         wOriginX = wDragStartOriginX - wDeltaX;
         wOriginY = wDragStartOriginY - wDeltaY;
 
+        BatchState.notifyOriginChanged(wOriginX, wOriginY);
+
         repaint();
       }
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-      // bs.setBatchPosition(wCenterX, wCenterY);
+      //BatchState.notifyOriginChanged(wOriginX, wOriginY);
       initDrag();
     }
 
@@ -213,114 +386,5 @@ public class BatchComponent extends JComponent implements BatchState.Observer {
     }
   };
 
-  private void initDrag() {
-    isDragging = false;
-    wDragStartX = 0;
-    wDragStartY = 0;
-    wDragStartOriginX = 0;
-    wDragStartOriginY = 0;
-  }
 
-  private void redrawBatch(BufferedImage batch) {
-      shapes.add(new DrawingImage(batch, new Rectangle2D.Double(-dCenterX, -dCenterY, batch
-          .getWidth(null), batch.getHeight(null))));
-    repaint();
-  }
-
-  private void initBatch(BufferedImage batch) {
-    this.batch = batch;
-    if (batch != null) {
-      dCenterX = batch.getWidth(null) / 2;
-      dCenterY = batch.getHeight(null) / 2;
-      shapes.add(new DrawingImage(batch, new Rectangle2D.Double(-dCenterX, -dCenterY, batch
-          .getWidth(null), batch.getHeight(null))));
-    }
-    repaint();
-  }
-
-  /* (non-Javadoc)
-   * @see client.model.BatchState.Observer#cellWasSelected(int, int)
-   */
-  @Override
-  public void cellWasSelected(int x, int y) {
-    // TODO Auto-generated method stub
-
-  }
-
-  /* (non-Javadoc)
-   * @see client.model.BatchState.Observer#didHighlight(boolean)
-   */
-  @Override
-  public void didHighlight(boolean hasHighlight) {
-    // TODO Auto-generated method stub
-
-  }
-
-  /* (non-Javadoc)
-   * @see client.model.BatchState.Observer#didZoom(double)
-   */
-  @Override
-  public void didZoom(double zoomDirection) {
-    zoomDirection *= ZOOM_SCALE_FACTOR;
-    this.scale *= (1 + zoomDirection);
-
-    if (this.scale > MAX_ZOOM_AMT)
-      this.scale = MAX_ZOOM_AMT;
-    if (this.scale < MIN_ZOOM_AMT)
-      this.scale = MIN_ZOOM_AMT;
-
-    this.setScale(scale);
-  }
-
-  /* (non-Javadoc)
-   * @see client.model.BatchState.Observer#didInvert(boolean)
-   */
-  @Override
-  public void didToggleInvert() {
-    this.isInverted = !this.isInverted;
-    if (this.isInverted) {
-      BufferedImage negative = new RescaleOp(-1.0f, 255f, null).filter(batch, null);
-      this.redrawBatch(negative);
-    } else {
-      this.redrawBatch(batch);
-    }
-  }
-
-  /* (non-Javadoc)
-   * @see client.model.BatchState.Observer#dataWasInput(java.lang.String, int, int)
-   */
-  @Override
-  public void dataWasInput(String data, int x, int y) {
-    // TODO Auto-generated method stub
-
-  }
-
-  /* (non-Javadoc)
-   * @see client.model.BatchState.Observer#didChangeValue(int, shared.model.Field, java.lang.String)
-   */
-  @Override
-  public void didChangeValue(int record, Field field, String value) {
-    // TODO Auto-generated method stub
-
-  }
-
-  /* (non-Javadoc)
-   * @see client.model.BatchState.Observer#didDownload(shared.model.Batch)
-   */
-  @Override
-  public void didDownload(BufferedImage b) {
-    initBatch(b);
-    repaint();
-    //generateImageCells();
-
-  }
-
-  /* (non-Javadoc)
-   * @see client.model.BatchState.Observer#didSubmit(shared.model.Batch)
-   */
-  @Override
-  public void didSubmit(Batch b) {
-    // TODO Auto-generated method stub
-
-  }
 }

@@ -110,15 +110,43 @@ public enum Facade {
     return user;
   }
 
+  public static void setUser(User user) {
+    Facade.user = user;
+  }
+
+  public static Batch getBatch() {
+    return batch;
+  }
+
+  public static void setBatch(Batch batch) {
+    Facade.batch = batch;
+  }
+
+  public static Project getProject() {
+    return project;
+  }
+
+  public static void setProject(Project project) {
+    Facade.project = project;
+  }
+
+  public static List<Field> getFields() {
+    return fields;
+  }
+
+  public static void setFields(List<Field> fields) {
+    Facade.fields = fields;
+  }
+
+  public static URL getBatchUrl() {
+    return batchUrl;
+  }
+
+  public static void setBatchUrl(URL batchUrl) {
+    Facade.batchUrl = batchUrl;
+  }
+
   public static String getAddress() {
     return address;
   }
-
-  public static String getPort() {
-    return port;
-  }
-
-  public static ClientCommunicator getClientComm() {
-    return clientComm;
-  }
-}
+ }

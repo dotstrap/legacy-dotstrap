@@ -12,7 +12,8 @@ public enum BatchState {
 
   public interface Observer {//@formatter:off
     public void cellWasSelected(int x, int y);
-    public void didHighlight(boolean hasHighlight);
+    public void didChangeOrigin(int x, int y);
+    public void didToggleHighlight();
     public void didZoom(double zoomDirection);
     public void didToggleInvert();
     public void dataWasInput(String data, int x, int y);
@@ -29,7 +30,6 @@ public enum BatchState {
 
   private static int scrollPositionX;
   private static int scrollPositionY;
-  private static boolean isHighlighted;
 
   public static List<Observer> getCurrentObservers() {
     return currentObservers;
@@ -71,9 +71,9 @@ public enum BatchState {
   }
 
   public static void notifyToggleInvert() {
-      for (Observer o : currentObservers) {
-        o.didToggleInvert();
-      }
+    for (Observer o : currentObservers) {
+      o.didToggleInvert();
+    }
   }
 
   public static BufferedImage getCurrentBatch() {
@@ -90,12 +90,9 @@ public enum BatchState {
     }
   }
 
-   // public void setBatchPosition(int positionX, int positionY) {
-  // scrollPositionX = positionX;
-  // scrollPositionY = positionY;
-
-  // for (Observer o : currentObservers) {
-  // o.batchChanged(zoomAmt, scrollPositionX, scrollPositionY);
-  // }
-  // }
+  public static void notifyOriginChanged(int positionX, int positionY) {
+    for (Observer o : currentObservers) {
+      o.didChangeOrigin(positionX, positionY);
+    }
+  }
 }

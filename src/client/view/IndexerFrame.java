@@ -122,7 +122,7 @@ public class IndexerFrame extends JFrame implements BatchState.Observer {
 
     // toolBar.addSeparator();
     toolBar.setFloatable(false);
-    toolBar.setRollover(true);
+    toolBar.setRollover(false);
     toolBar.setEnabled(false);
 
     return toolBar;
@@ -255,6 +255,7 @@ public class IndexerFrame extends JFrame implements BatchState.Observer {
   @Override
   public void didDownload(BufferedImage b) {
     toolBar.setEnabled(true);
+    toolBar.setRollover(true);
     downloadBatchMenuItem.setEnabled(false);
   }
 
