@@ -73,6 +73,7 @@ public class BatchComponent extends JComponent implements BatchState.Observer {
     shapes = new ArrayList<DrawingShape>();
 
     isInverted = false;
+    isHighlighted = false;
 
     dCenterX = getWidth() / 2;
     dCenterY = getHeight() / 2;
@@ -160,6 +161,9 @@ public class BatchComponent extends JComponent implements BatchState.Observer {
 
     if (this.isInverted) {
       this.redrawBatch(new RescaleOp(-1.0f, 255f, null).filter(batch, null));
+      //if (this.isHighlighted) {
+           //highlightCell
+      //}
     } else {
       this.redrawBatch(batch);
     }
@@ -257,9 +261,6 @@ public class BatchComponent extends JComponent implements BatchState.Observer {
     return null;
   }
 
-  //public interface HighlightListener {
-    //public void updateSelectedCells(int row, int column);
-  //}
 
   public void highlightCell(int row, int column) {
     // if no selected column then select first column
@@ -267,10 +268,9 @@ public class BatchComponent extends JComponent implements BatchState.Observer {
       column = 0;
     // if rectangle already exists, change it. Else add rectangle
     if (shapes.size() == 2) {
-      isHighlighted = true;
+      //isHighlighted = true;
       ((DrawingRect) shapes.get(1)).setRect(cells[row][column]);
-    }
-    else {
+    } else {
       isHighlighted = true;
       shapes.add(new DrawingRect(cells[row][column], HIGHLIGHT_COLOR));
     }

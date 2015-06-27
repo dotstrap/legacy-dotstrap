@@ -2,8 +2,7 @@ package client.view.indexerframe;
 
 import javax.swing.JPanel;
 
+@SuppressWarnings("serial")
 public class FieldHelpTab extends JPanel {
-
-  private static final long serialVersionUID = 137696947539232682L;
 
 }
