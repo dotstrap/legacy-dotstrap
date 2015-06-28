@@ -1,10 +1,4 @@
-/**
- * ImporterUnitTest.java
- * JRE v1.8.0_40
- * 
- * Created by William Myers on Mar 24, 2015.
- * Copyright (c) 2015 William Myers. All Rights reserved.
- */
+
 package server;
 
 import static org.junit.Assert.assertEquals;
@@ -18,29 +12,19 @@ import server.importer.Importer;
 
 import shared.model.*;
 
-/**
- * The Class ImporterUnitTest.
- */
+
 public class ImporterUnitTest {
-  /**
-   * Sets up before class.
-   *
-   * @throws Exception the exception
-   */
+  
   @BeforeClass
   public static void setUpBeforeClass() throws Exception {
     // Load database driver
     Database.initDriver();
   }
 
-  /** The database. */
+  
   Database db;
 
-  /**
-   * Sets the database up.
-   *
-   * @throws Exception the exception
-   */
+  
   @Before
   public void setUp() throws Exception {
     // Prepare database for test case(s)
@@ -51,11 +35,7 @@ public class ImporterUnitTest {
     db.startTransaction();
   }
 
-  /**
-   * Tear down.
-   *
-   * @throws Exception the exception
-   */
+  
   @After
   public void tearDown() throws Exception {
     // Roll back this transaction so changes are undone
@@ -63,11 +43,7 @@ public class ImporterUnitTest {
     db = null;
   }
 
-  /**
-   * Import test.
-   *
-   * @throws Exception the exception
-   */
+  
   @Test
   public void importTest() throws Exception {
     // Extra precaution that lists are empty to start with...

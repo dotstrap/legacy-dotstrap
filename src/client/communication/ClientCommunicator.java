@@ -1,8 +1,3 @@
-/**
- * ClientCommunicator.java JRE v1.8.0_40
- *
- * Created by William Myers on Mar 24, 2015. Copyright (c) 2015 William Myers. All Rights reserved.
- */
 package client.communication;
 
 import java.io.File;
@@ -41,15 +36,12 @@ import shared.communication.SubmitBatchResponse;
 import shared.communication.ValidateUserRequest;
 import shared.communication.ValidateUserResponse;
 
-/**
- * The Class ClientCommunicator.
- */
 public class ClientCommunicator {
   private XStream xs = new XStream(new DomDriver());
 
-  private String  URL_PREFIX;
-  private String  host;
-  private int     port;
+  private String URL_PREFIX;
+  private String host;
+  private int port;
 
   public String getHost() {
     return host;
@@ -67,70 +59,33 @@ public class ClientCommunicator {
     this.port = port;
   }
 
-  /**
-   * Instantiates a new ClientCommunicator.
-   *
-   */
   public ClientCommunicator() {
     host = "localhost";
     port = 39640;
     URL_PREFIX = String.format("http://%s:%d", host, port);
   }
 
-  /**
-   * Instantiates a new client communicator.
-   *
-   * @param host the host
-   * @param port the port
-   */
   public ClientCommunicator(String host, String port) {
     this.port = Integer.parseInt(port);
     this.host = host;
     URL_PREFIX = String.format("http://%s:%s", host, port);
   }
 
-  /**
-   * Instantiates a new client communicator.
-   *
-   * @param host the host
-   * @param port the port
-   */
   public ClientCommunicator(String host, int port) {
     this.port = port;
     this.host = host;
     URL_PREFIX = String.format("http://%s:%s", host, port);
   }
 
-  /**
-   * Validate user.
-   *
-   * @param params the params
-   * @return the validate user response
-   */
   public ValidateUserResponse validateUser(ValidateUserRequest params) throws ServerException {
     ClientLogManager.getLogger().log(Level.FINER, host + ":" + port);
     return (ValidateUserResponse) doPost("/ValidateUser", params);
   }
 
-  /**
-   * Gets the projects.
-   *
-   * @param params the creds
-   * @return the projects
-   * @throws ServerException the client exception
-   */
   public GetProjectsResponse getProjects(GetProjectsRequest params) throws ServerException {
     return (GetProjectsResponse) doPost("/GetProjects", params);
   }
 
-  /**
-   * Gets the sample batch.
-   *
-   * @param params the params
-   * @return the sample batch
-   * @throws ServerException the client exception
-   * @throws MalformedURLException
-   */
   public GetSampleBatchResponse getSampleBatch(GetSampleBatchRequest params)
       throws ServerException, MalformedURLException {
     GetSampleBatchResponse result = (GetSampleBatchResponse) doPost("/GetSampleImage", params);
@@ -141,52 +96,24 @@ public class ClientCommunicator {
     return result;
   }
 
-  /**
-   * Download batch.
-   *
-   * @param params the params
-   * @return the download batch response
-   * @throws ServerException the client exception
-   * @throws MalformedURLException
-   */
   public DownloadBatchResponse downloadBatch(DownloadBatchRequest params) throws ServerException,
       MalformedURLException {
     DownloadBatchResponse result = (DownloadBatchResponse) doPost("/DownloadBatch", params);
     URL url = new URL(URL_PREFIX);
     result.setUrlPrefix(url);
-    ClientLogManager.getLogger().log(Level.FINER, url.toString() + "/" + result.getBatch().getFilePath());
+    ClientLogManager.getLogger().log(Level.FINER,
+        url.toString() + "/" + result.getBatch().getFilePath());
     return result;
   }
 
-  /**
-   * Submit batch.
-   *
-   * @param params the params
-   * @return the submit batch response
-   * @throws ServerException the client exception
-   */
   public SubmitBatchResponse submitBatch(SubmitBatchRequest params) throws ServerException {
     return (SubmitBatchResponse) doPost("/SubmitBatch", params);
   }
 
-  /**
-   * Gets the fields.
-   *
-   * @param params the params
-   * @return the fields
-   * @throws ServerException the client exception
-   */
   public GetFieldsResponse getFields(GetFieldsRequest params) throws ServerException {
     return (GetFieldsResponse) doPost("/GetFields", params);
   }
 
-  /**
-   * Search.
-   *
-   * @param params the params
-   * @return the search response
-   * @throws ServerException the client exception
-   */
   public SearchResponse search(SearchRequest params) throws ServerException, MalformedURLException {
     SearchResponse result = (SearchResponse) doPost("/Search", params);
     URL url = new URL(URL_PREFIX);
@@ -194,26 +121,12 @@ public class ClientCommunicator {
     return result;
   }
 
-  /**
-   * Download file.
-   *
-   * @param params the params
-   * @return the download file response
-   * @throws ServerException the client exception
-   */
   public DownloadFileResponse downloadFile(DownloadFileRequest params) throws ServerException {
     String url = URL_PREFIX + File.separator + params.getUrl();
     ClientLogManager.getLogger().log(Level.FINEST, url);
     return new DownloadFileResponse(doGet(url));
   }
 
-  /**
-   * Do get.
-   *
-   * @param urlPath the url path
-   * @return the byte[]
-   * @throws ServerException the client exception
-   */
   public byte[] doGet(String urlPath) throws ServerException {
     byte[] result = null;
     try {
@@ -234,15 +147,6 @@ public class ClientCommunicator {
     return result;
   }
 
-  /**
-   * Does and HTTP post using the postCommand to the server
-   *
-   * @param postCommand
-   * @param request the type of post request
-   * @return
-   *
-   * @throws ServerException
-   */
   private Response doPost(String postCommand, Request request) throws ServerException {
     assert postCommand != null;
     assert request != null;

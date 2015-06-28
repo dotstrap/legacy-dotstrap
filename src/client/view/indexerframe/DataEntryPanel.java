@@ -1,4 +1,11 @@
-package client.view.indexer;
+/**
+ * DataEntryPanel.java
+ * JRE v1.8.0_45
+ * 
+ * Created by William Myers on Jun 28, 2015.
+ * Copyright (c) 2015 William Myers. All Rights reserved.
+ */
+package client.view.indexerframe;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
@@ -14,20 +21,15 @@ import javax.swing.JPopupMenu;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 
-import client.view.indexerframe.FieldHelpTab;
-import client.view.indexerframe.FormEntryTab;
-import client.view.indexerframe.ImageNavigationTab;
-import client.view.indexerframe.TableEntryTab;
-
 @SuppressWarnings("serial")
 public class DataEntryPanel extends JPanel {
 
-  private JButton       addButton;
-  private JButton       removeButton;
+  private JButton addButton;
+  private JButton removeButton;
   private JList<String> favList;
-  private JPopupMenu    favPopupMenu;
-  private JMenuItem     favAddMenuItem;
-  private JMenuItem     favRemoveMenuItem;
+  private JPopupMenu favPopupMenu;
+  private JMenuItem favAddMenuItem;
+  private JMenuItem favRemoveMenuItem;
 
   private JSplitPane vSplit;
   private JSplitPane hSplit;
@@ -40,41 +42,6 @@ public class DataEntryPanel extends JPanel {
 
   private FieldHelpTab fieldHelpTab;
   private ImageNavigationTab imageNavigationTab;
-
-  public DataEntryPanel() {
-    super();
-    // data entry components
-    tableEntryTab = new TableEntryTab();
-    formEntryTab = new FormEntryTab();
-
-    entryTabs = new JTabbedPane();
-    entryTabs.add("Table Entry", tableEntryTab);
-    entryTabs.add("Form Entry", formEntryTab);
-
-    // field help and image navigation
-    fieldHelpTab = new FieldHelpTab();
-    imageNavigationTab = new ImageNavigationTab();
-
-    navTabs = new JTabbedPane();
-    navTabs.add("Field Help", fieldHelpTab);
-    navTabs.add("Navigation", imageNavigationTab);
-
-    // horizontal split
-    hSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-    hSplit.setResizeWeight(0.5);
-    hSplit.add(entryTabs);
-    hSplit.add(navTabs);
-
-    // vertical split
-    //imageViewer = new ImageViewer(this.userState.getBatchState(), this.communicator);
-
-    vSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-    vSplit.setResizeWeight(0.5);
-    vSplit.add(imageNavigationTab );
-    vSplit.add(hSplit);
-
-    this.setLayout(new BorderLayout());
-  }
 
   private ActionListener actionListener = new ActionListener() {//@formatter:off
 
@@ -101,6 +68,41 @@ public class DataEntryPanel extends JPanel {
       }
     }
   };
+
+  public DataEntryPanel() {
+    super();
+    // data entry components
+    tableEntryTab = new TableEntryTab();
+    formEntryTab = new FormEntryTab();
+
+    entryTabs = new JTabbedPane();
+    entryTabs.add("Table Entry", tableEntryTab);
+    entryTabs.add("Form Entry", formEntryTab);
+
+    // field help and image navigation
+    fieldHelpTab = new FieldHelpTab();
+    imageNavigationTab = new ImageNavigationTab();
+
+    navTabs = new JTabbedPane();
+    navTabs.add("Field Help", fieldHelpTab);
+    navTabs.add("Navigation", imageNavigationTab);
+
+    // horizontal split
+    hSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+    hSplit.setResizeWeight(0.5);
+    hSplit.add(entryTabs);
+    hSplit.add(navTabs);
+
+    // vertical split
+    // imageViewer = new ImageViewer(this.userState.getBatchState(), this.communicator);
+
+    vSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+    vSplit.setResizeWeight(0.5);
+    vSplit.add(imageNavigationTab);
+    vSplit.add(hSplit);
+
+    this.setLayout(new BorderLayout());
+  }
 
   public void addFav() {
 

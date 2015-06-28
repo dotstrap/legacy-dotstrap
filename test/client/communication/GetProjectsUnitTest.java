@@ -1,10 +1,4 @@
-/**
- * GetProjectsUnitTest.java
- * JRE v1.8.0_40
- *
- * Created by William Myers on Mar 24, 2015.
- * Copyright (c) 2015 William Myers. All Rights reserved.
- */
+
 package client.communication;
 
 import static org.junit.Assert.assertEquals;
@@ -26,9 +20,7 @@ import shared.communication.GetProjectsResponse;
 import shared.model.Project;
 import shared.model.User;
 
-/**
- * The Class GetProjectsUnitTest.
- */
+
 public class GetProjectsUnitTest {
    private ClientCommunicator clientComm; // @formatter:off
 
@@ -44,32 +36,20 @@ public class GetProjectsUnitTest {
    private Project    testProject2;
    private Project    testProject3;  // @formatter:on
 
-  /**
-   * Sets the up before class.
-   *
-   * @throws Exception the exception
-   */
+  
   @BeforeClass
   public static void setUpBeforeClass() throws Exception {
     // Load database driver
     Database.initDriver();
   }
 
-  /**
-   * Tear down after class.
-   *
-   * @throws DatabaseException
-   */
+  
   @AfterClass
   public static void tearDownAfterClass() throws DatabaseException {
     return;
   }
 
-  /**
-   * Sets the up.
-   *
-   * @throws Exception the exception
-   */
+  
   @Before
   public void setUp() throws Exception {
     db = new Database();
@@ -107,11 +87,7 @@ public class GetProjectsUnitTest {
     db.endTransaction(true);
   }
 
-  /**
-   * Tear down.
-   *
-   * @throws Exception the exception
-   */
+  
   @After
   public void tearDown() throws Exception {
     testUser1      = null; // @formatter:off
@@ -132,9 +108,7 @@ public class GetProjectsUnitTest {
     db = null;
   }
 
-  /**
-   * Valid project test.
-   */
+  
   @Test
   public void validProjectTest() throws ServerException, DatabaseException {
     GetProjectsResponse result =
@@ -151,49 +125,31 @@ public class GetProjectsUnitTest {
     assertEquals("testProject3", result.getProjects().get(2).getTitle());
   }
 
-  /**
-   * Invalid password test.
-   *
-   * @throws ServerException
-   */
+  
   @Test
   public void invalidPasswordTest() throws ServerException {
     assertEquals(null, clientComm.getProjects(new GetProjectsRequest("userTest2", "INVALID")));
   }
 
-  /**
-   * Mis matched password test.
-   *
-   * @throws ServerException
-   */
+  
   @Test
   public void misMatchedPasswordTest() throws ServerException {
     assertEquals(null, clientComm.getProjects(new GetProjectsRequest("userTest2", "pass3")));
   }
 
-  /**
-   * Invalid username test.
-   *
-   * @throws ServerException
-   */
+  
   @Test
   public void invalidUsernameTest() throws ServerException {
     assertEquals(null, clientComm.getProjects(new GetProjectsRequest("pass3", "userTest3")));
   }
 
-  /**
-   * Invalid creds test.
-   *
-   * @throws ServerException
-   */
+  
   @Test
   public void invalidCredsTest() throws ServerException {
     assertEquals(null, clientComm.getProjects(new GetProjectsRequest("10101001", "%$$%&^$%^*")));
   }
 
-  /**
-   * Null creds test.
-   */
+  
   @Test
   public void nullCredsTest() throws ServerException {
     assertEquals(null, clientComm.getProjects(new GetProjectsRequest("", "")));

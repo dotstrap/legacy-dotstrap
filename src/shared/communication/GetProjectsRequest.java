@@ -1,33 +1,14 @@
-/**
- * GetProjectsRequest.java
- * JRE v1.8.0_40
- *
- * Created by William Myers on Mar 24, 2015.
- * Copyright (c) 2015 William Myers. All Rights reserved.
- */
 package shared.communication;
 
-/**
- * The Class GetProjectsRequest.
- */
 public class GetProjectsRequest implements Request {
   private String username;
   private String password;
 
-  /**
-   * Instantiates GetProjectsRequest
-   */
   public GetProjectsRequest() {
     username = "newuser";
     password = "changeme";
   }
 
-  /**
-   * Instantiates GetProjectsRequest
-   *
-   * @param usrname the name
-   * @param passwrd the password
-   */
   public GetProjectsRequest(String usrname, String passwrd) {
     this.username = usrname;
     this.password = passwrd;

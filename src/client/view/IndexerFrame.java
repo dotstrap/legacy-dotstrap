@@ -1,3 +1,10 @@
+/**
+ * IndexerFrame.java
+ * JRE v1.8.0_45
+ * 
+ * Created by William Myers on Jun 28, 2015.
+ * Copyright (c) 2015 William Myers. All Rights reserved.
+ */
 package client.view;
 
 import java.awt.BorderLayout;
@@ -50,8 +57,40 @@ public class IndexerFrame extends JFrame implements BatchState.Observer {
   private JButton saveButton;
   private JButton submitButton;
 
+  private ActionListener toolBarListener = new ActionListener() {//@formatter:off
+    public void actionPerformed(ActionEvent e) {
+      if (e.getSource() == zoomInButton) {
+        BatchState.notifyDidZoom(1.0);
+      } else if (e.getSource() == zoomOutButton) {
+        BatchState.notifyDidZoom(-1.0);
+      } else if (e.getSource() == invertImageButton) {
+        BatchState.notifyToggleInvert();
+      } else if (e.getSource() == toggleHighlightsButton) {
+        BatchState.notifyToggleHighlight();
+      }
+    }
+  };
+
+  private ActionListener menuListener = new ActionListener() {
+    public void actionPerformed(ActionEvent e) {
+      if (e.getSource() == downloadBatchMenuItem) {
+        new DownloadBatchDialog(IndexerFrame.this, batchViewer);
+      } else if (e.getSource() == logoutMenuItem) {
+        dispose();
+        new LoginDialog();
+      } else if (e.getSource() == exitMenuItem) {
+        processExit();
+      }
+    }
+  };
+
+  private WindowAdapter windowAdapter = new WindowAdapter() {
+    public void windowClosing(WindowEvent e) {
+        processExit();
+    }
+  };//@formatter:on
+
   public IndexerFrame(String title) throws HeadlessException {
-    // Initalize
     setSize(new Dimension(1000, 800));
 
     setJMenuBar(initMenu());
@@ -67,6 +106,42 @@ public class IndexerFrame extends JFrame implements BatchState.Observer {
 
     BatchState.addObserver(this);
   }
+
+  @Override
+  public void cellWasSelected(int x, int y) {}
+
+  @Override
+  public void dataWasInput(String value, int record, Field field) {}
+
+  @Override
+  public void didChangeOrigin(int x, int y) {}
+
+  @Override
+  public void didDownload(BufferedImage b) {
+    toolBar.setEnabled(true);
+    toolBar.setRollover(true);
+    downloadBatchMenuItem.setEnabled(false);
+  }
+
+  @Override
+  public void didHighlight() {}
+
+  @Override
+  public void didSubmit(Batch b) {
+    downloadBatchMenuItem.setEnabled(true);
+  }
+
+  @Override
+  public void didToggleHighlight() {}
+
+  @Override
+  public void didToggleInvert() {}
+
+  @Override
+  public void didZoom(double zoomAmt) {}
+
+  @Override
+  public void fieldWasSelected(int record, Field field) {}
 
   private JMenuBar initMenu() {
     JMenuBar menuBar = new JMenuBar();
@@ -88,6 +163,29 @@ public class IndexerFrame extends JFrame implements BatchState.Observer {
     menu.add(exitMenuItem);
 
     return menuBar;
+  }
+
+  private JSplitPane initSplitPane() {
+    JTabbedPane entryTabs = new JTabbedPane();
+    entryTabs.add("Table Entry", new TableEntryTab());
+    entryTabs.add("Form Entry", new FormEntryTab());
+
+    JTabbedPane navTabs = new JTabbedPane();
+    navTabs.add("Field Help", new FieldHelpTab());
+    navTabs.add("Navigation", new ImageNavigationTab());
+
+    JSplitPane hSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+    hSplit.setResizeWeight(0.5);
+    hSplit.add(entryTabs);
+    hSplit.add(navTabs);
+
+    batchViewer = new BatchComponent();
+    JSplitPane vSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+    vSplit.setResizeWeight(0.5);
+    vSplit.add(batchViewer);
+    vSplit.add(hSplit);
+
+    return vSplit;
   }
 
   // TODO: clean this code up
@@ -127,170 +225,8 @@ public class IndexerFrame extends JFrame implements BatchState.Observer {
     return toolBar;
   }
 
-  private JSplitPane initSplitPane() {
-    // data entry components
-    JTabbedPane entryTabs = new JTabbedPane();
-    entryTabs.add("Table Entry", new TableEntryTab());
-    entryTabs.add("Form Entry", new FormEntryTab());
-
-    // field help and image navigation
-    JTabbedPane navTabs = new JTabbedPane();
-    navTabs.add("Field Help", new FieldHelpTab());
-    navTabs.add("Navigation", new ImageNavigationTab());
-
-    // horizontal split
-    JSplitPane hSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-    hSplit.setResizeWeight(0.5);
-    hSplit.add(entryTabs);
-    hSplit.add(navTabs);
-
-    // vertical split
-    batchViewer = new BatchComponent();
-    JSplitPane vSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-    vSplit.setResizeWeight(0.5);
-    vSplit.add(batchViewer);
-    vSplit.add(hSplit);
-
-    return vSplit;
-  }
-
   private void processExit() {
     // TODO: save work
     System.exit(0);
   }
-
-  private ActionListener toolBarListener = new ActionListener() {//@formatter:off
-    // TODO: implement toolbar and make it look better...!
-    public void actionPerformed(ActionEvent e) {
-      if (e.getSource() == zoomInButton) {
-        BatchState.notifyDidZoom(1.0);
-      } else if (e.getSource() == zoomOutButton) {
-        BatchState.notifyDidZoom(-1.0);
-      } else if (e.getSource() == invertImageButton) {
-        BatchState.notifyToggleInvert();
-      } else if (e.getSource() == toggleHighlightsButton) {
-        BatchState.notifyToggleHighlight();
-      }
-    }
-  };
-
-  private ActionListener menuListener = new ActionListener() {
-    public void actionPerformed(ActionEvent e) {
-      if (e.getSource() == downloadBatchMenuItem) {
-        new DownloadBatchDialog(IndexerFrame.this, batchViewer);
-      } else if (e.getSource() == logoutMenuItem) {
-        dispose();
-        new LoginDialog();
-        //BatchState.nfyDidLogout();
-      } else if (e.getSource() == exitMenuItem) {
-        processExit();
-      }
-    }
-  };
-
-  private WindowAdapter windowAdapter = new WindowAdapter() {
-    public void windowClosing(WindowEvent e) {
-        processExit();
-    }
-  };//@formatter:on
-
-  /* (non-Javadoc)
-   * @see client.model.BatchState.Observer#cellWasSelected(int, int)
-   */
-  @Override
-  public void cellWasSelected(int x, int y) {
-    // TODO Auto-generated method stub
-
-  }
-
-  /* (non-Javadoc)
-   * @see client.model.BatchState.Observer#didChangeOrigin(int, int)
-   */
-  @Override
-  public void didChangeOrigin(int x, int y) {
-    // TODO Auto-generated method stub
-
-  }
-
-  /* (non-Javadoc)
-   * @see client.model.BatchState.Observer#didToggleHighlight()
-   */
-  @Override
-  public void didToggleHighlight() {
-    // TODO Auto-generated method stub
-
-  }
-
-  /* (non-Javadoc)
-   * @see client.model.BatchState.Observer#didZoom(double)
-   */
-  @Override
-  public void didZoom(double zoomAmt) {
-    // TODO Auto-generated method stub
-
-  }
-
-  /* (non-Javadoc)
-   * @see client.model.BatchState.Observer#didInvert(boolean)
-   */
-  @Override
-  public void didToggleInvert() {
-    // TODO Auto-generated method stub
-
-  }
-
-  /* (non-Javadoc)
-   * @see client.model.BatchState.Observer#dataWasInput(java.lang.String, int, int)
-   */
-  @Override
-  public void dataWasInput(String data, int x, int y) {
-    // TODO Auto-generated method stub
-
-  }
-
-  /* (non-Javadoc)
-   * @see client.model.BatchState.Observer#didChangeValue(int, shared.model.Field, java.lang.String)
-   */
-  @Override
-  public void didChangeValue(int record, Field field, String value) {
-    // TODO Auto-generated method stub
-
-  }
-
-  /* (non-Javadoc)
-   * @see client.model.BatchState.Observer#didDownload(shared.model.Batch)
-   */
-  @Override
-  public void didDownload(BufferedImage b) {
-    toolBar.setEnabled(true);
-    toolBar.setRollover(true);
-    downloadBatchMenuItem.setEnabled(false);
-  }
-
-  /* (non-Javadoc)
-   * @see client.model.BatchState.Observer#didSubmit(shared.model.Batch)
-   */
-  @Override
-  public void didSubmit(Batch b) {
-    downloadBatchMenuItem.setEnabled(true);
-  }
-
-  /* (non-Javadoc)
-   * @see client.model.BatchState.Observer#fieldWasSelected(int, shared.model.Field)
-   */
-  @Override
-  public void fieldWasSelected(int record, Field field) {
-    // TODO Auto-generated method stub
-
-  }
-
-  /* (non-Javadoc)
-   * @see client.model.BatchState.Observer#didHighlight()
-   */
-  @Override
-  public void didHighlight() {
-    // TODO Auto-generated method stub
-
-  }
-
 }

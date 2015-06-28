@@ -1,10 +1,4 @@
-/**
- * RecordDAO.java
- * JRE v1.8.0_40
- *
- * Created by William Myers on Mar 24, 2015.
- * Copyright (c) 2015 William Myers. All Rights reserved.
- */
+
 package server.database.dao;
 
 import java.sql.*;
@@ -16,26 +10,16 @@ import server.database.DatabaseException;
 
 import shared.model.Record;
 
-/**
- * The Class RecordDAO.
- */
+
 public class RecordDAO {
   private Database db;
 
-  /**
-   * Instantiates a new record DAO.
-   *
-   * @param db the db
-   */
+  
   public RecordDAO(Database db) {
     this.db = db;
   }
 
-  /**
-   * Initializes the table.
-   *
-   * @throws DatabaseException the database exception
-   */
+  
   public void initTable() throws DatabaseException {
     String dropTable = "DROP TABLE IF EXISTS Record";// @formatter:off
       String createTable =
@@ -57,12 +41,7 @@ public class RecordDAO {
     }
   }
 
-  /**
-   * Returns all Records in an array.
-   *
-   * @return record array if found, else return null
-   * @throws DatabaseException the database exception
-   */
+  
   public ArrayList<Record> getAll() throws DatabaseException {
     String query = "SELECT * from Record";
 
@@ -91,12 +70,7 @@ public class RecordDAO {
     }
   }
 
-  /**
-   * Returns all Records in an array.
-   *
-   * @return record array if found, else return null
-   * @throws DatabaseException the database exception
-   */
+  
   public ArrayList<Record> getAll(int batchId) throws DatabaseException {
     String query = "SELECT * FROM Record WHERE BatchId= ?";
 
@@ -126,14 +100,7 @@ public class RecordDAO {
     }
   }
 
-  /**
-   * Searches the records table for a string.
-   *
-   * @param fieldId
-   * @param dataValue
-   * @return the records that contain the string
-   * @throws DatabaseException the database exception
-   */
+  
   public List<Record> search(int fieldId, String dataValue) throws DatabaseException {
     String query = "SELECT * from Record WHERE FieldId = ? AND Data = ?";;
 
@@ -164,13 +131,7 @@ public class RecordDAO {
     return searchResult;
   }
 
-  /**
-   * Creates a new record.
-   *
-   * @param newRecord the record
-   * @return the int RecordId of the record
-   * @throws DatabaseException the database exception
-   */
+  
   public int create(Record newRecord) throws DatabaseException {
     String query =
         "INSERT into Record" + "(FieldId, BatchId, BatchURL, Data, RowNumber, ColumnNumber) "
@@ -201,13 +162,7 @@ public class RecordDAO {
     }
   }
 
-  /**
-   * Gets the record.
-   *
-   * @param id the id
-   * @return the record
-   * @throws DatabaseException the database exception
-   */
+  
   public Record read(int id) throws DatabaseException {
     String query = "SELECT * from Record WHERE RecordId = ?";
 
@@ -237,12 +192,7 @@ public class RecordDAO {
     }
   }
 
-  /**
-   * Deletes the specified record.
-   *
-   * @param record the record
-   * @throws DatabaseException the database exception
-   */
+  
   public void delete(Record record) throws DatabaseException {
     String query = "DELETE from Record WHERE RecordId = ?";
 

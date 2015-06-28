@@ -1,10 +1,3 @@
-/**
- * DownloadBatchResponse.java
- * JRE v1.8.0_40
- *
- * Created by William Myers on Mar 24, 2015.
- * Copyright (c) 2015 William Myers. All Rights reserved.
- */
 package shared.communication;
 
 import java.net.URL;
@@ -12,20 +5,13 @@ import java.util.List;
 
 import shared.model.*;
 
-/**
- * The Class DownloadBatchResponse.
- */
 public class DownloadBatchResponse implements Response {
 
-  /** The batch. */
   public Batch batch;
   private Project project;
   private List<Field> fields;
   private URL urlPrefix;
 
-  /**
-   * Instantiates a new download batch result.
-   */
   public DownloadBatchResponse() {
     this.batch = null;
     this.project = null;
@@ -34,14 +20,7 @@ public class DownloadBatchResponse implements Response {
   }
 
   // @formatter:off
-  /**
-   * Instantiates a new DownloadBatchResponse.
-   *
-   * @param batch the batch
-   * @param project the project
-   * @param fields the fields
-   * @param url the url
-   */
+  
   public DownloadBatchResponse(Batch batch, Project project,
       List<Field> fields, URL url) {
     this.batch = batch;
@@ -51,44 +30,27 @@ public class DownloadBatchResponse implements Response {
   }
 
   // @formatter:on
-  /**
-   * @return the batch
-   */
+
   public Batch getBatch() {
     return batch;
   }
 
-  /**
-   * @param batch the batch to set
-   */
   public void setBatch(Batch batch) {
     this.batch = batch;
   }
 
-  /**
-   * @return the project
-   */
   public Project getProject() {
     return project;
   }
 
-  /**
-   * @param project the project to set
-   */
   public void setProject(Project project) {
     this.project = project;
   }
 
-  /**
-   * @return the fields
-   */
   public List<Field> getFields() {
     return fields;
   }
 
-  /**
-   * @param fields the fields to set
-   */
   public void setFields(List<Field> fields) {
     this.fields = fields;
   }
@@ -101,12 +63,6 @@ public class DownloadBatchResponse implements Response {
     urlPrefix = url;
   }
 
-  /**
-   * (non-Javadoc).
-   *
-   * @return the string
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();

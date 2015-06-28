@@ -1,3 +1,10 @@
+/**
+ * DownloadBatchDialog.java
+ * JRE v1.8.0_45
+ * 
+ * Created by William Myers on Jun 28, 2015.
+ * Copyright (c) 2015 William Myers. All Rights reserved.
+ */
 package client.view.indexerframe;
 
 import java.awt.BorderLayout;
@@ -35,10 +42,20 @@ public class DownloadBatchDialog extends JDialog {
 
   // private Batch batch;
 
-  /**
-   * Instantiates a new DownloadBatchDialog.
-   *
-   */
+  private ActionListener downloadBatchButtonListener = new ActionListener() {//@formatter:off
+    @Override
+    public void actionPerformed(ActionEvent e) {
+      if (e.getSource() == sampleButton) {
+        processViewSampleBatch((Project) projectList.getSelectedItem());
+      } else if (e.getSource() == cancelButton) {
+          //batch = null;
+          dispose();
+      } else if (e.getSource() == downloadButton) {
+          processDownloadBatch((Project) projectList.getSelectedItem());
+      }
+    }
+  };//@formatter:on
+
   public DownloadBatchDialog(IndexerFrame p, BatchComponent b) throws HeadlessException {
     super(p, "Download Batch", true);
 
@@ -56,13 +73,18 @@ public class DownloadBatchDialog extends JDialog {
     setVisible(true);
   }
 
-  private void initRootPanel() {
-    JPanel rootPanel = new JPanel();
-    rootPanel.setLayout(new BoxLayout(rootPanel, BoxLayout.PAGE_AXIS));
-    rootPanel.add(Box.createRigidArea(new Dimension(0, 5)));
-    rootPanel.add(initProjectPanel());
-    rootPanel.add(initButtonBox());
-    this.add(rootPanel);
+  private Box initButtonBox() {
+    Box buttonBox = Box.createHorizontalBox();
+    cancelButton = new JButton("Cancel");
+    cancelButton.addActionListener(downloadBatchButtonListener);
+    downloadButton = new JButton("Download");
+    downloadButton.addActionListener(downloadBatchButtonListener);
+    buttonBox.add(Box.createGlue());
+    buttonBox.add(cancelButton);
+    buttonBox.add(Box.createRigidArea(new Dimension(5, 5)));
+    buttonBox.add(downloadButton);
+    buttonBox.add(Box.createGlue());
+    return buttonBox;
   }
 
   private JPanel initProjectPanel() {
@@ -86,23 +108,13 @@ public class DownloadBatchDialog extends JDialog {
     return projectPanel;
   }
 
-  private Box initButtonBox() {
-    Box buttonBox = Box.createHorizontalBox();
-    cancelButton = new JButton("Cancel");
-    cancelButton.addActionListener(downloadBatchButtonListener);
-    downloadButton = new JButton("Download");
-    downloadButton.addActionListener(downloadBatchButtonListener);
-    buttonBox.add(Box.createGlue());
-    buttonBox.add(cancelButton);
-    buttonBox.add(Box.createRigidArea(new Dimension(5, 5)));
-    buttonBox.add(downloadButton);
-    buttonBox.add(Box.createGlue());
-    return buttonBox;
-  }
-
-  private void processViewSampleBatch(Project p) {
-    BufferedImage sampleBatch = Facade.getSampleBatch(p.getProjectId());
-    new SampleBatchDialog(this, sampleBatch, p.getTitle());
+  private void initRootPanel() {
+    JPanel rootPanel = new JPanel();
+    rootPanel.setLayout(new BoxLayout(rootPanel, BoxLayout.PAGE_AXIS));
+    rootPanel.add(Box.createRigidArea(new Dimension(0, 5)));
+    rootPanel.add(initProjectPanel());
+    rootPanel.add(initButtonBox());
+    this.add(rootPanel);
   }
 
   private void processDownloadBatch(Project p) {
@@ -117,17 +129,8 @@ public class DownloadBatchDialog extends JDialog {
     }
   }
 
-  private ActionListener downloadBatchButtonListener = new ActionListener() {//@formatter:off
-    @Override
-    public void actionPerformed(ActionEvent e) {
-      if (e.getSource() == sampleButton) {
-        processViewSampleBatch((Project) projectList.getSelectedItem());
-      } else if (e.getSource() == cancelButton) {
-          //batch = null;
-          dispose();
-      } else if (e.getSource() == downloadButton) {
-          processDownloadBatch((Project) projectList.getSelectedItem());
-      }
-    }
-  };//@formatter:on
+  private void processViewSampleBatch(Project p) {
+    BufferedImage sampleBatch = Facade.getSampleBatch(p.getProjectId());
+    new SampleBatchDialog(this, sampleBatch, p.getTitle());
+  }
 }

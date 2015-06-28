@@ -1,19 +1,8 @@
-/**
- * User.java
- * JRE v1.8.0_40
- *
- * Created by William Myers on Mar 24, 2015.
- * Copyright (c) 2015 William Myers. All Rights reserved.
- */
-
 package shared.model;
 
-/**
- * The Class User.
- */
 public class User {
   // Credentials
-  private int    userId;
+  private int userId;
   private String username;
   private String password;
   // User info
@@ -21,13 +10,10 @@ public class User {
   private String last;
   private String email;
   // Current project info
-  private int    recordCount;
-  private int    currentBatchId;
+  private int recordCount;
+  private int currentBatchId;
 
-  /**
-   * Instantiates a new User.
-   */
-  public User() { //@formatter:off
+  public User() {//@formatter:off
     this.userId         = -1;
     this.username       = "username";
     this.password       = "password";
@@ -38,17 +24,7 @@ public class User {
     this.currentBatchId = -1;
   }
 
-  /**
-   * Instantiates a new User.
-   *
-   * @param username the username
-   * @param password the password
-   * @param first the first
-   * @param last the last
-   * @param email the email
-   * @param recordCount the record count
-   * @param currBatch the curr batch
-   */
+  
   public User(String username, String password, String first, String last, String email,
       int recordCount, int currBatch) {
     this.username       = username;
@@ -146,20 +122,27 @@ public class User {
         && email.equals(other.getEmail()));  // @formatter:on
   }
 
-  //@Override
-  //public String toString() {
-    //StringBuilder output = new StringBuilder();
-
-    //output.append("User ID: " + userId + "\n");
-    //output.append("Username: " + username + "\n");
-    //output.append("Password: " + password + "\n");
-    //output.append("First Name: " + first + "\n");
-    //output.append("Last Name: " + last + "\n");
-    //output.append("Email: " + email + "\n");
-    //output.append("Indexed Records: " + recordCount + "\n");
-    //output.append("Current Batch ID: " + currentBatchId + "\n");
-
-    //return output.toString();
-  //}
+  @Override
+  public String toString() {
+    StringBuilder builder = new StringBuilder();
+    builder.append("User [userId=");
+    builder.append(this.userId);
+    builder.append(", username=");
+    builder.append(this.username);
+    builder.append(", password=");
+    builder.append(this.password);
+    builder.append(", first=");
+    builder.append(this.first);
+    builder.append(", last=");
+    builder.append(this.last);
+    builder.append(", email=");
+    builder.append(this.email);
+    builder.append(", recordCount=");
+    builder.append(this.recordCount);
+    builder.append(", currentBatchId=");
+    builder.append(this.currentBatchId);
+    builder.append("]");
+    return builder.toString();
+  }
 
 }

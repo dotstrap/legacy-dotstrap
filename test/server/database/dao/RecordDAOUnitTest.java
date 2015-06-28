@@ -1,10 +1,4 @@
-/**
- * RecordDAOUnitTest.java
- * JRE v1.8.0_40
- *
- * Created by William Myers on Mar 24, 2015.
- * Copyright (c) 2015 William Myers. All Rights reserved.
- */
+
 package server.database.dao;
 
 import static org.junit.Assert.*;
@@ -18,26 +12,16 @@ import server.database.DatabaseException;
 
 import shared.model.Record;
 
-/**
- * The Class RecordDAOUnitTest.
- */
+
 public class RecordDAOUnitTest {
-  /**
-   * Sets the up before class.
-   *
-   * @throws Exception the exception
-   */
+  
   @BeforeClass
   public static void setUpBeforeClass() throws Exception {
     // Load database drivers
     Database.initDriver();
   }
 
-  /**
-   * Tear down after class.
-   *
-   * @throws Exception the exception
-   */
+  
   @AfterClass
   public static void tearDownAfterClass() throws Exception {
     return;
@@ -46,11 +30,7 @@ public class RecordDAOUnitTest {
   private Database db;
   private RecordDAO testRecDAO;
 
-  /**
-   * Sets the database up.
-   *
-   * @throws Exception the exception
-   */
+  
   @Before
   public void setUp() throws Exception {
     // Prepare database for test case
@@ -60,11 +40,7 @@ public class RecordDAOUnitTest {
     testRecDAO = db.getRecordDAO();
   }
 
-  /**
-   * Tear down.
-   *
-   * @throws Exception the exception
-   */
+  
   @After
   public void tearDown() throws Exception {
     // Roll back this transaction so changes are undone
@@ -73,22 +49,14 @@ public class RecordDAOUnitTest {
     testRecDAO = null;
   }
 
-  /**
-   * Test get allRecords.
-   *
-   * @throws DatabaseException the database exception
-   */
+  
   @Test
   public void testGetAll() throws DatabaseException {
     List<Record> allRecords = testRecDAO.getAll();
     assertEquals(0, allRecords.size());
   }
 
-  /**
-   * Test create.
-   *
-   * @throws DatabaseException the database exception
-   */
+  
   @Test
   public void testCreate() throws DatabaseException {
     int fieldId1 = 1;
@@ -187,11 +155,7 @@ public class RecordDAOUnitTest {
     assertTrue(hasFoundRecord1 && hasFoundRecord2 && hasFoundRecord3 && hasFoundRecord4);
   }
 
-  /**
-   * Test delete.
-   *
-   * @throws DatabaseException the database exception
-   */
+  
   @Test
   public void testDelete() throws DatabaseException {
     int batchId1 = 1;

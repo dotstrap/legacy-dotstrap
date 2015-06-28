@@ -1,10 +1,4 @@
-/**
- * SubmitBatchUnitTest.java
- * JRE v1.8.0_40
- *
- * Created by William Myers on Mar 24, 2015.
- * Copyright (c) 2015 William Myers. All Rights reserved.
- */
+
 package client.communication;
 
 import static org.junit.Assert.assertEquals;
@@ -23,9 +17,7 @@ import shared.communication.DownloadBatchRequest;
 import shared.communication.SubmitBatchRequest;
 import shared.model.*;
 
-/**
- * The Class SubmitBatchUnitTest.
- */
+
 public class SubmitBatchUnitTest {
 
 
@@ -44,32 +36,20 @@ public class SubmitBatchUnitTest {
   private Project    testProject2;
   private Project    testProject3;  // @formatter:on
 
-  /**
-   * Sets the up before class.
-   *
-   * @throws Exception the exception
-   */
+  
   @BeforeClass
   public static void setUpBeforeClass() throws Exception {
     // Load database driver
     Database.initDriver();
   }
 
-  /**
-   * Tear down after class.
-   *
-   * @throws DatabaseException
-   */
+  
   @AfterClass
   public static void tearDownAfterClass() throws DatabaseException {
     return;
   }
 
-  /**
-   * Sets the up.
-   *
-   * @throws Exception the exception
-   */
+  
   @Before
   public void setUp() throws Exception {
     db = new Database();
@@ -126,11 +106,7 @@ public class SubmitBatchUnitTest {
     db.endTransaction(true);
   }
 
-  /**
-   * Tear down.
-   *
-   * @throws Exception the exception
-   */
+  
   @After
   public void tearDown() throws Exception {
     testUser1      = null;// @formatter:off
@@ -159,9 +135,7 @@ public class SubmitBatchUnitTest {
 
   }
 
-  /**
-   * Valid input test.
-   */
+  
   @Test
   public void validInputTest() throws ServerException, MalformedURLException {
     assertEquals(
@@ -172,62 +146,42 @@ public class SubmitBatchUnitTest {
     // TODO: read db to see if the above info was saved & test that the models were updated too
   }
 
-  /**
-   * Null input test.
-   */
+  
   @Test
   public void nullInputTest() throws ServerException {
     assertEquals("FAILED\n",
         clientComm.submitBatch(new SubmitBatchRequest("userTest1", "pass1", 1, ";")).toString());
   }
 
-  /**
-   * Invalid password test.
-   *
-   * @throws ServerException
-   */
+  
   @Test
   public void invalidPasswordTest() throws ServerException {
     assertEquals(null,
         clientComm.submitBatch(new SubmitBatchRequest("userTest2", "INVALID", 2, "TEST,")));
   }
 
-  /**
-   * Mis matched password test.
-   *
-   * @throws ServerException
-   */
+  
   @Test
   public void misMatchedPasswordTest() throws ServerException {
     assertEquals(null,
         clientComm.submitBatch(new SubmitBatchRequest("userTest2", "pass3", 2, "TEST,")));
   }
 
-  /**
-   * Invalid username test.
-   *
-   * @throws ServerException
-   */
+  
   @Test
   public void invalidUsernameTest() throws ServerException {
     assertEquals(null,
         clientComm.submitBatch(new SubmitBatchRequest("pass3", "userTest3", 2, "TEST,")));
   }
 
-  /**
-   * Invalid creds test.
-   *
-   * @throws ServerException
-   */
+  
   @Test
   public void invalidCredsTest() throws ServerException {
     assertEquals(null,
         clientComm.submitBatch(new SubmitBatchRequest("10101001", "%$$%&^$%^*", 2, "TEST,")));
   }
 
-  /**
-   * Null creds test.
-   */
+  
   @Test
   public void nullCredsTest() throws ServerException {
     assertEquals(null, clientComm.submitBatch(new SubmitBatchRequest("", "", 2, "TEST,")));

@@ -1,3 +1,10 @@
+/**
+ * Client.java
+ * JRE v1.8.0_45
+ * 
+ * Created by William Myers on Jun 28, 2015.
+ * Copyright (c) 2015 William Myers. All Rights reserved.
+ */
 package client;
 
 import java.awt.EventQueue;
@@ -11,11 +18,6 @@ import client.view.LoginDialog;
 public class Client {
   private static final String USAGE_MESSAGE = "Usage: java client.Client <host> <port>";
 
-  /**
-   * Entry point for the Indexer Server program.
-   *
-   * @param args the port to run the indexer server on
-   */
   public static void main(String[] args) {
     ClientLogManager.initLogs();
 

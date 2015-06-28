@@ -1,10 +1,4 @@
-/**
- * IndexerServerHandler.java
- * JRE v1.8.0_40
- *
- * Created by William Myers on Mar 24, 2015.
- * Copyright (c) 2015 William Myers. All Rights reserved.
- */
+
 package server.httphandler;
 
 import java.io.IOException;
@@ -23,27 +17,22 @@ import server.facade.ServerFacade;
 
 import shared.communication.*;
 
-/**
- * Template class for the HTTP handlers for the various operations.
- *
- * This class uses its derived classes' doOperation() methods to handle the specifics of each type
- * of operation.
- */
+
 public abstract class IndexerServerHandler implements HttpHandler {
 
-  /** The logger used throughout the project. */
+  
   private static Logger   logger;
   static {
     logger = Logger.getLogger("server");
   }
 
-  /** The server. */
+  
   protected static String SERVER       = HttpServer.class.getName() + " ("
                                            + System.getProperty("os.name") + ")";
-  /** The content type. */
+  
   protected static String CONTENT_TYPE = "text/xml";
 
-  /** The x stream. */
+  
   protected XStream       xStream      = new XStream(new DomDriver());
 
   private Request         request;
@@ -90,13 +79,7 @@ public abstract class IndexerServerHandler implements HttpHandler {
     logger.fine("HTTP status code: " + statusCode + " @ " + this.getClass().getSimpleName());
   }
 
-  /**
-   * Processes the request and returns a response and status code.
-   *
-   * @return The HTTP status code to return
-   * @throws ServerException the server exception
-   * @throws DatabaseException the database exception
-   */
+  
   protected abstract int doRequest() throws ServerException, DatabaseException;
 
   protected Request getRequest() {
@@ -107,13 +90,7 @@ public abstract class IndexerServerHandler implements HttpHandler {
     this.response = response;
   }
 
-  /**
-   * Validates user credentials.
-   *
-   * @param username the username
-   * @param password the password
-   * @return True if credentials are valid, false otherwise
-   */
+  
   public static boolean authenticate(String username, String password)// @formatter:off
       throws DatabaseException, ServerException { // @formatter:on
     ValidateUserRequest auth = new ValidateUserRequest();

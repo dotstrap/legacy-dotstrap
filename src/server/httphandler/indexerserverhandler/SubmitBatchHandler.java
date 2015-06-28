@@ -1,10 +1,4 @@
-/**
- * SubmitBatchHandler.java
- * JRE v1.8.0_40
- *
- * Created by William Myers on Mar 24, 2015.
- * Copyright (c) 2015 William Myers. All Rights reserved.
- */
+
 package server.httphandler.indexerserverhandler;
 
 import java.net.HttpURLConnection;
@@ -17,16 +11,9 @@ import server.httphandler.IndexerServerHandler;
 import shared.communication.SubmitBatchRequest;
 import shared.communication.SubmitBatchResponse;
 
-/**
- * The Class SubmitBatchHandler.
- */
+
 public class SubmitBatchHandler extends IndexerServerHandler {
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see server.httphandler.IndexerServerHandler#doRequest()
-   */
   @Override
   protected int doRequest() throws ServerException, DatabaseException {
     SubmitBatchRequest request = (SubmitBatchRequest) getRequest();

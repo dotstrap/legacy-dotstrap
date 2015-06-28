@@ -1,3 +1,10 @@
+/**
+ * Facade.java
+ * JRE v1.8.0_45
+ * 
+ * Created by William Myers on Jun 28, 2015.
+ * Copyright (c) 2015 William Myers. All Rights reserved.
+ */
 package client.model;
 
 import java.awt.image.BufferedImage;
@@ -27,11 +34,6 @@ import shared.model.Field;
 import shared.model.Project;
 import shared.model.User;
 
-/**
- * Client Facade (Singleton)
- *
- * communicates with the server via the ClientCommunicator class
- */
 public enum Facade {
   INSTANCE;
 
@@ -43,15 +45,7 @@ public enum Facade {
   private static List<Field> fields;
   private static String urlPrefix;
   private static URL batchUrl;
-  private static URL filedHelpUrl;
 
-  /**
-   * Validates the user's credentials with the server
-   *
-   * @param u the user's username
-   * @param p the user's password
-   * @return true/false if authentication was successful
-   */
   public static boolean validateUser(String u, char[] p) {
     try {
       ValidateUserResponse response =
@@ -95,7 +89,7 @@ public enum Facade {
           clientComm.downloadBatch(new DownloadBatchRequest(user.getUsername(), user.getPassword(),
               projId));
       Facade.urlPrefix = response.getUrlPrefix().toString() + "/";
-      String batchUrl =  urlPrefix + response.getBatch().getFilePath();
+      String batchUrl = urlPrefix + response.getBatch().getFilePath();
 
       URL u = new URL(batchUrl);
       Facade.batchUrl = u;
@@ -113,8 +107,9 @@ public enum Facade {
   public static InputStream downloadFile(String fileUrl) {
     try {
       DownloadFileResponse response =
-          clientComm.downloadFile(new DownloadFileRequest(fileUrl, user.getUsername(), user.getPassword()));
-      //Facade.fieldHelpUrl = fileUrl;
+          clientComm.downloadFile(new DownloadFileRequest(fileUrl, user.getUsername(), user
+              .getPassword()));
+      // Facade.fieldHelpUrl = fileUrl;
       return new ByteArrayInputStream(response.getFileBytes());
     } catch (Exception e) {
       ClientLogManager.getLogger().log(Level.FINER, fileUrl);

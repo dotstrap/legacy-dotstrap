@@ -1,12 +1,16 @@
+/**
+ * FieldHelpTab.java
+ * JRE v1.8.0_45
+ * 
+ * Created by William Myers on Jun 28, 2015.
+ * Copyright (c) 2015 William Myers. All Rights reserved.
+ */
 package client.view.indexerframe;
 
 import java.awt.BorderLayout;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -40,6 +44,44 @@ public class FieldHelpTab extends JPanel implements BatchState.Observer {
     BatchState.addObserver(this);
   }
 
+  @Override
+  public void cellWasSelected(int x, int y) {}
+
+  @Override
+  public void dataWasInput(String value, int record, Field field) {}
+
+  @Override
+  public void didChangeOrigin(int x, int y) {}
+
+  @Override
+  public void didDownload(BufferedImage b) {
+    helpPages.clear();
+    htmlPane.setText("");
+  }
+
+  @Override
+  public void didHighlight() {}
+
+  @Override
+  public void didSubmit(Batch b) {}
+
+  @Override
+  public void didToggleHighlight() {}
+
+  @Override
+  public void didToggleInvert() {}
+
+  @Override
+  public void didZoom(double zoomDirection) {}
+
+  @Override
+  public void fieldWasSelected(int record, Field field) {
+    ClientLogManager.getLogger().log(Level.FINEST, field.toString());
+    if (field != null) {
+      htmlPane.setText(downloadHelpPage(field));
+    }
+  }
+
   private String downloadHelpPage(Field field) {
     if (helpPages.get(field) != null) {
       return helpPages.get(field);
@@ -61,126 +103,6 @@ public class FieldHelpTab extends JPanel implements BatchState.Observer {
       ClientLogManager.getLogger().log(Level.FINE, "STACKTRACE: ", e);
       return "";
     }
-  }
-
-  /*
-   * (non-Javadoc)
-   *
-   * @see client.model.BatchState.Observer#cellWasSelected(int, int)
-   */
-  @Override
-  public void cellWasSelected(int x, int y) {}
-
-  /*
-   * (non-Javadoc)
-   *
-   * @see client.model.BatchState.Observer#fieldWasSelected(int, shared.model.Field)
-   */
-  @Override
-  public void fieldWasSelected(int record, Field field) {
-    ClientLogManager.getLogger().log(Level.FINEST, field.toString());
-    if (field != null) {
-      htmlPane.setText(downloadHelpPage(field));
-    }
-  }
-
-  /*
-   * (non-Javadoc)
-   *
-   * @see client.model.BatchState.Observer#didChangeOrigin(int, int)
-   */
-  @Override
-  public void didChangeOrigin(int x, int y) {
-    // TODO Auto-generated method stub
-
-  }
-
-  /*
-   * (non-Javadoc)
-   *
-   * @see client.model.BatchState.Observer#didToggleHighlight()
-   */
-  @Override
-  public void didToggleHighlight() {
-    // TODO Auto-generated method stub
-
-  }
-
-  /*
-   * (non-Javadoc)
-   *
-   * @see client.model.BatchState.Observer#didHighlight()
-   */
-  @Override
-  public void didHighlight() {
-    // TODO Auto-generated method stub
-
-  }
-
-  /*
-   * (non-Javadoc)
-   *
-   * @see client.model.BatchState.Observer#didZoom(double)
-   */
-  @Override
-  public void didZoom(double zoomDirection) {
-    // TODO Auto-generated method stub
-
-  }
-
-  /*
-   * (non-Javadoc)
-   *
-   * @see client.model.BatchState.Observer#didToggleInvert()
-   */
-  @Override
-  public void didToggleInvert() {
-    // TODO Auto-generated method stub
-
-  }
-
-  /*
-   * (non-Javadoc)
-   *
-   * @see client.model.BatchState.Observer#dataWasInput(java.lang.String, int, int)
-   */
-  @Override
-  public void dataWasInput(String data, int x, int y) {
-    // TODO Auto-generated method stub
-
-  }
-
-  /*
-   * (non-Javadoc)
-   *
-   * @see client.model.BatchState.Observer#didChangeValue(int, shared.model.Field, java.lang.String)
-   */
-  @Override
-  public void didChangeValue(int record, Field field, String value) {
-    // TODO Auto-generated method stub
-
-  }
-
-  /*
-   * (non-Javadoc)
-   *
-   * @see client.model.BatchState.Observer#didDownload(java.awt.image.BufferedImage)
-   */
-  @Override
-  public void didDownload(BufferedImage b) {
-    helpPages.clear();
-    htmlPane.setText("");
-  }
-
-  /*
-   * (non-Javadoc)
-   *
-   * @see client.model.BatchState.Observer#didSubmit(shared.model.Batch)
-   */
-  @Override
-  public void didSubmit(Batch b) {
-    // TODO Auto-generated method stub
-
   }
 
 }

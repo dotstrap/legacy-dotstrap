@@ -1,16 +1,6 @@
-/**
- * Field.java
- * JRE v1.8.0_40
- *
- * Created by William Myers on Mar 24, 2015.
- * Copyright (c) 2015 William Myers. All Rights reserved.
- */
 package shared.model;
 
-/**
- * The Class Field.
- */
-public class Field {
+public class Field implements Comparable<Field> {
   private int fieldId;
   private int projectId;
   private String title;
@@ -20,10 +10,6 @@ public class Field {
   private int width;
   private int colNum;
 
-  /**
-   * Instantiates a new Field.
-   *
-   */
   public Field() {// @formatter:off
     this.fieldId = -1;
     this.projectId = -1;
@@ -34,30 +20,10 @@ public class Field {
     this.width = -1;
     this.colNum = -1;
   }
-
-  /**
-   * Instantiates a new Field.
-   *
-   * @param projectId the project id
-   * @param title the title
-   * @param knownData the known data
-   * @param helpURL the help url
-   * @param xCoord the x coord
-   * @param width the width
-   * @param colNum the col num
-   */
+  
   public Field(int projectId, String title, String knownData, String helpURL, int xCoord,
       int width, int colNum) {
-    //System.out.println("-1");
-    //System.out.println(projectId);
-    //System.out.println(title.toString());
-    //System.out.println(knownData.toString());
-    //System.out.println(helpURL.toString());
-    //System.out.println(xCoord);
-    //System.out.println(width);
-    //System.out.println(colNum);
-    //System.out.println("-----------------");
-
+    
     this.fieldId   = -1;
     this.projectId = projectId;
     this.title     = title;
@@ -67,30 +33,9 @@ public class Field {
     this.width     = width;
     this.colNum    = colNum;
   }
-
-  /**
-   * Instantiates a new Field.
-   *
-   * @param fieldId the field id
-   * @param projectId the project id
-   * @param title the title
-   * @param knownData the known data
-   * @param helpURL the help url
-   * @param xCoord the x coord
-   * @param width the width
-   * @param colNum the col num
-   */
+  
   public Field(int fieldId, int projectId, String title, String knownData, String helpURL,
       int xCoord, int width, int colNum) {
-      //System.out.println(fieldId);
-      //System.out.println(projectId);
-      //System.out.println(title.toString());
-      //System.out.println(knownData.toString());
-      //System.out.println(helpURL.toString());
-      //System.out.println(xCoord);
-      //System.out.println(width);
-      //System.out.println(colNum);
-      //System.out.println("-----------------");
 
     this.fieldId   = fieldId;
     this.projectId = projectId;
@@ -186,25 +131,37 @@ public class Field {
   }
 
   @Override
-  public String toString() {
-    String s = "\n-----------\n";
-    s += "FieldID=" + this.fieldId;
-    s += "\n";
-    s += "ProjectID=" + this.projectId;
-    s += "\n";
-    s += "Title=" + this.title.toString();
-    s += "\n";
-    s += "KnownData=" + this.knownData.toString();
-    s += "\n";
-    s +="HelpURL=" +  this.helpURL.toString();
-    s += "\n";
-    s += "XCoord=" + this.xCoord;
-    s += "\n";
-    s += "Width=" + this.width;
-    s += "\n";
-    s += "NumCols=" + this.colNum;
-    s += "\n";
-    s += "-----------\n";
-    return s;
+  public int compareTo(Field other) {
+    if (this.fieldId < other.fieldId) {
+      return -1;
+    } else if (this.fieldId > other.fieldId) {
+      return 1;
+    } else {
+      return 0;
+    }
   }
+
+  @Override
+  public String toString() {
+    StringBuilder builder = new StringBuilder();
+    builder.append("Field [fieldId=");
+    builder.append(this.fieldId);
+    builder.append(", projectId=");
+    builder.append(this.projectId);
+    builder.append(", title=");
+    builder.append(this.title);
+    builder.append(", knownData=");
+    builder.append(this.knownData);
+    builder.append(", helpURL=");
+    builder.append(this.helpURL);
+    builder.append(", xCoord=");
+    builder.append(this.xCoord);
+    builder.append(", width=");
+    builder.append(this.width);
+    builder.append(", colNum=");
+    builder.append(this.colNum);
+    builder.append("]");
+    return builder.toString();
+  }
+
 }

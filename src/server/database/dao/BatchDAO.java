@@ -1,10 +1,4 @@
-/**
- * BatchDAO.java
- * JRE v1.8.0_40
- *
- * Created by William Myers on Mar 26, 2015.
- * Copyright (c) 2015 William Myers. All Rights reserved.
- */
+
 package server.database.dao;
 
 import java.sql.*;
@@ -17,34 +11,24 @@ import server.database.DatabaseException;
 
 import shared.model.Batch;
 
-/**
- * The Class BatchDAO.
- */
+
 public class BatchDAO {
 
-  /** The db. */
+  
   private Database      db;
 
-  /** The logger used throughout the project. */
+  
   private static Logger logger;
   static {
     logger = Logger.getLogger("server");
   }
 
-  /**
-   * Instantiates a new batch DAO.
-   *
-   * @param db the db
-   */
+  
   public BatchDAO(Database db) {
     this.db = db;
   }
 
-  /**
-   * Initializes the table.
-   *
-   * @throws DatabaseException the database exception
-   */
+  
   public void initTable() throws DatabaseException {
     String dropTable = "DROP TABLE IF EXISTS Batch";// @formatter:off
     String createTable =
@@ -90,13 +74,7 @@ public class BatchDAO {
     }
   }
 
-  /**
-   * Creates a new user.
-   *
-   * @param newBatch the new batch
-   * @return the int UserId of the user
-   * @throws DatabaseException the database exception
-   */
+  
   public int create(Batch newBatch) throws DatabaseException {
     String query =
         "INSERT INTO Batch (FilePath, ProjectId, Status, CurrentUserId) VALUES (?, ?, ?, ?)";
@@ -125,13 +103,7 @@ public class BatchDAO {
     return newBatch.getBatchId();
   }
 
-  /**
-   * Retrieves the batch with the specified id from the database.
-   *
-   * @param batchId The batch id
-   * @return The batch with the specified id, null if doesn't exist
-   * @throws DatabaseException
-   */
+  
   public Batch read(int batchId) throws DatabaseException {
     String query = "SELECT * FROM Batch WHERE BatchId = ?";
 
@@ -166,13 +138,7 @@ public class BatchDAO {
     }
   }
 
-  /**
-   * Gets the incomplete batch.
-   *
-   * @param projectId the project id
-   * @return the incomplete batch
-   * @throws DatabaseException the database exception
-   */
+  
   public Batch getIncompleteBatch(int projectId) throws DatabaseException {
     String query = "SELECT * from Batch WHERE ProjectId = ? AND Status = ? AND CurrentUserId = ?";
 
@@ -210,13 +176,7 @@ public class BatchDAO {
     }
   }
 
-  /**
-   * Gets a sample batch for a project.
-   *
-   * @param projectId the id of the project the sample batch is in
-   * @return the sample batch
-   * @throws DatabaseException the database exception
-   */
+  
   public Batch getSampleBatch(int projectId) throws DatabaseException {
     String query = "SELECT * from Batch WHERE ProjectId = ?";
 
@@ -252,12 +212,7 @@ public class BatchDAO {
     }
   }
 
-  /**
-   * updates the batch.
-   *
-   * @param batch -> batch to update with
-   * @throws DatabaseException the database exception
-   */
+  
   public void update(Batch batch) throws DatabaseException {
     String query = "UPDATE Batch SET Status = ? WHERE BatchId = ?";
 
@@ -272,14 +227,7 @@ public class BatchDAO {
     }
   }
 
-  /**
-   * Assigns a batch to a user.
-   *
-   * @param batchId the id of the batch being assigned
-   * @param userId the id of the user being assigned the batch
-   * @return true if operation succeeded, false otherwise
-   * @throws DatabaseException the database exception
-   */
+  
   public void assignBatchToUser(int batchId, int userId) throws DatabaseException {
     String query = "UPDATE Batch SET CurrentUserId = ? WHERE batchId = ?";
 
@@ -294,26 +242,13 @@ public class BatchDAO {
     return;
   }
 
-  /**
-   * Unassigns a batch from the current user.
-   *
-   * @param batchId the id of the batch being unassigned
-   * @return true if operation succeeded, false otherwise
-   * @throws DatabaseException the database exception
-   */
+  
   public void unassignBatch(int batchId) throws DatabaseException {
     assignBatchToUser(batchId, -1);
     return;
   }
 
-  /**
-   * Sets the status of a batch to 0 (inactive), 1 (active), or 2 (complete).
-   *
-   * @param batchId the id of the batch whose status to change
-   * @param status the status to set on the batchs
-   * @return true if operation succeeded, false otherwise
-   * @throws DatabaseException the database exception
-   */
+  
   public void setStatus(int batchId, int status) throws DatabaseException {
     if (status != Batch.INCOMPLETE && status != Batch.ACTIVE && status != Batch.COMPLETE) {
       throw new DatabaseException("ERROR: Current status: " + status + " is not 0, 1, or 2...");
@@ -330,12 +265,7 @@ public class BatchDAO {
 
   }
 
-  /**
-   * Deletes the specified batch.
-   *
-   * @param batch the batch
-   * @throws DatabaseException the database exception
-   */
+  
   public void delete(Batch batch) throws DatabaseException {
     String query = "DELETE from Batch WHERE BatchId = ?";
 

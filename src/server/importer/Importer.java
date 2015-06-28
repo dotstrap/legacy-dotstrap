@@ -1,10 +1,4 @@
-/**
- * Importer.java
- * JRE v1.8.0_40
- *
- * Created by William Myers on Mar 24, 2015.
- * Copyright (c) 2015 William Myers. All Rights reserved.
- */
+
 package server.importer;
 
 import java.io.*;
@@ -23,19 +17,13 @@ import server.database.DatabaseException;
 
 import shared.model.*;
 
-/**
- * Imports data from an XML file to database
- */
+
 public class Importer {
   private static Logger logger;
   private static String importDirName;
   private static String importFileName;
 
-  /**
-   * The main method
-   *
-   * @param args the xml file to import into the database
-   */
+  
   public static void main(String[] args) {
     File logDir = new File("logs");
     if (!logDir.exists()) {
@@ -108,20 +96,12 @@ public class Importer {
     return result;
   }
 
-  /**
-   * Checks if an Element contains a certain attribute
-   *
-   * @param elem the element to check for the attr
-   * @param attr the attribute to check
-   * @return true if elem > 0
-   */
+  
   private boolean contains(Element elem, String attr) {
     return elem.getElementsByTagName(attr).getLength() > 0;
   }
 
-  /**
-   * Gets the children elements of a Node
-   */
+  
   private ArrayList<Element> getChildElements(Node node) {
     ArrayList<Element> result = new ArrayList<Element>();
     NodeList children = node.getChildNodes();
@@ -135,11 +115,7 @@ public class Importer {
     return result;
   }
 
-  /**
-   * Loads record indexer data into memory and the database
-   *
-   * @param root
-   */
+  
   private void importData(Element root) {
     ArrayList<Element> rootElems = getChildElements(root);
 
@@ -153,11 +129,7 @@ public class Importer {
     }
   }
 
-  /**
-   * Inserts User element into database
-   *
-   * @param userElem
-   */
+  
   private void loadUsers(Element userElem) {
     // Get all User elements
     Element usernameElem = (Element) userElem.getElementsByTagName("username").item(0);
@@ -189,9 +161,7 @@ public class Importer {
     }
   }
 
-  /**
-   * Inserts a Project element into database
-   */
+  
   private void loadProjects(Element projectElem) {
     // Get Project Elements
     Element titleElem = (Element) projectElem.getElementsByTagName("title").item(0);
@@ -236,9 +206,7 @@ public class Importer {
     }
   }
 
-  /**
-   * Inserts a Field element into database
-   */
+  
   private void loadFields(Element fieldElem, int projectId, int colNum) {
     // Get Field elements
     Element titleElem = (Element) fieldElem.getElementsByTagName("title").item(0);
@@ -271,9 +239,7 @@ public class Importer {
     }
   }
 
-  /**
-   * Inserts an Image element into database
-   */
+  
   private void loadBatches(Element batchElem, int projectId) {
     // get file element
     Element batchFileElem = (Element) batchElem.getElementsByTagName("file").item(0);
@@ -307,9 +273,7 @@ public class Importer {
     }
   }
 
-  /**
-   * Inserts a Record element into the database
-   */
+  
   private void loadRecords(Element recordElem, int projectId, int batchId, String batchUrl,
       int rowNum) {
     ArrayList<Element> children = getChildElements(recordElem);

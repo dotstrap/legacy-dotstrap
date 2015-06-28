@@ -1,10 +1,4 @@
-/**
- * GetSampleBatchUnitTest.java
- * JRE v1.8.0_40
- *
- * Created by William Myers on Mar 24, 2015.
- * Copyright (c) 2015 William Myers. All Rights reserved.
- */
+
 package client.communication;
 
 import static org.junit.Assert.assertEquals;
@@ -24,9 +18,7 @@ import shared.communication.GetSampleBatchRequest;
 import shared.communication.GetSampleBatchResponse;
 import shared.model.*;
 
-/**
- * The Class GetSampleBatchUnitTest.
- */
+
 public class GetSampleBatchUnitTest {
   private ClientCommunicator clientComm;
 
@@ -46,30 +38,18 @@ public class GetSampleBatchUnitTest {
   private User               testUser2;
   private User               testUser3;     // @formatter:on
 
-  /**
-   * Sets the up before class.
-   *
-   * @throws Exception the exception
-   */
+  
   @BeforeClass
   public static void setUpBeforeClass() throws Exception {
     // Load database driver
     Database.initDriver();
   }
 
-  /**
-   * Tear down after class.
-   *
-   * @throws Exception the exception
-   */
+  
   @AfterClass
   public static void tearDownAfterClass() throws Exception {}
 
-  /**
-   * Sets the up.
-   *
-   * @throws Exception the exception
-   */
+  
   @Before
   public void setUp() throws Exception {
     db = new Database();
@@ -118,11 +98,7 @@ public class GetSampleBatchUnitTest {
     db.endTransaction(true);
   }
 
-  /**
-   * Tear down.
-   *
-   * @throws Exception the exception
-   */
+  
   @After
   public void tearDown() throws Exception {
     testProject1 = null;// @formatter:off
@@ -150,9 +126,7 @@ public class GetSampleBatchUnitTest {
     return;
   }
 
-  /**
-   * Valid user test.
-   */
+  
   @Test
   public void validUserTest() throws ServerException, DatabaseException, MalformedURLException {
     GetSampleBatchResponse result = null;
@@ -161,9 +135,7 @@ public class GetSampleBatchUnitTest {
     assertEquals("http://localhost:39640/someTestPath/batchTest1\n", result.toString());
   }
 
-  /**
-   * Invalid username test.
-   */
+  
   @Test
   public void invalidUsernameTest() throws ServerException, DatabaseException,
       MalformedURLException {
@@ -177,9 +149,7 @@ public class GetSampleBatchUnitTest {
     assertTrue(shouldPass);
   }
 
-  /**
-   * Invalid projectId test.
-   */
+  
   @Test
   public void invalidProjectIdTest() throws ServerException, DatabaseException,
       MalformedURLException {

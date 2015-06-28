@@ -1,10 +1,4 @@
-/**
- * GetFieldsUnitTest.java
- * JRE v1.8.0_40
- *
- * Created by William Myers on Mar 24, 2015.
- * Copyright (c) 2015 William Myers. All Rights reserved.
- */
+
 package client.communication;
 
 import static org.junit.Assert.assertEquals;
@@ -22,9 +16,7 @@ import shared.communication.GetFieldsRequest;
 import shared.communication.GetFieldsResponse;
 import shared.model.*;
 
-/**
- * The Class GetFieldsUnitTest.
- */
+
 public class GetFieldsUnitTest {
    private ClientCommunicator clientComm;
 
@@ -44,32 +36,20 @@ public class GetFieldsUnitTest {
    private Project    testProject2;
    private Project    testProject3;  // @formatter:on
 
-  /**
-   * Sets the up before class.
-   *
-   * @throws Exception the exception
-   */
+  
   @BeforeClass
   public static void setUpBeforeClass() throws Exception {
     // Load database driver
     Database.initDriver();
   }
 
-  /**
-   * Tear down after class.
-   *
-   * @throws Exception the exception
-   */
+  
   @AfterClass
   public static void tearDownAfterClass() throws Exception {
     return;
   }
 
-  /**
-   * Sets the up.
-   *
-   * @throws Exception the exception
-   */
+  
   @Before
   public void setUp() throws Exception {
     // Empty & populate db for each test (even though it is slower) case to prevent against possible
@@ -120,11 +100,7 @@ public class GetFieldsUnitTest {
     db.endTransaction(true);
   }
 
-  /**
-   * Tear down.
-   *
-   * @throws Exception the exception
-   */
+  
   @After
   public void tearDown() throws Exception {
     db = null;
@@ -148,9 +124,7 @@ public class GetFieldsUnitTest {
 
   }
 
-  /**
-   * Test valid field.
-   */
+  
   @Test
   public void testValidField() {
     GetFieldsResponse result1 = null;
@@ -164,9 +138,7 @@ public class GetFieldsUnitTest {
     assertEquals(1, result1.getFields().size());
   }
 
-  /**
-   * Test valid field with no project.
-   */
+  
   @Test
   public void testValidFieldWithNoProject() {
     GetFieldsResponse result2 = null;
@@ -178,9 +150,7 @@ public class GetFieldsUnitTest {
     assertEquals(3, result2.getFields().size());
   }
 
-  /**
-   * Invalid password test.
-   */
+  
   @Test
   public void invalidPasswordTest() throws ServerException {
       assertEquals("FAILED\n", clientComm.getFields(new GetFieldsRequest("userTest2", "INVALID")).toString());
@@ -194,9 +164,7 @@ public class GetFieldsUnitTest {
     //assertEquals(false, isValidPassword);
   }
 
-  /**
-   * Mismatched password test.
-   */
+  
   @Test
   public void misMatchedPasswordTest() {
     boolean isValidPassword = false;
@@ -209,9 +177,7 @@ public class GetFieldsUnitTest {
     assertEquals(false, isValidPassword);
   }
 
-  /**
-   * Invalid username test.
-   */
+  
   @Test
   public void invalidUsernameTest() {
     boolean isValidUsername = false;
@@ -224,9 +190,7 @@ public class GetFieldsUnitTest {
     assertEquals(false, isValidUsername);
   }
 
-  /**
-   * Invalid creds test.
-   */
+  
   @Test
   public void invalidCredsTest() {
     boolean isValidCreds = false;
@@ -239,9 +203,7 @@ public class GetFieldsUnitTest {
     assertEquals(false, isValidCreds);
   }
 
-  /**
-   * Invalid user test.
-   */
+  
   @Test
   public void invalidUserTest() {
     boolean isValidUser = false;
@@ -254,9 +216,7 @@ public class GetFieldsUnitTest {
     assertEquals(false, isValidUser);
   }
 
-  /**
-   * Invalid project id test.
-   */
+  
   @Test
   public void invalidProjectIdTest() {
     boolean isValidProject = false;

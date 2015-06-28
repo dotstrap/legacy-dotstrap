@@ -1,3 +1,10 @@
+/**
+ * ClientLogManager.java
+ * JRE v1.8.0_45
+ * 
+ * Created by William Myers on Jun 28, 2015.
+ * Copyright (c) 2015 William Myers. All Rights reserved.
+ */
 package client.util;
 
 import java.io.*;
@@ -8,7 +15,6 @@ import java.util.logging.Level;
 public enum ClientLogManager {
   INSTANCE;
 
-  /** The logger used throughout the project. */
   private static Logger logger = Logger.getLogger("client");
 
   public static void initLogs() {

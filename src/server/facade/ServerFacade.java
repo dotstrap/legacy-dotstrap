@@ -1,8 +1,4 @@
-/**
- * ServerFacade.java JRE v1.8.0_40
- *
- * Created by William Myers on Mar 24, 2015. Copyright (c) 2015 William Myers. All Rights reserved.
- */
+
 package server.facade;
 
 import java.io.FileInputStream;
@@ -20,21 +16,15 @@ import server.database.DatabaseException;
 import shared.communication.*;
 import shared.model.*;
 
-/**
- * The Class ServerFacade.
- */
+
 public class ServerFacade {
-  /** The logger used throughout the project. */
+  
   private static Logger logger;
   static {
     logger = Logger.getLogger("server");
   }
 
-  /**
-   * Initialize the database driver.
-   *
-   * @throws ServerException the server exception
-   */
+  
   public static void initialize() throws ServerException {
     try {
       Database.initDriver();
@@ -43,13 +33,7 @@ public class ServerFacade {
     }
   }
 
-  /**
-   * Validates a username/password combination.
-   *
-   * @param request the request
-   * @return the validate user response
-   * @throws ServerException
-   */
+  
   public static ValidateUserResponse validateUser(ValidateUserRequest request)
       throws ServerException {
     Database db = new Database();
@@ -74,13 +58,7 @@ public class ServerFacade {
     return result;
   }
 
-  /**
-   * Gets all the projects in the database.
-   *
-   * @param request the request
-   * @return the projects
-   * @throws ServerException the server exception
-   */
+  
   public static GetProjectsResponse getProjects(GetProjectsRequest request) throws ServerException {
     Database db = new Database();
     List<Project> projects = null;
@@ -99,13 +77,7 @@ public class ServerFacade {
     return result;
   }
 
-  /**
-   * Gets a sample batch from a project.
-   *
-   * @param request the request
-   * @return the sample batch
-   * @throws ServerException the server exception
-   */
+  
   public static GetSampleBatchResponse getSampleBatch(GetSampleBatchRequest request)
       throws ServerException {
     Database db = new Database();
@@ -125,15 +97,7 @@ public class ServerFacade {
     return result;
   }
 
-  /**
-   * Downloads an incomplete batch from a project. This includes information from batchs, projects,
-   * and fields
-   *
-   * @param request the request
-   * @return the download batch response
-   * @throws ServerException the server exception
-   * @throws DatabaseException the database exception
-   */
+  
   public static DownloadBatchResponse downloadBatch(DownloadBatchRequest request)
       throws ServerException, DatabaseException { // TODO: clean this method up
     Database db = new Database();
@@ -217,13 +181,7 @@ public class ServerFacade {
     db.getBatchDAO().update(batch);
   }
 
-  /**
-   * Submits values from a batch into the database.
-   *
-   * @param request the request
-   * @return the submit batch response
-   * @throws ServerException
-   */
+  
   public static SubmitBatchResponse submitBatch(SubmitBatchRequest request)
       throws DatabaseException, ServerException {
     SubmitBatchResponse result = new SubmitBatchResponse();
@@ -260,13 +218,7 @@ public class ServerFacade {
     return result;
   }
 
-  /**
-   * Gets the fields for a project.
-   *
-   * @param request the request
-   * @return the fields
-   * @throws ServerException the server exception
-   */
+  
   public static GetFieldsResponse getFields(GetFieldsRequest request) throws ServerException {
     Database db = new Database();
     int projectId = request.getProjectId();
@@ -290,13 +242,7 @@ public class ServerFacade {
     return result;
   }
 
-  /**
-   * Searches certain fields for certain values.
-   *
-   * @param request the request
-   * @return the search response
-   * @throws ServerException the server exception
-   */
+  
   public static SearchResponse search(SearchRequest request) throws ServerException {
     Database db = new Database();
     SearchResponse result = new SearchResponse();
@@ -325,13 +271,7 @@ public class ServerFacade {
     return result;
   }
 
-  /**
-   * Downloads a file from the server.
-   *
-   * @param request the request
-   * @return the download file response
-   * @throws ServerException the server exception
-   */
+  
   public static DownloadFileResponse downloadFile(DownloadFileRequest request)
       throws ServerException {
     InputStream is;

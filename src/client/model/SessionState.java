@@ -1,3 +1,10 @@
+/**
+ * SessionState.java
+ * JRE v1.8.0_45
+ * 
+ * Created by William Myers on Jun 28, 2015.
+ * Copyright (c) 2015 William Myers. All Rights reserved.
+ */
 package client.model;
 
 import java.net.URL;
@@ -14,13 +21,6 @@ public class SessionState {
   private List<Field> fields;
   private URL batchUrl;
 
-  /**
-   * Instantiates a new SessionState.
-   *
-   */
-  public SessionState() {
-
-
-  }
+  public SessionState() {}
 
 }

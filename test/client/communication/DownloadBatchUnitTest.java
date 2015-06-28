@@ -1,10 +1,4 @@
-/**
- * DownloadBatchUnitTest.java
- * JRE v1.8.0_40
- *
- * Created by William Myers on Mar 24, 2015.
- * Copyright (c) 2015 William Myers. All Rights reserved.
- */
+
 package client.communication;
 
 import static org.junit.Assert.assertEquals;
@@ -25,9 +19,7 @@ import shared.communication.DownloadBatchResponse;
 import shared.model.Batch;
 import shared.model.User;
 
-/**
- * The Class DownloadBatchUnitTest.
- */
+
 public class DownloadBatchUnitTest {
 
   private static ClientCommunicator clientComm; // @formatter:off
@@ -44,32 +36,20 @@ public class DownloadBatchUnitTest {
   private static Batch    testBatch2;
   private static Batch    testBatch3;  // @formatter:on
 
-  /**
-   * Sets the up before class.
-   *
-   * @throws Exception the exception
-   */
+  
   @BeforeClass
   public static void setUpBeforeClass() throws Exception {
       // Load database driver
       Database.initDriver();
   }
 
-  /**
-   * Tear down after class.
-   *
-   * @throws DatabaseException
-   */
+  
   @AfterClass
   public static void tearDownAfterClass() throws DatabaseException {
       return;
 }
 
-  /**
-   * Sets the up before class.
-   *
-   * @throws Exception the exception
-   */
+  
   @Before
   public void setUp() throws Exception {
     // Load database driver
@@ -78,10 +58,7 @@ public class DownloadBatchUnitTest {
     db = new Database();
     db.startTransaction();
 
-    /*
-     * Populate the database once per test-suite instead of per test-case because it is faster and
-     * we wont be modifying it each test-case; just reading from it
-     */
+    
     testUserDAO = db.getUserDAO();
     testBatchDAO = db.getBatchDAO();
     clientComm = new ClientCommunicator();
@@ -114,11 +91,7 @@ public class DownloadBatchUnitTest {
     db.endTransaction(true);
   }
 
-  /**
-   * Tear down after class.
-   *
-   * @throws Exception the exception
-   */
+  
   @After
   public void tearDown() throws Exception {
     testUser1 = null;
@@ -140,11 +113,7 @@ public class DownloadBatchUnitTest {
     return;
   }
 
-  /**
-   * Invalid user test.
-   *
-   * @throws DatabaseException the database exception
-   */
+  
   @Test
   public void invalidUserTest() throws DatabaseException, ServerException, MalformedURLException {
     boolean isValid = true;
@@ -156,11 +125,7 @@ public class DownloadBatchUnitTest {
     assertEquals(false, isValid);
   }
 
-  /**
-   * Invalid project id test.
-   *
-   * @throws DatabaseException the database exception
-   */
+  
   @Test
   public void invalidProjectIdTest() throws DatabaseException, ServerException, MalformedURLException {
     DownloadBatchResponse result2 = new DownloadBatchResponse();

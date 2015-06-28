@@ -1,10 +1,4 @@
-/**
- * SearchUnitTestTest.java
- * JRE v1.8.0_40
- *
- * Created by William Myers on Mar 24, 2015.
- * Copyright (c) 2015 William Myers. All Rights reserved.
- */
+
 
 package client.communication;
 
@@ -26,9 +20,7 @@ import shared.communication.SearchRequest;
 import shared.communication.SearchResponse;
 import shared.model.*;
 
-/**
- * The Class SearchUnitTestTest.
- */
+
 public class SearchUnitTest {
   private ClientCommunicator clientComm; // @formatter:off
 
@@ -52,11 +44,7 @@ public class SearchUnitTest {
   private List<String>  values;
   private List<String>  badValues; // @formatter:on
 
-  /**
-   * Sets the up before class.
-   *
-   * @throws Exception the exception
-   */
+  
   @BeforeClass
   public static void setUpBeforeClass() throws Exception {
     // Load database driver
@@ -64,21 +52,13 @@ public class SearchUnitTest {
 
   }
 
-  /**
-   * Tear down after class.
-   *
-   * @throws Exception the exception
-   */
+  
   @AfterClass
   public static void tearDownAfterClass() throws Exception {
     return;
   }
 
-  /**
-   * Sets the up.
-   *
-   * @throws Exception the exception
-   */
+  
   @Before
   public void setUp() throws Exception {
     db = new Database();
@@ -140,11 +120,7 @@ public class SearchUnitTest {
     db.endTransaction(true);
   }
 
-  /**
-   * Tear down.
-   *
-   * @throws Exception the exception
-   */
+  
   @After
   public void tearDown() throws Exception {
     db = null;

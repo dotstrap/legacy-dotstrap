@@ -1,10 +1,4 @@
-/**
- * ProjectDAO.java
- * JRE v1.8.0_40
- *
- * Created by William Myers on Mar 24, 2015.
- * Copyright (c) 2015 William Myers. All Rights reserved.
- */
+
 package server.database.dao;
 
 import java.sql.*;
@@ -17,34 +11,24 @@ import server.database.DatabaseException;
 
 import shared.model.Project;
 
-/**
- * The Class ProjectDAO.
- */
+
 public class ProjectDAO {
 
-  /** The db. */
+  
   private Database      db;
 
-  /** The logger used throughout the project. */
+  
   private static Logger logger;
   static {
     logger = Logger.getLogger("server");
   }
 
-  /**
-   * Instantiates a new project DAO.
-   *
-   * @param db the db
-   */
+  
   public ProjectDAO(Database db) {
     this.db = db;
   }
 
-  /**
-   * Initializes the table.
-   *
-   * @throws DatabaseException the database exception
-   */
+  
   public void initTable() throws DatabaseException {
     String dropTable = "DROP TABLE IF EXISTS Project";// @formatter:off
       String createTable =
@@ -64,12 +48,7 @@ public class ProjectDAO {
     }
   }
 
-  /**
-   * Returns all Projects in an array.
-   *
-   * @return project array if found, else return null
-   * @throws DatabaseException the database exception
-   */
+  
   public ArrayList<Project> getAll() throws DatabaseException {
     String query = "SELECT * from Project";
 
@@ -96,13 +75,7 @@ public class ProjectDAO {
     }
   }
 
-  /**
-   * Creates a new project.
-   *
-   * @param newProject the project
-   * @return the int ProjectId of the project
-   * @throws DatabaseException the database exception
-   */
+  
   public int create(Project newProject) throws DatabaseException {
     String query =
         "INSERT INTO Project (Title, RecordsPerBatch, FirstYCoord, RecordHeight)"
@@ -131,13 +104,7 @@ public class ProjectDAO {
     return newProject.getProjectId();
   }
 
-  /**
-   * Retrieves the project with the specified id from the database.
-   *
-   * @param projectId The project id
-   * @return The project with the specified id, null if doesn't exist
-   * @throws DatabaseException
-   */
+  
   public Project read(int projectId) throws DatabaseException {
     String query = "SELECT * FROM Project WHERE ProjectId = ?";
 
@@ -168,12 +135,7 @@ public class ProjectDAO {
     }
   }
 
-  /**
-   * Deletes the specified project.
-   *
-   * @param project the project
-   * @throws DatabaseException the database exception
-   */
+  
   public void delete(Project project) throws DatabaseException {
     String query = "DELETE from Project WHERE ProjectId = ?";
 

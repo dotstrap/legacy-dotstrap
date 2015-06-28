@@ -52,7 +52,7 @@ public class IndexerServerTesterFrame extends JFrame implements IView {
     addWindowListener(new WindowAdapter() {
       @Override
       public void windowClosed(WindowEvent arg0) {
-        // TODO Auto-generated method stub
+        
 
       }
     });

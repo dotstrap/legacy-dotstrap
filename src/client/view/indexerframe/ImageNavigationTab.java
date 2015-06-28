@@ -1,3 +1,10 @@
+/**
+ * ImageNavigationTab.java
+ * JRE v1.8.0_45
+ * 
+ * Created by William Myers on Jun 28, 2015.
+ * Copyright (c) 2015 William Myers. All Rights reserved.
+ */
 package client.view.indexerframe;
 
 import javax.swing.JPanel;

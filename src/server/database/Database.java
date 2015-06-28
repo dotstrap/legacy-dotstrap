@@ -1,8 +1,4 @@
-/**
- * Database.java JRE v1.8.0_40
- *
- * Created by William Myers on Mar 27, 2015. Copyright (c) 2015 William Myers. All Rights reserved.
- */
+
 package server.database;
 
 import java.io.File;
@@ -12,52 +8,36 @@ import java.util.logging.Logger;
 
 import server.database.dao.*;
 
-/**
- * The Class Database.
- */
+
 public class Database {
   private static String DB_DIR = "database";
   private static String DB_NAME = "IndexerServer.sqlite";
   public static String DB_FILE = DB_DIR + File.separator + DB_NAME;
   private static String DB_CONNECTION_URL = "jdbc:sqlite:" + DB_DIR + File.separator + DB_NAME;
 
-  /** The logger used throughout the project. */
+  
   private static Logger logger;
   static {
     logger = Logger.getLogger("server");
   }
 
   // DataBase Access //////////////////
-  /** The database driver connection. */
+  
   private Connection connection;
 
-  /**
-   * The batch DataBaseAccess. interfaces with the database to modify the batch (image) table
-   */
+  
   private BatchDAO batchDAO;
-  /**
-   * The field DataBaseAccess. interfaces with the database to modify the field table
-   */
+  
   private FieldDAO fieldDAO;
-  /**
-   * The project DataBaseAccess. interfaces with the database to modify the project table
-   */
+  
   private ProjectDAO projectDAO;
-  /**
-   * The record DataBaseAccess.
-   *
-   * interfaces with the database to modify the record table
-   */
+  
   private RecordDAO recordDAO;
-  /**
-   * The user DataBaseAccess. interfaces with the database to modify the user table
-   */
+  
   private UserDAO userDAO;
 
   // @formatter:off
-  /**
-   * Instantiates a new database.
-   */
+  
   public Database() {
     connection = null;
 
@@ -92,11 +72,7 @@ public class Database {
     return userDAO;
   }
 
-  /**
-   * Initializes the Java SQL driver.
-   *
-   * @throws DatabaseException the database exception
-   */
+  
   public static void initDriver() throws DatabaseException {
     try {
       String driver = "org.sqlite.JDBC";
@@ -107,11 +83,7 @@ public class Database {
     }
   }
 
-  /**
-   * Starts the transaction.
-   *
-   * @throws DatabaseException the database exception
-   */
+  
   public void startTransaction() throws DatabaseException {
     //System.out.println("*****************STARTING TRANSACTION***********************");
     if (connection == null) {
@@ -129,12 +101,7 @@ public class Database {
     }
   }
 
-  /**
-   * Ends the database transaction.
-   *
-   * @param shouldCommit - commit or rollback transaction?
-   * @throws DatabaseException
-   */
+  
   public void endTransaction(boolean shouldCommit) {
     //System.out.println("#####################ENDING TRANSACTION### SHOULDCOMMIT: " + shouldCommit);
     // Commit or rollback the transaction and finally close the connection
@@ -153,11 +120,7 @@ public class Database {
     }
   }
 
-  /**
-   * Initializes the database by sequentially dropping each table and then creating it.
-   *
-   * @throws DatabaseException the database exception
-   */
+  
   public void initTables() throws DatabaseException {
     try {
       batchDAO.initTable();

@@ -1,10 +1,4 @@
-/**
- * UserDAO.java
- * JRE v1.8.0_40
- *
- * Created by William Myers on Mar 24, 2015.
- * Copyright (c) 2015 William Myers. All Rights reserved.
- */
+
 package server.database.dao;
 
 import java.sql.*;
@@ -17,34 +11,24 @@ import server.database.DatabaseException;
 
 import shared.model.User;
 
-/**
- * The Class UserDAO. Interfaces with the database to CRUD users & getAll() users.
- */
+
 public class UserDAO {
-  /** The logger used throughout the project. */
+  
   private static Logger logger;
   static {
     logger = Logger.getLogger("server");
   }
 
-  /** The db. */
+  
   private Database      db;
 
-  /**
-   * Instantiates a new user dao.
-   *
-   * @param db the db
-   */
+  
   public UserDAO(Database db) {
 
     this.db = db;
   }
 
-  /**
-   * Initializes the table.
-   *
-   * @throws DatabaseException the database exception
-   */
+  
   public void initTable() throws DatabaseException {
     String dropTable = "DROP TABLE IF EXISTS User";// @formatter:off
     String createTable =
@@ -98,13 +82,7 @@ public class UserDAO {
     }
   }
 
-  /**
-   * Creates a new user.
-   *
-   * @param newUser the user
-   * @return the int UserId of the user
-   * @throws DatabaseException the database exception
-   */
+  
   public int create(User newUser) throws DatabaseException {
     String query =
         "INSERT INTO User (Username, Password, FirstName, LastName, "
@@ -135,13 +113,7 @@ public class UserDAO {
     return newUser.getUserId();
   }
 
-  /**
-   * Gets the user with specified username.
-   *
-   * @param username the username
-   * @return the user with the given
-   * @throws DatabaseException the database exception
-   */
+  
   public User read(String username, String password) throws DatabaseException {
     String query = "SELECT * from User WHERE Username = ? AND Password = ?";
 
@@ -177,12 +149,7 @@ public class UserDAO {
     }
   }
 
-  /**
-   * Updates the given user with the provided information.
-   *
-   * @param user the user
-   * @throws DatabaseException the database exception
-   */
+  
   public void update(User user) throws DatabaseException {
     String query =
         "UPDATE User SET FirstName = ?, LastName = ?, Email = ?, RecordCount = ?, CurrentBatchId = ?"
@@ -205,13 +172,7 @@ public class UserDAO {
     }
   }
 
-  /**
-   * Updates the id of the image a user is currently working on.
-   *
-   * @param userId the id of the user working on a new image
-   * @param batchId the id of the image the user is working on
-   * @throws DatabaseException the database exception
-   */
+  
   public void updateCurrentBatchId(int userId, int batchId) throws DatabaseException {
     String query = "UPDATE User SET CurrentBatchId = ? WHERE UserId = ?";
 
@@ -225,24 +186,13 @@ public class UserDAO {
     }
   }
 
-  /**
-   * Clears the current image id of a user.
-   *
-   * @param userId the user id
-   * @throws DatabaseException the database exception
-   */
+  
   public void clearCurrentBatchId(int userId) throws DatabaseException {
     updateCurrentBatchId(userId, -1);
     return;
   }
 
-  /**
-   * Increments the number of records a user has indexed.
-   *
-   * @param userId the id of the user who indexed another record
-   * @return true if operation succeeded, false otherwise
-   * @throws DatabaseException the database exception
-   */
+  
   public void incrementIndexedRecords(int userId) throws DatabaseException {
     String query = "UPDATE User SET IndexedRecords = IndexedRecords + 1 WHERE UserId = ?";
 
@@ -255,12 +205,7 @@ public class UserDAO {
     }
   }
 
-  /**
-   * Deletes the specified user.
-   *
-   * @param user the user
-   * @throws DatabaseException the database exception
-   */
+  
   public void delete(User user) throws DatabaseException {
     String query = "DELETE from User WHERE Username = ? AND Password = ?";
 

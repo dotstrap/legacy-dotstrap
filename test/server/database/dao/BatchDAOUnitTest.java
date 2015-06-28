@@ -1,10 +1,4 @@
-/**
- * BatchDAOUnitTest.java
- * JRE v1.8.0_40
- *
- * Created by William Myers on Mar 24, 2015.
- * Copyright (c) 2015 William Myers. All Rights reserved.
- */
+
 package server.database.dao;
 
 import static org.junit.Assert.*;
@@ -18,26 +12,16 @@ import server.database.DatabaseException;
 
 import shared.model.Batch;
 
-/**
- * The Class BatchDAOUnitTest.
- */
+
 public class BatchDAOUnitTest {
-  /**
-   * Sets the up before class.
-   *
-   * @throws Exception the exception
-   */
+  
   @BeforeClass
   public static void setUpBeforeClass() throws Exception {
     // Load database drivers
     Database.initDriver();
   }
 
-  /**
-   * Tear down after class.
-   *
-   * @throws Exception the exception
-   */
+  
   @AfterClass
   public static void tearDownAfterClass() throws Exception {
     // "tearDownAfterClass");
@@ -50,11 +34,7 @@ public class BatchDAOUnitTest {
   Batch batchTest2;
   Batch batchTest3;
 
-  /**
-   * Sets the database up.
-   *
-   * @throws Exception the exception
-   */
+  
   @Before
   public void setUp() throws Exception {
     db = new Database();
@@ -75,11 +55,7 @@ public class BatchDAOUnitTest {
 
   }
 
-  /**
-   * Tear down.
-   *
-   * @throws Exception the exception
-   */
+  
   @After
   public void tearDown() throws Exception {
     db.endTransaction(false);
@@ -92,14 +68,7 @@ public class BatchDAOUnitTest {
 
   }
 
-  /**
-   * Are equal.
-   *
-   * @param a the a
-   * @param b the b
-   * @param compareIds the compare i ds
-   * @return true, if successful
-   */
+  
   private boolean areEqual(Batch a, Batch b, boolean compareIds) {
     if (compareIds) {
       if (a.getBatchId() != b.getBatchId()) {
@@ -111,13 +80,7 @@ public class BatchDAOUnitTest {
           b.getStatus()));
   }
 
-  /**
-   * Safe equals.
-   *
-   * @param a the a
-   * @param b the b
-   * @return true, if successful
-   */
+  
   private boolean safeEquals(Object a, Object b) {
     if ((a == null) || (b == null)) {
       return ((a == null) && (b == null));
@@ -126,22 +89,14 @@ public class BatchDAOUnitTest {
     }
   }
 
-  /**
-   * Test get allBatches.
-   *
-   * @throws DatabaseException the database exception
-   */
+  
   @Test
   public void testGetAll() throws DatabaseException {
     List<Batch> allBatches = testBatchDAO.getAll();
     assertEquals(3, allBatches.size());
   }
 
-  /**
-   * Test create.
-   *
-   * @throws DatabaseException the database exception
-   */
+  
   @Test
   public void testCreate() throws DatabaseException {
     List<Batch> allBatches = testBatchDAO.getAll();
@@ -165,11 +120,7 @@ public class BatchDAOUnitTest {
     assertTrue(hasFoundBatch1 && hasFoundBatch2 && hasFoundBatch3);
   }
 
-  /**
-   * Test update.
-   *
-   * @throws DatabaseException the database exception
-   */
+  
   @Test
   public void testUpdate() throws DatabaseException {
     batchTest1.setStatus(Batch.INCOMPLETE);
@@ -201,11 +152,7 @@ public class BatchDAOUnitTest {
     assertTrue(hasFoundBatch1 && hasFoundBatch2 && hasFoundBatch3);
   }
 
-  /**
-   * Test delete.
-   *
-   * @throws DatabaseException the database exception
-   */
+  
   @Test
   public void testDelete() throws DatabaseException {
     List<Batch> allBatches = testBatchDAO.getAll();

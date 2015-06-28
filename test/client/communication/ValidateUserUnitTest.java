@@ -1,10 +1,4 @@
-/**
- * ValidateUserUnitTest.java
- * JRE v1.8.0_40
- *
- * Created by William Myers on Mar 24, 2015.
- * Copyright (c) 2015 William Myers. All Rights reserved.
- */
+
 package client.communication;
 
 import static org.junit.Assert.assertEquals;
@@ -20,9 +14,7 @@ import server.database.dao.UserDAO;
 import shared.communication.ValidateUserRequest;
 import shared.model.User;
 
-/**
- * The Class ValidateUserUnitTest.
- */
+
 public class ValidateUserUnitTest {
 
 
@@ -37,32 +29,20 @@ public class ValidateUserUnitTest {
   private User     testUser2;
   private User     testUser3; // @formatter:on
 
-  /**
-   * Sets the up before class.
-   *
-   * @throws Exception the exception
-   */
+  
   @BeforeClass
   public static void setUpBeforeClass() throws Exception {
     // Load database driver
     Database.initDriver();
   }
 
-  /**
-   * Tear down after class.
-   *
-   * @throws Exception the exception
-   */
+  
   @AfterClass
   public static void tearDownAfterClass() throws Exception {
     return;
   }
 
-  /**
-   * Sets the up.
-   *
-   * @throws Exception the exception
-   */
+  
   @Before
   public void setUp() throws Exception {
     // Empty & populate db for each test case (even though it is slower) to prevent against possible
@@ -90,11 +70,7 @@ public class ValidateUserUnitTest {
     db.endTransaction(true);
   }
 
-  /**
-   * Tear down.
-   *
-   * @throws Exception the exception
-   */
+  
   @After
   public void tearDown() throws Exception {
     testUser1 = null;
@@ -114,53 +90,35 @@ public class ValidateUserUnitTest {
     db = null;
   }
 
-  /**
-   * Invalid password test.
-   *
-   * @throws ServerException
-   */
+  
   @Test
   public void invalidPasswordTest() throws ServerException {
     assertEquals(null, clientComm.validateUser(new ValidateUserRequest("userTest2", "INVALID"))
         .getUser());
   }
 
-  /**
-   * Mis matched password test.
-   *
-   * @throws ServerException
-   */
+  
   @Test
   public void misMatchedPasswordTest() throws ServerException {
     assertEquals("FALSE\n", clientComm.validateUser(new ValidateUserRequest("userTest2", "pass3"))
         .toString());
   }
 
-  /**
-   * Invalid username test.
-   *
-   * @throws ServerException
-   */
+  
   @Test
   public void invalidUsernameTest() throws ServerException {
     assertEquals(null, clientComm.validateUser(new ValidateUserRequest("pass3", "userTest3"))
         .getUser());
   }
 
-  /**
-   * Invalid creds test.
-   *
-   * @throws ServerException
-   */
+  
   @Test
   public void invalidCredsTest() throws ServerException {
     assertEquals("FALSE\n",
         clientComm.validateUser(new ValidateUserRequest("10101001", "%$asdf$%&^$%^*")).toString());
   }
 
-  /**
-   * Null creds test.
-   */
+  
   @Test
   public void nullCredsTest() throws ServerException {
     assertEquals(null, clientComm.validateUser(new ValidateUserRequest("", "")).getUser());

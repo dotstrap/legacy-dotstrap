@@ -1,10 +1,4 @@
-/**
- * Controller.java
- * JRE v1.8.0_40
- *
- * Created by William Myers on Mar 27, 2015.
- * Copyright (c) 2015 William Myers. All Rights reserved.
- */
+
 package servertester.controllers;
 
 import java.net.MalformedURLException;
@@ -23,7 +17,7 @@ public class Controller implements IController {
   private ClientCommunicator clientComm;
   private IView              _view;
 
-  /** The logger used throughout the project. */
+  
   private static Logger      logger;
   static {
     logger = Logger.getLogger("server");
@@ -279,12 +273,7 @@ public class Controller implements IController {
     }
   }
 
-  /**
-   * Prints the user input.
-   *
-   * @param args the user input to print out
-   * @return the string with formatted output
-   */
+  
   private String printUserInput(String[] args) {
     StringBuilder sb = new StringBuilder();
     for (String s : args) {

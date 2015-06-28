@@ -1,10 +1,4 @@
-/**
- * FieldDAO.java
- * JRE v1.8.0_40
- *
- * Created by William Myers on Mar 24, 2015.
- * Copyright (c) 2015 William Myers. All Rights reserved.
- */
+
 package server.database.dao;
 
 import java.sql.*;
@@ -18,34 +12,24 @@ import server.database.DatabaseException;
 
 import shared.model.Field;
 
-/**
- * The Class FieldDAO. Interfaces with the database to CRUD fields & getAll() fields.
- */
+
 public class FieldDAO {
 
-  /** The logger used throughout the project. */
+  
   private static Logger logger;
   static {
     logger = Logger.getLogger("server");
   }
 
-  /** The db. */
+  
   private Database      db;
 
-  /**
-   * Instantiates a new field dao.
-   *
-   * @param db the db
-   */
+  
   public FieldDAO(Database db) {
     this.db = db;
   }
 
-  /**
-   * Initializes the table.
-   *
-   * @throws DatabaseException the database exception
-   */
+  
   public void initTable() throws DatabaseException {
     String dropTable = "DROP TABLE IF EXISTS Field";
     String createTable =// @formatter:off
@@ -127,14 +111,7 @@ public class FieldDAO {
     }
   }
 
-  /**
-   * Gets the id for the field of a project at a certain column.
-   *
-   * @param projectId the projectId for the desired fieldId
-   * @param colNum the colNum for the desired fieldId
-   * @return the fieldId
-   * @throws DatabaseException the database exception
-   */
+  
   public int getFieldId(int projectId, int colNum) throws DatabaseException {
     String query = "SELECT FieldId FROM Field WHERE ProjectId = ? AND ColumnNumber = ?";
 
@@ -159,13 +136,7 @@ public class FieldDAO {
     }
   }
 
-  /**
-   * Creates a new field.
-   *
-   * @param newField the field
-   * @return the int FieldId of the field
-   * @throws DatabaseException the database exception
-   */
+  
   public int create(Field newField) throws DatabaseException {
     String query =
         "INSERT INTO Field (" + "ProjectId, Title, KnownData, HelpURL, "
@@ -199,14 +170,7 @@ public class FieldDAO {
     return newField.getFieldId();
   }
 
-  /**
-   * Gets the field with specified projectId and title.
-   *
-   * @param projectId the project id
-   * @param title the title
-   * @return true if valid, else false
-   * @throws DatabaseException the database exception
-   */
+  
   public Field read(int projectId, String title) throws DatabaseException {
     String query = "SELECT * from Field WHERE ProjectId = ? AND Title = ?";
 
@@ -241,12 +205,7 @@ public class FieldDAO {
     }
   }
 
-  /**
-   * Updates the given field with the provided information.
-   *
-   * @param field the field
-   * @throws DatabaseException the database exception
-   */
+  
   public void update(Field field) throws DatabaseException {
 String query =
     "UPDATE Field SET KnownData = ?, HelpURL = ?, XCoordinate = ?, Width = ? "
@@ -266,12 +225,7 @@ String query =
     }
   }
 
-  /**
-   * Deletes the specified field.
-   *
-   * @param field the field
-   * @throws DatabaseException the database exception
-   */
+  
   public void delete(Field field) throws DatabaseException {
     String query = "DELETE from Field WHERE ProjectId = ? AND Title = ?";
 

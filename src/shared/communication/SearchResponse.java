@@ -1,8 +1,3 @@
-/**
- * SearchResponse.java JRE v1.8.0_40
- *
- * Created by William Myers on Mar 27, 2015. Copyright (c) 2015 William Myers. All Rights reserved.
- */
 package shared.communication;
 
 import java.net.URL;
@@ -10,64 +5,34 @@ import java.util.List;
 
 import shared.model.Record;
 
-/**
- * The Class SearchResponse.
- */
 public class SearchResponse implements Response {
   private List<Record> foundRecords;
   private URL urlPrefix;
 
-  /**
-   * Instantiates a new SearchResponse.
-   *
-   */
   public SearchResponse() {
     foundRecords = null;
   }
 
-  /**
-   * Instantiates a new search response.
-   *
-   * @param foundRecords the found records
-   */
   public SearchResponse(List<Record> foundRecords) {
     this.foundRecords = foundRecords;
   }
 
-  /**
-   * @return the foundRecords
-   */
   public List<Record> getFoundRecords() {
     return foundRecords;
   }
 
-  /**
-   * @param foundRecords the foundRecords to set
-   */
   public void setFoundRecords(List<Record> foundRecords) {
     this.foundRecords = foundRecords;
   }
 
-  /**
-   * @return the urlPrefix
-   */
   public URL getUrlPrefix() {
     return urlPrefix;
   }
 
-  /**
-   * @param urlPrefix the urlPrefix to set
-   */
   public void setUrlPrefix(URL urlPrefix) {
     this.urlPrefix = urlPrefix;
   }
 
-  /**
-   * To string.
-   *
-   * @return the string
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();

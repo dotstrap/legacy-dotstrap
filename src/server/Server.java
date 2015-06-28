@@ -1,11 +1,3 @@
-/**
- * Server.java
- * JRE v1.8.0_40
- *
- * Created by William Myers on Mar 24, 2015.
- * Copyright (c) 2015 William Myers. All Rights reserved.
- */
-
 package server;
 
 import java.io.*;
@@ -17,22 +9,13 @@ import com.sun.net.httpserver.HttpServer;
 import server.facade.ServerFacade;
 import server.httphandler.indexerserverhandler.*;
 
-/**
- * The Class Server. Initializes the server's logs (used in all non-testing classes) Creates
- * HTTPHandler Objects Bootstraps the HTTP Server
- */
 public class Server {
-  private static int    MAX_WAITING_CONNECTIONS = 10;
-  /** Default port number the server runs on (can be overridden via CLI args. */
-  private static int    DEFAULT_PORT            = 39640;
-  /** The logger used throughout the project. */
+  private static int MAX_WAITING_CONNECTIONS = 10;
+
+  private static int DEFAULT_PORT = 39640;
+
   private static Logger logger;
 
-  /**
-   * Entry point for the Indexer Server program.
-   *
-   * @param args the port to run the indexer server on
-   */
   public static void main(String[] args) {
     File logDir = new File("logs");
     if (!logDir.exists()) {
@@ -76,7 +59,6 @@ public class Server {
     }
   }
 
-
   // The server //@formatter:off
   private HttpServer server;
   // Handler objects ////////////////////////////////
@@ -89,9 +71,7 @@ public class Server {
   private DownloadBatchHandler  downloadBatchHandler;
   private DownloadFileHandler   downloadFileHandler;
 
-  /**
-   * Instantiates a new Server. Server
-   */
+  
   public Server() {
     logger.info("Initializing HTTP handlers...");
     searchHandler         = new SearchHandler();
@@ -104,13 +84,6 @@ public class Server {
     downloadFileHandler   = new DownloadFileHandler();
   }  //@formatter:on
 
-  /**
-   * Bootstraps the server: Initializes the models Starts the HTTP server Creates contexts Starts
-   * the server.
-   *
-   * @param portNum the port num
-   * @throws ServerException the server exception
-   */
   public void bootstrap(int portNum) throws ServerException {
     logger.info("Initializing Model...");
     try {
@@ -143,9 +116,6 @@ public class Server {
     server.start();
   }
 
-  /**
-   * Stops the server and frees the port.
-   */
   public void stop() {
     server.stop(0);
   }
