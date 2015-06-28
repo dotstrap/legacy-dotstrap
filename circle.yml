@@ -2,6 +2,9 @@ machine:
   java:
     version: oraclejdk7
 test:
+  pre:
+    curl -JkLO https://students.cs.byu.edu/~cs240ta/summer2015/download/record-indexer-data.zip 
+    unzip -u *.zip
   override:
     - ant clean
     - ant import
