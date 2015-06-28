@@ -3,8 +3,8 @@ machine:
     version: oraclejdk7
 test:
   pre:
-    curl -JkLO https://students.cs.byu.edu/~cs240ta/summer2015/download/record-indexer-data.zip 
-    unzip -u *.zip
+    curl -kL -o Records.zip https://students.cs.byu.edu/~cs240ta/summer2015/download/record-indexer-data.zip 
+    unzip -u Records.zip
   override:
     - ant clean
     - ant import
