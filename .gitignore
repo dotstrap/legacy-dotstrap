@@ -25,6 +25,7 @@ RecordIndexer.tar.gz
 .classpath
 .project
 data
+Records
 /bin/
 .idea
 RecordIndexer.iml
