@@ -18,7 +18,6 @@ logs/
 build/
 bin
 .settings
-Records
 *.zip
 checkstyle-report.txt
 RecordIndexer.tar.gz
