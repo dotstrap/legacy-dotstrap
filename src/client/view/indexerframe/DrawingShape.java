@@ -5,28 +5,57 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.awt.image.RescaleOp;
 
 
-/////////////////
-// Drawing Shape
-/////////////////
 interface DrawingShape {
   boolean contains(Graphics2D g2, double x, double y);
   void draw(Graphics2D g2);
   Rectangle2D getBounds(Graphics2D g2);
 }
 
-/////////////////
-//Implementations
-/////////////////
 class DrawingRect implements DrawingShape {
 
   private Rectangle2D rect;
   private Color color;
-  private boolean visible = true;
+  private boolean isVisible = true;
+
   public DrawingRect(Rectangle2D rect, Color color) {
     this.rect = rect;
     this.color = color;
+  }
+
+  public Rectangle2D getRect(){
+    return rect;
+  }
+
+  public void setRect(Rectangle2D rect){
+    this.rect = rect;
+  }
+
+  public Color getColor() {
+    return this.color;
+  }
+
+  public DrawingRect setColor(Color invertColor) {
+    color = invertColor;
+    if(!isVisible){
+      setVisible(false);
+    }
+    return this;
+  }
+
+  public boolean isVisible() {
+    return isVisible;
+  }
+
+  public DrawingRect setVisible(boolean isVisible){
+    if(isVisible == false)
+      color = new Color(color.getRed(), color.getGreen(), color.getBlue(), 0);
+    if(isVisible == true)
+      color = new Color(color.getRed(), color.getGreen(), color.getBlue(), 100);
+    this.isVisible = isVisible;
+    return this;
   }
 
   @Override
@@ -45,43 +74,38 @@ class DrawingRect implements DrawingShape {
     return rect.getBounds2D();
   }
 
-  public Rectangle2D getRect(){
-    return rect;
-  }
-
-  public void setRect(Rectangle2D rect){
-    this.rect = rect;
-  }
-  public DrawingRect invert() {
-    color = new Color(0, 0, 255, 100);
-    if(!visible){
-      setVisible(false);
-    }
-    return this;
-  }
-
-  public DrawingRect setVisible(boolean visible){
-    if(visible == false)
-      color = new Color(color.getRed(), color.getGreen(), color.getBlue(), 0);
-    if(visible == true)
-      color = new Color(color.getRed(), color.getGreen(), color.getBlue(), 100);
-    this.visible = visible;
-    return this;
-  }
-
-  public boolean isVisible() {
-    return visible;
-  }
 }
 
 class DrawingImage implements DrawingShape {
 
-  private Image image;
+  private BufferedImage image;
   private Rectangle2D rect;
 
-  public DrawingImage(Image image, Rectangle2D rect) {
+  public DrawingImage(BufferedImage image, Rectangle2D rect) {
     this.image = image;
     this.rect = rect;
+  }
+
+  public BufferedImage getImage() {
+    return this.image;
+  }
+
+  public DrawingImage setImage(BufferedImage img) {
+    image = img;
+    return this;
+  }
+
+  public Rectangle2D getRect() {
+    return this.rect;
+  }
+
+  public void setRect(Rectangle2D rect) {
+    this.rect = rect;
+  }
+
+  public DrawingImage invert(BufferedImage img) {
+    image = new RescaleOp(-1.0f, 255f, null).filter(img, null);
+    return this;
   }
 
   @Override

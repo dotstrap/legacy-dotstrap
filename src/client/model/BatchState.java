@@ -12,8 +12,10 @@ public enum BatchState {
 
   public interface Observer {//@formatter:off
     public void cellWasSelected(int x, int y);
+    public void fieldWasSelected(int record, Field field);
     public void didChangeOrigin(int x, int y);
     public void didToggleHighlight();
+    public void didHighlight();
     public void didZoom(double zoomDirection);
     public void didToggleInvert();
     public void dataWasInput(String data, int x, int y);
@@ -23,12 +25,6 @@ public enum BatchState {
   }; //@formatter:on
 
   private static transient List<Observer> currentObservers;
-
-  private static Field currentField;
-  private static int currentRecord;
-
-  private static int scrollPositionX;
-  private static int scrollPositionY;
 
   public static List<Observer> getCurrentObservers() {
     return currentObservers;
@@ -69,9 +65,21 @@ public enum BatchState {
     }
   }
 
+  public static void notifyFieldWasSelected(int record, Field field) {
+    for (Observer o : currentObservers) {
+      o.fieldWasSelected(record, field);
+    }
+  }
+
   public static void notifyOriginChanged(int positionX, int positionY) {
     for (Observer o : currentObservers) {
       o.didChangeOrigin(positionX, positionY);
+    }
+  }
+
+  public static void notifyHighlight() {
+    for (Observer o : currentObservers) {
+      o.didHighlight();
     }
   }
 
@@ -98,6 +106,5 @@ public enum BatchState {
       o.didDownload(newBatch);
     }
   }
-
 
 }

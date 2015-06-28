@@ -13,14 +13,15 @@ import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
-import java.awt.image.RescaleOp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 import javax.swing.JComponent;
 
 import client.model.BatchState;
 import client.model.Facade;
+import client.util.ClientLogManager;
 
 import shared.model.Batch;
 import shared.model.Field;
@@ -30,8 +31,7 @@ import shared.model.Project;
 public class BatchComponent extends JComponent implements BatchState.Observer {
 
   private static final Color HIGHLIGHT_COLOR = new Color(0, 255, 245, 80);
-  // private static BufferedImage NULL_IMAGE = new BufferedImage(10, 10,
-  // BufferedImage.TYPE_INT_ARGB);
+  private static final Color INVERTED_HIGHLIGHT_COLOR = new Color(255, 0, 10, 80);
   private static final double ZOOM_SCALE_FACTOR = 0.09;
   private static final double MAX_ZOOM_AMT = 95.0;
   private static final double MIN_ZOOM_AMT = 0.01;
@@ -60,8 +60,9 @@ public class BatchComponent extends JComponent implements BatchState.Observer {
   private int wDragStartOriginX;
   private int wDragStartOriginY;
 
-  //private List<HighlightListener> highlightlisteners = new ArrayList<HighlightListener>();
   private Rectangle2D[][] cells;
+  private Field[][] fieldLocations;
+  private int[][] recordLocations;
 
   /**
    * Instantiates a new BatchComponent.
@@ -113,16 +114,34 @@ public class BatchComponent extends JComponent implements BatchState.Observer {
 
   @Override
   public void cellWasSelected(int x, int y) {
-      Point cell = getCellAt(x, y);
-      if (cell != null) {
-        highlightCell(cell.x, cell.y);
-        repaint();
+    Point cell = null;
+    for (int row = 0; row < cells.length; row++) {
+      for (int column = 0; column < cells[row].length; column++) {
+        if (cells[row][column].contains(x, y)) {
+          cell = new Point(row, column);
+          BatchState.notifyFieldWasSelected(row, fieldLocations[row][column]);
+        }
       }
+    }
+
+    if (cell != null) {
+      highlightCell(cell.x, cell.y);
+      repaint();
+    }
   }
 
   @Override
   public void didChangeOrigin(int x, int y) {
-    setOrigin(x,y);
+    setOrigin(x, y);
+  }
+
+  @Override
+  public void didHighlight() {
+    if (shapes.size() == 2) {
+      DrawingRect rect = (DrawingRect) shapes.get(1);
+      shapes.set(1, rect.setVisible(isHighlighted));
+      repaint();
+    }
   }
 
   @Override
@@ -150,23 +169,22 @@ public class BatchComponent extends JComponent implements BatchState.Observer {
 
   @Override
   public void didToggleInvert() {
-    this.isInverted = !this.isInverted;
-
-    // TODO: preserve highlights??
-    // FIXME: after multiple toggles you can then highlight more than one cell
-    // TODO: why do I have to check for this if the toolbar should be disabled
-    // when there is no batch downloaded?
     if (shapes.size() < 1)
       return;
 
+    this.isInverted = !this.isInverted;
+
     if (this.isInverted) {
-      this.redrawBatch(new RescaleOp(-1.0f, 255f, null).filter(batch, null));
-      //if (this.isHighlighted) {
-           //highlightCell
-      //}
+      shapes.set(0, ((DrawingImage) shapes.get(0)).invert(this.batch));
+      if (shapes.size() == 2)
+        shapes.set(1, ((DrawingRect) shapes.get(1)).setColor(INVERTED_HIGHLIGHT_COLOR));
     } else {
-      this.redrawBatch(batch);
+      shapes.set(0, ((DrawingImage) shapes.get(0)).setImage(this.batch));
+      if (shapes.size() == 2)
+        shapes.set(1, ((DrawingRect) shapes.get(1)).setColor(HIGHLIGHT_COLOR));
     }
+
+    repaint();
   }
 
   @Override
@@ -218,18 +236,10 @@ public class BatchComponent extends JComponent implements BatchState.Observer {
 
     generateBatchCells();
 
-    redrawBatch(batch);
-  }
-
-  private void redrawBatch(BufferedImage batch) {
     shapes.add(new DrawingImage(batch, new Rectangle2D.Double(-dCenterX, -dCenterY, batch
         .getWidth(null), batch.getHeight(null))));
-    repaint();
   }
 
-  //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  // TODO!!! XXX CLEANUP THE CELL HIGHLIGHT CODE ///////////////////////////////////////////////////////////////
-  // //////////////////////////////////////////////////////////////////////////////////////////////////////////
   private void generateBatchCells() {
     List<Field> fields = Facade.getFields();
     Project project = Facade.getProject();
@@ -237,6 +247,8 @@ public class BatchComponent extends JComponent implements BatchState.Observer {
     int firstY = project.getFirstYCoord();
     int recordHeight = project.getRecordHeight();
     cells = new Rectangle2D[recordCount][fields.size()];
+    fieldLocations = new Field[recordCount][fields.size()];
+
     for (int record = 0; record < recordCount; record++) {
       for (int field = 0; field < fields.size(); field++) {
         Field fieldData = fields.get(field);
@@ -244,40 +256,23 @@ public class BatchComponent extends JComponent implements BatchState.Observer {
         double y = (firstY + recordHeight * record) - dCenterY;
         double w = fieldData.getWidth();
         double h = recordHeight;
+
         Rectangle2D rect = new Rectangle2D.Double(x, y, w, h);
         cells[record][field] = rect;
+        fieldLocations[record][field] = fieldData;
       }
     }
   }
 
-  public Point getCellAt(double x, double y) {
-    for (int i = 0; i < cells.length; i++) {
-      for (int j = 0; j < cells[i].length; j++) {
-        if (cells[i][j].contains(x, y)) {
-          return new Point(i, j);
-        }
-      }
-    }
-    return null;
-  }
-
-
-  public void highlightCell(int row, int column) {
-    // if no selected column then select first column
+  private void highlightCell(int row, int column) {
     if (column == -1)
       column = 0;
-    // if rectangle already exists, change it. Else add rectangle
     if (shapes.size() == 2) {
-      //isHighlighted = true;
       ((DrawingRect) shapes.get(1)).setRect(cells[row][column]);
     } else {
       isHighlighted = true;
       shapes.add(new DrawingRect(cells[row][column], HIGHLIGHT_COLOR));
     }
-    // notify listeners
-    //for (HighlightListener e : highlightlisteners) {
-      //e.updateSelectedCells(row, column);
-    //}
     repaint();
   }
 
@@ -382,7 +377,7 @@ public class BatchComponent extends JComponent implements BatchState.Observer {
 
     @Override
     public void mouseReleased(MouseEvent e) {
-      //BatchState.notifyOriginChanged(wOriginX, wOriginY);
+      // BatchState.notifyOriginChanged(wOriginX, wOriginY);
       initDrag();
     }
 
@@ -393,5 +388,12 @@ public class BatchComponent extends JComponent implements BatchState.Observer {
     }
   };
 
+  /* (non-Javadoc)
+   * @see client.model.BatchState.Observer#fieldWasSelected(int, shared.model.Field)
+   */
+  @Override
+  public void fieldWasSelected(int record, Field field) {
+    // TODO Auto-generated method stub
 
+  }
 }

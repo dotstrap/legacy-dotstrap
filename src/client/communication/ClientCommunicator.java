@@ -202,7 +202,9 @@ public class ClientCommunicator {
    * @throws ServerException the client exception
    */
   public DownloadFileResponse downloadFile(DownloadFileRequest params) throws ServerException {
-    return new DownloadFileResponse(doGet(URL_PREFIX + File.separator + params.getUrl()));
+    String url = URL_PREFIX + File.separator + params.getUrl();
+    ClientLogManager.getLogger().log(Level.FINEST, url);
+    return new DownloadFileResponse(doGet(url));
   }
 
   /**

@@ -1,6 +1,8 @@
 package client.model;
 
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
 import java.util.logging.Level;
@@ -12,6 +14,8 @@ import client.util.ClientLogManager;
 
 import shared.communication.DownloadBatchRequest;
 import shared.communication.DownloadBatchResponse;
+import shared.communication.DownloadFileRequest;
+import shared.communication.DownloadFileResponse;
 import shared.communication.GetProjectsRequest;
 import shared.communication.GetProjectsResponse;
 import shared.communication.GetSampleBatchRequest;
@@ -37,7 +41,9 @@ public enum Facade {
   private static Batch batch;
   private static Project project;
   private static List<Field> fields;
+  private static String urlPrefix;
   private static URL batchUrl;
+  private static URL filedHelpUrl;
 
   /**
    * Validates the user's credentials with the server
@@ -88,8 +94,8 @@ public enum Facade {
       DownloadBatchResponse response =
           clientComm.downloadBatch(new DownloadBatchRequest(user.getUsername(), user.getPassword(),
               projId));
-      String batchUrl =
-          response.getUrlPrefix().toString() + "/" + response.getBatch().getFilePath();
+      Facade.urlPrefix = response.getUrlPrefix().toString() + "/";
+      String batchUrl =  urlPrefix + response.getBatch().getFilePath();
 
       URL u = new URL(batchUrl);
       Facade.batchUrl = u;
@@ -99,6 +105,19 @@ public enum Facade {
 
       return ImageIO.read(u);
     } catch (Exception e) {
+      ClientLogManager.getLogger().log(Level.FINE, "STACKTRACE: ", e);
+      return null;
+    }
+  }
+
+  public static InputStream downloadFile(String fileUrl) {
+    try {
+      DownloadFileResponse response =
+          clientComm.downloadFile(new DownloadFileRequest(fileUrl, user.getUsername(), user.getPassword()));
+      //Facade.fieldHelpUrl = fileUrl;
+      return new ByteArrayInputStream(response.getFileBytes());
+    } catch (Exception e) {
+      ClientLogManager.getLogger().log(Level.FINER, fileUrl);
       ClientLogManager.getLogger().log(Level.FINE, "STACKTRACE: ", e);
       return null;
     }
@@ -142,6 +161,14 @@ public enum Facade {
 
   public static void setFields(List<Field> fields) {
     Facade.fields = fields;
+  }
+
+  public static String getUrlPrefix() {
+    return urlPrefix;
+  }
+
+  public static void setUrlPrefix(String urlPrefix) {
+    Facade.urlPrefix = urlPrefix;
   }
 
   public static URL getBatchUrl() {

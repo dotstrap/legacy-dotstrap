@@ -275,4 +275,22 @@ public class IndexerFrame extends JFrame implements BatchState.Observer {
     downloadBatchMenuItem.setEnabled(true);
   }
 
+  /* (non-Javadoc)
+   * @see client.model.BatchState.Observer#fieldWasSelected(int, shared.model.Field)
+   */
+  @Override
+  public void fieldWasSelected(int record, Field field) {
+    // TODO Auto-generated method stub
+
+  }
+
+  /* (non-Javadoc)
+   * @see client.model.BatchState.Observer#didHighlight()
+   */
+  @Override
+  public void didHighlight() {
+    // TODO Auto-generated method stub
+
+  }
+
 }

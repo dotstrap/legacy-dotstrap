@@ -11,14 +11,14 @@ package shared.model;
  * The Class Field.
  */
 public class Field {
-  private int    fieldId;
-  private int    projectId;
+  private int fieldId;
+  private int projectId;
   private String title;
   private String knownData;
   private String helpURL;
-  private int    xCoord;
-  private int    width;
-  private int    colNum;
+  private int xCoord;
+  private int width;
+  private int colNum;
 
   /**
    * Instantiates a new Field.
@@ -185,27 +185,26 @@ public class Field {
         && (colNum == other.getColNum()));  // @formatter:on
   }
 
-  // @Override
-  // public String toString() {
-  // String s = "";
-
-  // s += this.fieldId;
-  // s += "\n";
-  // s += this.projectId;
-  // s += "\n";
-  // s += this.title.toString();
-  // s += "\n";
-  // s += this.knownData.toString();
-  // s += "\n";
-  // s += this.helpURL.toString();
-  // s += "\n";
-  // s += this.xCoord;
-  // s += "\n";
-  // s += this.width;
-  // s += "\n";
-  // s += this.colNum;
-  // s += "\n";
-  // s += "-----------\n";
-  // return s;
-  // }
+  @Override
+  public String toString() {
+    String s = "\n-----------\n";
+    s += "FieldID=" + this.fieldId;
+    s += "\n";
+    s += "ProjectID=" + this.projectId;
+    s += "\n";
+    s += "Title=" + this.title.toString();
+    s += "\n";
+    s += "KnownData=" + this.knownData.toString();
+    s += "\n";
+    s +="HelpURL=" +  this.helpURL.toString();
+    s += "\n";
+    s += "XCoord=" + this.xCoord;
+    s += "\n";
+    s += "Width=" + this.width;
+    s += "\n";
+    s += "NumCols=" + this.colNum;
+    s += "\n";
+    s += "-----------\n";
+    return s;
+  }
 }
