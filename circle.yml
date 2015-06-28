@@ -1,0 +1,11 @@
+machine:
+  java:
+    version: oraclejdk8
+    version: oraclejdk7
+    version: oraclejdk6
+    version: openjdk7
+test:
+  override:
+    - ant clean
+    - ant import
+    - ant server-tests
