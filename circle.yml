@@ -1,10 +1,10 @@
 machine:
   java:
-    version: oraclejdk8
     version: oraclejdk7
-    version: oraclejdk6
-    version: openjdk7
 test:
+  pre:
+    curl -JkLO https://students.cs.byu.edu/~cs240ta/summer2015/download/record-indexer-data.zip 
+    unzip -u *.zip
   override:
     - ant clean
     - ant import
