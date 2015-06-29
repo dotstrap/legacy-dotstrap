@@ -1,33 +1,23 @@
 /**
- * DownloadBatchDialog.java
- * JRE v1.8.0_45
- * 
- * Created by William Myers on Jun 28, 2015.
- * Copyright (c) 2015 William Myers. All Rights reserved.
+ * DownloadBatchDialog.java JRE v1.8.0_45
+ *
+ * Created by William Myers on Jun 28, 2015. Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package client.view.indexerframe;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.util.logging.Level;
 
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.WindowConstants;
+import javax.swing.*;
 
 import client.model.BatchState;
 import client.model.Facade;
+import client.util.ClientLogManager;
 import client.view.IndexerFrame;
-
 import shared.model.Project;
 
 @SuppressWarnings("serial")
@@ -56,7 +46,7 @@ public class DownloadBatchDialog extends JDialog {
     }
   };//@formatter:on
 
-  public DownloadBatchDialog(IndexerFrame p, BatchComponent b) throws HeadlessException {
+  public DownloadBatchDialog(IndexerFrame p, BatchComponent b) {
     super(p, "Download Batch", true);
 
     this.indexerFrame = p;
@@ -124,13 +114,21 @@ public class DownloadBatchDialog extends JDialog {
       BatchState.notifyDidDownload(batch);
     } else {
       JOptionPane.showMessageDialog(this,
-          "A Batch could not be downloaded for this project. Please try another project.",
+          "A Batch could not be downloaded. Please try again.",
           "Unable to Download Batch", JOptionPane.WARNING_MESSAGE);
     }
   }
 
   private void processViewSampleBatch(Project p) {
     BufferedImage sampleBatch = Facade.getSampleBatch(p.getProjectId());
-    new SampleBatchDialog(this, sampleBatch, p.getTitle());
+    if (sampleBatch != null) {
+      new SampleBatchDialog(this, sampleBatch, p.getTitle());
+    } else {
+      JOptionPane.showMessageDialog(this, "Error downloading sample batch.",
+          "Unable to Download Sample Batch", JOptionPane.WARNING_MESSAGE);
+      ClientLogManager.getLogger().log(Level.FINE,
+          "received null image from Facade");
+
+    }
   }
 }

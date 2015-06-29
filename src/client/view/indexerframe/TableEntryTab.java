@@ -1,24 +1,19 @@
+/*
+ * 
+ */
 package client.view.indexerframe;
 
 import java.awt.BorderLayout;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
+import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 
 import client.model.BatchState;
 import client.model.Facade;
-
-import shared.model.Batch;
-import shared.model.Field;
-import shared.model.Record;
+import shared.model.*;
 
 @SuppressWarnings("serial")
 public class TableEntryTab extends JPanel implements BatchState.Observer {
@@ -116,9 +111,11 @@ public class TableEntryTab extends JPanel implements BatchState.Observer {
     @Override
     public void keyReleased(KeyEvent e) {
       int key = e.getKeyCode();
-      if (key == KeyEvent.VK_LEFT || key == KeyEvent.VK_RIGHT || key == KeyEvent.VK_UP
-          || key == KeyEvent.VK_DOWN || key == KeyEvent.VK_ENTER || key == KeyEvent.VK_TAB) {
-        BatchState.notifyFieldWasSelected(getCurrentRecord(), getCurrentField());
+      if (key == KeyEvent.VK_LEFT || key == KeyEvent.VK_RIGHT
+          || key == KeyEvent.VK_UP || key == KeyEvent.VK_DOWN
+          || key == KeyEvent.VK_ENTER || key == KeyEvent.VK_TAB) {
+        BatchState.notifyFieldWasSelected(getCurrentRecord(),
+            getCurrentField());
       }
     }
   };
@@ -157,7 +154,7 @@ public class TableEntryTab extends JPanel implements BatchState.Observer {
   }
 
   private int recordToRow(int record) {
-    assert (record >= 0 && record < table.getRowCount());
+    assert(record >= 0 && record < table.getRowCount());
     return record;
   }
 
@@ -185,7 +182,8 @@ public class TableEntryTab extends JPanel implements BatchState.Observer {
   public void dataWasInput(String value, int record, Field field) {}
 
   @Override
-  public void wordWasMisspelled(String value, int record, Field field, List<String> suggestions) {}
+  public void wordWasMisspelled(String value, int record, Field field,
+      List<String> suggestions) {}
 
   @Override
   public void didChangeOrigin(int x, int y) {}

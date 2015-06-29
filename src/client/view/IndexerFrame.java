@@ -1,42 +1,21 @@
 /**
- * IndexerFrame.java
- * JRE v1.8.0_45
- * 
- * Created by William Myers on Jun 28, 2015.
- * Copyright (c) 2015 William Myers. All Rights reserved.
+ * IndexerFrame.java JRE v1.8.0_45
+ *
+ * Created by William Myers on Jun 28, 2015. Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package client.view;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.HeadlessException;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
-import javax.swing.JSplitPane;
-import javax.swing.JTabbedPane;
-import javax.swing.JToolBar;
+import javax.swing.*;
 
 import client.model.BatchState;
-import client.view.indexerframe.BatchComponent;
-import client.view.indexerframe.DownloadBatchDialog;
-import client.view.indexerframe.FieldHelpTab;
-import client.view.indexerframe.FormEntryTab;
-import client.view.indexerframe.ImageNavigationTab;
-import client.view.indexerframe.TableEntryTab;
-
+import client.view.indexerframe.*;
 import shared.model.Batch;
 import shared.model.Field;
 
@@ -58,6 +37,7 @@ public class IndexerFrame extends JFrame implements BatchState.Observer {
   private JButton submitButton;
 
   private ActionListener toolBarListener = new ActionListener() {//@formatter:off
+    @Override
     public void actionPerformed(ActionEvent e) {
       if (e.getSource() == zoomInButton) {
         BatchState.notifyDidZoom(1.0);
@@ -72,6 +52,7 @@ public class IndexerFrame extends JFrame implements BatchState.Observer {
   };
 
   private ActionListener menuListener = new ActionListener() {
+    @Override
     public void actionPerformed(ActionEvent e) {
       if (e.getSource() == downloadBatchMenuItem) {
         new DownloadBatchDialog(IndexerFrame.this, batchViewer);
@@ -85,12 +66,13 @@ public class IndexerFrame extends JFrame implements BatchState.Observer {
   };
 
   private WindowAdapter windowAdapter = new WindowAdapter() {
+    @Override
     public void windowClosing(WindowEvent e) {
         processExit();
     }
   };//@formatter:on
 
-  public IndexerFrame(String title) throws HeadlessException {
+  public IndexerFrame(String title) {
     setSize(new Dimension(1000, 800));
 
     setJMenuBar(initMenu());
@@ -184,6 +166,8 @@ public class IndexerFrame extends JFrame implements BatchState.Observer {
     vSplit.setResizeWeight(0.5);
     vSplit.add(batchViewer);
     vSplit.add(hSplit);
+    // make the batchViewer window 500 pixels tall
+    vSplit.setDividerLocation(500 + vSplit.getInsets().bottom);
 
     return vSplit;
   }
@@ -232,12 +216,13 @@ public class IndexerFrame extends JFrame implements BatchState.Observer {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see client.model.BatchState.Observer#wordWasMisspelled(java.lang.String, int,
    * shared.model.Field)
    */
   @Override
-  public void wordWasMisspelled(String value, int record, Field field, List<String> suggestions) {
+  public void wordWasMisspelled(String value, int record, Field field,
+      List<String> suggestions) {
     // TODO Auto-generated method stub
 
   }

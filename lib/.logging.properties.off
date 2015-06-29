@@ -7,11 +7,11 @@ config   =
 # Handlers
 # -----------------------------------------
 # --- ConsoleHandler ---
-java.util.logging.ConsoleHandler.level     = FINEST
+java.util.logging.ConsoleHandler.level     = SEVERE
 java.util.logging.ConsoleHandler.formatter = java.util.logging.SimpleFormatter
 
 # --- FileHandler ---
-java.util.logging.FileHandler.level       = FINEST
+java.util.logging.FileHandler.level       = SEVERE
 java.util.logging.FileHandler.pattern     = logs/RecordIndexer%u.log
 java.util.logging.FileHandler.limit       = 1000000
 java.util.logging.FileHandler.append      = false
@@ -22,12 +22,12 @@ java.util.logging.FileHandler.formatter   = java.util.logging.SimpleFormatter
 # ------------------------------------------
 server.handlers              = java.util.logging.FileHandler, java.util.logging.ConsoleHandler
 server.useParentHandlers     = false
-server.level                 = FINEST
+server.level                 = SEVERE
 
 importer.handlers            = java.util.logging.FileHandler, java.util.logging.ConsoleHandler
 importer.useParentHandlers   = false
-importer.level               = FINEST
+importer.level               = SEVERE
 
 client.handlers              = java.util.logging.FileHandler, java.util.logging.ConsoleHandler
 client.useParentHandlers     = false
-client.level                 = FINEST
+client.level                 = SEVERE

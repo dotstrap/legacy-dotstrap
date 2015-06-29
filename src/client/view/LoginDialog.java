@@ -1,7 +1,7 @@
 /**
  * LoginDialog.java
  * JRE v1.8.0_45
- * 
+ *
  * Created by William Myers on Jun 28, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
@@ -10,7 +10,6 @@ package client.view;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Frame;
-import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -64,7 +63,7 @@ public class LoginDialog extends JDialog implements BatchState.Observer {
     }
   };//@formatter:on
 
-  public LoginDialog() throws HeadlessException {
+  public LoginDialog() {
     super((Frame) null, "Login", true);
 
     // Initialize

@@ -1,9 +1,7 @@
 /**
- * Facade.java
- * JRE v1.8.0_45
- * 
- * Created by William Myers on Jun 28, 2015.
- * Copyright (c) 2015 William Myers. All Rights reserved.
+ * Facade.java JRE v1.8.0_45
+ *
+ * Created by William Myers on Jun 28, 2015. Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package client.model;
 
@@ -19,22 +17,8 @@ import javax.imageio.ImageIO;
 
 import client.communication.ClientCommunicator;
 import client.util.ClientLogManager;
-
-import shared.communication.DownloadBatchRequest;
-import shared.communication.DownloadBatchResponse;
-import shared.communication.DownloadFileRequest;
-import shared.communication.DownloadFileResponse;
-import shared.communication.GetProjectsRequest;
-import shared.communication.GetProjectsResponse;
-import shared.communication.GetSampleBatchRequest;
-import shared.communication.GetSampleBatchResponse;
-import shared.communication.ValidateUserRequest;
-import shared.communication.ValidateUserResponse;
-import shared.model.Batch;
-import shared.model.Field;
-import shared.model.Project;
-import shared.model.Record;
-import shared.model.User;
+import shared.communication.*;
+import shared.model.*;
 
 public enum Facade {
   INSTANCE;
@@ -48,15 +32,15 @@ public enum Facade {
   private static Record[] records;
   private static String urlPrefix;
   private static URL batchUrl;
-  private static URL sampleBatchUrl;
 
   public static boolean validateUser(String u, char[] p) {
     try {
-      ValidateUserResponse response =
-          clientComm.validateUser(new ValidateUserRequest(u, String.valueOf(p)));
-      user = response.getUser();
+      ValidateUserResponse response = Facade.clientComm
+          .validateUser(new ValidateUserRequest(u, String.valueOf(p)));
+      Facade.user = response.getUser();
 
-      ClientLogManager.getLogger().log(Level.FINEST, "SUCESS: " + u + " " + String.valueOf(p));
+      ClientLogManager.getLogger().log(Level.FINEST,
+          "SUCESS: " + u + " " + String.valueOf(p));
       return response.isValidated();
     } catch (Exception e) {
       ClientLogManager.getLogger().log(Level.FINE, "STACKTRACE: ", e);
@@ -67,11 +51,13 @@ public enum Facade {
   public static Project[] getProjects() {
     try {
       GetProjectsResponse response =
-          clientComm.getProjects(new GetProjectsRequest(user.getUsername(), user.getPassword()));
+          Facade.clientComm.getProjects(new GetProjectsRequest(
+              Facade.user.getUsername(), Facade.user.getPassword()));
 
-      ClientLogManager.getLogger()
-          .log(Level.FINEST, "SUCESS: " + response.getProjects().toString());
-      return response.getProjects().toArray(new Project[response.getProjects().size()]);
+      ClientLogManager.getLogger().log(Level.FINEST,
+          "SUCESS: " + response.getProjects().toString());
+      return response.getProjects()
+          .toArray(new Project[response.getProjects().size()]);
     } catch (Exception e) {
       ClientLogManager.getLogger().log(Level.FINE, "STACKTRACE: ", e);
       return null;
@@ -79,19 +65,30 @@ public enum Facade {
   }
 
   public static BufferedImage getSampleBatch(int projId) {
-    String sampleBatchUrl = "";
+    ClientLogManager.getLogger().log(Level.WARNING, "PROJ: " + projId);
+    ClientLogManager.getLogger().log(Level.WARNING,
+        "U: " + Facade.user.getUsername());
+    ClientLogManager.getLogger().log(Level.WARNING,
+        "P: " + Facade.user.getPassword());
+
     try {
       GetSampleBatchResponse response =
-          clientComm.getSampleBatch(new GetSampleBatchRequest(user.getUsername(), user
-              .getPassword(), projId));
-      sampleBatchUrl = response.getURL().toString() + "/" + response.getSampleBatch().getFilePath();
-      URL url = new URL(sampleBatchUrl);
-      Facade.sampleBatchUrl = url;
+          Facade.clientComm.getSampleBatch(new GetSampleBatchRequest(
+              Facade.user.getUsername(), Facade.user.getPassword(), projId));
 
-      ClientLogManager.getLogger().log(Level.FINEST, "SUCESS: " + sampleBatchUrl);
+      String sampleBatchUrl = response.getURL().toString() + "/"
+          + response.getSampleBatch().getFilePath();
+
+      ClientLogManager.getLogger().log(Level.WARNING,
+          "SUCESS: " + response.getURL().toString());
+
+      ClientLogManager.getLogger().log(Level.WARNING,
+          "SUCESS: " + response.getSampleBatch().getFilePath());
+
+      ClientLogManager.getLogger().log(Level.FINEST,
+          "SUCESS: " + sampleBatchUrl);
       return ImageIO.read(new URL(sampleBatchUrl));
     } catch (Exception e) {
-      ClientLogManager.getLogger().log(Level.FINER, sampleBatchUrl);
       ClientLogManager.getLogger().log(Level.FINE, "STACKTRACE: ", e);
       return null;
     }
@@ -101,10 +98,10 @@ public enum Facade {
     String batchUrl = "";
     try {
       DownloadBatchResponse response =
-          clientComm.downloadBatch(new DownloadBatchRequest(user.getUsername(), user.getPassword(),
-              projId));
+          Facade.clientComm.downloadBatch(new DownloadBatchRequest(
+              Facade.user.getUsername(), Facade.user.getPassword(), projId));
       Facade.urlPrefix = response.getUrlPrefix().toString() + "/";
-      batchUrl = urlPrefix + response.getBatch().getFilePath();
+      batchUrl = Facade.urlPrefix + response.getBatch().getFilePath();
       URL url = new URL(batchUrl);
 
       Facade.batchUrl = url;
@@ -115,15 +112,17 @@ public enum Facade {
       Facade.fields = new ArrayList<Field>();
       Facade.fields = response.getFields();
 
-      ClientLogManager.getLogger().log(Level.FINEST, "fields SIZE: " + response.getFields().size());
-      Facade.records =
-          response.getRecords().toArray(new Record[Facade.project.getRecordsPerBatch()]);
-      ClientLogManager.getLogger().log(Level.FINEST, "records LENGTH: " + records.length);
+      ClientLogManager.getLogger().log(Level.FINEST,
+          "fields SIZE: " + response.getFields().size());
+      Facade.records = response.getRecords()
+          .toArray(new Record[Facade.project.getRecordsPerBatch()]);
+      ClientLogManager.getLogger().log(Level.FINEST,
+          "records LENGTH: " + Facade.records.length);
 
       ClientLogManager.getLogger().log(Level.FINEST, "SUCESS: " + batchUrl);
       return ImageIO.read(url);
     } catch (Exception e) {
-      ClientLogManager.getLogger().log(Level.FINER, batchUrl);
+      ClientLogManager.getLogger().log(Level.FINER, "URL: " + batchUrl);
       ClientLogManager.getLogger().log(Level.FINE, "STACKTRACE: ", e);
       return null;
     }
@@ -132,8 +131,8 @@ public enum Facade {
   public static InputStream downloadFile(String fileUrl) {
     try {
       DownloadFileResponse response =
-          clientComm.downloadFile(new DownloadFileRequest(fileUrl, user.getUsername(), user
-              .getPassword()));
+          Facade.clientComm.downloadFile(new DownloadFileRequest(fileUrl,
+              Facade.user.getUsername(), Facade.user.getPassword()));
 
       ClientLogManager.getLogger().log(Level.FINEST, "SUCESS: " + fileUrl);
       return new ByteArrayInputStream(response.getFileBytes());
@@ -153,7 +152,7 @@ public enum Facade {
   }
 
   public static User getUser() {
-    return user;
+    return Facade.user;
   }
 
   public static void setUser(User user) {
@@ -161,7 +160,7 @@ public enum Facade {
   }
 
   public static Batch getBatch() {
-    return batch;
+    return Facade.batch;
   }
 
   public static void setBatch(Batch batch) {
@@ -169,7 +168,7 @@ public enum Facade {
   }
 
   public static Project getProject() {
-    return project;
+    return Facade.project;
   }
 
   public static void setProject(Project project) {
@@ -177,7 +176,7 @@ public enum Facade {
   }
 
   public static List<Field> getFields() {
-    return fields;
+    return Facade.fields;
   }
 
   public static void setFields(ArrayList<Field> fields) {
@@ -185,7 +184,7 @@ public enum Facade {
   }
 
   public static Record[] getRecords() {
-    return records;
+    return Facade.records;
   }
 
   public static void setRecords(Record[] records) {
@@ -193,7 +192,7 @@ public enum Facade {
   }
 
   public static String getUrlPrefix() {
-    return urlPrefix;
+    return Facade.urlPrefix;
   }
 
   public static void setUrlPrefix(String urlPrefix) {
@@ -201,19 +200,11 @@ public enum Facade {
   }
 
   public static URL getBatchUrl() {
-    return batchUrl;
+    return Facade.batchUrl;
   }
 
   public static void setBatchUrl(URL batchUrl) {
     Facade.batchUrl = batchUrl;
-  }
-
-  public static URL getSampleBatchUrl() {
-    return sampleBatchUrl;
-  }
-
-  public static void setSampleBatchUrl(URL sampleBatchUrl) {
-    Facade.sampleBatchUrl = sampleBatchUrl;
   }
 
 }

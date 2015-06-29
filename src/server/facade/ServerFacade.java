@@ -1,10 +1,11 @@
+/*
+ *
+ */
 package server.facade;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -13,34 +14,15 @@ import org.apache.commons.io.IOUtils;
 import server.ServerException;
 import server.database.Database;
 import server.database.DatabaseException;
-
-import shared.communication.DownloadBatchRequest;
-import shared.communication.DownloadBatchResponse;
-import shared.communication.DownloadFileRequest;
-import shared.communication.DownloadFileResponse;
-import shared.communication.GetFieldsRequest;
-import shared.communication.GetFieldsResponse;
-import shared.communication.GetProjectsRequest;
-import shared.communication.GetProjectsResponse;
-import shared.communication.GetSampleBatchRequest;
-import shared.communication.GetSampleBatchResponse;
-import shared.communication.SearchRequest;
-import shared.communication.SearchResponse;
-import shared.communication.SubmitBatchRequest;
-import shared.communication.SubmitBatchResponse;
-import shared.communication.ValidateUserRequest;
-import shared.communication.ValidateUserResponse;
-import shared.model.Batch;
-import shared.model.Field;
-import shared.model.Project;
-import shared.model.Record;
-import shared.model.User;
+import shared.communication.*;
+import shared.model.*;
 
 public class ServerFacade {
 
   private static Logger logger;
+
   static {
-    logger = Logger.getLogger("server");
+    ServerFacade.logger = Logger.getLogger("server");
   }
 
   public static void initialize() throws ServerException {
@@ -61,15 +43,18 @@ public class ServerFacade {
       db.endTransaction(true);
     } catch (DatabaseException e) {
       db.endTransaction(false);
-      throw new ServerException("while reading from database to validate username: "
-          + request.getUsername(), e);
+      throw new ServerException(
+          "while reading from database to validate username: "
+              + request.getUsername(),
+          e);
     }
 
     ValidateUserResponse result = new ValidateUserResponse(user);
     return result;
   }
 
-  public static GetProjectsResponse getProjects(GetProjectsRequest request) throws ServerException {
+  public static GetProjectsResponse getProjects(GetProjectsRequest request)
+      throws ServerException {
     Database db = new Database();
     List<Project> projects = null;
 
@@ -87,8 +72,8 @@ public class ServerFacade {
     return result;
   }
 
-  public static GetSampleBatchResponse getSampleBatch(GetSampleBatchRequest request)
-      throws ServerException {
+  public static GetSampleBatchResponse getSampleBatch(
+      GetSampleBatchRequest request) throws ServerException {
     Database db = new Database();
     Batch sampleBatch = null;
 
@@ -103,11 +88,13 @@ public class ServerFacade {
 
     GetSampleBatchResponse result = new GetSampleBatchResponse();
     result.setSampleBatch(sampleBatch);
+    ServerFacade.logger.log(Level.FINEST,
+        "URL=" + result.getURL() + result.getSampleBatch().getFilePath());
     return result;
   }
 
-  public static DownloadBatchResponse downloadBatch(DownloadBatchRequest request)
-      throws ServerException, DatabaseException { // TODO
+  public static DownloadBatchResponse downloadBatch(
+      DownloadBatchRequest request) throws ServerException, DatabaseException { // TODO
     Database db = new Database();
 
     DownloadBatchResponse result = new DownloadBatchResponse();
@@ -115,7 +102,8 @@ public class ServerFacade {
     try {
       db.startTransaction();
 
-      User currUser = db.getUserDAO().read(request.getUsername(), request.getPassword());
+      User currUser =
+          db.getUserDAO().read(request.getUsername(), request.getPassword());
       if (currUser.getCurrBatch() <= 0) {
         int projectId = request.getProjectId();
         Batch batchToDownload = db.getBatchDAO().getIncompleteBatch(projectId);
@@ -124,7 +112,7 @@ public class ServerFacade {
         // update the user and batch models
         int currUserId = currUser.getUserId();
         currUser.setCurrBatch(currBatchId);
-        logger.log(Level.FINE, "batchId=" + currBatchId);
+        ServerFacade.logger.log(Level.FINEST, "batchId=" + currBatchId);
         batchToDownload.setCurrUserId(currUserId);
 
         // update the user and batch in the db
@@ -141,22 +129,27 @@ public class ServerFacade {
         result.setRecords(records);
 
         db.endTransaction(true);
+        ServerFacade.logger.log(Level.FINEST,
+            "URL=" + result.getUrlPrefix() + result.getBatch().getFilePath());
         return result;
       } else {
-        logger.log(Level.WARNING, "user already has a batch checked out...");
+        ServerFacade.logger.log(Level.WARNING,
+            "user already has a batch checked out...");
       }
     } catch (DatabaseException e) {
       db.endTransaction(false);
       throw new ServerException("while attempting to download batch ", e);
     } catch (Exception e) {
       db.endTransaction(false);
-      throw new ServerException("unknown error while attempting to download batch ", e);
+      throw new ServerException(
+          "unknown error while attempting to download batch ", e);
     }
     db.endTransaction(false);
     return result; // should have all null values if we made it to here
   }
 
-  private static ArrayList<Integer> getFieldIDs(Batch batch, Database db) throws DatabaseException {
+  private static ArrayList<Integer> getFieldIDs(Batch batch, Database db)
+      throws DatabaseException {
     ArrayList<Integer> fields = new ArrayList<Integer>();
     ArrayList<Field> allFields = db.getFieldDAO().getAll();
     for (Field f : allFields) {
@@ -167,8 +160,8 @@ public class ServerFacade {
     return fields;
   }
 
-  private static void addRecords(String input, Project project, Batch batch, Database db,
-      ArrayList<Integer> fields) throws DatabaseException {
+  private static void addRecords(String input, Project project, Batch batch,
+      Database db, ArrayList<Integer> fields) throws DatabaseException {
     List<String> rows = Arrays.asList(input.split(";| ;", 0));
     int row = 0;
     for (String s : rows) {
@@ -176,8 +169,8 @@ public class ServerFacade {
       List<String> allData = Arrays.asList(s.split(",| ,", 0));
       for (String currData : allData) {
         currData = currData.toUpperCase();
-        Record record =
-            new Record(fields.get(col), batch.getBatchId(), batch.getFilePath(), currData, row, col);
+        Record record = new Record(fields.get(col), batch.getBatchId(),
+            batch.getFilePath(), currData, row, col);
         db.getRecordDAO().create(record);
         col++;
       }
@@ -193,16 +186,17 @@ public class ServerFacade {
     Database db = new Database();
     try {
       db.startTransaction();
-      User user = db.getUserDAO().read(request.getUsername(), request.getPassword());
+      User user =
+          db.getUserDAO().read(request.getUsername(), request.getPassword());
 
       if (user.getCurrBatch() == request.getBatchID()) {
         String input = request.getFieldValues();
         Batch batch = db.getBatchDAO().read(request.getBatchID());
         Project project = db.getProjectDAO().read(batch.getProjectId());
-        ArrayList<Integer> fields = getFieldIDs(batch, db);
+        ArrayList<Integer> fields = ServerFacade.getFieldIDs(batch, db);
         if (fields.size() > 0) {
 
-          addRecords(input, project, batch, db, fields);
+          ServerFacade.addRecords(input, project, batch, db, fields);
 
           user.setCurrBatch(-1);
           int count = (user.getRecordCount() + project.getRecordsPerBatch());
@@ -223,22 +217,26 @@ public class ServerFacade {
     return result;
   }
 
-  public static GetFieldsResponse getFields(GetFieldsRequest request) throws ServerException {
+  public static GetFieldsResponse getFields(GetFieldsRequest request)
+      throws ServerException {
     Database db = new Database();
     int projectId = request.getProjectId();
     List<Field> fields = null;
 
     try {
       db.startTransaction();
-      fields = projectId > 0 ? db.getFieldDAO().getAll(projectId) : db.getFieldDAO().getAll();
+      fields = projectId > 0 ? db.getFieldDAO().getAll(projectId)
+          : db.getFieldDAO().getAll();
       db.endTransaction(true);
     } catch (DatabaseException e) {
       db.endTransaction(false);
-      throw new ServerException("while attempting to read all fields from the database...", e);
+      throw new ServerException(
+          "while attempting to read all fields from the database...", e);
     }
 
     if (fields.isEmpty()) {
-      throw new ServerException("Requested projectId (" + projectId + ") does not exist...");
+      throw new ServerException(
+          "Requested projectId (" + projectId + ") does not exist...");
     }
 
     GetFieldsResponse result = new GetFieldsResponse();
@@ -246,7 +244,8 @@ public class ServerFacade {
     return result;
   }
 
-  public static SearchResponse search(SearchRequest request) throws ServerException {
+  public static SearchResponse search(SearchRequest request)
+      throws ServerException {
     Database db = new Database();
     SearchResponse result = new SearchResponse();
     ArrayList<Record> records = new ArrayList<Record>();

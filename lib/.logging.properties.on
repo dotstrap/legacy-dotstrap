@@ -11,7 +11,7 @@ java.util.logging.ConsoleHandler.level     = FINEST
 java.util.logging.ConsoleHandler.formatter = java.util.logging.SimpleFormatter
 
 # --- FileHandler ---
-java.util.logging.FileHandler.level       = FINEST
+#java.util.logging.FileHandler.level       = FINEST
 java.util.logging.FileHandler.pattern     = logs/RecordIndexer%u.log
 java.util.logging.FileHandler.limit       = 1000000
 java.util.logging.FileHandler.append      = false

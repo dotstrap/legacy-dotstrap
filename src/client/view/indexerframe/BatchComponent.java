@@ -1,7 +1,7 @@
 /**
  * BatchComponent.java
  * JRE v1.8.0_45
- * 
+ *
  * Created by William Myers on Jun 28, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
@@ -10,7 +10,6 @@ package client.view.indexerframe;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.HeadlessException;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -159,7 +158,7 @@ public class BatchComponent extends JComponent implements BatchState.Observer {
     }
   };
 
-  public BatchComponent() throws HeadlessException {
+  public BatchComponent() {
     batch = null;
     scale = 1.0;
     rectangle = new Rectangle2D.Double();

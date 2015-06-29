@@ -36,13 +36,18 @@
     <!-- File containing the report output by Checkstyle -->
     <property name="checkstyle-report-file" location="checkstyle-report.txt"/>
     
+    <!-- Deploy target files & commands -->
     <property name="rsync" value="/usr/local/bin/rsync" />
     <property name="user" value="wmyers7" />
-    <property name="rsync-host" value="schizo.cs.byu.edu" />
-    <!--<property name="remote-path" value="/users/guest/w/${user}/Documents/Developer/CS240/${ant.project.name}/"/> -->
-    <property name="remote-path" value="/users/guest/w/${user}/Downloads/" />
+    <property name="rsync-host" value="ssh.fsl.byu.edu" />
+    <!--<property name="remote-path" value="/users/guest/w/${user}/Downloads/" />-->
+    <property name="remote-path" value="/fslhome/${user}/Downloads/" />
+
     <property name="tar" value="/usr/bin/tar" />
-    <property name="tar-name" value="server.tar.gz" />
+    <property name="tar-name" value="client.tar.gz" />
+
+    <property name="log-file-on" location="${lib}/.logging.properties.on"/>
+    <property name="log-file-off" location="${lib}/.logging.properties.off"/>
 
     <!-- Default values for command-line properties.  Values specified on the command-line will override these. -->
     <property name="file" value="Records/Records.xml"/>
@@ -218,14 +223,16 @@
     
     <target name="deploy" depends="clean"
         description="copies source code to remote host">
+        <copy file="${log-file-off}" tofile="logging.properties" overwrite="true"/>
         <exec executable="${tar}">
             <arg
-                line="--exclude=docs --exclude='*README*' --exclude=.gitignore --exclude=.git -X .gitignore -czf ${tar-name} ." />
+                line="--exclude=database/IndexerServerEmpty.sqlite --exclude=database/IndexerServerFull.sqlite --exclude=circle.yml --exclude=docs --exclude='*README*' --exclude=.gitignore --exclude=.git -X .gitignore -czf ${tar-name} ." />
         </exec>
         <exec executable="${rsync}">
             <arg
                 line="-e ssh -ahuv --delete ${tar-name} ${user}@${rsync-host}:${remote-path}" />
         </exec>
+        <copy file="${log-file-on}" tofile="logging.properties" overwrite="true"/>
     </target>
 
 </project>
