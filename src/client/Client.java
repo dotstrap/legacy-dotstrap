@@ -7,12 +7,15 @@
  */
 package client;
 
+import java.awt.Color;
 import java.awt.EventQueue;
+
+import javax.swing.UIManager;
+import javax.swing.plaf.ColorUIResource;
 
 import client.communication.ClientCommunicator;
 import client.model.Facade;
 import client.util.ClientLogManager;
-import client.view.IndexerFrame;
 import client.view.LoginDialog;
 
 public class Client {
@@ -27,6 +30,7 @@ public class Client {
         final int port = Integer.parseInt(args[1]);
 
         Facade.setClientCommunicator(new ClientCommunicator(host, port));
+        UIManager.put("Table.gridColor", new ColorUIResource(Color.LIGHT_GRAY));
         EventQueue.invokeLater(new Runnable() {
           public void run() {
             new LoginDialog();

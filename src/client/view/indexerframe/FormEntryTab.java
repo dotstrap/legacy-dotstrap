@@ -33,6 +33,7 @@ import client.util.ClientLogManager;
 
 import shared.model.Batch;
 import shared.model.Field;
+import shared.model.Record;
 
 @SuppressWarnings("serial")
 public class FormEntryTab extends JPanel implements BatchState.Observer {
@@ -64,6 +65,7 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
         JList<Integer> source = (JList<Integer>) e.getSource();
         int selection = source.getSelectedIndex();
         if (selection >= 0) {
+          ClientLogManager.getLogger().log(Level.FINEST, "SELECTION: " + selection);
           BatchState.setCurrentRecord(selection);
         }
       }
@@ -78,7 +80,7 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
         if (BatchState.getCurrentRecord() < 0) {
           BatchState.setCurrentRecord(0);
         }
-        ClientLogManager.getLogger().log(Level.FINE, field.toString());
+        ClientLogManager.getLogger().log(Level.INFO, field.toString());
         BatchState.setCurrentField(field);
       }
     }
@@ -89,8 +91,8 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
 
       if (field != null) {
         String text = ((JTextField) e.getSource()).getText();
-        ClientLogManager.getLogger().log(Level.FINE, "field: " + field.toString());
-        ClientLogManager.getLogger().log(Level.FINE, "text: " + text);
+        ClientLogManager.getLogger().log(Level.FINEST, field.toString());
+        ClientLogManager.getLogger().log(Level.FINEST, "text: " + text);
         BatchState.notifyDataWasInput(text, BatchState.getCurrentRecord(), field);
       }
     }
@@ -106,7 +108,37 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
 
   @Override
   public void dataWasInput(String value, int record, Field field) {
-    new QualityCheckerPopupMenu(record, record);
+    int index = record;
+    if (Facade.getRecords()[index] == null) {
+      Facade.getRecords()[index] = new Record();
+    }
+
+    // make sure all the record data is accurate
+    if (Facade.getRecords()[index].getFieldId() < 0) {
+      Facade.getRecords()[index].setFieldId(field.getFieldId());
+    }
+    if (Facade.getRecords()[index].getBatchId() < 0) {
+      Facade.getRecords()[index].setBatchId(Facade.getBatch().getBatchId());
+    }
+    if (Facade.getRecords()[index].getBatchURL() == "") {
+      Facade.getRecords()[index].setBatchURL(Facade.getBatch().getFilePath());
+    }
+    if (Facade.getRecords()[index].getData() == "") {
+      Facade.getRecords()[index].setData(value);
+    }
+    if (Facade.getRecords()[index].getRowNum() < 0) {
+      Facade.getRecords()[index].setRowNum(index);
+    }
+    if (Facade.getRecords()[index].getColNum() < 0) {
+      Facade.getRecords()[index].setColNum(field.getColNum());
+    }
+
+    ClientLogManager.getLogger().log(Level.WARNING, field.toString());
+    ClientLogManager.getLogger().log(Level.WARNING, Facade.getRecords()[index].toString());
+    ClientLogManager.getLogger().log(Level.SEVERE, "\n\n\n");
+
+    // ClientLogManager.getLogger().log(Level.CONFIG, Facade.getRecords()[record].toString());
+    // new QualityCheckerPopupMenu(record, record);
     // BatchState.updateSpeltWrong(record, field.getColNum(), value);
   }
 
@@ -137,25 +169,27 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
   public void fieldWasSelected(int r, Field field) {
     if (records != null && r >= 0) {
       records.setSelectedIndex(r);
-      // ClientLogManager.getLogger().log(Level.FINE, record + "=>" + field.toString());
     }
 
-    // ClientLogManager.getLogger().log(Level.FINE, record + "=>" + field.toString());
-    // ClientLogManager.getLogger().log(Level.FINE, "RECORDS=>" + Facade.getRecords().toString());
-
+    String text = "";
     if (!fields.isEmpty() && fields != null && field != null) {
       for (Field f : fields.keySet()) {
-        String text = "";
 
-        int record = BatchState.getCurrentRecord();
+        int record = r;
+        // int record = BatchState.getCurrentRecord();
         if (record >= 0) {
           if (Facade.getRecords()[record] != null) {
-            text = Facade.getRecords()[record].getData();
-            ClientLogManager.getLogger().log(Level.FINE, Facade.getRecords()[record].toString());
+            if (Facade.getRecords()[record].getData() != ""
+                && Facade.getRecords()[record].getColNum() == field.getColNum()) {
+              text = Facade.getRecords()[record].getData();
+
+              ClientLogManager.getLogger()
+                  .log(Level.CONFIG, Facade.getRecords()[record].toString());
+            }
           }
         }
-        fields.get(f).setText(text);
       }
+      fields.get(field).setText(text);
       fields.get(field).requestFocusInWindow();
     }
 
