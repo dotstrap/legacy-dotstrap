@@ -14,6 +14,7 @@ import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.util.List;
 import java.util.logging.Level;
 
 import javax.swing.AbstractAction;
@@ -41,8 +42,6 @@ public class LoginDialog extends JDialog implements BatchState.Observer {
 
   private JTextField usernameField;
   private JPasswordField passwordField;
-
-  // TODO: clean this code up
 
   private Action loginAction = new AbstractAction() {//@formatter:off
     @Override
@@ -86,6 +85,9 @@ public class LoginDialog extends JDialog implements BatchState.Observer {
 
   @Override
   public void dataWasInput(String value, int record, Field field) {}
+
+  @Override
+  public void wordWasMisspelled(String value, int record, Field field, List<String> suggestions) {}
 
   @Override
   public void didChangeOrigin(int x, int y) {}

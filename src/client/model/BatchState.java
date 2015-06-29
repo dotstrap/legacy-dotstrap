@@ -8,11 +8,16 @@
 package client.model;
 
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import client.util.ClientLogManager;
+import client.util.spell.SpellCorrector;
+
 import shared.model.Batch;
 import shared.model.Field;
+import shared.model.Record;
 
 public enum BatchState {
   INSTANCE;
@@ -20,6 +25,7 @@ public enum BatchState {
   public interface Observer {//@formatter:off
     public void cellWasSelected(int x, int y);
     public void dataWasInput(String value, int record, Field field);
+    public void wordWasMisspelled(String value, int record, Field field, List<String> suggestions);
     public void didChangeOrigin(int x, int y);
     public void didDownload(BufferedImage b);
     public void didHighlight();
@@ -59,20 +65,26 @@ public enum BatchState {
     }
   }
 
-  // public static void notifyFieldWasSelected(Field field) {
-  // for (Observer o : currentObservers) {
-  // o.fieldWasSelected(field);
-  // }
-  // }
-
   public static void notifyDataWasInput(String value, int record, Field field) {
+    int index = record;
+    if (Facade.getRecords()[record] == null) {
+      Facade.getRecords()[index] =
+          new Record(field.getFieldId(), Facade.getBatch().getBatchId(), Facade.getBatch()
+              .getFilePath(), value, index, field.getColNum());
 
-    field.setKnownData(value);
-
-    for (Observer o : currentObservers) {
-      o.dataWasInput(value, record, field);
+    } else {
+      Facade.getRecords()[index].setData(value);
     }
+    for (Observer o : currentObservers) {
+      o.dataWasInput(value, index, field);
+    }
+  }
 
+  public static void notifyWordWasMisspelled(String value, int record, Field field,
+      List<String> suggestions) {
+    for (Observer o : currentObservers) {
+      o.wordWasMisspelled(value, record, field, suggestions);
+    }
   }
 
   public static void notifyDidDownload(BufferedImage newBatch) {
@@ -147,6 +159,85 @@ public enum BatchState {
         // TODO
       }
     }
+  }
+
+  public static int[][] speltWrong;
+  private String[][] indexedData;
+
+  public String[][] getIndexedData() {
+    return indexedData;
+  }
+
+  public static boolean isKnownWord(int field, String word) {
+    SpellCorrector corrector = getCorrector(field);
+    if (corrector != null) {
+      return corrector.wordKnown(word);
+    }
+    return true;
+  }
+
+  public List<String> getSuggestions(int column, String word) {
+    SpellCorrector corrector = getCorrector(column - 1);
+    return corrector.suggestSimilarWord(word);
+  }
+
+  public static SpellCorrector getCorrector(int field) {
+    try {
+      String DictionaryPath = Facade.getFields().get(field).getKnownData();
+
+      if (DictionaryPath != null) {
+        SpellCorrector corrector = new SpellCorrector();
+        corrector.useDictionary(DictionaryPath);
+        return corrector;
+      }
+    } catch (IOException e) {
+      ClientLogManager.getLogger().log(Level.SEVERE, "unable to open dictionairy" + e);
+    }
+    return null;
+  }
+
+  public void initializeSpeltWrong() {
+    int records = Facade.getProject().getRecordsPerBatch();
+    int fields = Facade.getFields().size();
+    String[][] data = new String[records][fields + 1];
+    speltWrong = new int[records][fields];
+    if (getIndexedData() != null) {
+      data = getIndexedData();
+      for (int record = 0; record < data.length; record++) {
+        for (int column = 1; column < fields; column++) {
+          speltWrong[record][column - 1] = 0;
+          String value = data[record][column];
+          if (value != null && !value.equals("")) {
+            updateSpeltWrong(record, column - 1, value);
+          }
+        }
+      }
+    } else {
+      for (int i = 0; i < records; i++) {
+        Vector<String> row = new Vector<String>(fields + 1);
+        row.add(0, String.valueOf(i + 1));
+        data[i] = row.toArray(new String[] {});
+      }
+    }
+  }
+
+  public static boolean updateSpeltWrong(int record, int field, String word) {
+    if (word != null && !word.equals("")) {
+      speltWrong[record][field] = 0;
+      if (!isKnownWord(field, word)) {
+        speltWrong[record][field] = 1;
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public boolean isSpeltWrong(int record, int field) {
+    if (record >= 0 && field >= 0) {
+      if (speltWrong[record][field] == 1)
+        return true;
+    }
+    return false;
   }
 
 }

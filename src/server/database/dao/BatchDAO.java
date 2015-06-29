@@ -1,7 +1,9 @@
-
 package server.database.dao;
 
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -11,24 +13,19 @@ import server.database.DatabaseException;
 
 import shared.model.Batch;
 
-
 public class BatchDAO {
 
-  
-  private Database      db;
+  private Database db;
 
-  
   private static Logger logger;
   static {
     logger = Logger.getLogger("server");
   }
 
-  
   public BatchDAO(Database db) {
     this.db = db;
   }
 
-  
   public void initTable() throws DatabaseException {
     String dropTable = "DROP TABLE IF EXISTS Batch";// @formatter:off
     String createTable =
@@ -74,7 +71,6 @@ public class BatchDAO {
     }
   }
 
-  
   public int create(Batch newBatch) throws DatabaseException {
     String query =
         "INSERT INTO Batch (FilePath, ProjectId, Status, CurrentUserId) VALUES (?, ?, ?, ?)";
@@ -100,10 +96,10 @@ public class BatchDAO {
     } catch (SQLException e) {
       throw new DatabaseException(e);
     }
+    logger.log(Level.INFO, "DATABASEbatchId=" + newBatch.getBatchId());
     return newBatch.getBatchId();
   }
 
-  
   public Batch read(int batchId) throws DatabaseException {
     String query = "SELECT * FROM Batch WHERE BatchId = ?";
 
@@ -123,14 +119,6 @@ public class BatchDAO {
         resultBatch.setStatus(resultset.getInt("Status"));
         resultBatch.setCurrUserId(resultset.getInt("CurrentUserId"));
 
-        // if (resultset.next())
-        // throw new DatabaseException("Read more than one batch: " + batchId
-        // + " from database...");
-
-        // if (resultBatch.getFilePath() == "") {
-        // return null;
-        // }
-
         return resultBatch;
       }
     } catch (SQLException e) {
@@ -138,7 +126,6 @@ public class BatchDAO {
     }
   }
 
-  
   public Batch getIncompleteBatch(int projectId) throws DatabaseException {
     String query = "SELECT * from Batch WHERE ProjectId = ? AND Status = ? AND CurrentUserId = ?";
 
@@ -161,14 +148,6 @@ public class BatchDAO {
         resultBatch.setStatus(resultset.getInt("Status"));
         // resultBatch.setCurrUserId(resultset.getInt("CurrentUserId"));
 
-        // if (resultset.next())
-        // throw new DatabaseException("Read more than one batch with projectId: " + projectId
-        // + " from database...");
-
-        // if (resultBatch.getFilePath() == "") {
-        // return null;
-        // }
-
         return resultBatch;
       }
     } catch (SQLException e) {
@@ -176,7 +155,6 @@ public class BatchDAO {
     }
   }
 
-  
   public Batch getSampleBatch(int projectId) throws DatabaseException {
     String query = "SELECT * from Batch WHERE ProjectId = ?";
 
@@ -197,14 +175,6 @@ public class BatchDAO {
         resultBatch.setStatus(resultset.getInt("Status"));
         resultBatch.setCurrUserId(resultset.getInt("CurrentUserId"));
 
-        //if (resultset.next()){
-          //throw new DatabaseException("Read more than one  with projectId: " + projectId
-              //+ " from database...");
-        //}
-        // if (resultBatch.getFilePath() == "") {
-        // return null;
-        // }
-
         return resultBatch;
       }
     } catch (SQLException e) {
@@ -212,7 +182,6 @@ public class BatchDAO {
     }
   }
 
-  
   public void update(Batch batch) throws DatabaseException {
     String query = "UPDATE Batch SET Status = ? WHERE BatchId = ?";
 
@@ -227,7 +196,6 @@ public class BatchDAO {
     }
   }
 
-  
   public void assignBatchToUser(int batchId, int userId) throws DatabaseException {
     String query = "UPDATE Batch SET CurrentUserId = ? WHERE batchId = ?";
 
@@ -242,13 +210,11 @@ public class BatchDAO {
     return;
   }
 
-  
   public void unassignBatch(int batchId) throws DatabaseException {
     assignBatchToUser(batchId, -1);
     return;
   }
 
-  
   public void setStatus(int batchId, int status) throws DatabaseException {
     if (status != Batch.INCOMPLETE && status != Batch.ACTIVE && status != Batch.COMPLETE) {
       throw new DatabaseException("ERROR: Current status: " + status + " is not 0, 1, or 2...");
@@ -265,7 +231,6 @@ public class BatchDAO {
 
   }
 
-  
   public void delete(Batch batch) throws DatabaseException {
     String query = "DELETE from Batch WHERE BatchId = ?";
 

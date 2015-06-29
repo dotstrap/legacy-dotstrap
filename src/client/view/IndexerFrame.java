@@ -229,4 +229,16 @@ public class IndexerFrame extends JFrame implements BatchState.Observer {
     // TODO: save work
     System.exit(0);
   }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see client.model.BatchState.Observer#wordWasMisspelled(java.lang.String, int,
+   * shared.model.Field)
+   */
+  @Override
+  public void wordWasMisspelled(String value, int record, Field field, List<String> suggestions) {
+    // TODO Auto-generated method stub
+
+  }
 }

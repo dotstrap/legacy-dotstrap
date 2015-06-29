@@ -63,22 +63,24 @@ public class ClientCommunicator {
     host = "localhost";
     port = 39640;
     URL_PREFIX = String.format("http://%s:%d", host, port);
+    ClientLogManager.getLogger().log(Level.FINER, "Initialized default: " + host + ":" + port);
   }
 
   public ClientCommunicator(String host, String port) {
     this.port = Integer.parseInt(port);
     this.host = host;
     URL_PREFIX = String.format("http://%s:%s", host, port);
+    ClientLogManager.getLogger().log(Level.FINER, "Initialized " + host + ":" + port);
   }
 
   public ClientCommunicator(String host, int port) {
     this.port = port;
     this.host = host;
     URL_PREFIX = String.format("http://%s:%s", host, port);
+    ClientLogManager.getLogger().log(Level.FINER, "Initialized " + host + ":" + port);
   }
 
   public ValidateUserResponse validateUser(ValidateUserRequest params) throws ServerException {
-    ClientLogManager.getLogger().log(Level.FINER, host + ":" + port);
     return (ValidateUserResponse) doPost("/ValidateUser", params);
   }
 
@@ -89,20 +91,18 @@ public class ClientCommunicator {
   public GetSampleBatchResponse getSampleBatch(GetSampleBatchRequest params)
       throws ServerException, MalformedURLException {
     GetSampleBatchResponse result = (GetSampleBatchResponse) doPost("/GetSampleImage", params);
-    URL url = new URL(URL_PREFIX);
-    result.setUrlPrefix(url);
-    ClientLogManager.getLogger().log(Level.FINER,
-        url.toString() + "/" + result.getSampleBatch().getFilePath());
+
+    String url = URL_PREFIX + File.separator + result.getSampleBatch().getFilePath();
+    ClientLogManager.getLogger().log(Level.FINEST, url);
     return result;
   }
 
   public DownloadBatchResponse downloadBatch(DownloadBatchRequest params) throws ServerException,
       MalformedURLException {
     DownloadBatchResponse result = (DownloadBatchResponse) doPost("/DownloadBatch", params);
-    URL url = new URL(URL_PREFIX);
-    result.setUrlPrefix(url);
-    ClientLogManager.getLogger().log(Level.FINER,
-        url.toString() + "/" + result.getBatch().getFilePath());
+    result.setUrlPrefix(new URL(URL_PREFIX));
+    String url = URL_PREFIX + File.separator + result.getBatch().getFilePath();
+    ClientLogManager.getLogger().log(Level.FINEST, url);
     return result;
   }
 

@@ -11,8 +11,10 @@ import java.awt.GridLayout;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.image.BufferedImage;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.logging.Level;
 
 import javax.swing.AbstractListModel;
 import javax.swing.BoxLayout;
@@ -27,15 +29,13 @@ import javax.swing.event.ListSelectionListener;
 
 import client.model.BatchState;
 import client.model.Facade;
+import client.util.ClientLogManager;
 
 import shared.model.Batch;
 import shared.model.Field;
 
 @SuppressWarnings("serial")
 public class FormEntryTab extends JPanel implements BatchState.Observer {
-  private JList<Integer> records;
-  private Map<Field, JTextField> fields;
-
   private class RecordsListModel extends AbstractListModel<Integer> {
     @Override
     public Integer getElementAt(int index) {
@@ -51,6 +51,10 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
       }
     }
   }
+
+  private JList<Integer> records;
+
+  private Map<Field, JTextField> fields;
 
   private ListSelectionListener listListener = new ListSelectionListener() {
     @SuppressWarnings("unchecked")
@@ -74,6 +78,7 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
         if (BatchState.getCurrentRecord() < 0) {
           BatchState.setCurrentRecord(0);
         }
+        ClientLogManager.getLogger().log(Level.FINE, field.toString());
         BatchState.setCurrentField(field);
       }
     }
@@ -84,6 +89,8 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
 
       if (field != null) {
         String text = ((JTextField) e.getSource()).getText();
+        ClientLogManager.getLogger().log(Level.FINE, "field: " + field.toString());
+        ClientLogManager.getLogger().log(Level.FINE, "text: " + text);
         BatchState.notifyDataWasInput(text, BatchState.getCurrentRecord(), field);
       }
     }
@@ -98,7 +105,10 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
   public void cellWasSelected(int x, int y) {}
 
   @Override
-  public void dataWasInput(String value, int record, Field field) {}
+  public void dataWasInput(String value, int record, Field field) {
+    new QualityCheckerPopupMenu(record, record);
+    // BatchState.updateSpeltWrong(record, field.getColNum(), value);
+  }
 
   @Override
   public void didChangeOrigin(int x, int y) {}
@@ -124,26 +134,38 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
   public void didZoom(double zoomDirection) {}
 
   @Override
-  public void fieldWasSelected(int record, Field field) {
-    if (records != null && record >= 0) {
-      records.setSelectedIndex(record);
+  public void fieldWasSelected(int r, Field field) {
+    if (records != null && r >= 0) {
+      records.setSelectedIndex(r);
+      // ClientLogManager.getLogger().log(Level.FINE, record + "=>" + field.toString());
     }
 
-    if (fields != null && field != null) {
+    // ClientLogManager.getLogger().log(Level.FINE, record + "=>" + field.toString());
+    // ClientLogManager.getLogger().log(Level.FINE, "RECORDS=>" + Facade.getRecords().toString());
+
+    if (!fields.isEmpty() && fields != null && field != null) {
       for (Field f : fields.keySet()) {
         String text = "";
 
+        int record = BatchState.getCurrentRecord();
         if (record >= 0) {
-          if (field.getKnownData() != null) {
-            text = f.getKnownData(); // FIXME: this should not be getKnownData
-            // text = "FIXME :(";
+          if (Facade.getRecords()[record] != null) {
+            text = Facade.getRecords()[record].getData();
+            ClientLogManager.getLogger().log(Level.FINE, Facade.getRecords()[record].toString());
           }
         }
-        fields.get(field).setText(text);
+        fields.get(f).setText(text);
       }
       fields.get(field).requestFocusInWindow();
     }
 
+  }
+
+  @Override
+  public void wordWasMisspelled(String value, int record, Field field, List<String> suggestions) {
+    // new SimilarWordSuggestor(tableEntryTable, row, column).show(tableEntryTable, e.getX(),
+    // e.getY());
+    // new QualityCheckerPopupMenu(null, record, record);
   }
 
   private void initialize() {
@@ -177,7 +199,6 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
 
       add(new JScrollPane(fieldsPanel));
     }
-    this.setVisible(true);
   }
 
   private Field textFieldToField(JTextField textField) {

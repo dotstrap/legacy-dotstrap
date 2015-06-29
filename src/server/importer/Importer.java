@@ -1,29 +1,37 @@
-
 package server.importer;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.logging.*;
+import java.util.logging.Level;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 //import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.FileUtils;
-import org.w3c.dom.*;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import server.database.Database;
 import server.database.DatabaseException;
 
-import shared.model.*;
-
+import shared.model.Batch;
+import shared.model.Field;
+import shared.model.Project;
+import shared.model.Record;
+import shared.model.User;
 
 public class Importer {
   private static Logger logger;
   private static String importDirName;
   private static String importFileName;
 
-  
   public static void main(String[] args) {
     File logDir = new File("logs");
     if (!logDir.exists()) {
@@ -96,12 +104,10 @@ public class Importer {
     return result;
   }
 
-  
   private boolean contains(Element elem, String attr) {
     return elem.getElementsByTagName(attr).getLength() > 0;
   }
 
-  
   private ArrayList<Element> getChildElements(Node node) {
     ArrayList<Element> result = new ArrayList<Element>();
     NodeList children = node.getChildNodes();
@@ -115,7 +121,6 @@ public class Importer {
     return result;
   }
 
-  
   private void importData(Element root) {
     ArrayList<Element> rootElems = getChildElements(root);
 
@@ -129,7 +134,6 @@ public class Importer {
     }
   }
 
-  
   private void loadUsers(Element userElem) {
     // Get all User elements
     Element usernameElem = (Element) userElem.getElementsByTagName("username").item(0);
@@ -161,7 +165,6 @@ public class Importer {
     }
   }
 
-  
   private void loadProjects(Element projectElem) {
     // Get Project Elements
     Element titleElem = (Element) projectElem.getElementsByTagName("title").item(0);
@@ -206,7 +209,6 @@ public class Importer {
     }
   }
 
-  
   private void loadFields(Element fieldElem, int projectId, int colNum) {
     // Get Field elements
     Element titleElem = (Element) fieldElem.getElementsByTagName("title").item(0);
@@ -239,7 +241,6 @@ public class Importer {
     }
   }
 
-  
   private void loadBatches(Element batchElem, int projectId) {
     // get file element
     Element batchFileElem = (Element) batchElem.getElementsByTagName("file").item(0);
@@ -267,13 +268,14 @@ public class Importer {
       records = getChildElements(children.get(1));
 
       int rowNum = 0;
+
       for (Element curr : records) {
+        logger.log(Level.INFO, "BEFOREbatchId=" + batchId);
         loadRecords(curr, projectId, batchId, batchUrl, rowNum++);
       }
     }
   }
 
-  
   private void loadRecords(Element recordElem, int projectId, int batchId, String batchUrl,
       int rowNum) {
     ArrayList<Element> children = getChildElements(recordElem);
@@ -291,6 +293,8 @@ public class Importer {
         assert (fieldId > 0);
         Record newRecord = new Record(fieldId, batchId, batchUrl, recordData, rowNum, colNum);
         db.getRecordDAO().create(newRecord);
+        logger.log(Level.INFO, "AFTERbatchId=" + batchId);
+        logger.log(Level.INFO, newRecord.toString());
 
         db.endTransaction(true);
       } catch (DatabaseException e) {

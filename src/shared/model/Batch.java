@@ -27,7 +27,7 @@ public class Batch {
   public Batch(String filePath, int projectId, int status) {
     this.batchId    = -1;
     this.filePath   = filePath;
-    this.projectId  = projectId;
+    this.projectId  = projectId; 
     this.status     = status;
     this.currUserId = -1;
   }

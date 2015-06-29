@@ -203,6 +203,9 @@ public class BatchComponent extends JComponent implements BatchState.Observer {
   public void dataWasInput(String value, int record, Field field) {}
 
   @Override
+  public void wordWasMisspelled(String value, int record, Field field, List<String> suggestions) {}
+
+  @Override
   public void didChangeOrigin(int x, int y) {
     setOrigin(x, y);
   }
@@ -273,14 +276,18 @@ public class BatchComponent extends JComponent implements BatchState.Observer {
 
   @Override
   public void fieldWasSelected(int record, Field field) {
-    ClientLogManager.getLogger().log(Level.FINEST,
-        "\n" + field.toString() + " @ record:" + record + "\n");
-    Point cell = new Point(record, field.getColNum());
-    if (cell != null) {
-      ClientLogManager.getLogger().log(Level.FINEST, "\ncellX=" + cell.x + " cellY=" + cell.y);
-      highlightCell(cell.x, cell.y);
-      this.repaint();
+    if (field != null) {
+      ClientLogManager.getLogger().log(Level.FINEST,
+          "\n" + field.toString() + " @ record:" + record + "\n");
+
+      Point cell = new Point(record, field.getColNum());
+      if (cell != null) {
+        ClientLogManager.getLogger().log(Level.FINEST, "\ncellX=" + cell.x + " cellY=" + cell.y);
+        highlightCell(cell.x, cell.y);
+        this.repaint();
+      }
     }
+
   }
 
   public BufferedImage getBatch() {

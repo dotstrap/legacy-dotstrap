@@ -1,15 +1,26 @@
+/**
+ * DownloadBatchResponse.java
+ * JRE v1.8.0_45
+ * 
+ * Created by William Myers on Jun 28, 2015.
+ * Copyright (c) 2015 William Myers. All Rights reserved.
+ */
 package shared.communication;
 
 import java.net.URL;
 import java.util.List;
 
-import shared.model.*;
+import shared.model.Batch;
+import shared.model.Field;
+import shared.model.Project;
+import shared.model.Record;
 
 public class DownloadBatchResponse implements Response {
 
   public Batch batch;
   private Project project;
   private List<Field> fields;
+  private List<Record> records;
   private URL urlPrefix;
 
   public DownloadBatchResponse() {
@@ -19,17 +30,12 @@ public class DownloadBatchResponse implements Response {
     this.urlPrefix = null;
   }
 
-  // @formatter:off
-  
-  public DownloadBatchResponse(Batch batch, Project project,
-      List<Field> fields, URL url) {
+  public DownloadBatchResponse(Batch batch, Project project, List<Field> fields, URL url) {
     this.batch = batch;
     this.project = project;
     this.fields = fields;
     urlPrefix = url;
   }
-
-  // @formatter:on
 
   public Batch getBatch() {
     return batch;
@@ -55,6 +61,14 @@ public class DownloadBatchResponse implements Response {
     this.fields = fields;
   }
 
+  public List<Record> getRecords() {
+    return this.records;
+  }
+
+  public void setRecords(List<Record> records) {
+    this.records = records;
+  }
+
   public URL getUrlPrefix() {
     return urlPrefix;
   }
@@ -63,6 +77,11 @@ public class DownloadBatchResponse implements Response {
     urlPrefix = url;
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * Mandatory toString implementation for automatic pass-off driver
+   */
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
@@ -92,4 +111,21 @@ public class DownloadBatchResponse implements Response {
     }
     return sb.toString();
   }
+
+  public String toStringCustom() {
+    StringBuilder builder = new StringBuilder();
+    builder.append("DownloadBatchResponse [batch=");
+    builder.append(this.batch);
+    builder.append(", project=");
+    builder.append(this.project);
+    builder.append(", fields=");
+    builder.append(this.fields);
+    builder.append(", records=");
+    builder.append(this.records);
+    builder.append(", urlPrefix=");
+    builder.append(this.urlPrefix);
+    builder.append("]");
+    return builder.toString();
+  }
+
 }

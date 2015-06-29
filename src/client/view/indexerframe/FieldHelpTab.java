@@ -11,6 +11,7 @@ import java.awt.BorderLayout;
 import java.awt.image.BufferedImage;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -51,6 +52,9 @@ public class FieldHelpTab extends JPanel implements BatchState.Observer {
   public void dataWasInput(String value, int record, Field field) {}
 
   @Override
+  public void wordWasMisspelled(String value, int record, Field field, List<String> suggestions) {}
+
+  @Override
   public void didChangeOrigin(int x, int y) {}
 
   @Override
@@ -76,9 +80,9 @@ public class FieldHelpTab extends JPanel implements BatchState.Observer {
 
   @Override
   public void fieldWasSelected(int record, Field field) {
-    ClientLogManager.getLogger().log(Level.FINEST, field.toString());
     if (field != null) {
       htmlPane.setText(downloadHelpPage(field));
+      ClientLogManager.getLogger().log(Level.FINEST, field.toString());
     }
   }
 

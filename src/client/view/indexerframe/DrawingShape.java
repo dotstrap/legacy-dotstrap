@@ -9,10 +9,18 @@ package client.view.indexerframe;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
+
+interface DrawingShape {
+  boolean contains(Graphics2D g2, double x, double y);
+
+  void draw(Graphics2D g2);
+
+  Rectangle2D getBounds(Graphics2D g2);
+}
+
 
 class DrawingImage implements DrawingShape {
 
@@ -124,13 +132,4 @@ class DrawingRect implements DrawingShape {
     return this;
   }
 
-}
-
-
-interface DrawingShape {
-  boolean contains(Graphics2D g2, double x, double y);
-
-  void draw(Graphics2D g2);
-
-  Rectangle2D getBounds(Graphics2D g2);
 }

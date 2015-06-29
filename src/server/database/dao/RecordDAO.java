@@ -1,7 +1,9 @@
-
 package server.database.dao;
 
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,16 +12,13 @@ import server.database.DatabaseException;
 
 import shared.model.Record;
 
-
 public class RecordDAO {
   private Database db;
 
-  
   public RecordDAO(Database db) {
     this.db = db;
   }
 
-  
   public void initTable() throws DatabaseException {
     String dropTable = "DROP TABLE IF EXISTS Record";// @formatter:off
       String createTable =
@@ -41,7 +40,6 @@ public class RecordDAO {
     }
   }
 
-  
   public ArrayList<Record> getAll() throws DatabaseException {
     String query = "SELECT * from Record";
 
@@ -70,7 +68,6 @@ public class RecordDAO {
     }
   }
 
-  
   public ArrayList<Record> getAll(int batchId) throws DatabaseException {
     String query = "SELECT * FROM Record WHERE BatchId= ?";
 
@@ -100,7 +97,6 @@ public class RecordDAO {
     }
   }
 
-  
   public List<Record> search(int fieldId, String dataValue) throws DatabaseException {
     String query = "SELECT * from Record WHERE FieldId = ? AND Data = ?";;
 
@@ -131,7 +127,6 @@ public class RecordDAO {
     return searchResult;
   }
 
-  
   public int create(Record newRecord) throws DatabaseException {
     String query =
         "INSERT into Record" + "(FieldId, BatchId, BatchURL, Data, RowNumber, ColumnNumber) "
@@ -162,7 +157,6 @@ public class RecordDAO {
     }
   }
 
-  
   public Record read(int id) throws DatabaseException {
     String query = "SELECT * from Record WHERE RecordId = ?";
 
@@ -192,7 +186,39 @@ public class RecordDAO {
     }
   }
 
-  
+  public List<Record> readByBatchId(int id) throws DatabaseException {
+    String query = "SELECT * from Record WHERE BatchId = ?";
+
+    ArrayList<Record> results = new ArrayList<Record>();
+    try (PreparedStatement pstmt = db.getConnection().prepareStatement(query)) {
+      pstmt.setInt(1, id);
+
+      try (ResultSet resultset = pstmt.executeQuery()) {
+        while (resultset.next()) {
+          Record resultRecord = new Record();
+          resultRecord.setBatchId(id);
+
+          if (!resultset.next()) {
+            return null;
+          }
+
+          resultRecord.setFieldId(resultset.getInt("RecordId"));
+          resultRecord.setFieldId(resultset.getInt("FieldId"));
+          resultRecord.setBatchURL(resultset.getString("BatchURL"));
+          resultRecord.setData(resultset.getString("Data"));
+          resultRecord.setRowNum(resultset.getInt("RowNumber"));
+          resultRecord.setColNum(resultset.getInt("ColumnNumber"));
+
+          results.add(resultRecord);
+        }
+      }
+
+    } catch (SQLException e) {
+      throw new DatabaseException("occurred while reading batchId: " + id, e);
+    }
+    return results;
+  }
+
   public void delete(Record record) throws DatabaseException {
     String query = "DELETE from Record WHERE RecordId = ?";
 
@@ -201,8 +227,8 @@ public class RecordDAO {
 
       pstmt.executeUpdate();
     } catch (SQLException e) {
-      throw new DatabaseException("occurred deleting record with recordID: "
-          + record.getRecordId(), e);
+      throw new DatabaseException(
+          "occurred deleting record with recordID: " + record.getRecordId(), e);
     }
   }
 }
