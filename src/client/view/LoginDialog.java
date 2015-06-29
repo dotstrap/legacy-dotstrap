@@ -174,14 +174,13 @@ public class LoginDialog extends JDialog implements BatchState.Observer {
   }
 
   private void processLogin() {
-    // String username = usernameField.getText();
-    // char[] password = passwordField.getPassword();
+    String username = usernameField.getText();
+    char[] password = passwordField.getPassword();
     // TODO: remember to not hardcode sheila!
-    String username = "sheila";
-    char[] password = {'p', 'a', 'r', 'k', 'e', 'r'};
+    // String username = "sheila";
+    // char[] password = {'p', 'a', 'r', 'k', 'e', 'r'};
     if (Facade.validateUser(username, password)) {
       // TODO: implement load data
-      // IndexerFrame.getInstance().loadData();
       JOptionPane.showMessageDialog(this, "Welcome " + Facade.getUser().getFirst() + " "
           + Facade.getUser().getLast() + "\nYou have indexed: " + Facade.getUser().getRecordCount()
           + " records!", "Record Indexer", JOptionPane.PLAIN_MESSAGE);
