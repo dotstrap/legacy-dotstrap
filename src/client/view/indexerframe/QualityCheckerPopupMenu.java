@@ -9,7 +9,6 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.Box;
@@ -36,15 +35,15 @@ public class QualityCheckerPopupMenu extends JPopupMenu
   JList<String> suggestionlist;
   JButton useButton;
 
-  public QualityCheckerPopupMenu(String word) {
+  public QualityCheckerPopupMenu(String word, final List<String> suggestions) {
     ActionListener seeSuggestionsListener = new ActionListener() {
       JDialog suggestionDialog;
 
       @Override
       public void actionPerformed(ActionEvent e) {
-        List<String> suggestions = Arrays.asList("EJB", "JPA", "GlassFish");;
-        // BatchState.getCorrector(column - 1).suggestSimilarWord(
-        // (String) table.getValueAt(row, column));
+        // List<String> suggestions = Arrays.asList("EJB", "JPA", "GlassFish");;
+        // // BatchState.getCorrector(column - 1).suggestSimilarWord(
+        // // (String) table.getValueAt(row, column));
         suggestionDialog = new JDialog();
         suggestionDialog.setTitle("Suggestions");
         suggestionDialog.setModal(true);
@@ -123,70 +122,45 @@ public class QualityCheckerPopupMenu extends JPopupMenu
   }
 
   @Override
-  public void cellWasSelected(int x, int y) {
-    // TODO Auto-generated method stub
-
-  }
+  public void cellWasSelected(int x, int y) {}
 
   @Override
-  public void dataWasInput(String value, int record, Field field) {
-    // TODO Auto-generated method stub
-
-  }
+  public void dataWasInput(String value, int record, Field field) {}
 
   @Override
-  public void wordWasMisspelled(String value, int record, Field field,
-      List<String> suggestions) {
-    // TODO Auto-generated method stub
-
-  }
+  public void wordWasMisspelled(String value, int record, Field field) {}
 
   @Override
-  public void didChangeOrigin(int x, int y) {
-    // TODO Auto-generated method stub
-
-  }
+  public void didChangeOrigin(int x, int y) {}
 
   @Override
-  public void didDownload(BufferedImage b) {
-    // TODO Auto-generated method stub
-
-  }
+  public void didDownload(BufferedImage b) {}
 
   @Override
-  public void didHighlight() {
-    // TODO Auto-generated method stub
-
-  }
+  public void didHighlight() {}
 
   @Override
-  public void didSubmit(Batch b) {
-    // TODO Auto-generated method stub
-
-  }
+  public void didSubmit(Batch b) {}
 
   @Override
-  public void didToggleHighlight() {
-    // TODO Auto-generated method stub
-
-  }
+  public void didToggleHighlight() {}
 
   @Override
-  public void didToggleInvert() {
-    // TODO Auto-generated method stub
-
-  }
+  public void didToggleInvert() {}
 
   @Override
-  public void didZoom(double zoomDirection) {
-    // TODO Auto-generated method stub
-
-  }
+  public void didZoom(double zoomDirection) {}
 
   @Override
-  public void fieldWasSelected(int record, Field field) {
-    // TODO Auto-generated method stub
+  public void fieldWasSelected(int record, Field field) {}
 
-  }
+  /*
+   * (non-Javadoc)
+   * 
+   * @see client.model.BatchState.Observer#spellPopupWasOpened(java.lang.String, int,
+   * shared.model.Field)
+   */
+  @Override
+  public void spellPopupWasOpened(String value, int record, Field field, List<String> suggestions) {}
 
 }

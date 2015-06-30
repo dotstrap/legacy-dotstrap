@@ -87,8 +87,7 @@ public class LoginDialog extends JDialog implements BatchState.Observer {
   public void dataWasInput(String value, int record, Field field) {}
 
   @Override
-  public void wordWasMisspelled(String value, int record, Field field,
-      List<String> suggestions) {}
+  public void wordWasMisspelled(String value, int record, Field field) {}
 
   @Override
   public void didChangeOrigin(int x, int y) {}
@@ -215,4 +214,13 @@ public class LoginDialog extends JDialog implements BatchState.Observer {
   public void setIndexerFrame(IndexerFrame indexerFrame) {
     this.indexerFrame = indexerFrame;
   }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see client.model.BatchState.Observer#spellPopupWasOpened(java.lang.String, int,
+   * shared.model.Field)
+   */
+  @Override
+  public void spellPopupWasOpened(String value, int record, Field field, List<String> suggestions) {}
 }

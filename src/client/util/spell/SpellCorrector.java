@@ -7,13 +7,19 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.logging.Level;
+
+import client.util.ClientLogManager;
 
 public class SpellCorrector implements ISpellCorrector {
 
   public Dictionary dictionary;
+
   SortedSet<String> Check1 = new TreeSet<String>();
-  private char[] Alphabet = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
-      'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
+
+  private char[] Alphabet =
+      {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
+          'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
 
   public SpellCorrector() {
 
@@ -42,8 +48,12 @@ public class SpellCorrector implements ISpellCorrector {
   @Override
   public List<String> suggestSimilarWord(String inputWord) {
 
-    if (inputWord.equals(""))
+    if (inputWord == null || inputWord.equals(""))
       return new ArrayList<String>();
+
+    StringBuilder consoleOutput = new StringBuilder(inputWord);
+    ClientLogManager.getLogger().log(Level.FINE, consoleOutput.toString());
+
     SortedSet<String> SimilarWords = new TreeSet<String>();
     String gword = inputWord.toLowerCase();
     ArrayList<Dictionary.Node> nodes = new ArrayList<Dictionary.Node>();

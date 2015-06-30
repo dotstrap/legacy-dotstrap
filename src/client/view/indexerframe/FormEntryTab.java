@@ -1,10 +1,13 @@
 /**
- * FormEntryTab.java JRE v1.8.0_45
- *
- * Created by William Myers on Jun 28, 2015. Copyright (c) 2015 William Myers. All Rights reserved.
+ * FormEntryTab.java
+ * JRE v1.8.0_45
+ * 
+ * Created by William Myers on Jun 30, 2015.
+ * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package client.view.indexerframe;
 
+import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
@@ -35,12 +38,20 @@ import shared.model.Batch;
 import shared.model.Field;
 import shared.model.Record;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class FormEntryTab.
+ */
 @SuppressWarnings("serial")
 public class FormEntryTab extends JPanel implements BatchState.Observer {
 
+  /** The records. */
   private JList<Integer> records;;
 
+  /** The fields. */
   private Map<Field, JTextField> fields;
+
+  /** The list listener. */
   private ListSelectionListener listListener = new ListSelectionListener() {
     @SuppressWarnings("unchecked")
     @Override
@@ -57,10 +68,12 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
     }
   };
 
+  /** The focus listener. */
   private FocusListener focusListener = new FocusListener() {
     @Override
     public void focusGained(FocusEvent e) {
       Field field = textFieldToField((JTextField) e.getSource());
+      JTextField textField = (JTextField) e.getSource();
       if (field != null) {
         if (BatchState.getCurrentRecord() < 0) {
           BatchState.setCurrentRecord(0);
@@ -68,6 +81,7 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
         ClientLogManager.getLogger().log(Level.FINER, field.toString());
         BatchState.setCurrentField(field);
       }
+      textField.setBackground(Color.RED);
     }
 
     @Override
@@ -84,6 +98,7 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
     }
   };
 
+  /** The mouse listener. */
   private MouseAdapter mouseListener = new MouseAdapter() {
     @Override
     public void mouseReleased(MouseEvent e) {
@@ -99,14 +114,27 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
     }
   };
 
+  /**
+   * Instantiates a new form entry tab.
+   */
   public FormEntryTab() {
     initialize();
     BatchState.addObserver(this);
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see client.model.BatchState.Observer#cellWasSelected(int, int)
+   */
   @Override
   public void cellWasSelected(int x, int y) {}
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see client.model.BatchState.Observer#dataWasInput(java.lang.String, int, shared.model.Field)
+   */
   @Override
   public void dataWasInput(String cellValue, int row, Field field) {
     int column = field.getColNum();
@@ -163,31 +191,71 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
     // BatchState.updateSpeltWrong(record, field.getColNum(), value);
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see client.model.BatchState.Observer#didChangeOrigin(int, int)
+   */
   @Override
   public void didChangeOrigin(int x, int y) {}
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see client.model.BatchState.Observer#didDownload(java.awt.image.BufferedImage)
+   */
   @Override
   public void didDownload(BufferedImage b) {
     initialize();
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see client.model.BatchState.Observer#didHighlight()
+   */
   @Override
   public void didHighlight() {}
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see client.model.BatchState.Observer#didSubmit(shared.model.Batch)
+   */
   @Override
   public void didSubmit(Batch b) {
     this.clear();
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see client.model.BatchState.Observer#didToggleHighlight()
+   */
   @Override
   public void didToggleHighlight() {}
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see client.model.BatchState.Observer#didToggleInvert()
+   */
   @Override
   public void didToggleInvert() {}
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see client.model.BatchState.Observer#didZoom(double)
+   */
   @Override
   public void didZoom(double zoomDirection) {}
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see client.model.BatchState.Observer#fieldWasSelected(int, shared.model.Field)
+   */
   @Override
   public void fieldWasSelected(int r, Field field) {
     if (records != null && r >= 0)
@@ -216,14 +284,23 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
     }
   }
 
+  /**
+   * Word was misspelled.
+   *
+   * @param value the value
+   * @param record the record
+   * @param field the field
+   */
   @Override
-  public void wordWasMisspelled(String value, int record, Field field,
-      List<String> suggestions) {
+  public void wordWasMisspelled(String value, int record, Field field) {
     // new SimilarWordSuggestor(tableEntryTable, row, column).show(tableEntryTable, e.getX(),
     // e.getY());
     // new QualityCheckerPopupMenu(null, record, record);
   }
 
+  /**
+   * Clear.
+   */
   private void clear() {
     this.records.clearSelection();;
     this.fields.clear();;
@@ -232,6 +309,9 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
     this.repaint();
   }
 
+  /**
+   * Initialize.
+   */
   private void initialize() {
     removeAll();
 
@@ -267,6 +347,12 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
     }
   }
 
+  /**
+   * Text field to field.
+   *
+   * @param textField the text field
+   * @return the field
+   */
   private Field textFieldToField(JTextField textField) {
     Field result = null;
 
@@ -278,7 +364,16 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
     return result;
   }
 
+  /**
+   * The Class RecordsListModel.
+   */
   private class RecordsListModel extends AbstractListModel<Integer> {
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see javax.swing.ListModel#getElementAt(int)
+     */
     @Override
     public Integer getElementAt(int index) {
       return index + 1;
@@ -293,4 +388,13 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
       }
     }
   }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see client.model.BatchState.Observer#spellPopupWasOpened(java.lang.String, int,
+   * shared.model.Field)
+   */
+  @Override
+  public void spellPopupWasOpened(String value, int record, Field field, List<String> suggestions) {}
 }

@@ -4,6 +4,7 @@
 package client.view.indexerframe;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -21,6 +22,7 @@ import javax.swing.table.AbstractTableModel;
 import client.model.BatchState;
 import client.model.Facade;
 import client.util.ClientLogManager;
+import client.util.spell.ISpellCorrector.NoSimilarWordFoundException;
 
 import shared.model.Batch;
 import shared.model.Field;
@@ -31,6 +33,8 @@ public class TableEntryTab extends JPanel implements BatchState.Observer {
 
   private JTable table;
   private JScrollPane scrollPane;
+  private boolean isWordIncorrect;
+  private String currentWord;
 
   private AbstractTableModel recordsTableModel = new AbstractTableModel() {
     @Override
@@ -102,10 +106,23 @@ public class TableEntryTab extends JPanel implements BatchState.Observer {
         BatchState.notifyFieldWasSelected(getCurrentRecord(),
             getCurrentField());
       } else if (SwingUtilities.isRightMouseButton(e)) {
-        QualityCheckerPopupMenu popup = new QualityCheckerPopupMenu("BOOBS");
-        popup.show(table, e.getX(), e.getY());
-      }
+        try {
+          List<String> suggestions = BatchState.getCorrector().initialize(
+              Facade.getUrlPrefix() + getCurrentField().getKnownData(),
+              currentWord);
 
+          QualityCheckerPopupMenu popup =
+              new QualityCheckerPopupMenu(currentWord, suggestions);
+          popup.show(table, e.getX(), e.getY());
+
+          BatchState.notifySpellPopupWasOpened(currentWord, getCurrentRecord(),
+              getCurrentField(), suggestions);
+        } catch (NoSimilarWordFoundException ex) {
+          StringBuilder msg =
+              new StringBuilder("currentWord=").append(currentWord);
+          ClientLogManager.getLogger().log(Level.SEVERE, msg.toString(), e);
+        }
+      }
     }
   };
 
@@ -191,12 +208,15 @@ public class TableEntryTab extends JPanel implements BatchState.Observer {
     consoleOutput.append(
         "Records per batch=" + Facade.getProject().getRecordsPerBatch());
     consoleOutput.append("\n");
-    ClientLogManager.getLogger().log(Level.FINEST, consoleOutput.toString());
+    ClientLogManager.getLogger().log(Level.FINE, consoleOutput.toString());
   }
 
   @Override
-  public void wordWasMisspelled(String value, int record, Field field,
-      List<String> suggestions) {}
+  public void wordWasMisspelled(String value, int record, Field field) {
+    isWordIncorrect = true;
+    currentWord = value;
+    table.setBackground(Color.RED);
+  }
 
   @Override
   public void didChangeOrigin(int x, int y) {}
@@ -245,6 +265,34 @@ public class TableEntryTab extends JPanel implements BatchState.Observer {
     consoleOutput.append("\n");
     consoleOutput.append(
         "Records per batch=" + Facade.getProject().getRecordsPerBatch());
-    ClientLogManager.getLogger().log(Level.FINEST, consoleOutput.toString());
+    ClientLogManager.getLogger().log(Level.FINE, consoleOutput.toString());
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see client.model.BatchState.Observer#spellPopupWasOpened(java.lang.String, int,
+   * shared.model.Field)
+   */
+  @Override
+  public void spellPopupWasOpened(String value, int record, Field field,
+      List<String> suggestions) {
+
+  }
+
+  public boolean isWordIncorrect() {
+    return isWordIncorrect;
+  }
+
+  public void setWordIncorrect(boolean wordIsIncorrect) {
+    this.isWordIncorrect = wordIsIncorrect;
+  }
+
+  public String getCurrentWord() {
+    return currentWord;
+  }
+
+  public void setCurrentWord(String currentWord) {
+    this.currentWord = currentWord;
   }
 }

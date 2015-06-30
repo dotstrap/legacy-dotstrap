@@ -137,9 +137,8 @@ public enum Facade {
       ClientLogManager.getLogger().log(Level.FINEST, "SUCESS: " + fileUrl);
       return new ByteArrayInputStream(response.getFileBytes());
     } catch (Exception e) {
-      StringBuilder stack = new StringBuilder("URL: ").append(fileUrl);
-      stack.append("\nSTACKTRACE: ").append(e);
-      ClientLogManager.getLogger().log(Level.SEVERE, stack.toString());
+      StringBuilder msg = new StringBuilder("URL: ").append(fileUrl);
+      ClientLogManager.getLogger().log(Level.SEVERE, msg.toString(), e);
       return null;
     }
   }
@@ -155,10 +154,9 @@ public enum Facade {
           "SUCESS: " + Facade.recordsToString());
       return response.isSuccess();
     } catch (Exception e) {
-      StringBuilder stack =
+      StringBuilder msg =
           new StringBuilder("RecordValues: ").append(Facade.recordsToString());
-      stack.append("\nSTACKTRACE: ").append(e);
-      ClientLogManager.getLogger().log(Level.SEVERE, stack.toString());
+      ClientLogManager.getLogger().log(Level.SEVERE, msg.toString(), e);
       return false;
     }
   }

@@ -141,8 +141,7 @@ public class IndexerFrame extends JFrame implements BatchState.Observer {
   public void fieldWasSelected(int record, Field field) {}
 
   @Override
-  public void wordWasMisspelled(String value, int record, Field field,
-      List<String> suggestions) {}
+  public void wordWasMisspelled(String value, int record, Field field) {}
 
   private void clear() {
     // this.removeAll();
@@ -271,6 +270,18 @@ public class IndexerFrame extends JFrame implements BatchState.Observer {
     Facade.submitBatch();
     BatchState.notifyDidSubmit(Facade.getBatch());
     Facade.setBatch(null);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see client.model.BatchState.Observer#spellPopupWasOpened(java.lang.String, int,
+   * shared.model.Field)
+   */
+  @Override
+  public void spellPopupWasOpened(String value, int record, Field field, List<String> suggestions) {
+    // TODO Auto-generated method stub
+
   }
 
 }

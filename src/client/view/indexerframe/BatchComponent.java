@@ -203,8 +203,7 @@ public class BatchComponent extends JComponent implements BatchState.Observer {
   public void dataWasInput(String value, int record, Field field) {}
 
   @Override
-  public void wordWasMisspelled(String value, int record, Field field,
-      List<String> suggestions) {}
+  public void wordWasMisspelled(String value, int record, Field field) {}
 
   @Override
   public void didChangeOrigin(int x, int y) {
@@ -397,4 +396,13 @@ public class BatchComponent extends JComponent implements BatchState.Observer {
     wDragStartOriginX = 0;
     wDragStartOriginY = 0;
   }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see client.model.BatchState.Observer#spellPopupWasOpened(java.lang.String, int,
+   * shared.model.Field)
+   */
+  @Override
+  public void spellPopupWasOpened(String value, int record, Field field, List<String> suggestions) {}
 }

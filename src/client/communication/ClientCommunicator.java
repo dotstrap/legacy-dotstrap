@@ -3,8 +3,12 @@
  */
 package client.communication;
 
-import java.io.*;
-import java.net.*;
+import java.io.File;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.logging.Level;
 
 import org.apache.commons.io.IOUtils;
@@ -13,8 +17,27 @@ import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 
 import client.util.ClientLogManager;
+
 import server.ServerException;
-import shared.communication.*;
+
+import shared.communication.DownloadBatchRequest;
+import shared.communication.DownloadBatchResponse;
+import shared.communication.DownloadFileRequest;
+import shared.communication.DownloadFileResponse;
+import shared.communication.GetFieldsRequest;
+import shared.communication.GetFieldsResponse;
+import shared.communication.GetProjectsRequest;
+import shared.communication.GetProjectsResponse;
+import shared.communication.GetSampleBatchRequest;
+import shared.communication.GetSampleBatchResponse;
+import shared.communication.Request;
+import shared.communication.Response;
+import shared.communication.SearchRequest;
+import shared.communication.SearchResponse;
+import shared.communication.SubmitBatchRequest;
+import shared.communication.SubmitBatchResponse;
+import shared.communication.ValidateUserRequest;
+import shared.communication.ValidateUserResponse;
 
 public class ClientCommunicator {
   private XStream xs = new XStream(new DomDriver());
@@ -81,7 +104,7 @@ public class ClientCommunicator {
 
     String url =
         URL_PREFIX + File.separator + result.getSampleBatch().getFilePath();
-    ClientLogManager.getLogger().log(Level.FINEST, url);
+    ClientLogManager.getLogger().log(Level.FINER, url);
     return result;
   }
 
@@ -91,7 +114,7 @@ public class ClientCommunicator {
         (DownloadBatchResponse) doPost("/DownloadBatch", params);
     result.setUrlPrefix(new URL(URL_PREFIX));
     String url = URL_PREFIX + File.separator + result.getBatch().getFilePath();
-    ClientLogManager.getLogger().log(Level.FINEST, url);
+    ClientLogManager.getLogger().log(Level.FINER, url);
     return result;
   }
 
@@ -116,7 +139,7 @@ public class ClientCommunicator {
   public DownloadFileResponse downloadFile(DownloadFileRequest params)
       throws ServerException {
     String url = URL_PREFIX + File.separator + params.getUrl();
-    ClientLogManager.getLogger().log(Level.FINEST, url);
+    ClientLogManager.getLogger().log(Level.FINER, url);
     return new DownloadFileResponse(doGet(url));
   }
 

@@ -77,10 +77,6 @@ public class FieldHelpTab extends JPanel implements BatchState.Observer {
     }
   }
 
-  @Override
-  public void wordWasMisspelled(String value, int record, Field field,
-      List<String> suggestions) {}
-
   private void clear() {
     helpPages.clear();
     htmlPane.setText("");;
@@ -110,9 +106,6 @@ public class FieldHelpTab extends JPanel implements BatchState.Observer {
     }
   }
 
-  /**
-   * 
-   */
   private void initialize() {
     helpPages = new HashMap<Field, String>();
 
@@ -123,5 +116,11 @@ public class FieldHelpTab extends JPanel implements BatchState.Observer {
     setLayout(new BorderLayout());
     add(new JScrollPane(htmlPane), BorderLayout.CENTER);
   }
+
+  @Override
+  public void wordWasMisspelled(String value, int record, Field field) {}
+
+  @Override
+  public void spellPopupWasOpened(String value, int record, Field field, List<String> suggestions) {}
 
 }
