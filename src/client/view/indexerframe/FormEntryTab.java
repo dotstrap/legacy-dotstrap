@@ -37,7 +37,8 @@ import shared.model.Record;
 
 @SuppressWarnings("serial")
 public class FormEntryTab extends JPanel implements BatchState.Observer {
-  private class RecordsListModel extends AbstractListModel<Integer> {
+
+  private AbstractListModel<Integer> model = new AbstractListModel<Integer>() {
     @Override
     public Integer getElementAt(int index) {
       return index + 1;
@@ -51,7 +52,7 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
         return 0;
       }
     }
-  }
+  };
 
   private JList<Integer> records;
   private Map<Field, JTextField> fields;
@@ -102,15 +103,15 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
   private MouseAdapter mouseListener = new MouseAdapter() {
     @Override
     public void mouseReleased(MouseEvent e) {
-      super.mouseReleased(e);
-      JTextField field = (JTextField) e.getSource();
-      if (e.getButton() == MouseEvent.BUTTON3) {
-        // if (field.getBackground() == Color.RED) {
-        QualityCheckerPopupMenu popup = new QualityCheckerPopupMenu("test",
-            records.getSelectedIndex(), Integer.parseInt(field.getName()) + 1);
-        popup.show(field, e.getX(), e.getY());
-        // }
-      }
+      // super.mouseReleased(e);
+      // JTextField field = (JTextField) e.getSource();
+      // if (e.getButton() == MouseEvent.BUTTON3) {
+      // // if (field.getBackground() == Color.RED) {
+      // QualityCheckerPopupMenu popup = new QualityCheckerPopupMenu("test",
+      // records.getSelectedIndex(), Integer.parseInt(field.getName()) + 1);
+      // popup.show(field, e.getX(), e.getY());
+      // // }
+      // }
     }
   };
 
@@ -124,7 +125,6 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
 
   @Override
   public void dataWasInput(String cellValue, int row, Field field) {
-
     int column = field.getColNum();
     StringBuilder consoleOutput = new StringBuilder();
     if (Facade.getRecordValues()[row][column] == null) {
@@ -234,8 +234,8 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
               Facade.getRecordValues()[row].toString());
         }
       }
+      fields.get(field).setText(text);
     }
-    fields.get(field).setText(text);
 
     fields.get(field).requestFocusInWindow();
   }
@@ -266,6 +266,7 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
 
       JPanel fieldsPanel = new JPanel();
       fieldsPanel.setLayout(new GridLayout(Facade.getFields().size(), 2));
+
       fields = new TreeMap<Field, JTextField>();
       for (int i = 0; i < Facade.getFields().size(); i++) {
         Field field = Facade.getFields().get(i);

@@ -31,8 +31,7 @@ public class TableEntryTab extends JPanel implements BatchState.Observer {
   private JTable table;
   private JScrollPane scrollPane;
 
-  private AbstractTableModel model = new AbstractTableModel() {
-
+  private AbstractTableModel recordsTableModel = new AbstractTableModel() {
     @Override
     public int getColumnCount() {
       return Facade.getBatch() != null ? Facade.getFields().size() + 1 : 0;
@@ -117,7 +116,7 @@ public class TableEntryTab extends JPanel implements BatchState.Observer {
   private void initialize() {
     removeAll();
 
-    table = new JTable(model);
+    table = new JTable(recordsTableModel);
     table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
     table.getTableHeader().setReorderingAllowed(false);
     table.setCellSelectionEnabled(false);
