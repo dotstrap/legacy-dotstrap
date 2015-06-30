@@ -113,16 +113,22 @@ public class Record {
     builder.append(this.fieldId);
     builder.append(", batchId=");
     builder.append(this.batchId);
-    builder.append(", batchURL=");
-    builder.append(this.batchURL);
-    builder.append(", data=");
-    builder.append(this.data);
-    builder.append(", rowNum=");
+    builder.append(", ");
+    if (this.batchURL != null) {
+      builder.append("batchURL=");
+      builder.append(this.batchURL);
+      builder.append(", ");
+    }
+    if (this.data != null) {
+      builder.append("data=");
+      builder.append(this.data);
+      builder.append(", ");
+    }
+    builder.append("rowNum=");
     builder.append(this.rowNum);
     builder.append(", colNum=");
     builder.append(this.colNum);
     builder.append("]");
     return builder.toString();
   }
-
 }

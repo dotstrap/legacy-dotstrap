@@ -20,7 +20,7 @@ public class DownloadBatchResponse implements Response {
   public Batch batch;
   private Project project;
   private List<Field> fields;
-  private List<Record> records;
+  private Record[][] recordValues;
   private URL urlPrefix;
 
   public DownloadBatchResponse() {
@@ -30,7 +30,8 @@ public class DownloadBatchResponse implements Response {
     this.urlPrefix = null;
   }
 
-  public DownloadBatchResponse(Batch batch, Project project, List<Field> fields, URL url) {
+  public DownloadBatchResponse(Batch batch, Project project, List<Field> fields,
+      URL url) {
     this.batch = batch;
     this.project = project;
     this.fields = fields;
@@ -61,12 +62,12 @@ public class DownloadBatchResponse implements Response {
     this.fields = fields;
   }
 
-  public List<Record> getRecords() {
-    return this.records;
+  public Record[][] getRecordValues() {
+    return this.recordValues;
   }
 
-  public void setRecords(List<Record> records) {
-    this.records = records;
+  public void setRecordValues(Record[][] records) {
+    this.recordValues = records;
   }
 
   public URL getUrlPrefix() {
@@ -120,8 +121,8 @@ public class DownloadBatchResponse implements Response {
     builder.append(this.project);
     builder.append(", fields=");
     builder.append(this.fields);
-    builder.append(", records=");
-    builder.append(this.records);
+    builder.append(", recordValues=");
+    builder.append(this.recordValues);
     builder.append(", urlPrefix=");
     builder.append(this.urlPrefix);
     builder.append("]");

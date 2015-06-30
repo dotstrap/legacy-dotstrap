@@ -50,13 +50,16 @@ public class TableEntryTab extends JPanel implements BatchState.Observer {
         return null;
       if (column == 0)
         return row + 1;
-      if (Facade.getRecords()[row] == null)
+      if (Facade.getRecordValues() == null
+          // || Facade.getRecordValues().length == 0
+          || Facade.getRecordValues()[row] == null
+          || Facade.getRecordValues()[row][column - 1] == null)
         return null;
-      if (Facade.getRecords()[row].getColNum() != column - 1) {
-        return null;
-      }
 
-      return Facade.getRecords()[row].getData();
+      // if (Facade.getRecordValues()[row].getColNum() != column - 1) {
+      // return null;
+      // }
+      return Facade.getRecordValues()[row][column - 1].getData();
     }
 
     @Override
@@ -163,23 +166,24 @@ public class TableEntryTab extends JPanel implements BatchState.Observer {
 
   @Override
   public void dataWasInput(String cellValue, int row, Field field) {
+    int column = field.getColNum();
     StringBuilder consoleOutput = new StringBuilder();
-    if (Facade.getRecords()[row] == null) {
-      Facade.getRecords()[row] = new Record(field.getFieldId(),
-          Facade.getBatch().getBatchId(), Facade.getBatch().getFilePath(),
-          cellValue, row, field.getColNum());
+    if (Facade.getRecordValues()[row][column] == null) {
+      Facade.getRecordValues()[row][column] =
+          new Record(field.getFieldId(), Facade.getBatch().getBatchId(),
+              Facade.getBatch().getFilePath(), cellValue, row, column);
       consoleOutput.append("\n!!!!!!NULL!!!!!!");
-    } else if (Facade.getRecords()[row].getColNum() == field.getColNum()) {
+    } else {
       consoleOutput.append("\nsetData=" + cellValue);
-      Facade.getRecords()[row].setData(cellValue);
+      Facade.getRecordValues()[row][column].setData(cellValue);
     }
 
     consoleOutput.append("\n" + field.toString());
-    consoleOutput.append("\n" + Facade.getRecords()[row].toString());
+    consoleOutput.append("\n" + Facade.getRecordValues()[row].toString());
     consoleOutput.append(
         "Records per batch=" + Facade.getProject().getRecordsPerBatch());
     consoleOutput.append("\n");
-    ClientLogManager.getLogger().log(Level.FINE, consoleOutput.toString());
+    ClientLogManager.getLogger().log(Level.FINEST, consoleOutput.toString());
   }
 
   @Override
@@ -220,23 +224,12 @@ public class TableEntryTab extends JPanel implements BatchState.Observer {
       table.setColumnSelectionInterval(column, column);
       consoleOutput.append("\nrow=" + row);
       consoleOutput.append("\ncolumn=" + column);
-      if (Facade.getRecords()[row] != null) {
-        consoleOutput.append("\n" + field.toString());
-        consoleOutput.append("\n" + Facade.getRecords()[row].toString());
-        if (Facade.getRecords()[row].getColNum() != field.getColNum()) {
-          consoleOutput.append("\nCREATED NEW RECORD");
-          Facade.getRecords()[row] =
-              new Record(field.getFieldId(), Facade.getBatch().getBatchId(),
-                  Facade.getBatch().getFilePath(), "", row, field.getColNum());
-        }
-      }
+    } else {
+      table.clearSelection();
     }
-    // } else {
-    // table.clearSelection();
-    // }
     consoleOutput.append("\n");
     consoleOutput.append(
         "Records per batch=" + Facade.getProject().getRecordsPerBatch());
-    ClientLogManager.getLogger().log(Level.FINE, consoleOutput.toString());
+    ClientLogManager.getLogger().log(Level.FINEST, consoleOutput.toString());
   }
 }

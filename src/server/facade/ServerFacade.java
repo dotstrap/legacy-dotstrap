@@ -5,7 +5,9 @@ package server.facade;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -14,8 +16,28 @@ import org.apache.commons.io.IOUtils;
 import server.ServerException;
 import server.database.Database;
 import server.database.DatabaseException;
-import shared.communication.*;
-import shared.model.*;
+
+import shared.communication.DownloadBatchRequest;
+import shared.communication.DownloadBatchResponse;
+import shared.communication.DownloadFileRequest;
+import shared.communication.DownloadFileResponse;
+import shared.communication.GetFieldsRequest;
+import shared.communication.GetFieldsResponse;
+import shared.communication.GetProjectsRequest;
+import shared.communication.GetProjectsResponse;
+import shared.communication.GetSampleBatchRequest;
+import shared.communication.GetSampleBatchResponse;
+import shared.communication.SearchRequest;
+import shared.communication.SearchResponse;
+import shared.communication.SubmitBatchRequest;
+import shared.communication.SubmitBatchResponse;
+import shared.communication.ValidateUserRequest;
+import shared.communication.ValidateUserResponse;
+import shared.model.Batch;
+import shared.model.Field;
+import shared.model.Project;
+import shared.model.Record;
+import shared.model.User;
 
 public class ServerFacade {
 
@@ -97,8 +119,8 @@ public class ServerFacade {
       DownloadBatchRequest request) throws ServerException, DatabaseException { // TODO
     Database db = new Database();
 
+    StringBuilder batchLogOutput = new StringBuilder();
     DownloadBatchResponse result = new DownloadBatchResponse();
-
     try {
       db.startTransaction();
 
@@ -112,7 +134,6 @@ public class ServerFacade {
         // update the user and batch models
         int currUserId = currUser.getUserId();
         currUser.setCurrBatch(currBatchId);
-        ServerFacade.logger.log(Level.FINEST, "batchId=" + currBatchId);
         batchToDownload.setCurrUserId(currUserId);
 
         // update the user and batch in the db
@@ -121,16 +142,20 @@ public class ServerFacade {
 
         Project currProject = db.getProjectDAO().read(projectId);
         List<Field> fields = db.getFieldDAO().getAll(projectId);
-        List<Record> records = db.getRecordDAO().readByBatchId(currBatchId);
+        Record[][] recordValues = db.getRecordDAO().readByBatchId(currBatchId,
+            currProject.getRecordsPerBatch(), fields.size());
 
         result.setBatch(batchToDownload);
         result.setProject(currProject);
         result.setFields(fields);
-        result.setRecords(records);
+        result.setRecordValues(recordValues);
 
         db.endTransaction(true);
-        ServerFacade.logger.log(Level.FINEST,
-            "URL=" + result.getUrlPrefix() + result.getBatch().getFilePath());
+
+        batchLogOutput.append("batchId=").append(currBatchId);
+        batchLogOutput.append("\nURL=").append(result.getUrlPrefix())
+            .append(result.getBatch().getFilePath());
+        ServerFacade.logger.log(Level.FINEST, batchLogOutput.toString());
         return result;
       } else {
         ServerFacade.logger.log(Level.WARNING,

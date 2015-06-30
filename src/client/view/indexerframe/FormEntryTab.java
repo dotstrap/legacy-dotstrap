@@ -123,29 +123,47 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
   public void cellWasSelected(int x, int y) {}
 
   @Override
-  public void dataWasInput(String value, int row, Field field) {
+  public void dataWasInput(String cellValue, int row, Field field) {
+
+    int column = field.getColNum();
+    StringBuilder consoleOutput = new StringBuilder();
+    if (Facade.getRecordValues()[row][column] == null) {
+      Facade.getRecordValues()[row][column] =
+          new Record(field.getFieldId(), Facade.getBatch().getBatchId(),
+              Facade.getBatch().getFilePath(), cellValue, row, column);
+      consoleOutput.append("\n!!!!!!NULL!!!!!!");
+    } else {
+      consoleOutput.append("\nsetData=" + cellValue);
+      Facade.getRecordValues()[row][column].setData(cellValue);
+    }
+
+    consoleOutput.append("\n" + field.toString());
+    consoleOutput.append("\n" + Facade.getRecordValues()[row].toString());
+    consoleOutput.append(
+        "Records per batch=" + Facade.getProject().getRecordsPerBatch());
+    consoleOutput.append("\n");
+    ClientLogManager.getLogger().log(Level.FINEST, consoleOutput.toString());
+
     // int row = record;
     // if (Facade.getRecords()[index] == null) {
     // Facade.getRecords()[index] = new Record();
     // }
-    StringBuilder consoleOutput = new StringBuilder();
 
-    if (Facade.getRecords()[row] == null) {
-      Facade.getRecords()[row] =
-          new Record(field.getFieldId(), Facade.getBatch().getBatchId(),
-              Facade.getBatch().getFilePath(), value, row, field.getColNum());
-      ClientLogManager.getLogger().log(Level.FINEST,
-          "======!!!!!!NULL!!!!!!======");
-    } else if (Facade.getRecords()[row].getColNum() == field.getColNum()) {
-      Facade.getRecords()[row].setData(value);
-    }
+    // ====================================================================
+    // StringBuilder consoleOutput = new StringBuilder();
+    //
+    // if (Facade.getRecordValues()[row] == null) {
+    // Facade.getRecordValues()[row] =
+    // new Record(field.getFieldId(), Facade.getBatch().getBatchId(),
+    // Facade.getBatch().getFilePath(), value, row, field.getColNum());
+    // ClientLogManager.getLogger().log(Level.FINEST,
+    // "======!!!!!!NULL!!!!!!======");
+    // } else if (Facade.getRecordValues()[row].getColNum() == field.getColNum()) {
+    // Facade.getRecordValues()[row].setData(value);
+    // }
+    //
 
-    ClientLogManager.getLogger().log(Level.FINEST, "================");
-    ClientLogManager.getLogger().log(Level.FINEST, field.toString());
-    ClientLogManager.getLogger().log(Level.FINEST,
-        Facade.getRecords()[row].toString());
-    ClientLogManager.getLogger().log(Level.FINEST, "================");
-
+    // ====================================================================
     // make sure all the record data is accurate
     // if (Facade.getRecords()[index].getFieldId() < 0) {
     // Facade.getRecords()[index].setFieldId(field.getFieldId());
@@ -194,31 +212,31 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
   public void didZoom(double zoomDirection) {}
 
   @Override
-  public void fieldWasSelected(int r, Field field) {
-    if (records != null && r >= 0) {
-      records.setSelectedIndex(r);
-    }
+  public void fieldWasSelected(int row, Field field) {
+    if (records != null && row >= 0)
+      records.setSelectedIndex(row);
 
-    String text = "";
-    if (!fields.isEmpty() && fields != null && field != null) {
-      for (Field f : fields.keySet()) {
-        // int record = r;
-        int record = BatchState.getCurrentRecord();
-        if (record >= 0) {
-          if (Facade.getRecords()[record] != null) {
-            if (Facade.getRecords()[record].getData() != ""
-                && Facade.getRecords()[record].getColNum() == field
-                    .getColNum()) {
-              text = Facade.getRecords()[record].getData();
+    if (fields.isEmpty() || fields == null || field == null)
+      return;
 
-              ClientLogManager.getLogger().log(Level.FINEST,
-                  Facade.getRecords()[record].toString());
-            }
-          }
+    int column = field.getColNum();
+    for (Field f : fields.keySet()) {
+      String text = "";
+      // int row = BatchState.getCurrentRecord();
+      if (row >= 0) {
+        if (Facade.getRecordValues()[row] != null
+            && Facade.getRecordValues()[row][column] != null
+            && Facade.getRecordValues()[row][column].getData() != "") {
+
+          text = Facade.getRecordValues()[row][column].getData();
+
+          ClientLogManager.getLogger().log(Level.FINEST,
+              Facade.getRecordValues()[row].toString());
         }
-        fields.get(f).setText(text);
       }
     }
+    fields.get(field).setText(text);
+
     fields.get(field).requestFocusInWindow();
   }
 

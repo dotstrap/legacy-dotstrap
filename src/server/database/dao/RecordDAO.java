@@ -93,11 +93,13 @@ public class RecordDAO {
         return allRecordes;
       }
     } catch (SQLException e) {
-      throw new DatabaseException("occurred while getting all record from database", e);
+      throw new DatabaseException(
+          "occurred while getting all record from database", e);
     }
   }
 
-  public List<Record> search(int fieldId, String dataValue) throws DatabaseException {
+  public List<Record> search(int fieldId, String dataValue)
+      throws DatabaseException {
     String query = "SELECT * from Record WHERE FieldId = ? AND Data = ?";;
 
     ArrayList<Record> searchResult = new ArrayList<Record>();
@@ -128,9 +130,9 @@ public class RecordDAO {
   }
 
   public int create(Record newRecord) throws DatabaseException {
-    String query =
-        "INSERT into Record" + "(FieldId, BatchId, BatchURL, Data, RowNumber, ColumnNumber) "
-            + "VALUES (?, ?, ?, ?, ?, ?)";
+    String query = "INSERT into Record"
+        + "(FieldId, BatchId, BatchURL, Data, RowNumber, ColumnNumber) "
+        + "VALUES (?, ?, ?, ?, ?, ?)";
 
     try (PreparedStatement pstmt = db.getConnection().prepareStatement(query)) {
       pstmt.setInt(1, newRecord.getFieldId());
@@ -142,18 +144,20 @@ public class RecordDAO {
 
       if (pstmt.executeUpdate() == 1) {
         try (Statement stmt = db.getConnection().createStatement();
-            ResultSet resultset = stmt.executeQuery("SELECT last_insert_rowid()")) {
+            ResultSet resultset =
+                stmt.executeQuery("SELECT last_insert_rowid()")) {
           resultset.next();
           int id = resultset.getInt(1);
           newRecord.setRecordId(id);
           return id;
         }
       } else {
-        throw new DatabaseException("ERROR occurred while inserting record: "
-            + newRecord.toString());
+        throw new DatabaseException(
+            "ERROR occurred while inserting record: " + newRecord.toString());
       }
     } catch (SQLException e) {
-      throw new DatabaseException("occurred while inserting record: " + newRecord.toString());
+      throw new DatabaseException(
+          "occurred while inserting record: " + newRecord.toString());
     }
   }
 
@@ -186,37 +190,39 @@ public class RecordDAO {
     }
   }
 
-  public List<Record> readByBatchId(int id) throws DatabaseException {
+  public Record[][] readByBatchId(int id, int recordsPerBatch,
+      int fieldsPerbatch) throws DatabaseException {
     String query = "SELECT * from Record WHERE BatchId = ?";
 
-    ArrayList<Record> results = new ArrayList<Record>();
+    // TODO: shouldn't pre-allocate these b/c sometimes they will be empty
+    Record[][] recordValues = new Record[recordsPerBatch][fieldsPerbatch];
     try (PreparedStatement pstmt = db.getConnection().prepareStatement(query)) {
       pstmt.setInt(1, id);
 
       try (ResultSet resultset = pstmt.executeQuery()) {
         while (resultset.next()) {
-          Record resultRecord = new Record();
-          resultRecord.setBatchId(id);
+          Record result = new Record();
+          result.setBatchId(id);
 
           if (!resultset.next()) {
             return null;
           }
 
-          resultRecord.setFieldId(resultset.getInt("RecordId"));
-          resultRecord.setFieldId(resultset.getInt("FieldId"));
-          resultRecord.setBatchURL(resultset.getString("BatchURL"));
-          resultRecord.setData(resultset.getString("Data"));
-          resultRecord.setRowNum(resultset.getInt("RowNumber"));
-          resultRecord.setColNum(resultset.getInt("ColumnNumber"));
+          result.setFieldId(resultset.getInt("RecordId"));
+          result.setFieldId(resultset.getInt("FieldId"));
+          result.setBatchURL(resultset.getString("BatchURL"));
+          result.setData(resultset.getString("Data"));
+          result.setRowNum(resultset.getInt("RowNumber"));
+          result.setColNum(resultset.getInt("ColumnNumber"));
 
-          results.add(resultRecord);
+          recordValues[result.getRowNum()][result.getColNum()] = result;
         }
       }
 
     } catch (SQLException e) {
       throw new DatabaseException("occurred while reading batchId: " + id, e);
     }
-    return results;
+    return recordValues;
   }
 
   public void delete(Record record) throws DatabaseException {

@@ -17,8 +17,22 @@ import javax.imageio.ImageIO;
 
 import client.communication.ClientCommunicator;
 import client.util.ClientLogManager;
-import shared.communication.*;
-import shared.model.*;
+
+import shared.communication.DownloadBatchRequest;
+import shared.communication.DownloadBatchResponse;
+import shared.communication.DownloadFileRequest;
+import shared.communication.DownloadFileResponse;
+import shared.communication.GetProjectsRequest;
+import shared.communication.GetProjectsResponse;
+import shared.communication.GetSampleBatchRequest;
+import shared.communication.GetSampleBatchResponse;
+import shared.communication.ValidateUserRequest;
+import shared.communication.ValidateUserResponse;
+import shared.model.Batch;
+import shared.model.Field;
+import shared.model.Project;
+import shared.model.Record;
+import shared.model.User;
 
 public enum Facade {
   INSTANCE;
@@ -29,7 +43,7 @@ public enum Facade {
   private static Batch batch;
   private static Project project;
   private static List<Field> fields;
-  private static Record[] records;
+  private static Record[][] recordValues;
   private static String urlPrefix;
   private static URL batchUrl;
 
@@ -43,7 +57,7 @@ public enum Facade {
           "SUCESS: " + u + " " + String.valueOf(p));
       return response.isValidated();
     } catch (Exception e) {
-      ClientLogManager.getLogger().log(Level.FINE, "STACKTRACE: ", e);
+      ClientLogManager.getLogger().log(Level.SEVERE, "STACKTRACE: ", e);
       return false;
     }
   }
@@ -59,7 +73,7 @@ public enum Facade {
       return response.getProjects()
           .toArray(new Project[response.getProjects().size()]);
     } catch (Exception e) {
-      ClientLogManager.getLogger().log(Level.FINE, "STACKTRACE: ", e);
+      ClientLogManager.getLogger().log(Level.SEVERE, "STACKTRACE: ", e);
       return null;
     }
   }
@@ -77,7 +91,7 @@ public enum Facade {
           "SUCESS: " + sampleBatchUrl);
       return ImageIO.read(new URL(sampleBatchUrl));
     } catch (Exception e) {
-      ClientLogManager.getLogger().log(Level.FINE, "STACKTRACE: ", e);
+      ClientLogManager.getLogger().log(Level.SEVERE, "STACKTRACE: ", e);
       return null;
     }
   }
@@ -100,14 +114,14 @@ public enum Facade {
       Facade.fields = new ArrayList<Field>();
       Facade.fields = response.getFields();
 
-      Facade.records = response.getRecords()
-          .toArray(new Record[Facade.project.getRecordsPerBatch()]);
+      Facade.recordValues = response.getRecordValues();
 
       ClientLogManager.getLogger().log(Level.FINEST, "SUCESS: " + batchUrl);
       return ImageIO.read(url);
     } catch (Exception e) {
-      ClientLogManager.getLogger().log(Level.FINER, "URL: " + batchUrl);
-      ClientLogManager.getLogger().log(Level.FINE, "STACKTRACE: ", e);
+      StringBuilder stack = new StringBuilder("URL: ").append(batchUrl);
+      stack.append("\nSTACKTRACE: ").append(e);
+      ClientLogManager.getLogger().log(Level.SEVERE, stack.toString());
       return null;
     }
   }
@@ -121,8 +135,9 @@ public enum Facade {
       ClientLogManager.getLogger().log(Level.FINEST, "SUCESS: " + fileUrl);
       return new ByteArrayInputStream(response.getFileBytes());
     } catch (Exception e) {
-      ClientLogManager.getLogger().log(Level.FINER, fileUrl);
-      ClientLogManager.getLogger().log(Level.FINE, "STACKTRACE: ", e);
+      StringBuilder stack = new StringBuilder("URL: ").append(fileUrl);
+      stack.append("\nSTACKTRACE: ").append(e);
+      ClientLogManager.getLogger().log(Level.SEVERE, stack.toString());
       return null;
     }
   }
@@ -167,12 +182,12 @@ public enum Facade {
     Facade.fields = fields;
   }
 
-  public static Record[] getRecords() {
-    return Facade.records;
+  public static Record[][] getRecordValues() {
+    return Facade.recordValues;
   }
 
-  public static void setRecords(Record[] records) {
-    Facade.records = records;
+  public static void setRecords(Record[][] records) {
+    Facade.recordValues = records;
   }
 
   public static String getUrlPrefix() {
