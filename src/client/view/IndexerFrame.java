@@ -96,12 +96,19 @@ public class IndexerFrame extends JFrame implements BatchState.Observer {
   public void dataWasInput(String value, int record, Field field) {}
 
   @Override
+  public void wordWasMisspelled(String value, int record, Field field,
+      List<String> suggestions) {}
+
+  @Override
   public void didChangeOrigin(int x, int y) {}
 
   @Override
   public void didDownload(BufferedImage b) {
     toolBar.setEnabled(true);
     toolBar.setRollover(true);
+    for (JButton button : toolBarButtons) {
+      button.setEnabled(true);
+    }
     downloadBatchMenuItem.setEnabled(false);
   }
 
@@ -199,6 +206,7 @@ public class IndexerFrame extends JFrame implements BatchState.Observer {
     toolBar = new JToolBar();
     for (JButton button : toolBarButtons) {
       toolBar.add(button);
+      button.setEnabled(false);
     }
 
     // toolBar.addSeparator();
@@ -214,16 +222,4 @@ public class IndexerFrame extends JFrame implements BatchState.Observer {
     System.exit(0);
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see client.model.BatchState.Observer#wordWasMisspelled(java.lang.String, int,
-   * shared.model.Field)
-   */
-  @Override
-  public void wordWasMisspelled(String value, int record, Field field,
-      List<String> suggestions) {
-    // TODO Auto-generated method stub
-
-  }
 }

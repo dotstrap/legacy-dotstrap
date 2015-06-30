@@ -1,9 +1,7 @@
 /**
- * QualityChecker.java
- * JRE v1.8.0_45
- * 
- * Created by William Myers on Jun 27, 2015.
- * Copyright (c) 2015 William Myers. All Rights reserved.
+ * QualityChecker.java JRE v1.8.0_45
+ *
+ * Created by William Myers on Jun 27, 2015. Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package client.view.indexerframe;
 
@@ -13,29 +11,21 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JList;
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.JScrollPane;
+import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import client.model.BatchState;
-
 import shared.model.Batch;
 import shared.model.Field;
 
 @SuppressWarnings("serial")
-public class QualityCheckerPopupMenu extends JPopupMenu implements BatchState.Observer {
+public class QualityCheckerPopupMenu extends JPopupMenu
+    implements BatchState.Observer {
   JList<String> suggestionlist;
   JButton useButton;
 
-  public QualityCheckerPopupMenu(final int row, final int column) {
+  public QualityCheckerPopupMenu(String word, final int row, final int column) {
     ActionListener seeSuggestionsListener = new ActionListener() {
       JDialog suggestionDialog;
 
@@ -50,10 +40,12 @@ public class QualityCheckerPopupMenu extends JPopupMenu implements BatchState.Ob
         suggestionDialog.setLocationRelativeTo(null);
         suggestionDialog.setSize(230, 230);
         suggestionDialog.setResizable(false);
-        suggestionDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        suggestionDialog
+            .setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
-        suggestionlist = new JList<String>(suggestions.toArray(new String[] {}));
+        suggestionlist =
+            new JList<String>(suggestions.toArray(new String[] {}));
         // suggestionlist.setMinimumSize(new Dimension(200,0));
         Box space = Box.createHorizontalBox();
         space.add(Box.createVerticalStrut(5));
@@ -73,7 +65,8 @@ public class QualityCheckerPopupMenu extends JPopupMenu implements BatchState.Ob
           public void actionPerformed(ActionEvent e) {
             if (((JButton) e.getSource()).getText().equals("Cancel")) {
               suggestionDialog.dispose();
-            } else if (((JButton) e.getSource()).getText().equals("Use Suggestion")) {
+            } else if (((JButton) e.getSource()).getText()
+                .equals("Use Suggestion")) {
               int selected = suggestionlist.getSelectedIndex();
               if (selected != -1) {
                 // table.setValueAt(suggestionlist.getSelectedValue(), row, column);
@@ -132,7 +125,8 @@ public class QualityCheckerPopupMenu extends JPopupMenu implements BatchState.Ob
   }
 
   @Override
-  public void wordWasMisspelled(String value, int record, Field field, List<String> suggestions) {
+  public void wordWasMisspelled(String value, int record, Field field,
+      List<String> suggestions) {
     // TODO Auto-generated method stub
 
   }

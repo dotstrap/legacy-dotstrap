@@ -30,8 +30,6 @@ public class DownloadBatchDialog extends JDialog {
   private JButton sampleButton;
   private Project selectedProject;
 
-  // private Batch batch;
-
   private ActionListener downloadBatchButtonListener = new ActionListener() {//@formatter:off
     @Override
     public void actionPerformed(ActionEvent e) {

@@ -65,12 +65,6 @@ public enum Facade {
   }
 
   public static BufferedImage getSampleBatch(int projId) {
-    ClientLogManager.getLogger().log(Level.WARNING, "PROJ: " + projId);
-    ClientLogManager.getLogger().log(Level.WARNING,
-        "U: " + Facade.user.getUsername());
-    ClientLogManager.getLogger().log(Level.WARNING,
-        "P: " + Facade.user.getPassword());
-
     try {
       GetSampleBatchResponse response =
           Facade.clientComm.getSampleBatch(new GetSampleBatchRequest(
@@ -78,12 +72,6 @@ public enum Facade {
 
       String sampleBatchUrl = response.getURL().toString() + "/"
           + response.getSampleBatch().getFilePath();
-
-      ClientLogManager.getLogger().log(Level.WARNING,
-          "SUCESS: " + response.getURL().toString());
-
-      ClientLogManager.getLogger().log(Level.WARNING,
-          "SUCESS: " + response.getSampleBatch().getFilePath());
 
       ClientLogManager.getLogger().log(Level.FINEST,
           "SUCESS: " + sampleBatchUrl);
@@ -112,12 +100,8 @@ public enum Facade {
       Facade.fields = new ArrayList<Field>();
       Facade.fields = response.getFields();
 
-      ClientLogManager.getLogger().log(Level.FINEST,
-          "fields SIZE: " + response.getFields().size());
       Facade.records = response.getRecords()
           .toArray(new Record[Facade.project.getRecordsPerBatch()]);
-      ClientLogManager.getLogger().log(Level.FINEST,
-          "records LENGTH: " + Facade.records.length);
 
       ClientLogManager.getLogger().log(Level.FINEST, "SUCESS: " + batchUrl);
       return ImageIO.read(url);
