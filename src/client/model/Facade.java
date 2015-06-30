@@ -26,6 +26,8 @@ import shared.communication.GetProjectsRequest;
 import shared.communication.GetProjectsResponse;
 import shared.communication.GetSampleBatchRequest;
 import shared.communication.GetSampleBatchResponse;
+import shared.communication.SubmitBatchRequest;
+import shared.communication.SubmitBatchResponse;
 import shared.communication.ValidateUserRequest;
 import shared.communication.ValidateUserResponse;
 import shared.model.Batch;
@@ -142,6 +144,25 @@ public enum Facade {
     }
   }
 
+  public static boolean submitBatch() {
+    try {
+      SubmitBatchResponse response =
+          Facade.clientComm.submitBatch(new SubmitBatchRequest(
+              Facade.user.getUsername(), Facade.user.getPassword(),
+              Facade.batch.getBatchId(), Facade.recordsToString()));
+
+      ClientLogManager.getLogger().log(Level.FINE,
+          "SUCESS: " + Facade.recordsToString());
+      return response.isSuccess();
+    } catch (Exception e) {
+      StringBuilder stack =
+          new StringBuilder("RecordValues: ").append(Facade.recordsToString());
+      stack.append("\nSTACKTRACE: ").append(e);
+      ClientLogManager.getLogger().log(Level.SEVERE, stack.toString());
+      return false;
+    }
+  }
+
   public static ClientCommunicator getClientCommunicator() {
     return Facade.clientComm;
   }
@@ -206,4 +227,32 @@ public enum Facade {
     Facade.batchUrl = batchUrl;
   }
 
+  public static String recordsToString() {
+    StringBuilder submitData = new StringBuilder();
+
+    for (Record[] records : recordValues) {
+      for (Record r : records) {
+        String val = r != null ? r.getData() : "";
+        submitData.append(val).append(",");
+      }
+      submitData.append(";");
+    }
+    return submitData.toString();
+  }
+
+  // public String toStringOLD() {
+  // StringBuilder data = new StringBuilder();
+  // for (int row = 0; row < getRowCount(); row++) {
+  // for (int column = 1; column < getColumnCount(); column++) {
+  // String value = (String) getValueAt(row, column);
+  // if (value == null)
+  // value = "";
+  // if (column == getColumnCount() - 1) {
+  // data.append(value + ";");
+  // } else
+  // data.append(value + ",");
+  // }
+  // }
+  // return data.toString();
+  // }
 }

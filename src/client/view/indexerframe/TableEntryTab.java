@@ -203,14 +203,21 @@ public class TableEntryTab extends JPanel implements BatchState.Observer {
 
   @Override
   public void didDownload(BufferedImage b) {
-    initialize();
+    this.initialize();
   }
 
   @Override
   public void didHighlight() {}
 
   @Override
-  public void didSubmit(Batch b) {}
+  public void didSubmit(Batch b) {
+    this.clear();
+  }
+
+  private void clear() {
+    this.removeAll();
+    table.createDefaultColumnsFromModel();
+  }
 
   @Override
   public void didToggleHighlight() {}

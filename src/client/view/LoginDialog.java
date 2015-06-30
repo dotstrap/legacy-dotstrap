@@ -38,6 +38,7 @@ import shared.model.Field;
 
 @SuppressWarnings("serial")
 public class LoginDialog extends JDialog implements BatchState.Observer {
+  private IndexerFrame indexerFrame;
 
   private JTextField usernameField;
   private JPasswordField passwordField;
@@ -99,7 +100,10 @@ public class LoginDialog extends JDialog implements BatchState.Observer {
   public void didHighlight() {}
 
   @Override
-  public void didSubmit(Batch b) {}
+  public void didSubmit(Batch b) {
+    // this.indexerFrame.dispose();
+    // this.indexerFrame.initialize();
+  }
 
   @Override
   public void didToggleHighlight() {}
@@ -186,9 +190,10 @@ public class LoginDialog extends JDialog implements BatchState.Observer {
               + Facade.getUser().getLast() + "\nYou have indexed: "
               + Facade.getUser().getRecordCount() + " records!",
           "Record Indexer", JOptionPane.PLAIN_MESSAGE);
-      dispose();
+
       new IndexerFrame("Record Indexer");
-      // BatchState.notifyDidLogin();
+      dispose();
+
     } else {
       ClientLogManager.getLogger().log(Level.FINEST,
           "Incorrect credentials entered: Username: " + username + " Password: "
@@ -197,5 +202,17 @@ public class LoginDialog extends JDialog implements BatchState.Observer {
           "Incorrect username or password.\nPlease try again.",
           "Invalid Credentials", JOptionPane.PLAIN_MESSAGE);
     }
+  }
+
+  // public void createNewIndexerFrame() {
+  // return indexerFrame;
+  // }
+
+  public IndexerFrame getIndexerFrame() {
+    return indexerFrame;
+  }
+
+  public void setIndexerFrame(IndexerFrame indexerFrame) {
+    this.indexerFrame = indexerFrame;
   }
 }

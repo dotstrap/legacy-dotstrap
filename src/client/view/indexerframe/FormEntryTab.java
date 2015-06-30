@@ -38,25 +38,9 @@ import shared.model.Record;
 @SuppressWarnings("serial")
 public class FormEntryTab extends JPanel implements BatchState.Observer {
 
-  private class RecordsListModel extends AbstractListModel<Integer> {
-    @Override
-    public Integer getElementAt(int index) {
-      return index + 1;
-    }
+  private JList<Integer> records;;
 
-    @Override
-    public int getSize() {
-      if (Facade.getBatch() != null) {
-        return Facade.getProject().getRecordsPerBatch();
-      } else {
-        return 0;
-      }
-    }
-  };
-
-  private JList<Integer> records;
   private Map<Field, JTextField> fields;
-
   private ListSelectionListener listListener = new ListSelectionListener() {
     @SuppressWarnings("unchecked")
     @Override
@@ -186,7 +170,9 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
   public void didHighlight() {}
 
   @Override
-  public void didSubmit(Batch b) {}
+  public void didSubmit(Batch b) {
+    this.clear();
+  }
 
   @Override
   public void didToggleHighlight() {}
@@ -233,6 +219,14 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
     // new QualityCheckerPopupMenu(null, record, record);
   }
 
+  private void clear() {
+    this.records.clearSelection();;
+    this.fields.clear();;
+    this.removeAll();
+    this.revalidate();
+    this.repaint();
+  }
+
   private void initialize() {
     removeAll();
 
@@ -277,5 +271,21 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
       }
     }
     return result;
+  }
+
+  private class RecordsListModel extends AbstractListModel<Integer> {
+    @Override
+    public Integer getElementAt(int index) {
+      return index + 1;
+    }
+
+    @Override
+    public int getSize() {
+      if (Facade.getBatch() != null) {
+        return Facade.getProject().getRecordsPerBatch();
+      } else {
+        return 0;
+      }
+    }
   }
 }

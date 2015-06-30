@@ -7,15 +7,34 @@ package client.view;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JSplitPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JToolBar;
 
 import client.model.BatchState;
-import client.view.indexerframe.*;
+import client.model.Facade;
+import client.view.indexerframe.BatchComponent;
+import client.view.indexerframe.DownloadBatchDialog;
+import client.view.indexerframe.FieldHelpTab;
+import client.view.indexerframe.FormEntryTab;
+import client.view.indexerframe.ImageNavigationTab;
+import client.view.indexerframe.TableEntryTab;
+
 import shared.model.Batch;
 import shared.model.Field;
 
@@ -47,6 +66,10 @@ public class IndexerFrame extends JFrame implements BatchState.Observer {
         BatchState.notifyToggleInvert();
       } else if (e.getSource() == toggleHighlightsButton) {
         BatchState.notifyToggleHighlight();
+      } else if (e.getSource() == saveButton) {
+        //TODO
+      } else if (e.getSource() == submitButton) {
+        processSubmit();
       }
     }
   };
@@ -73,18 +96,7 @@ public class IndexerFrame extends JFrame implements BatchState.Observer {
   };//@formatter:on
 
   public IndexerFrame(String title) {
-    setSize(new Dimension(1000, 800));
-
-    setJMenuBar(initMenu());
-    this.add(initToolBar(), BorderLayout.NORTH);
-
-    JPanel rootPanel = new JPanel(new BorderLayout());
-    rootPanel.add(initSplitPane());
-
-    this.add(rootPanel);
-    this.setVisible(true);
-
-    this.addWindowListener(windowAdapter);
+    this.intitialize();
 
     BatchState.addObserver(this);
   }
@@ -94,10 +106,6 @@ public class IndexerFrame extends JFrame implements BatchState.Observer {
 
   @Override
   public void dataWasInput(String value, int record, Field field) {}
-
-  @Override
-  public void wordWasMisspelled(String value, int record, Field field,
-      List<String> suggestions) {}
 
   @Override
   public void didChangeOrigin(int x, int y) {}
@@ -117,7 +125,7 @@ public class IndexerFrame extends JFrame implements BatchState.Observer {
 
   @Override
   public void didSubmit(Batch b) {
-    downloadBatchMenuItem.setEnabled(true);
+    this.clear();
   }
 
   @Override
@@ -131,6 +139,28 @@ public class IndexerFrame extends JFrame implements BatchState.Observer {
 
   @Override
   public void fieldWasSelected(int record, Field field) {}
+
+  @Override
+  public void wordWasMisspelled(String value, int record, Field field,
+      List<String> suggestions) {}
+
+  private void clear() {
+    // this.removeAll();
+    // this.revalidate();
+    // this.repaint();
+    // batchViewer = null;
+    // downloadBatchMenuItem = null;
+    // logoutMenuItem = null;
+    // exitMenuItem = null;
+    // toolBar = null;
+    // toolBarButtons = null;
+    // zoomInButton = null;
+    // zoomOutButton = null;
+    // invertImageButton = null;
+    // toggleHighlightsButton = null;
+    // saveButton = null;
+    // submitButton = null;
+  }
 
   private JMenuBar initMenu() {
     JMenuBar menuBar = new JMenuBar();
@@ -179,7 +209,7 @@ public class IndexerFrame extends JFrame implements BatchState.Observer {
     return vSplit;
   }
 
-  // TODO: clean this code up
+  // TODO
   private JToolBar initToolBar() {
     zoomInButton = new JButton("Zoom In");
     zoomOutButton = new JButton("Zoom Out");
@@ -217,9 +247,30 @@ public class IndexerFrame extends JFrame implements BatchState.Observer {
     return toolBar;
   }
 
+  public void intitialize() {
+    setSize(new Dimension(1000, 800));
+
+    setJMenuBar(initMenu());
+    this.add(initToolBar(), BorderLayout.NORTH);
+
+    JPanel rootPanel = new JPanel(new BorderLayout());
+    rootPanel.add(initSplitPane());
+
+    this.add(rootPanel);
+    this.setVisible(true);
+
+    this.addWindowListener(windowAdapter);
+  }
+
   private void processExit() {
     // TODO: save work
     System.exit(0);
+  }
+
+  private void processSubmit() {
+    Facade.submitBatch();
+    BatchState.notifyDidSubmit(Facade.getBatch());
+    Facade.setBatch(null);
   }
 
 }

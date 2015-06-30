@@ -33,15 +33,7 @@ public class FieldHelpTab extends JPanel implements BatchState.Observer {
   private JEditorPane htmlPane;
 
   public FieldHelpTab() {
-    helpPages = new HashMap<Field, String>();
-
-    htmlPane = new JEditorPane();
-    htmlPane.setContentType("text/html");
-    htmlPane.setEditable(false);
-
-    setLayout(new BorderLayout());
-    add(new JScrollPane(htmlPane), BorderLayout.CENTER);
-
+    this.initialize();
     BatchState.addObserver(this);
   }
 
@@ -50,10 +42,6 @@ public class FieldHelpTab extends JPanel implements BatchState.Observer {
 
   @Override
   public void dataWasInput(String value, int record, Field field) {}
-
-  @Override
-  public void wordWasMisspelled(String value, int record, Field field,
-      List<String> suggestions) {}
 
   @Override
   public void didChangeOrigin(int x, int y) {}
@@ -68,7 +56,9 @@ public class FieldHelpTab extends JPanel implements BatchState.Observer {
   public void didHighlight() {}
 
   @Override
-  public void didSubmit(Batch b) {}
+  public void didSubmit(Batch b) {
+    this.clear();
+  }
 
   @Override
   public void didToggleHighlight() {}
@@ -85,6 +75,16 @@ public class FieldHelpTab extends JPanel implements BatchState.Observer {
       htmlPane.setText(downloadHelpPage(field));
       ClientLogManager.getLogger().log(Level.FINEST, field.toString());
     }
+  }
+
+  @Override
+  public void wordWasMisspelled(String value, int record, Field field,
+      List<String> suggestions) {}
+
+  private void clear() {
+    helpPages.clear();
+    htmlPane.setText("");;
+    this.removeAll();
   }
 
   private String downloadHelpPage(Field field) {
@@ -108,6 +108,20 @@ public class FieldHelpTab extends JPanel implements BatchState.Observer {
       ClientLogManager.getLogger().log(Level.SEVERE, "STACKTRACE: ", e);
       return "";
     }
+  }
+
+  /**
+   * 
+   */
+  private void initialize() {
+    helpPages = new HashMap<Field, String>();
+
+    htmlPane = new JEditorPane();
+    htmlPane.setContentType("text/html");
+    htmlPane.setEditable(false);
+
+    setLayout(new BorderLayout());
+    add(new JScrollPane(htmlPane), BorderLayout.CENTER);
   }
 
 }

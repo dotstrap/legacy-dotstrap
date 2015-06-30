@@ -226,7 +226,9 @@ public class BatchComponent extends JComponent implements BatchState.Observer {
   }
 
   @Override
-  public void didSubmit(Batch b) {}
+  public void didSubmit(Batch b) {
+    this.setVisible(false);
+  }
 
   @Override
   public void didToggleHighlight() {

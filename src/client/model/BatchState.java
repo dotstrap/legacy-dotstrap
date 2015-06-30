@@ -11,6 +11,8 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
+import client.view.IndexerFrame;
+
 import shared.model.Batch;
 import shared.model.Field;
 
@@ -30,6 +32,8 @@ public enum BatchState {
     public void didZoom(double zoomDirection);
     public void fieldWasSelected(int record, Field field);
   }; //@formatter:on
+
+  private static IndexerFrame indexerFrame;
 
   private static transient List<Observer> currentObservers;
   private static int currentRecord;
@@ -114,6 +118,13 @@ public enum BatchState {
     }
   }
 
+  public static void notifyDidSubmit(Batch b) {
+    for (Observer o : currentObservers) {
+      o.didSubmit(b);
+    }
+    // BatchState.initializeIndexerFrame();
+  }
+
   public static void notifyToggleInvert() {
     for (Observer o : currentObservers) {
       o.didToggleInvert();
@@ -143,6 +154,21 @@ public enum BatchState {
     for (Observer o : currentObservers) {
       o.fieldWasSelected(currentRecord, currentField);
     }
+  }
+
+  public static IndexerFrame getIndexerFrame() {
+    return indexerFrame;
+  }
+
+  // public static void setIndexerFrame(IndexerFrame indexerFrame) {
+  // BatchState.indexerFrame = indexerFrame;
+  // }
+
+  public static void initializeIndexerFrame() {
+    // if (BatchState.indexerFrame != null) {
+    // BatchState.indexerFrame.dispose();
+    // }
+    // BatchState.indexerFrame = new IndexerFrame("Record Indexer");
   }
 
   public static void updateAllObservers() {
