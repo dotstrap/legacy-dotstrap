@@ -61,15 +61,16 @@ public enum BatchState {
   }
 
   public static void notifyDataWasInput(String value, int record, Field field) {
-
+    BatchState.currentField = field;
+    BatchState.currentRecord = record;
     for (Observer o : currentObservers) {
       o.dataWasInput(value, record, field);
     }
 
   }
 
-  public static void notifyWordWasMisspelled(String value, int record, Field field,
-      List<String> suggestions) {
+  public static void notifyWordWasMisspelled(String value, int record,
+      Field field, List<String> suggestions) {
     for (Observer o : currentObservers) {
       o.wordWasMisspelled(value, record, field, suggestions);
     }
@@ -88,6 +89,8 @@ public enum BatchState {
   }
 
   public static void notifyFieldWasSelected(int record, Field field) {
+    BatchState.currentField = field;
+    BatchState.currentRecord = record;
     for (Observer o : currentObservers) {
       o.fieldWasSelected(record, field);
     }

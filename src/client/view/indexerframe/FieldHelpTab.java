@@ -52,7 +52,8 @@ public class FieldHelpTab extends JPanel implements BatchState.Observer {
   public void dataWasInput(String value, int record, Field field) {}
 
   @Override
-  public void wordWasMisspelled(String value, int record, Field field, List<String> suggestions) {}
+  public void wordWasMisspelled(String value, int record, Field field,
+      List<String> suggestions) {}
 
   @Override
   public void didChangeOrigin(int x, int y) {}
@@ -104,7 +105,7 @@ public class FieldHelpTab extends JPanel implements BatchState.Observer {
       helpPages.put(field, html);
       return html;
     } catch (Exception e) {
-      ClientLogManager.getLogger().log(Level.FINE, "STACKTRACE: ", e);
+      ClientLogManager.getLogger().log(Level.SEVERE, "STACKTRACE: ", e);
       return "";
     }
   }

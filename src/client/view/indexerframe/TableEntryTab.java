@@ -4,16 +4,26 @@
 package client.view.indexerframe;
 
 import java.awt.BorderLayout;
-import java.awt.event.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.util.List;
+import java.util.logging.Level;
 
-import javax.swing.*;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 
 import client.model.BatchState;
 import client.model.Facade;
-import shared.model.*;
+import client.util.ClientLogManager;
+
+import shared.model.Batch;
+import shared.model.Field;
+import shared.model.Record;
 
 @SuppressWarnings("serial")
 public class TableEntryTab extends JPanel implements BatchState.Observer {
@@ -25,57 +35,37 @@ public class TableEntryTab extends JPanel implements BatchState.Observer {
 
     @Override
     public int getColumnCount() {
-      if (Facade.getBatch() != null) {
-        return Facade.getFields().size() + 1;
-      } else {
-        return 0;
-      }
+      return Facade.getBatch() != null ? Facade.getFields().size() + 1 : 0;
     }
 
     @Override
     public int getRowCount() {
-      if (Facade.getBatch() != null) {
-        return Facade.getProject().getRecordsPerBatch();
-      } else {
-        return 0;
-      }
+      return Facade.getBatch() != null
+          ? Facade.getProject().getRecordsPerBatch() : 0;
     }
 
     @Override
     public Object getValueAt(int row, int column) {
-      if (Facade.getBatch() != null) {
-        if (column == 0) {
-          return row + 1;
-        } else {
-          if (Facade.getRecords()[row] != null) {
-            return Facade.getRecords()[row].getData();
-          } else {
-            return null;
-          }
-        }
-      } else {
+      if (Facade.getBatch() == null)
+        return null;
+      if (column == 0)
+        return row + 1;
+      if (Facade.getRecords()[row] == null)
+        return null;
+      if (Facade.getRecords()[row].getColNum() != column - 1) {
         return null;
       }
+
+      return Facade.getRecords()[row].getData();
     }
 
     @Override
     public void setValueAt(Object newValue, int row, int column) {
       if (column > 0) {
-        // assert (newValue.getClass() == Value.class);
         String cellValue = (String) newValue;
-
         Field field = Facade.getFields().get(column - 1);
-        int record = row;
-
-        if (Facade.getRecords()[record] == null) {
-          Facade.getRecords()[record] = new Record();
-          // FIXME: sets the whole row...
-          Facade.getRecords()[record].setData(cellValue);
-        } else {
-          Facade.getRecords()[record].setData(cellValue);
-        }
-
         fireTableCellUpdated(row, column);
+        BatchState.notifyDataWasInput(cellValue, row, field);
       }
     }
 
@@ -92,6 +82,7 @@ public class TableEntryTab extends JPanel implements BatchState.Observer {
         return Facade.getFields().get(column - 1).getTitle();
       }
     }
+
   };
 
   public TableEntryTab() {
@@ -142,11 +133,7 @@ public class TableEntryTab extends JPanel implements BatchState.Observer {
 
   private Field getCurrentField() {
     int column = table.getSelectedColumn();
-    if (column == 0) {
-      column = 1;
-    }
-
-    return columnToField(column);
+    return column <= 0 ? columnToField(1) : columnToField(column);
   }
 
   private int rowToRecord(int row) {
@@ -154,8 +141,13 @@ public class TableEntryTab extends JPanel implements BatchState.Observer {
   }
 
   private int recordToRow(int record) {
-    assert(record >= 0 && record < table.getRowCount());
-    return record;
+    if (record < 0) {
+      return 1;
+    } else if (record >= table.getRowCount()) {
+      return table.getRowCount();
+    } else {
+      return record;
+    }
   }
 
   private Field columnToField(int column) {
@@ -163,23 +155,32 @@ public class TableEntryTab extends JPanel implements BatchState.Observer {
   }
 
   private int fieldToColumn(Field field) {
-    List<Field> fields = Facade.getFields();
-    assert fields.contains(field);
-
-    for (int i = 0; i < fields.size(); i++) {
-      if (field == fields.get(i)) {
-        return i + 1;
-      }
-    }
-    assert false; // should never get here
-    return 0;
+    return field.getColNum() > 0 ? field.getColNum() + 1 : 1;
   }
 
   @Override
   public void cellWasSelected(int x, int y) {}
 
   @Override
-  public void dataWasInput(String value, int record, Field field) {}
+  public void dataWasInput(String cellValue, int row, Field field) {
+    StringBuilder consoleOutput = new StringBuilder();
+    if (Facade.getRecords()[row] == null) {
+      Facade.getRecords()[row] = new Record(field.getFieldId(),
+          Facade.getBatch().getBatchId(), Facade.getBatch().getFilePath(),
+          cellValue, row, field.getColNum());
+      consoleOutput.append("\n!!!!!!NULL!!!!!!");
+    } else if (Facade.getRecords()[row].getColNum() == field.getColNum()) {
+      consoleOutput.append("\nsetData=" + cellValue);
+      Facade.getRecords()[row].setData(cellValue);
+    }
+
+    consoleOutput.append("\n" + field.toString());
+    consoleOutput.append("\n" + Facade.getRecords()[row].toString());
+    consoleOutput.append(
+        "Records per batch=" + Facade.getProject().getRecordsPerBatch());
+    consoleOutput.append("\n");
+    ClientLogManager.getLogger().log(Level.FINE, consoleOutput.toString());
+  }
 
   @Override
   public void wordWasMisspelled(String value, int record, Field field,
@@ -210,15 +211,32 @@ public class TableEntryTab extends JPanel implements BatchState.Observer {
 
   @Override
   public void fieldWasSelected(int record, Field field) {
+    StringBuilder consoleOutput = new StringBuilder();
     if (field != null && record >= 0) {
       int row = recordToRow(record);
       int column = fieldToColumn(field);
 
       table.setRowSelectionInterval(row, row);
       table.setColumnSelectionInterval(column, column);
-    } else {
-      table.clearSelection();
+      consoleOutput.append("\nrow=" + row);
+      consoleOutput.append("\ncolumn=" + column);
+      if (Facade.getRecords()[row] != null) {
+        consoleOutput.append("\n" + field.toString());
+        consoleOutput.append("\n" + Facade.getRecords()[row].toString());
+        if (Facade.getRecords()[row].getColNum() != field.getColNum()) {
+          consoleOutput.append("\nCREATED NEW RECORD");
+          Facade.getRecords()[row] =
+              new Record(field.getFieldId(), Facade.getBatch().getBatchId(),
+                  Facade.getBatch().getFilePath(), "", row, field.getColNum());
+        }
+      }
     }
+    // } else {
+    // table.clearSelection();
+    // }
+    consoleOutput.append("\n");
+    consoleOutput.append(
+        "Records per batch=" + Facade.getProject().getRecordsPerBatch());
+    ClientLogManager.getLogger().log(Level.FINE, consoleOutput.toString());
   }
-
 }

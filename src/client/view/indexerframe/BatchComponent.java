@@ -37,7 +37,8 @@ import shared.model.Project;
 public class BatchComponent extends JComponent implements BatchState.Observer {
 
   private static final Color HIGHLIGHT_COLOR = new Color(0, 255, 245, 80);
-  private static final Color INVERTED_HIGHLIGHT_COLOR = new Color(255, 0, 10, 80);
+  private static final Color INVERTED_HIGHLIGHT_COLOR =
+      new Color(255, 0, 10, 80);
   private static final double ZOOM_SCALE_FACTOR = 0.09;
   private static final double MAX_ZOOM_AMT = 95.0;
   private static final double MIN_ZOOM_AMT = 0.01;
@@ -202,7 +203,8 @@ public class BatchComponent extends JComponent implements BatchState.Observer {
   public void dataWasInput(String value, int record, Field field) {}
 
   @Override
-  public void wordWasMisspelled(String value, int record, Field field, List<String> suggestions) {}
+  public void wordWasMisspelled(String value, int record, Field field,
+      List<String> suggestions) {}
 
   @Override
   public void didChangeOrigin(int x, int y) {
@@ -246,7 +248,8 @@ public class BatchComponent extends JComponent implements BatchState.Observer {
     if (this.isInverted) {
       shapes.set(0, ((DrawingImage) shapes.get(0)).invert(this.batch));
       if (shapes.size() == 2)
-        shapes.set(1, ((DrawingRect) shapes.get(1)).setColor(INVERTED_HIGHLIGHT_COLOR));
+        shapes.set(1,
+            ((DrawingRect) shapes.get(1)).setColor(INVERTED_HIGHLIGHT_COLOR));
     } else {
       shapes.set(0, ((DrawingImage) shapes.get(0)).setImage(this.batch));
       if (shapes.size() == 2)
@@ -281,7 +284,8 @@ public class BatchComponent extends JComponent implements BatchState.Observer {
 
       Point cell = new Point(record, field.getColNum());
       if (cell != null) {
-        ClientLogManager.getLogger().log(Level.FINEST, "\ncellX=" + cell.x + " cellY=" + cell.y);
+        ClientLogManager.getLogger().log(Level.FINEST,
+            "cellX=" + cell.x + " cellY=" + cell.y);
         highlightCell(cell.x, cell.y);
         this.repaint();
       }
@@ -378,8 +382,8 @@ public class BatchComponent extends JComponent implements BatchState.Observer {
 
     generateBatchCells();
 
-    shapes.add(new DrawingImage(batch, new Rectangle2D.Double(-dCenterX, -dCenterY, batch
-        .getWidth(null), batch.getHeight(null))));
+    shapes.add(new DrawingImage(batch, new Rectangle2D.Double(-dCenterX,
+        -dCenterY, batch.getWidth(null), batch.getHeight(null))));
 
     this.repaint();
   }
