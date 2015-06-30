@@ -191,7 +191,7 @@ public class TableEntryTab extends JPanel implements BatchState.Observer {
     consoleOutput.append(
         "Records per batch=" + Facade.getProject().getRecordsPerBatch());
     consoleOutput.append("\n");
-    ClientLogManager.getLogger().log(Level.FINER, consoleOutput.toString());
+    ClientLogManager.getLogger().log(Level.FINEST, consoleOutput.toString());
   }
 
   @Override
@@ -245,6 +245,6 @@ public class TableEntryTab extends JPanel implements BatchState.Observer {
     consoleOutput.append("\n");
     consoleOutput.append(
         "Records per batch=" + Facade.getProject().getRecordsPerBatch());
-    ClientLogManager.getLogger().log(Level.FINER, consoleOutput.toString());
+    ClientLogManager.getLogger().log(Level.FINEST, consoleOutput.toString());
   }
 }

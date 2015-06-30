@@ -49,7 +49,7 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
         JList<Integer> source = (JList<Integer>) e.getSource();
         int selection = source.getSelectedIndex();
         if (selection >= 0) {
-          ClientLogManager.getLogger().log(Level.FINEST,
+          ClientLogManager.getLogger().log(Level.FINER,
               "SELECTION: " + selection);
           BatchState.setCurrentRecord(selection);
         }
@@ -65,7 +65,7 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
         if (BatchState.getCurrentRecord() < 0) {
           BatchState.setCurrentRecord(0);
         }
-        ClientLogManager.getLogger().log(Level.FINEST, field.toString());
+        ClientLogManager.getLogger().log(Level.FINER, field.toString());
         BatchState.setCurrentField(field);
       }
     }
@@ -76,7 +76,7 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
 
       if (field != null) {
         String text = ((JTextField) e.getSource()).getText();
-        ClientLogManager.getLogger().log(Level.FINEST,
+        ClientLogManager.getLogger().log(Level.FINER,
             field.toString() + "\ntext: " + text);
         BatchState.notifyDataWasInput(text, BatchState.getCurrentRecord(),
             field);
@@ -111,6 +111,7 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
   public void dataWasInput(String cellValue, int row, Field field) {
     int column = field.getColNum();
     StringBuilder consoleOutput = new StringBuilder();
+    // String text = "";
     if (Facade.getRecordValues()[row][column] == null) {
       Facade.getRecordValues()[row][column] =
           new Record(field.getFieldId(), Facade.getBatch().getBatchId(),
@@ -119,6 +120,7 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
     } else {
       consoleOutput.append("\nsetData=" + cellValue);
       Facade.getRecordValues()[row][column].setData(cellValue);
+      // text = cellvalue;
     }
 
     consoleOutput.append("\n" + field.toString());
@@ -126,8 +128,11 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
     consoleOutput.append(
         "Records per batch=" + Facade.getProject().getRecordsPerBatch());
     consoleOutput.append("\n");
-    ClientLogManager.getLogger().log(Level.FINEST, consoleOutput.toString());
-
+    ClientLogManager.getLogger().log(Level.FINER, consoleOutput.toString());
+    fields.get(field).setText(cellValue);
+    if (fields.get(field).getText() == ""
+        || fields.get(field).getText() == null)
+      fields.get(field).requestFocusInWindow();
     // int row = record;
     // if (Facade.getRecords()[index] == null) {
     // Facade.getRecords()[index] = new Record();
@@ -191,9 +196,9 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
     if (fields.isEmpty() || fields == null || field == null)
       return;
 
+    String text = "";
     int column = field.getColNum();
     for (Field f : fields.keySet()) {
-      String text = "";
       int row = BatchState.getCurrentRecord();
       if (row >= 0) {
         if (Facade.getRecordValues()[row] != null
@@ -202,13 +207,13 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
 
           text = Facade.getRecordValues()[row][column].getData();
 
-          ClientLogManager.getLogger().log(Level.FINEST,
+          ClientLogManager.getLogger().log(Level.FINER,
               Facade.getRecordValues()[row].toString());
         }
+        fields.get(field).setText(text);
+        fields.get(field).requestFocusInWindow();
       }
-      fields.get(field).setText(text);
     }
-    fields.get(field).requestFocusInWindow();
   }
 
   @Override
