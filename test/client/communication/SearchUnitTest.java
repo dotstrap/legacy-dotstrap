@@ -1,4 +1,10 @@
-
+/**
+ * SearchUnitTest.java
+ * JRE v1.8.0_45
+ * 
+ * Created by William Myers on Jun 30, 2015.
+ * Copyright (c) 2015 William Myers. All Rights reserved.
+ */
 
 package client.communication;
 
@@ -20,31 +26,52 @@ import shared.communication.SearchRequest;
 import shared.communication.SearchResponse;
 import shared.model.*;
 
-
+/**
+ * The Class SearchUnitTest.
+ */
 public class SearchUnitTest {
+
   private ClientCommunicator clientComm; // @formatter:off
 
-  private Database      db;
+  private Database db;
 
-  private UserDAO       testUserDAO;
-  private ProjectDAO    testProjectDAO;
-  private FieldDAO      testFieldDAO;
+  private UserDAO testUserDAO;
 
-  private User          testUser1;
-  private User          testUser2;
-  private User          testUser3;
-  private Field         fieldTest1;
-  private Field         fieldTest2;
-  private Field         fieldTest3;
-  private Project       testProject1;
-  private Project       testProject2;
-  private Project       testProject3;
+  private ProjectDAO testProjectDAO;
+
+  private FieldDAO testFieldDAO;
+
+  private User testUser1;
+
+  private User testUser2;
+
+  private User testUser3;
+
+  private Field fieldTest1;
+
+  private Field fieldTest2;
+
+  private Field fieldTest3;
+
+  private Project testProject1;
+
+  private Project testProject2;
+
+  private Project testProject3;
+
   private List<Integer> fieldIDs;
-  private List<Integer> badFieldIDs;
-  private List<String>  values;
-  private List<String>  badValues; // @formatter:on
 
-  
+  private List<Integer> badFieldIDs;
+
+  private List<String> values;
+
+  private List<String> badValues; // @formatter:on
+
+  /**
+   * Sets the up before class.
+   *
+   * @throws Exception the exception
+   */
   @BeforeClass
   public static void setUpBeforeClass() throws Exception {
     // Load database driver
@@ -52,13 +79,21 @@ public class SearchUnitTest {
 
   }
 
-  
+  /**
+   * Tear down after class.
+   *
+   * @throws Exception the exception
+   */
   @AfterClass
   public static void tearDownAfterClass() throws Exception {
     return;
   }
 
-  
+  /**
+   * Sets the up.
+   *
+   * @throws Exception the exception
+   */
   @Before
   public void setUp() throws Exception {
     db = new Database();
@@ -71,9 +106,12 @@ public class SearchUnitTest {
     testFieldDAO = db.getFieldDAO();
     clientComm = new ClientCommunicator();
 
-    testUser1 = new User("userTest1", "pass1", "first1", "last1", "email1", 1, 1);
-    testUser2 = new User("userTest2", "pass2", "first2", "last2", "email2", 2, 2);
-    testUser3 = new User("userTest3", "pass3", "first3", "last3", "email3", 3, 3);
+    testUser1 =
+        new User("userTest1", "pass1", "first1", "last1", "email1", 1, 1);
+    testUser2 =
+        new User("userTest2", "pass2", "first2", "last2", "email2", 2, 2);
+    testUser3 =
+        new User("userTest3", "pass3", "first3", "last3", "email3", 3, 3);
 
     testUserDAO.create(testUser1);
     testUserDAO.create(testUser2);
@@ -120,7 +158,11 @@ public class SearchUnitTest {
     db.endTransaction(true);
   }
 
-  
+  /**
+   * Tear down.
+   *
+   * @throws Exception the exception
+   */
   @After
   public void tearDown() throws Exception {
     db = null;
@@ -143,29 +185,56 @@ public class SearchUnitTest {
     db.endTransaction(true);
   }
 
+  /**
+   * Quick test.
+   */
   @Test
   public void quickTest() {
     assertEquals(true, true);
   }
 
+  /**
+   * Valid user test.
+   *
+   * @throws ServerException the server exception
+   * @throws DatabaseException the database exception
+   * @throws MalformedURLException the malformed url exception
+   */
   @Test
-  public void validUserTest() throws ServerException, DatabaseException, MalformedURLException {
-    SearchResponse result =
-        clientComm.search(new SearchRequest("userTest1", "pass1", fieldIDs, values));
+  public void validUserTest()
+      throws ServerException, DatabaseException, MalformedURLException {
+    SearchResponse result = clientComm
+        .search(new SearchRequest("userTest1", "pass1", fieldIDs, values));
     assertEquals(result.getFoundRecords().size(), 1);
   }
 
+  /**
+   * Invalid field id test.
+   *
+   * @throws ServerException the server exception
+   * @throws DatabaseException the database exception
+   * @throws MalformedURLException the malformed url exception
+   */
   @Test
-  public void invalidFieldIdTest() throws ServerException, DatabaseException, MalformedURLException {
-    SearchResponse result =
-        clientComm.search(new SearchRequest("userTest1", "pass1", badFieldIDs, values));
+  public void invalidFieldIdTest()
+      throws ServerException, DatabaseException, MalformedURLException {
+    SearchResponse result = clientComm
+        .search(new SearchRequest("userTest1", "pass1", badFieldIDs, values));
     assertEquals(result.getFoundRecords().size(), 0);
   }
 
+  /**
+   * Invalid values test.
+   *
+   * @throws ServerException the server exception
+   * @throws DatabaseException the database exception
+   * @throws MalformedURLException the malformed url exception
+   */
   @Test
-  public void invalidValuesTest() throws ServerException, DatabaseException, MalformedURLException {
-    SearchResponse result =
-        clientComm.search(new SearchRequest("userTest1", "pass1", fieldIDs, badValues));
+  public void invalidValuesTest()
+      throws ServerException, DatabaseException, MalformedURLException {
+    SearchResponse result = clientComm
+        .search(new SearchRequest("userTest1", "pass1", fieldIDs, badValues));
     assertEquals(result.getFoundRecords().size(), 0);
   }
 }

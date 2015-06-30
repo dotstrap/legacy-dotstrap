@@ -1,18 +1,38 @@
+/**
+ * TestView.java
+ * JRE v1.8.0_45
+ * 
+ * Created by William Myers on Jun 30, 2015.
+ * Copyright (c) 2015 William Myers. All Rights reserved.
+ */
 package servertester.views;
 
 import servertester.controllers.*;
 
+/**
+ * The Class TestView.
+ */
 public class TestView implements IView {
 
   private IController _controller;
+
   private String _host;
+
   private String _port;
+
   private ServerOp _op;
+
   private String[] _paramNames;
+
   private String[] _paramValues;
+
   private String _request;
+
   private String _response;
 
+  /**
+   * Instantiates a new test view.
+   */
   public TestView() {
     _controller = null;
     _host = "";

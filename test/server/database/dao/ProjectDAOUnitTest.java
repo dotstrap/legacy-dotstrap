@@ -1,3 +1,10 @@
+/**
+ * ProjectDAOUnitTest.java
+ * JRE v1.8.0_45
+ * 
+ * Created by William Myers on Jun 30, 2015.
+ * Copyright (c) 2015 William Myers. All Rights reserved.
+ */
 
 package server.database.dao;
 
@@ -12,9 +19,16 @@ import server.database.DatabaseException;
 
 import shared.model.Project;
 
-
+/**
+ * The Class ProjectDAOUnitTest.
+ */
 public class ProjectDAOUnitTest {
-  
+
+  /**
+   * Sets the up before class.
+   *
+   * @throws Exception the exception
+   */
   @BeforeClass
   public static void setUpBeforeClass() throws Exception {
     // "setUpBeforeClass");
@@ -23,7 +37,11 @@ public class ProjectDAOUnitTest {
     Database.initDriver();
   }
 
-  
+  /**
+   * Tear down after class.
+   *
+   * @throws Exception the exception
+   */
   @AfterClass
   public static void tearDownAfterClass() throws Exception {
     // "tearDownAfterClass");
@@ -32,15 +50,22 @@ public class ProjectDAOUnitTest {
   }
 
   // @formatter:off
-  private Database   db;
+  private Database db;
+
   private ProjectDAO testProjectDAO;
 
   private Project testProject1 = null;
+
   private Project testProject2 = null;
+
   private Project testProject3 = null;
   // @formatter:on
 
-  
+  /**
+   * Sets the up.
+   *
+   * @throws Exception the exception
+   */
   @Before
   public void setUp() throws Exception {
 
@@ -59,7 +84,11 @@ public class ProjectDAOUnitTest {
     testProjectDAO.create(testProject3);
   }
 
-  
+  /**
+   * Tear down.
+   *
+   * @throws Exception the exception
+   */
   @After
   public void tearDown() throws Exception {
 
@@ -70,7 +99,15 @@ public class ProjectDAOUnitTest {
   }
 
   // @formatter:off
-  
+
+  /**
+   * Are equal.
+   *
+   * @param a the a
+   * @param b the b
+   * @param compareIds the compare ids
+   * @return true, if successful
+   */
   private boolean areEqual(Project a, Project b, boolean compareIds) {
     if (compareIds) {
       if (a.getProjectId() != b.getProjectId()) {
@@ -84,7 +121,13 @@ public class ProjectDAOUnitTest {
   }
   // @formatter:on
 
-  
+  /**
+   * Safe equals.
+   *
+   * @param a the a
+   * @param b the b
+   * @return true, if successful
+   */
   private boolean safeEquals(Object a, Object b) {
     if ((a == null) || (b == null)) {
       return ((a == null) && (b == null));
@@ -93,7 +136,11 @@ public class ProjectDAOUnitTest {
     }
   }
 
-  
+  /**
+   * Test get all.
+   *
+   * @throws DatabaseException the database exception
+   */
   @Test
   public void testGetAll() throws DatabaseException {
 
@@ -101,7 +148,11 @@ public class ProjectDAOUnitTest {
     assertEquals(3, allProjectes.size());
   }
 
-  
+  /**
+   * Test create.
+   *
+   * @throws DatabaseException the database exception
+   */
   @Test
   public void testCreate() throws DatabaseException {
 
@@ -126,7 +177,6 @@ public class ProjectDAOUnitTest {
     assertTrue(hasFoundProject1 && hasFoundProject2 && hasFoundProject3);
   }
 
-  
   // @Test
   // public void testUpdate() throws DatabaseException {
 
@@ -167,7 +217,11 @@ public class ProjectDAOUnitTest {
   // assertTrue(hasFoundProject1 && hasFoundProject2 && hasFoundProject3);
   // }
 
-  
+  /**
+   * Test delete.
+   *
+   * @throws DatabaseException the database exception
+   */
   @Test
   public void testDelete() throws DatabaseException {
     List<Project> allProjectes = testProjectDAO.getAll();

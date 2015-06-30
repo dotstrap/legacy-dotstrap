@@ -1,3 +1,10 @@
+/**
+ * Controller.java
+ * JRE v1.8.0_45
+ * 
+ * Created by William Myers on Jun 30, 2015.
+ * Copyright (c) 2015 William Myers. All Rights reserved.
+ */
 
 package servertester.controllers;
 
@@ -13,16 +20,24 @@ import servertester.views.IView;
 
 import shared.communication.*;
 
+/**
+ * The Class Controller.
+ */
 public class Controller implements IController {
-  private ClientCommunicator clientComm;
-  private IView              _view;
 
-  
-  private static Logger      logger;
+  private ClientCommunicator clientComm;
+
+  private IView _view;
+
+  private static Logger logger;
+
   static {
     logger = Logger.getLogger("server");
   }
 
+  /**
+   * Instantiates a new controller.
+   */
   public Controller() {
     return;
   }
@@ -37,6 +52,11 @@ public class Controller implements IController {
 
   // IController methods
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see servertester.controllers.IController#initialize()
+   */
   @Override
   public void initialize() {
     getView().setHost("localhost");
@@ -44,6 +64,11 @@ public class Controller implements IController {
     operationSelected();
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see servertester.controllers.IController#operationSelected()
+   */
   @Override
   public void operationSelected() {
     ArrayList<String> paramNames = new ArrayList<String>();
@@ -79,12 +104,19 @@ public class Controller implements IController {
 
     getView().setRequest("");
     getView().setResponse("");
-    getView().setParameterNames(paramNames.toArray(new String[paramNames.size()]));
+    getView()
+        .setParameterNames(paramNames.toArray(new String[paramNames.size()]));
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see servertester.controllers.IController#executeOperation()
+   */
   @Override
   public void executeOperation() {
-    clientComm = new ClientCommunicator(getView().getHost(), getView().getPort());
+    clientComm =
+        new ClientCommunicator(getView().getHost(), getView().getPort());
 
     switch (getView().getOperation()) {
       case VALIDATE_USER:
@@ -114,6 +146,9 @@ public class Controller implements IController {
     }
   }
 
+  /**
+   * Validate user.
+   */
   private void validateUser() {
     String[] args = getView().getParameterValues();
 
@@ -130,6 +165,11 @@ public class Controller implements IController {
     }
   }
 
+  /**
+   * Gets the projects.
+   *
+   * @return the projects
+   */
   private void getProjects() {
     String[] args = getView().getParameterValues();
 
@@ -147,12 +187,17 @@ public class Controller implements IController {
     }
   }
 
+  /**
+   * Gets the sample batch.
+   *
+   * @return the sample batch
+   */
   private void getSampleBatch() {
     String[] args = getView().getParameterValues();
 
     try {
-      GetSampleBatchRequest params =
-          new GetSampleBatchRequest(args[0], args[1], Integer.parseInt(args[2]));
+      GetSampleBatchRequest params = new GetSampleBatchRequest(args[0], args[1],
+          Integer.parseInt(args[2]));
       GetSampleBatchResponse result = clientComm.getSampleBatch(params);
 
       getView().setRequest(printUserInput(args));
@@ -165,6 +210,9 @@ public class Controller implements IController {
     }
   }
 
+  /**
+   * Download batch.
+   */
   private void downloadBatch() {
     String[] args = getView().getParameterValues();
 
@@ -182,23 +230,31 @@ public class Controller implements IController {
     }
   }
 
+  /**
+   * Submit batch.
+   */
   private void submitBatch() {
-      String[] args = getView().getParameterValues();
+    String[] args = getView().getParameterValues();
 
-      try {
-          SubmitBatchRequest params =
-              new SubmitBatchRequest(args[0], args[1], Integer.parseInt(args[2]), args[3]);
-          SubmitBatchResponse result = clientComm.submitBatch(params);
+    try {
+      SubmitBatchRequest params = new SubmitBatchRequest(args[0], args[1],
+          Integer.parseInt(args[2]), args[3]);
+      SubmitBatchResponse result = clientComm.submitBatch(params);
 
-          getView().setResponse(result.toString());
-      } catch (Exception e) {
-          getView().setResponse("FAILED\n");
-          logger.log(Level.SEVERE, "STACKTRACE: ", e);
-      } finally {
-          getView().setRequest(printUserInput(args));
-      }
+      getView().setResponse(result.toString());
+    } catch (Exception e) {
+      getView().setResponse("FAILED\n");
+      logger.log(Level.SEVERE, "STACKTRACE: ", e);
+    } finally {
+      getView().setRequest(printUserInput(args));
+    }
   }
 
+  /**
+   * Gets the fields.
+   *
+   * @return the fields
+   */
   private void getFields() {
     String[] args = getView().getParameterValues();
 
@@ -214,7 +270,8 @@ public class Controller implements IController {
         return;
       }
 
-      GetFieldsRequest params = new GetFieldsRequest(args[0], args[1], projectId);
+      GetFieldsRequest params =
+          new GetFieldsRequest(args[0], args[1], projectId);
       GetFieldsResponse result = clientComm.getFields(params);
 
       getView().setResponse(result.toString());
@@ -226,6 +283,9 @@ public class Controller implements IController {
     }
   }
 
+  /**
+   * Search.
+   */
   private void search() {
     String[] args = getView().getParameterValues();
 
@@ -236,7 +296,7 @@ public class Controller implements IController {
       for (String s : tmpFieldIds) {
         if (!fieldList.contains(Integer.parseInt(s))) {
           fieldList.add(Integer.parseInt(s));
-          //System.out.println("CURR INT: " + s);
+          // System.out.println("CURR INT: " + s);
         }
       }
     } catch (NumberFormatException e) {
@@ -252,16 +312,17 @@ public class Controller implements IController {
     for (String s : searchQuery) {
       s = s.toUpperCase();
       if (!searchList.contains(s)) {
-        //System.out.println("CURR S: " + s);
+        // System.out.println("CURR S: " + s);
         searchList.add(s);
       }
     }
 
     try {
-      //System.out.println(fieldList.toString());
-      //System.out.println("\n" + searchQuery.toString());
+      // System.out.println(fieldList.toString());
+      // System.out.println("\n" + searchQuery.toString());
 
-      SearchRequest params = new SearchRequest(args[0], args[1], fieldList, searchList);
+      SearchRequest params =
+          new SearchRequest(args[0], args[1], fieldList, searchList);
       SearchResponse result = clientComm.search(params);
 
       getView().setResponse(result.toString());
@@ -273,7 +334,12 @@ public class Controller implements IController {
     }
   }
 
-  
+  /**
+   * Prints the user input.
+   *
+   * @param args the args
+   * @return the string
+   */
   private String printUserInput(String[] args) {
     StringBuilder sb = new StringBuilder();
     for (String s : args) {

@@ -1,3 +1,10 @@
+/**
+ * SettingsPanel.java
+ * JRE v1.8.0_45
+ * 
+ * Created by William Myers on Jun 30, 2015.
+ * Copyright (c) 2015 William Myers. All Rights reserved.
+ */
 package servertester.views;
 
 import java.awt.event.*;
@@ -6,14 +13,23 @@ import javax.swing.*;
 
 import static servertester.views.Constants.*;
 
+/**
+ * The Class SettingsPanel.
+ */
 @SuppressWarnings({"serial", "rawtypes", "unchecked"})
 public class SettingsPanel extends BasePanel {
 
   private JTextField _hostTextField;
+
   private JTextField _portTextField;
+
   private JComboBox _opComboBox;
+
   private JButton _executeButton;
 
+  /**
+   * Instantiates a new settings panel.
+   */
   public SettingsPanel() {
     super();
 

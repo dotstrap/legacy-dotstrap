@@ -1,3 +1,10 @@
+/**
+ * ServerUnitTests.java
+ * JRE v1.8.0_45
+ * 
+ * Created by William Myers on Jun 30, 2015.
+ * Copyright (c) 2015 William Myers. All Rights reserved.
+ */
 
 package server;
 
@@ -11,16 +18,24 @@ import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.Test;
 
-
+/**
+ * The Class ServerUnitTests.
+ */
 public class ServerUnitTests {
-  
+
   private static Logger logger;
+
   public final static String LOG_NAME = "serverTest";
 
-  
+  /**
+   * Teardown.
+   */
   @After
   public void teardown() {}
-  
+
+  /**
+   * Test_1.
+   */
   @Test
   public void test_1() {
     assertEquals("OK", "OK");
@@ -28,14 +43,19 @@ public class ServerUnitTests {
     assertFalse(false);
   }
 
-  
+  /**
+   * The main method.
+   *
+   * @param args the arguments
+   */
   public static void main(String[] args) {
     try {
       final FileInputStream is = new FileInputStream("logging.properties");
       LogManager.getLogManager().readConfiguration(is);
       logger = Logger.getLogger(LOG_NAME);
     } catch (final IOException e) {
-      Logger.getAnonymousLogger().severe("ERROR: unable to load logging properties file...");
+      Logger.getAnonymousLogger()
+          .severe("ERROR: unable to load logging properties file...");
       Logger.getAnonymousLogger().severe(e.getMessage());
     }
 
@@ -45,8 +65,7 @@ public class ServerUnitTests {
         "server.database.dao.FieldDAOUnitTest",
         "server.database.dao.ProjectDAOUnitTest",
         "server.database.dao.RecordDAOUnitTest",
-        "server.database.dao.UserDAOUnitTest",
-        }; // @formatter:on
+        "server.database.dao.UserDAOUnitTest",}; // @formatter:on
     org.junit.runner.JUnitCore.main(testClasses);
   }
 }

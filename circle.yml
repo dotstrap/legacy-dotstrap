@@ -9,3 +9,4 @@ test:
     - ant clean
     - ant import
     - ant server-tests
+    - ant client-tests

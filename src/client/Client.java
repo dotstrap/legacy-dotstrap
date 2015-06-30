@@ -1,7 +1,9 @@
 /**
- * Client.java JRE v1.8.0_45
- *
- * Created by William Myers on Jun 28, 2015. Copyright (c) 2015 William Myers. All Rights reserved.
+ * Client.java
+ * JRE v1.8.0_45
+ * 
+ * Created by William Myers on Jun 30, 2015.
+ * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package client;
 
@@ -16,10 +18,19 @@ import client.model.Facade;
 import client.util.ClientLogManager;
 import client.view.LoginDialog;
 
+/**
+ * The Class Client.
+ */
 public class Client {
+
   private static final String USAGE_MESSAGE =
       "Usage: java client.Client <host> <port>";
 
+  /**
+   * The main method.
+   *
+   * @param args the arguments
+   */
   public static void main(String[] args) {
     ClientLogManager.initLogs();
 

@@ -1,3 +1,10 @@
+/**
+ * GetFieldsUnitTest.java
+ * JRE v1.8.0_45
+ *
+ * Created by William Myers on Jun 30, 2015.
+ * Copyright (c) 2015 William Myers. All Rights reserved.
+ */
 
 package client.communication;
 
@@ -6,54 +13,73 @@ import static org.junit.Assert.fail;
 
 import java.util.List;
 
-import org.junit.*;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import server.ServerException;
 import server.database.Database;
-import server.database.dao.*;
+import server.database.dao.FieldDAO;
+import server.database.dao.ProjectDAO;
+import server.database.dao.UserDAO;
 
 import shared.communication.GetFieldsRequest;
 import shared.communication.GetFieldsResponse;
-import shared.model.*;
+import shared.model.Field;
+import shared.model.Project;
+import shared.model.User;
 
-
+/**
+ * The Class GetFieldsUnitTest.
+ */
 public class GetFieldsUnitTest {
-   private ClientCommunicator clientComm;
+  private ClientCommunicator clientComm;
+  private Database db;
+  private UserDAO testUserDAO;
+  private ProjectDAO testProjectDAO;
+  private FieldDAO testFieldDAO;
+  private User testUser1;
+  private User testUser2;
+  private User testUser3;
+  private Field fieldTest1;
+  private Field fieldTest2;
+  private Field fieldTest3;
+  private Project testProject1;
+  private Project testProject2;
+  private Project testProject3;
 
-   private Database   db;
-
-   private UserDAO    testUserDAO;
-   private ProjectDAO testProjectDAO;
-   private FieldDAO   testFieldDAO;
-
-   private User       testUser1;
-   private User       testUser2;
-   private User       testUser3;
-   private Field      fieldTest1;
-   private Field      fieldTest2;
-   private Field      fieldTest3;
-   private Project    testProject1;
-   private Project    testProject2;
-   private Project    testProject3;  // @formatter:on
-
-  
+  /**
+   * Sets the up before class.
+   *
+   * @throws Exception the exception
+   */
   @BeforeClass
   public static void setUpBeforeClass() throws Exception {
     // Load database driver
     Database.initDriver();
   }
 
-  
+  /**
+   * Tear down after class.
+   *
+   * @throws Exception the exception
+   */
   @AfterClass
   public static void tearDownAfterClass() throws Exception {
     return;
   }
 
-  
+  /**
+   * Sets the up.
+   *
+   * @throws Exception the exception
+   */
   @Before
   public void setUp() throws Exception {
-    // Empty & populate db for each test (even though it is slower) case to prevent against possible
-    // db locking
+    // Empty & populate db for each test (even though it is slower) case to
+    // prevent against possible db locking
     db = new Database();
     db.startTransaction();
 
@@ -64,9 +90,12 @@ public class GetFieldsUnitTest {
 
     db.initTables();
 
-    testUser1 = new User("userTest1", "pass1", "first1", "last1", "email1", 1, 1);
-    testUser2 = new User("userTest2", "pass2", "first2", "last2", "email2", 2, 2);
-    testUser3 = new User("userTest3", "pass3", "first3", "last3", "email3", 3, 3);
+    testUser1 =
+        new User("userTest1", "pass1", "first1", "last1", "email1", 1, 1);
+    testUser2 =
+        new User("userTest2", "pass2", "first2", "last2", "email2", 2, 2);
+    testUser3 =
+        new User("userTest3", "pass3", "first3", "last3", "email3", 3, 3);
 
     testUserDAO.create(testUser1);
     testUserDAO.create(testUser2);
@@ -100,7 +129,11 @@ public class GetFieldsUnitTest {
     db.endTransaction(true);
   }
 
-  
+  /**
+   * Tear down.
+   *
+   * @throws Exception the exception
+   */
   @After
   public void tearDown() throws Exception {
     db = null;
@@ -124,47 +157,50 @@ public class GetFieldsUnitTest {
 
   }
 
-  
+  /**
+   * Test valid field.
+   */
   @Test
   public void testValidField() {
     GetFieldsResponse result1 = null;
     try {
-      result1 =
-          clientComm.getFields(new GetFieldsRequest("userTest1", "pass1", testProject1
-              .getProjectId()));
+      result1 = clientComm.getFields(new GetFieldsRequest("userTest1", "pass1",
+          testProject1.getProjectId()));
     } catch (ServerException e) {
       fail("ERROR: failed vaild test...");
     }
     assertEquals(1, result1.getFields().size());
   }
 
-  
+  /**
+   * Test valid field with no project.
+   */
   @Test
   public void testValidFieldWithNoProject() {
     GetFieldsResponse result2 = null;
     try {
-      result2 = clientComm.getFields(new GetFieldsRequest("userTest1", "pass1"));
+      result2 =
+          clientComm.getFields(new GetFieldsRequest("userTest1", "pass1"));
     } catch (Exception e) {
       fail("ERROR: failed vaild test...");
     }
     assertEquals(3, result2.getFields().size());
   }
 
-  
+  /**
+   * Invalid password test.
+   *
+   * @throws ServerException the server exception
+   */
   @Test
   public void invalidPasswordTest() throws ServerException {
-      assertEquals("FAILED\n", clientComm.getFields(new GetFieldsRequest("userTest2", "INVALID")).toString());
-    //boolean isValidPassword = false;
-    //try {
-      //clientComm.getFields(new GetFieldsRequest("userTest2", "INVALID"));
-      //isValidPassword = true;
-    //} catch (Exception e) {
-      //isValidPassword = false;
-    //}
-    //assertEquals(false, isValidPassword);
+    assertEquals("FAILED\n", clientComm
+        .getFields(new GetFieldsRequest("userTest2", "INVALID")).toString());
   }
 
-  
+  /**
+   * Mis matched password test.
+   */
   @Test
   public void misMatchedPasswordTest() {
     boolean isValidPassword = false;
@@ -177,7 +213,9 @@ public class GetFieldsUnitTest {
     assertEquals(false, isValidPassword);
   }
 
-  
+  /**
+   * Invalid username test.
+   */
   @Test
   public void invalidUsernameTest() {
     boolean isValidUsername = false;
@@ -190,7 +228,9 @@ public class GetFieldsUnitTest {
     assertEquals(false, isValidUsername);
   }
 
-  
+  /**
+   * Invalid creds test.
+   */
   @Test
   public void invalidCredsTest() {
     boolean isValidCreds = false;
@@ -203,7 +243,9 @@ public class GetFieldsUnitTest {
     assertEquals(false, isValidCreds);
   }
 
-  
+  /**
+   * Invalid user test.
+   */
   @Test
   public void invalidUserTest() {
     boolean isValidUser = false;
@@ -216,7 +258,9 @@ public class GetFieldsUnitTest {
     assertEquals(false, isValidUser);
   }
 
-  
+  /**
+   * Invalid project id test.
+   */
   @Test
   public void invalidProjectIdTest() {
     boolean isValidProject = false;

@@ -1,3 +1,10 @@
+/**
+ * ParamPanel.java
+ * JRE v1.8.0_45
+ * 
+ * Created by William Myers on Jun 30, 2015.
+ * Copyright (c) 2015 William Myers. All Rights reserved.
+ */
 package servertester.views;
 
 import java.awt.*;
@@ -5,12 +12,19 @@ import javax.swing.*;
 import java.util.*;
 import java.util.List;
 
+/**
+ * The Class ParamPanel.
+ */
 @SuppressWarnings("serial")
 public class ParamPanel extends BasePanel {
 
   private String[] _paramNames;
+
   private ArrayList<JTextField> _textFields;
 
+  /**
+   * Instantiates a new param panel.
+   */
   public ParamPanel() {
     super();
 
@@ -58,7 +72,8 @@ public class ParamPanel extends BasePanel {
 
     Dimension prefSize = getPreferredSize();
     Dimension maxSize = getMaximumSize();
-    setMaximumSize(new Dimension((int) maxSize.getWidth(), (int) prefSize.getHeight()));
+    setMaximumSize(
+        new Dimension((int) maxSize.getWidth(), (int) prefSize.getHeight()));
 
     revalidate();
   }

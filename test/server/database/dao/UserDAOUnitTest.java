@@ -1,3 +1,10 @@
+/**
+ * UserDAOUnitTest.java
+ * JRE v1.8.0_45
+ * 
+ * Created by William Myers on Jun 30, 2015.
+ * Copyright (c) 2015 William Myers. All Rights reserved.
+ */
 
 package server.database.dao;
 
@@ -12,28 +19,47 @@ import server.database.DatabaseException;
 
 import shared.model.User;
 
-
+/**
+ * The Class UserDAOUnitTest.
+ */
 public class UserDAOUnitTest {
-  
+
+  /**
+   * Sets the up before class.
+   *
+   * @throws Exception the exception
+   */
   @BeforeClass
   public static void setUpBeforeClass() throws Exception {
     // Load database driver
     Database.initDriver();
   }
 
-  
+  /**
+   * Tear down after class.
+   *
+   * @throws Exception the exception
+   */
   @AfterClass
   public static void tearDownAfterClass() throws Exception {
     return;
   }
 
   private Database db;
+
   private UserDAO testUserDAO;
+
   User userTest1;
+
   User userTest2;
+
   User userTest3;
 
-  
+  /**
+   * Sets the up.
+   *
+   * @throws Exception the exception
+   */
   @Before
   public void setUp() throws Exception {
     // Prepare database for test case
@@ -54,7 +80,11 @@ public class UserDAOUnitTest {
     assertEquals(3, all.size());
   }
 
-  
+  /**
+   * Tear down.
+   *
+   * @throws Exception the exception
+   */
   @After
   public void tearDown() throws Exception {
 
@@ -67,7 +97,13 @@ public class UserDAOUnitTest {
     db = null;
   }
 
-  
+  /**
+   * Safe equals.
+   *
+   * @param a the a
+   * @param b the b
+   * @return true, if successful
+   */
   private boolean safeEquals(Object a, Object b) {
     if ((a == null) || (b == null)) {
       return ((a == null) && (b == null));
@@ -76,19 +112,32 @@ public class UserDAOUnitTest {
     }
   }
 
+  /**
+   * Are equal.
+   *
+   * @param a the a
+   * @param b the b
+   * @param shouldCompareIds the should compare ids
+   * @return true, if successful
+   */
   private boolean areEqual(User a, User b, boolean shouldCompareIds) {
     if (shouldCompareIds) {
       if (a.getUserId() != b.getUserId()) {
         return false;
       }
     }
-    return (safeEquals(a.getFirst(), b.getFirst()) && safeEquals(a.getLast(), b.getLast())
+    return (safeEquals(a.getFirst(), b.getFirst())
+        && safeEquals(a.getLast(), b.getLast())
         && safeEquals(a.getEmail(), b.getEmail())
-        && safeEquals(a.getRecordCount(), b.getRecordCount()) && safeEquals(a.getCurrBatch(),
-          b.getCurrBatch()));
+        && safeEquals(a.getRecordCount(), b.getRecordCount())
+        && safeEquals(a.getCurrBatch(), b.getCurrBatch()));
   }
 
-  
+  /**
+   * Test create.
+   *
+   * @throws DatabaseException the database exception
+   */
   @Test
   public void testCreate() throws DatabaseException {
 
@@ -113,7 +162,11 @@ public class UserDAOUnitTest {
     assertTrue(hasFoundUser1 && hasFoundUser2 && hasFoundUser3);
   }
 
-  
+  /**
+   * Test update.
+   *
+   * @throws DatabaseException the database exception
+   */
   @Test
   public void testUpdate() throws DatabaseException {
     userTest1.setFirst("first-001");
@@ -153,7 +206,11 @@ public class UserDAOUnitTest {
     assertTrue(hasFoundUser1 && hasFoundUser2 && hasFoundUser3);
   }
 
-  
+  /**
+   * Test delete.
+   *
+   * @throws DatabaseException the database exception
+   */
   @Test
   public void testDelete() throws DatabaseException {
     List<User> allUseres = testUserDAO.getAll();

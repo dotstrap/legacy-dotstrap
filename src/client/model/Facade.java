@@ -1,7 +1,9 @@
 /**
- * Facade.java JRE v1.8.0_45
- *
- * Created by William Myers on Jun 28, 2015. Copyright (c) 2015 William Myers. All Rights reserved.
+ * Facade.java
+ * JRE v1.8.0_45
+ * 
+ * Created by William Myers on Jun 30, 2015.
+ * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package client.model;
 
@@ -36,68 +38,35 @@ import shared.model.Project;
 import shared.model.Record;
 import shared.model.User;
 
+/**
+ * The Enum Facade.
+ */
 public enum Facade {
+
   INSTANCE;
 
   private static ClientCommunicator clientComm;
 
   private static User user;
+
   private static Batch batch;
+
   private static Project project;
+
   private static List<Field> fields;
+
   private static Record[][] recordValues;
+
   private static String urlPrefix;
+
   private static URL batchUrl;
 
-  public static boolean validateUser(String u, char[] p) {
-    try {
-      ValidateUserResponse response = Facade.clientComm
-          .validateUser(new ValidateUserRequest(u, String.valueOf(p)));
-      Facade.user = response.getUser();
-
-      ClientLogManager.getLogger().log(Level.FINEST,
-          "SUCESS: " + u + " " + String.valueOf(p));
-      return response.isValidated();
-    } catch (Exception e) {
-      ClientLogManager.getLogger().log(Level.SEVERE, "STACKTRACE: ", e);
-      return false;
-    }
-  }
-
-  public static Project[] getProjects() {
-    try {
-      GetProjectsResponse response =
-          Facade.clientComm.getProjects(new GetProjectsRequest(
-              Facade.user.getUsername(), Facade.user.getPassword()));
-
-      ClientLogManager.getLogger().log(Level.FINEST,
-          "SUCESS: " + response.getProjects().toString());
-      return response.getProjects()
-          .toArray(new Project[response.getProjects().size()]);
-    } catch (Exception e) {
-      ClientLogManager.getLogger().log(Level.SEVERE, "STACKTRACE: ", e);
-      return null;
-    }
-  }
-
-  public static BufferedImage getSampleBatch(int projId) {
-    try {
-      GetSampleBatchResponse response =
-          Facade.clientComm.getSampleBatch(new GetSampleBatchRequest(
-              Facade.user.getUsername(), Facade.user.getPassword(), projId));
-
-      String sampleBatchUrl = response.getURL().toString() + "/"
-          + response.getSampleBatch().getFilePath();
-
-      ClientLogManager.getLogger().log(Level.FINEST,
-          "SUCESS: " + sampleBatchUrl);
-      return ImageIO.read(new URL(sampleBatchUrl));
-    } catch (Exception e) {
-      ClientLogManager.getLogger().log(Level.SEVERE, "STACKTRACE: ", e);
-      return null;
-    }
-  }
-
+  /**
+   * Download batch.
+   *
+   * @param projId the proj id
+   * @return the buffered image
+   */
   public static BufferedImage downloadBatch(int projId) {
     String batchUrl = "";
     try {
@@ -128,6 +97,12 @@ public enum Facade {
     }
   }
 
+  /**
+   * Download file.
+   *
+   * @param fileUrl the file url
+   * @return the input stream
+   */
   public static InputStream downloadFile(String fileUrl) {
     try {
       DownloadFileResponse response =
@@ -143,6 +118,133 @@ public enum Facade {
     }
   }
 
+  public static Batch getBatch() {
+    return Facade.batch;
+  }
+
+  public static URL getBatchUrl() {
+    return Facade.batchUrl;
+  }
+
+  public static ClientCommunicator getClientCommunicator() {
+    return Facade.clientComm;
+  }
+
+  public static List<Field> getFields() {
+    return Facade.fields;
+  }
+
+  public static Project getProject() {
+    return Facade.project;
+  }
+
+  public static Project[] getProjects() {
+    try {
+      GetProjectsResponse response =
+          Facade.clientComm.getProjects(new GetProjectsRequest(
+              Facade.user.getUsername(), Facade.user.getPassword()));
+
+      ClientLogManager.getLogger().log(Level.FINEST,
+          "SUCESS: " + response.getProjects().toString());
+      return response.getProjects()
+          .toArray(new Project[response.getProjects().size()]);
+    } catch (Exception e) {
+      ClientLogManager.getLogger().log(Level.SEVERE, "STACKTRACE: ", e);
+      return null;
+    }
+  }
+
+  public static Record[][] getRecordValues() {
+    return Facade.recordValues;
+  }
+
+  /**
+   * Gets the sample batch.
+   *
+   * @param projId the proj id
+   * @return the sample batch
+   */
+  public static BufferedImage getSampleBatch(int projId) {
+    try {
+      GetSampleBatchResponse response =
+          Facade.clientComm.getSampleBatch(new GetSampleBatchRequest(
+              Facade.user.getUsername(), Facade.user.getPassword(), projId));
+
+      String sampleBatchUrl = response.getURL().toString() + "/"
+          + response.getSampleBatch().getFilePath();
+
+      ClientLogManager.getLogger().log(Level.FINEST,
+          "SUCESS: " + sampleBatchUrl);
+      return ImageIO.read(new URL(sampleBatchUrl));
+    } catch (Exception e) {
+      ClientLogManager.getLogger().log(Level.SEVERE, "STACKTRACE: ", e);
+      return null;
+    }
+  }
+
+  public static String getUrlPrefix() {
+    return Facade.urlPrefix;
+  }
+
+  public static User getUser() {
+    return Facade.user;
+  }
+
+  /**
+   * Records to string.
+   *
+   * @return the string
+   */
+  public static String recordsToString() {
+    StringBuilder submitData = new StringBuilder();
+
+    for (Record[] records : recordValues) {
+      for (Record r : records) {
+        String val = r != null ? r.getData() : "";
+        submitData.append(val).append(",");
+      }
+      submitData.append(";");
+    }
+    return submitData.toString();
+  }
+
+  public static void setBatch(Batch batch) {
+    Facade.batch = batch;
+  }
+
+  public static void setBatchUrl(URL batchUrl) {
+    Facade.batchUrl = batchUrl;
+  }
+
+  public static void setClientCommunicator(ClientCommunicator clientComm) {
+    Facade.clientComm = clientComm;
+  }
+
+  public static void setFields(ArrayList<Field> fields) {
+    Facade.fields = fields;
+  }
+
+  public static void setProject(Project project) {
+    Facade.project = project;
+  }
+
+  public static void setRecords(Record[][] records) {
+    Facade.recordValues = records;
+  }
+
+  public static void setUrlPrefix(String urlPrefix) {
+    Facade.urlPrefix = urlPrefix;
+  }
+
+  public static void setUser(User user) {
+    Facade.user = user;
+  }
+
+  /**
+   * Submit batch.
+   *
+   * @return true, if successful
+   */
   public static boolean submitBatch() {
     try {
       SubmitBatchResponse response =
@@ -161,81 +263,26 @@ public enum Facade {
     }
   }
 
-  public static ClientCommunicator getClientCommunicator() {
-    return Facade.clientComm;
-  }
+  /**
+   * Validate user.
+   *
+   * @param u the u
+   * @param p the p
+   * @return true, if successful
+   */
+  public static boolean validateUser(String u, char[] p) {
+    try {
+      ValidateUserResponse response = Facade.clientComm
+          .validateUser(new ValidateUserRequest(u, String.valueOf(p)));
+      Facade.user = response.getUser();
 
-  public static void setClientCommunicator(ClientCommunicator clientComm) {
-    Facade.clientComm = clientComm;
-  }
-
-  public static User getUser() {
-    return Facade.user;
-  }
-
-  public static void setUser(User user) {
-    Facade.user = user;
-  }
-
-  public static Batch getBatch() {
-    return Facade.batch;
-  }
-
-  public static void setBatch(Batch batch) {
-    Facade.batch = batch;
-  }
-
-  public static Project getProject() {
-    return Facade.project;
-  }
-
-  public static void setProject(Project project) {
-    Facade.project = project;
-  }
-
-  public static List<Field> getFields() {
-    return Facade.fields;
-  }
-
-  public static void setFields(ArrayList<Field> fields) {
-    Facade.fields = fields;
-  }
-
-  public static Record[][] getRecordValues() {
-    return Facade.recordValues;
-  }
-
-  public static void setRecords(Record[][] records) {
-    Facade.recordValues = records;
-  }
-
-  public static String getUrlPrefix() {
-    return Facade.urlPrefix;
-  }
-
-  public static void setUrlPrefix(String urlPrefix) {
-    Facade.urlPrefix = urlPrefix;
-  }
-
-  public static URL getBatchUrl() {
-    return Facade.batchUrl;
-  }
-
-  public static void setBatchUrl(URL batchUrl) {
-    Facade.batchUrl = batchUrl;
-  }
-
-  public static String recordsToString() {
-    StringBuilder submitData = new StringBuilder();
-
-    for (Record[] records : recordValues) {
-      for (Record r : records) {
-        String val = r != null ? r.getData() : "";
-        submitData.append(val).append(",");
-      }
-      submitData.append(";");
+      ClientLogManager.getLogger().log(Level.FINEST,
+          "SUCESS: " + u + " " + String.valueOf(p));
+      return response.isValidated();
+    } catch (Exception e) {
+      ClientLogManager.getLogger().log(Level.SEVERE, "STACKTRACE: ", e);
+      return false;
     }
-    return submitData.toString();
   }
 
   // public String toStringOLD() {

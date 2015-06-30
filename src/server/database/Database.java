@@ -1,43 +1,67 @@
+/**
+ * Database.java
+ * JRE v1.8.0_45
+ * 
+ * Created by William Myers on Jun 30, 2015.
+ * Copyright (c) 2015 William Myers. All Rights reserved.
+ */
 
 package server.database;
 
 import java.io.File;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import server.database.dao.*;
+import server.database.dao.BatchDAO;
+import server.database.dao.FieldDAO;
+import server.database.dao.ProjectDAO;
+import server.database.dao.RecordDAO;
+import server.database.dao.UserDAO;
 
-
+/**
+ * The Class Database.
+ */
 public class Database {
   private static String DB_DIR = "database";
   private static String DB_NAME = "IndexerServer.sqlite";
   public static String DB_FILE = DB_DIR + File.separator + DB_NAME;
-  private static String DB_CONNECTION_URL = "jdbc:sqlite:" + DB_DIR + File.separator + DB_NAME;
+  private static String DB_CONNECTION_URL =
+      "jdbc:sqlite:" + DB_DIR + File.separator + DB_NAME;
 
-  
   private static Logger logger;
+
   static {
     logger = Logger.getLogger("server");
   }
 
-  // DataBase Access //////////////////
-  
-  private Connection connection;
+  /**
+   * Initializes the driver.
+   *
+   * @throws DatabaseException the database exception
+   */
+  public static void initDriver() throws DatabaseException {
+    try {
+      String driver = "org.sqlite.JDBC";
+      Class.forName(driver);
+    } catch (ClassNotFoundException e) {
+      logger.log(Level.SEVERE, "STACKTRACE: ", e);
+      throw new DatabaseException(e.toString());
+    }
+  }
 
-  
+  private Connection connection;
   private BatchDAO batchDAO;
-  
   private FieldDAO fieldDAO;
-  
   private ProjectDAO projectDAO;
-  
   private RecordDAO recordDAO;
-  
   private UserDAO userDAO;
 
-  // @formatter:off
-  
+  /**
+   * Instantiates a new database.
+   */
   public Database() {
     connection = null;
 
@@ -48,12 +72,33 @@ public class Database {
     userDAO = new UserDAO(this);
   }
 
-  public Connection getConnection() {
-    return connection;
+  /**
+   * Ends the transaction.
+   *
+   * @param shouldCommit the should commit
+   */
+  public void endTransaction(boolean shouldCommit) {
+    // Commit or rollback the transaction and finally close the connection
+    if (connection != null) {
+      try {
+        if (shouldCommit) {
+          connection.commit();
+        } else {
+          connection.rollback();
+        }
+        connection.close();
+      } catch (SQLException e) {
+        logger.log(Level.SEVERE, "STACKTRACE: ", e);
+      }
+    }
   }
 
   public BatchDAO getBatchDAO() {
     return batchDAO;
+  }
+
+  public Connection getConnection() {
+    return connection;
   }
 
   public FieldDAO getFieldDAO() {
@@ -72,55 +117,11 @@ public class Database {
     return userDAO;
   }
 
-  
-  public static void initDriver() throws DatabaseException {
-    try {
-      String driver = "org.sqlite.JDBC";
-      Class.forName(driver);
-    } catch (ClassNotFoundException e) {
-      logger.log(Level.SEVERE, "STACKTRACE: ", e);
-      throw new DatabaseException(e.toString());
-    }
-  }
-
-  
-  public void startTransaction() throws DatabaseException {
-    //System.out.println("*****************STARTING TRANSACTION***********************");
-    if (connection == null) {
-      // Open a connection to the database and start a transaction
-      try {
-        assert (connection == null);
-        connection = DriverManager.getConnection(DB_CONNECTION_URL);
-        connection.setAutoCommit(false);
-      } catch (Exception e) {
-        logger.log(Level.SEVERE, "STACKTRACE: ", e);
-        throw new DatabaseException(e.toString());
-      }
-    } else {
-      logger.log(Level.SEVERE, "connection already open...");
-    }
-  }
-
-  
-  public void endTransaction(boolean shouldCommit) {
-    //System.out.println("#####################ENDING TRANSACTION### SHOULDCOMMIT: " + shouldCommit);
-    // Commit or rollback the transaction and finally close the connection
-    if (connection != null) {
-      try {
-        if (shouldCommit) {
-          connection.commit();
-        } else {
-          connection.rollback();
-        }
-        connection.close();
-      } catch (SQLException e) {
-        logger.log(Level.SEVERE, "STACKTRACE: ", e);
-        // throw new DatabaseException(e.toString()); // FIXME: should this throw a db exception?
-      }
-    }
-  }
-
-  
+  /**
+   * Initializes the tables.
+   *
+   * @throws DatabaseException the database exception
+   */
   public void initTables() throws DatabaseException {
     try {
       batchDAO.initTable();
@@ -131,6 +132,27 @@ public class Database {
     } catch (Exception e) {
       logger.log(Level.SEVERE, "STACKTRACE: ", e);
       throw new DatabaseException(e.toString());
+    }
+  }
+
+  /**
+   * Starts the transaction.
+   *
+   * @throws DatabaseException the database exception
+   */
+  public void startTransaction() throws DatabaseException {
+    if (connection == null) {
+      // Open a connection to the database and start a transaction
+      try {
+        assert(connection == null);
+        connection = DriverManager.getConnection(DB_CONNECTION_URL);
+        connection.setAutoCommit(false);
+      } catch (Exception e) {
+        logger.log(Level.SEVERE, "STACKTRACE: ", e);
+        throw new DatabaseException(e.toString());
+      }
+    } else {
+      logger.log(Level.SEVERE, "connection already open...");
     }
   }
 }

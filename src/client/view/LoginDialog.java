@@ -1,8 +1,8 @@
 /**
  * LoginDialog.java
  * JRE v1.8.0_45
- *
- * Created by William Myers on Jun 28, 2015.
+ * 
+ * Created by William Myers on Jun 30, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package client.view;
@@ -13,11 +13,10 @@ import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 
 import javax.swing.AbstractAction;
-import javax.swing.Action;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -36,38 +35,29 @@ import client.util.ClientLogManager;
 import shared.model.Batch;
 import shared.model.Field;
 
+/**
+ * The Class LoginDialog.
+ */
 @SuppressWarnings("serial")
 public class LoginDialog extends JDialog implements BatchState.Observer {
   private IndexerFrame indexerFrame;
-
   private JTextField usernameField;
   private JPasswordField passwordField;
 
-  private Action loginAction = new AbstractAction() {//@formatter:off
-    @Override
-    public void actionPerformed(ActionEvent e) {
-      processLogin();
-    }
-  };
+  private LoginAction loginAction;
+  private LoginListener loginListener;
+  private ExitListener exitListener;
 
-  private ActionListener loginListener = new ActionListener() {
-    @Override
-    public void actionPerformed(ActionEvent e) {
-      processLogin();
-    }
-  };
-
-  private ActionListener exitListener = new ActionListener() {
-    @Override
-    public void actionPerformed(ActionEvent e) {
-      System.exit(0);
-    }
-  };//@formatter:on
-
+  /**
+   * Instantiates a new login dialog.
+   */
   public LoginDialog() {
     super((Frame) null, "Login", true);
 
-    // Initialize
+    loginAction = new LoginAction();
+    loginListener = new LoginListener();
+    exitListener = new ExitListener();
+
     setSize(new Dimension(370, 120));
     setLocationRelativeTo(null);
     setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -80,50 +70,131 @@ public class LoginDialog extends JDialog implements BatchState.Observer {
     BatchState.addObserver(this);
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see client.model.BatchState.Observer#cellWasSelected(int, int)
+   */
   @Override
   public void cellWasSelected(int x, int y) {}
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see client.model.BatchState.Observer#dataWasInput(java.lang.String, int, shared.model.Field,
+   * boolean)
+   */
   @Override
-  public void dataWasInput(String value, int record, Field field, boolean shouldResetIsIncorrect) {}
+  public void dataWasInput(String value, int record, Field field,
+      boolean shouldResetIsIncorrect) {}
 
-  @Override
-  public void wordWasMisspelled(String value, int record, Field field) {}
-
+  /*
+   * (non-Javadoc)
+   * 
+   * @see client.model.BatchState.Observer#didChangeOrigin(int, int)
+   */
   @Override
   public void didChangeOrigin(int x, int y) {}
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see client.model.BatchState.Observer#didDownload(java.awt.image.BufferedImage)
+   */
   @Override
   public void didDownload(BufferedImage b) {}
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see client.model.BatchState.Observer#didHighlight()
+   */
   @Override
   public void didHighlight() {}
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see client.model.BatchState.Observer#didSubmit(shared.model.Batch)
+   */
   @Override
   public void didSubmit(Batch b) {
     // this.indexerFrame.dispose();
     // this.indexerFrame.initialize();
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see client.model.BatchState.Observer#didToggleHighlight()
+   */
   @Override
   public void didToggleHighlight() {}
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see client.model.BatchState.Observer#didToggleInvert()
+   */
   @Override
   public void didToggleInvert() {}
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see client.model.BatchState.Observer#didZoom(double)
+   */
   @Override
   public void didZoom(double zoomDirection) {}
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see client.model.BatchState.Observer#fieldWasSelected(int, shared.model.Field)
+   */
   @Override
   public void fieldWasSelected(int record, Field field) {}
 
+  public IndexerFrame getIndexerFrame() {
+    return indexerFrame;
+  }
+
   public JPasswordField getPasswordField() {
-    return this.passwordField;
+    return passwordField;
   }
 
   public JTextField getUsernameField() {
-    return this.usernameField;
+    return usernameField;
   }
 
+  public void setIndexerFrame(IndexerFrame indexerFrame) {
+    this.indexerFrame = indexerFrame;
+  }
+
+  /*
+   * (non-Javadoc)
+   *
+   * @see client.model.BatchState.Observer#spellPopupWasOpened(java.lang.String, int,
+   * shared.model.Field)
+   */
+  @Override
+  public void spellPopupWasOpened(String value, int record, Field field,
+      Set<String> suggestions) {}
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see client.model.BatchState.Observer#wordWasMisspelled(java.lang.String, int,
+   * shared.model.Field)
+   */
+  @Override
+  public void wordWasMisspelled(String value, int record, Field field) {}
+
+  /**
+   * Initializes the button box.
+   *
+   * @return the box
+   */
   private Box initButtonBox() {
     Box buttonbox = Box.createHorizontalBox();
     JButton LoginButton = new JButton("Login");
@@ -138,6 +209,11 @@ public class LoginDialog extends JDialog implements BatchState.Observer {
     return buttonbox;
   }
 
+  /**
+   * Initializes the password box.
+   *
+   * @return the box
+   */
   private Box initPasswordBox() {
     Box passwordbox = Box.createHorizontalBox();
     passwordField = new JPasswordField();
@@ -152,6 +228,9 @@ public class LoginDialog extends JDialog implements BatchState.Observer {
     return passwordbox;
   }
 
+  /**
+   * Initializes the root panel.
+   */
   private void initRootPanel() {
     JPanel rootPanel = new JPanel();
     rootPanel.setLayout(new BoxLayout(rootPanel, BoxLayout.PAGE_AXIS));
@@ -163,6 +242,11 @@ public class LoginDialog extends JDialog implements BatchState.Observer {
     this.add(rootPanel);
   }
 
+  /**
+   * Initializes the user box.
+   *
+   * @return the box
+   */
   private Box initUserBox() {
     Box userbox = Box.createHorizontalBox();
     usernameField = new JTextField();
@@ -176,14 +260,14 @@ public class LoginDialog extends JDialog implements BatchState.Observer {
     return userbox;
   }
 
+  /**
+   * Process login.
+   */
   private void processLogin() {
-     String username = usernameField.getText();
-     char[] password = passwordField.getPassword();
-    // TODO: remember to not hardcode sheila!
-    //String username = "sheila";
-    //char[] password = {'p', 'a', 'r', 'k', 'e', 'r'};
+    String username = usernameField.getText();
+    char[] password = passwordField.getPassword();
+
     if (Facade.validateUser(username, password)) {
-      // TODO: implement load data
       JOptionPane.showMessageDialog(this,
           "Welcome " + Facade.getUser().getFirst() + " "
               + Facade.getUser().getLast() + "\nYou have indexed: "
@@ -192,35 +276,66 @@ public class LoginDialog extends JDialog implements BatchState.Observer {
 
       new IndexerFrame("Record Indexer");
       dispose();
-
     } else {
       ClientLogManager.getLogger().log(Level.FINEST,
           "Incorrect credentials entered: Username: " + username + " Password: "
               + String.valueOf(password));
+
       JOptionPane.showMessageDialog(this,
           "Incorrect username or password.\nPlease try again.",
           "Invalid Credentials", JOptionPane.PLAIN_MESSAGE);
     }
   }
 
-  // public void createNewIndexerFrame() {
-  // return indexerFrame;
-  // }
-
-  public IndexerFrame getIndexerFrame() {
-    return indexerFrame;
-  }
-
-  public void setIndexerFrame(IndexerFrame indexerFrame) {
-    this.indexerFrame = indexerFrame;
-  }
-
-  /*
-   * (non-Javadoc)
+  /**
+   * The listener interface for receiving exit events. The class that is interested in processing a
+   * exit event implements this interface, and the object created with that class is registered with
+   * a component using the component's <code>addExitListener<code> method. When the exit event
+   * occurs, that object's appropriate method is invoked.
    *
-   * @see client.model.BatchState.Observer#spellPopupWasOpened(java.lang.String, int,
-   * shared.model.Field)
+   * @see ExitEvent
    */
-  @Override
-  public void spellPopupWasOpened(String value, int record, Field field, List<String> suggestions) {}
+  private class ExitListener implements ActionListener {
+    
+    /* (non-Javadoc)
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
+    @Override
+    public void actionPerformed(ActionEvent e) {
+      System.exit(0);
+    }
+  }
+
+  /**
+   * The Class LoginAction.
+   */
+  private class LoginAction extends AbstractAction {
+    
+    /* (non-Javadoc)
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
+    @Override
+    public void actionPerformed(ActionEvent e) {
+      processLogin();
+    }
+  }
+
+  /**
+   * The listener interface for receiving login events. The class that is interested in processing a
+   * login event implements this interface, and the object created with that class is registered
+   * with a component using the component's <code>addLoginListener<code> method. When the login
+   * event occurs, that object's appropriate method is invoked.
+   *
+   * @see LoginEvent
+   */
+  private class LoginListener implements ActionListener {
+    
+    /* (non-Javadoc)
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
+    @Override
+    public void actionPerformed(ActionEvent e) {
+      processLogin();
+    }
+  }
 }

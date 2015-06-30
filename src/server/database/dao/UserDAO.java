@@ -1,7 +1,17 @@
+/**
+ * UserDAO.java
+ * JRE v1.8.0_45
+ * 
+ * Created by William Myers on Jun 30, 2015.
+ * Copyright (c) 2015 William Myers. All Rights reserved.
+ */
 
 package server.database.dao;
 
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -11,41 +21,118 @@ import server.database.DatabaseException;
 
 import shared.model.User;
 
-
+/**
+ * The Class UserDAO.
+ */
 public class UserDAO {
-  
+
   private static Logger logger;
+
   static {
     logger = Logger.getLogger("server");
   }
 
-  
-  private Database      db;
+  private Database db;
 
-  
+  /**
+   * Instantiates a new user dao.
+   *
+   * @param db the database
+   */
   public UserDAO(Database db) {
 
     this.db = db;
   }
 
-  
+  /**
+   * Clear current batch id.
+   *
+   * @param userId the user id
+   * @throws DatabaseException the database exception
+   */
+  public void clearCurrentBatchId(int userId) throws DatabaseException {
+    updateCurrentBatchId(userId, -1);
+    return;
+  }
+
+  /**
+   * Initializes the table.
+   *
+   * @throws DatabaseException the database exception
+   */
   public void initTable() throws DatabaseException {
     String dropTable = "DROP TABLE IF EXISTS User";// @formatter:off
-    String createTable =
-        "CREATE TABLE User ("
-            + "UserId INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE, "
-            + "Username TEXT NOT NULL UNIQUE, "
-            + "Password TEXT NOT NULL, "
-            + "FirstName TEXT NOT NULL, "
-            + "LastName TEXT NOT NULL, "
-            + "Email TEXT NOT NULL UNIQUE, "
-            + "RecordCount INTEGER NOT NULL, "
-            + "CurrentBatchId INTEGER NOT NULL)"; // @formatter:on
+    String createTable = "CREATE TABLE User ("
+        + "UserId INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE, "
+        + "Username TEXT NOT NULL UNIQUE, "
+        + "Password TEXT NOT NULL, "
+        + "FirstName TEXT NOT NULL, "
+        + "LastName TEXT NOT NULL, "
+        + "Email TEXT NOT NULL UNIQUE, "
+        + "RecordCount INTEGER NOT NULL, "
+        + "CurrentBatchId INTEGER NOT NULL)"; // @formatter:on
     try (Statement stmt1 = db.getConnection().createStatement();
         Statement stmt2 = db.getConnection().createStatement()) {
       stmt1.executeUpdate(dropTable);
 
       stmt2.executeUpdate(createTable);
+    } catch (SQLException e) {
+      throw new DatabaseException(e);
+    }
+  }
+
+  /**
+   * Creates the.
+   *
+   * @param newUser the new user
+   * @return the int
+   * @throws DatabaseException the database exception
+   */
+  public int create(User newUser) throws DatabaseException {
+    String query = "INSERT INTO User (Username, Password, FirstName, LastName, "
+        + "Email, RecordCount, CurrentBatchId) VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+    try (PreparedStatement pstmt = db.getConnection().prepareStatement(query)) {
+      pstmt.setString(1, newUser.getUsername());
+      pstmt.setString(2, newUser.getPassword());
+      pstmt.setString(3, newUser.getFirst());
+      pstmt.setString(4, newUser.getLast());
+      pstmt.setString(5, newUser.getEmail());
+      pstmt.setInt(6, newUser.getRecordCount());
+      pstmt.setInt(7, newUser.getCurrBatch());
+
+      if (pstmt.executeUpdate() == 1) {
+        try (Statement stmt = db.getConnection().createStatement();
+            ResultSet resultset =
+                stmt.executeQuery("SELECT last_insert_rowid()")) {
+          resultset.next();
+          int userid = resultset.getInt(1);
+          newUser.setUserId(userid);
+        }
+      } else {
+        throw new DatabaseException(
+            "Unable to insert username " + newUser.getUsername());
+      }
+    } catch (SQLException e) {
+      throw new DatabaseException(e);
+    }
+    return newUser.getUserId();
+  }
+
+  /**
+   * Deletes the.
+   *
+   * @param user the user
+   * @throws DatabaseException the database exception
+   */
+  public void delete(User user) throws DatabaseException {
+    String query = "DELETE from User WHERE Username = ? AND Password = ?";
+
+    try (PreparedStatement pstmt = db.getConnection().prepareStatement(query)) {
+      pstmt.setString(1, user.getUsername());
+      pstmt.setString(2, user.getPassword());
+
+      pstmt.executeUpdate();
     } catch (SQLException e) {
       throw new DatabaseException(e);
     }
@@ -82,38 +169,33 @@ public class UserDAO {
     }
   }
 
-  
-  public int create(User newUser) throws DatabaseException {
+  /**
+   * Increment indexed records.
+   *
+   * @param userId the user id
+   * @throws DatabaseException the database exception
+   */
+  public void incrementIndexedRecords(int userId) throws DatabaseException {
     String query =
-        "INSERT INTO User (Username, Password, FirstName, LastName, "
-            + "Email, RecordCount, CurrentBatchId) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        "UPDATE User SET IndexedRecords = IndexedRecords + 1 WHERE UserId = ?";
 
     try (PreparedStatement pstmt = db.getConnection().prepareStatement(query)) {
-      pstmt.setString(1, newUser.getUsername());
-      pstmt.setString(2, newUser.getPassword());
-      pstmt.setString(3, newUser.getFirst());
-      pstmt.setString(4, newUser.getLast());
-      pstmt.setString(5, newUser.getEmail());
-      pstmt.setInt(6, newUser.getRecordCount());
-      pstmt.setInt(7, newUser.getCurrBatch());
+      pstmt.setInt(1, userId);
 
-      if (pstmt.executeUpdate() == 1) {
-        try (Statement stmt = db.getConnection().createStatement();
-            ResultSet resultset = stmt.executeQuery("SELECT last_insert_rowid()")) {
-          resultset.next();
-          int userid = resultset.getInt(1);
-          newUser.setUserId(userid);
-        }
-      } else {
-        throw new DatabaseException("Unable to insert username " + newUser.getUsername());
-      }
+      pstmt.executeUpdate();
     } catch (SQLException e) {
       throw new DatabaseException(e);
     }
-    return newUser.getUserId();
   }
 
-  
+  /**
+   * Reads the.
+   *
+   * @param username the username
+   * @param password the password
+   * @return the user
+   * @throws DatabaseException the database exception
+   */
   public User read(String username, String password) throws DatabaseException {
     String query = "SELECT * from User WHERE Username = ? AND Password = ?";
 
@@ -138,18 +220,24 @@ public class UserDAO {
         returnUser.setCurrBatch(resultset.getInt(8));
 
         if (resultset.next()) {
-          throw new DatabaseException("Read more than one username: " + username
-              + " from database...");
+          throw new DatabaseException(
+              "Read more than one username: " + username + " from database...");
         }
 
         return returnUser;
       }
     } catch (SQLException e) {
-      throw new DatabaseException("reading username: " + username + " from database...", e);
+      throw new DatabaseException(
+          "reading username: " + username + " from database...", e);
     }
   }
 
-  
+  /**
+   * Updates the.
+   *
+   * @param user the user
+   * @throws DatabaseException the database exception
+   */
   public void update(User user) throws DatabaseException {
     String query =
         "UPDATE User SET FirstName = ?, LastName = ?, Email = ?, RecordCount = ?, CurrentBatchId = ?"
@@ -172,46 +260,20 @@ public class UserDAO {
     }
   }
 
-  
-  public void updateCurrentBatchId(int userId, int batchId) throws DatabaseException {
+  /**
+   * Updates the current batch id.
+   *
+   * @param userId the user id
+   * @param batchId the batch id
+   * @throws DatabaseException the database exception
+   */
+  public void updateCurrentBatchId(int userId, int batchId)
+      throws DatabaseException {
     String query = "UPDATE User SET CurrentBatchId = ? WHERE UserId = ?";
 
     try (PreparedStatement pstmt = db.getConnection().prepareStatement(query)) {
       pstmt.setInt(1, batchId);
       pstmt.setInt(2, userId);
-
-      pstmt.executeUpdate();
-    } catch (SQLException e) {
-      throw new DatabaseException(e);
-    }
-  }
-
-  
-  public void clearCurrentBatchId(int userId) throws DatabaseException {
-    updateCurrentBatchId(userId, -1);
-    return;
-  }
-
-  
-  public void incrementIndexedRecords(int userId) throws DatabaseException {
-    String query = "UPDATE User SET IndexedRecords = IndexedRecords + 1 WHERE UserId = ?";
-
-    try (PreparedStatement pstmt = db.getConnection().prepareStatement(query)) {
-      pstmt.setInt(1, userId);
-
-      pstmt.executeUpdate();
-    } catch (SQLException e) {
-      throw new DatabaseException(e);
-    }
-  }
-
-  
-  public void delete(User user) throws DatabaseException {
-    String query = "DELETE from User WHERE Username = ? AND Password = ?";
-
-    try (PreparedStatement pstmt = db.getConnection().prepareStatement(query)) {
-      pstmt.setString(1, user.getUsername());
-      pstmt.setString(2, user.getPassword());
 
       pstmt.executeUpdate();
     } catch (SQLException e) {

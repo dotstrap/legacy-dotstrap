@@ -1,3 +1,10 @@
+/**
+ * IndexerServerTesterFrame.java
+ * JRE v1.8.0_45
+ * 
+ * Created by William Myers on Jun 30, 2015.
+ * Copyright (c) 2015 William Myers. All Rights reserved.
+ */
 package servertester.views;
 
 import java.awt.*;
@@ -7,15 +14,25 @@ import javax.swing.*;
 import servertester.controllers.*;
 import static servertester.views.Constants.*;
 
+/**
+ * The Class IndexerServerTesterFrame.
+ */
 @SuppressWarnings("serial")
 public class IndexerServerTesterFrame extends JFrame implements IView {
 
   private IController _controller;
+
   private SettingsPanel _settingsPanel;
+
   private ParamPanel _paramPanel;
+
   private TextPanel _requestPanel;
+
   private TextPanel _responsePanel;
 
+  /**
+   * Instantiates a new indexer server tester frame.
+   */
   public IndexerServerTesterFrame() {
     super();
 
@@ -41,8 +58,8 @@ public class IndexerServerTesterFrame extends JFrame implements IView {
 
     _responsePanel = new TextPanel("Response");
 
-    JSplitPane splitPane =
-        new JSplitPane(JSplitPane.VERTICAL_SPLIT, _requestPanel, _responsePanel);
+    JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
+        _requestPanel, _responsePanel);
     splitPane.setResizeWeight(0.5);
     splitPane.setAlignmentX(Component.CENTER_ALIGNMENT);
     add(splitPane);
@@ -52,7 +69,6 @@ public class IndexerServerTesterFrame extends JFrame implements IView {
     addWindowListener(new WindowAdapter() {
       @Override
       public void windowClosed(WindowEvent arg0) {
-        
 
       }
     });

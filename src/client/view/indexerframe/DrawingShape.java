@@ -2,7 +2,7 @@
  * DrawingShape.java
  * JRE v1.8.0_45
  * 
- * Created by William Myers on Jun 28, 2015.
+ * Created by William Myers on Jun 30, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package client.view.indexerframe;
@@ -13,17 +13,7 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
 
-interface DrawingShape {
-  boolean contains(Graphics2D g2, double x, double y);
-
-  void draw(Graphics2D g2);
-
-  Rectangle2D getBounds(Graphics2D g2);
-}
-
-
 class DrawingImage implements DrawingShape {
-
   private BufferedImage image;
   private Rectangle2D rect;
 
@@ -39,8 +29,9 @@ class DrawingImage implements DrawingShape {
 
   @Override
   public void draw(Graphics2D g2) {
-    g2.drawImage(image, (int) rect.getMinX(), (int) rect.getMinY(), (int) rect.getMaxX(),
-        (int) rect.getMaxY(), 0, 0, image.getWidth(null), image.getHeight(null), null);
+    g2.drawImage(image, (int) rect.getMinX(), (int) rect.getMinY(),
+        (int) rect.getMaxX(), (int) rect.getMaxY(), 0, 0, image.getWidth(null),
+        image.getHeight(null), null);
   }
 
   @Override
@@ -49,11 +40,11 @@ class DrawingImage implements DrawingShape {
   }
 
   public BufferedImage getImage() {
-    return this.image;
+    return image;
   }
 
   public Rectangle2D getRect() {
-    return this.rect;
+    return rect;
   }
 
   public DrawingImage invert(BufferedImage img) {
@@ -73,7 +64,6 @@ class DrawingImage implements DrawingShape {
 
 
 class DrawingRect implements DrawingShape {
-
   private Rectangle2D rect;
   private Color color;
   private boolean isVisible = true;
@@ -100,7 +90,7 @@ class DrawingRect implements DrawingShape {
   }
 
   public Color getColor() {
-    return this.color;
+    return color;
   }
 
   public Rectangle2D getRect() {
@@ -124,12 +114,43 @@ class DrawingRect implements DrawingShape {
   }
 
   public DrawingRect setVisible(boolean isVisible) {
-    if (isVisible == false)
-      color = new Color(color.getRed(), color.getGreen(), color.getBlue(), 0);
-    if (isVisible == true)
-      color = new Color(color.getRed(), color.getGreen(), color.getBlue(), 100);
+    color = (isVisible == true)
+        ? new Color(color.getRed(), color.getGreen(), color.getBlue(), 100)
+        : new Color(color.getRed(), color.getGreen(), color.getBlue(), 0);
+
     this.isVisible = isVisible;
     return this;
   }
+}
 
+
+/**
+ * The Interface DrawingShape.
+ */
+interface DrawingShape {
+
+  /**
+   * Contains.
+   *
+   * @param g2 the g2
+   * @param x the x
+   * @param y the y
+   * @return true, if successful
+   */
+  boolean contains(Graphics2D g2, double x, double y);
+
+  /**
+   * Draw.
+   *
+   * @param g2 the g2
+   */
+  void draw(Graphics2D g2);
+
+  /**
+   * Gets the bounds.
+   *
+   * @param g2 the g2
+   * @return the bounds
+   */
+  Rectangle2D getBounds(Graphics2D g2);
 }

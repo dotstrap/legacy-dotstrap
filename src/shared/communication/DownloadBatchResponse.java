@@ -1,8 +1,8 @@
 /**
  * DownloadBatchResponse.java
  * JRE v1.8.0_45
- * 
- * Created by William Myers on Jun 28, 2015.
+ *
+ * Created by William Myers on Jun 30, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package shared.communication;
@@ -15,21 +15,34 @@ import shared.model.Field;
 import shared.model.Project;
 import shared.model.Record;
 
+/**
+ * The Class DownloadBatchResponse.
+ */
 public class DownloadBatchResponse implements Response {
-
   public Batch batch;
   private Project project;
   private List<Field> fields;
   private Record[][] recordValues;
   private URL urlPrefix;
 
+  /**
+   * Instantiates a new download batch response.
+   */
   public DownloadBatchResponse() {
-    this.batch = null;
-    this.project = null;
-    this.fields = null;
-    this.urlPrefix = null;
+    batch = null;
+    project = null;
+    fields = null;
+    urlPrefix = null;
   }
 
+  /**
+   * Instantiates a new download batch response.
+   *
+   * @param batch the batch
+   * @param project the project
+   * @param fields the fields
+   * @param url the url
+   */
   public DownloadBatchResponse(Batch batch, Project project, List<Field> fields,
       URL url) {
     this.batch = batch;
@@ -42,36 +55,36 @@ public class DownloadBatchResponse implements Response {
     return batch;
   }
 
-  public void setBatch(Batch batch) {
-    this.batch = batch;
+  public List<Field> getFields() {
+    return fields;
   }
 
   public Project getProject() {
     return project;
   }
 
-  public void setProject(Project project) {
-    this.project = project;
+  public Record[][] getRecordValues() {
+    return recordValues;
   }
 
-  public List<Field> getFields() {
-    return fields;
+  public URL getUrlPrefix() {
+    return urlPrefix;
+  }
+
+  public void setBatch(Batch batch) {
+    this.batch = batch;
   }
 
   public void setFields(List<Field> fields) {
     this.fields = fields;
   }
 
-  public Record[][] getRecordValues() {
-    return this.recordValues;
+  public void setProject(Project project) {
+    this.project = project;
   }
 
   public void setRecordValues(Record[][] records) {
-    this.recordValues = records;
-  }
-
-  public URL getUrlPrefix() {
-    return urlPrefix;
+    recordValues = records;
   }
 
   public void setUrlPrefix(URL url) {
@@ -80,7 +93,7 @@ public class DownloadBatchResponse implements Response {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * Mandatory toString implementation for automatic pass-off driver
    */
   @Override
@@ -112,21 +125,4 @@ public class DownloadBatchResponse implements Response {
     }
     return sb.toString();
   }
-
-  public String toStringCustom() {
-    StringBuilder builder = new StringBuilder();
-    builder.append("DownloadBatchResponse [batch=");
-    builder.append(this.batch);
-    builder.append(", project=");
-    builder.append(this.project);
-    builder.append(", fields=");
-    builder.append(this.fields);
-    builder.append(", recordValues=");
-    builder.append(this.recordValues);
-    builder.append(", urlPrefix=");
-    builder.append(this.urlPrefix);
-    builder.append("]");
-    return builder.toString();
-  }
-
 }

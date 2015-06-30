@@ -1,7 +1,7 @@
 /**
  * BatchState.java
  * JRE v1.8.0_45
- * 
+ *
  * Created by William Myers on Jun 30, 2015.
  * Copyright (c) 2015 William Myers. All Rights reserved.
  */
@@ -10,6 +10,7 @@ package client.model;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import client.util.spell.QualityChecker;
 import client.view.IndexerFrame;
@@ -18,26 +19,22 @@ import shared.model.Batch;
 import shared.model.Field;
 
 /**
- * The Enum BatchState.
+ * The Enum BatchState. (Singleton)
+ * 
+ * Notifies all the UI elements of events to keep everything in sync
  */
 public enum BatchState {
 
-  /** The instance. */
   INSTANCE;
 
-  /** The indexer frame. */
   private static IndexerFrame indexerFrame;;
 
-  /** The corrector. */
   private static QualityChecker corrector;
 
-  /** The current observers. */
   private static transient List<Observer> currentObservers;
 
-  /** The current record. */
   private static int currentRecord;
 
-  /** The current field. */
   private static Field currentField;
 
   /**
@@ -73,16 +70,6 @@ public enum BatchState {
   }
 
   /**
-   * Initialize indexer frame.
-   */
-  public static void initializeIndexerFrame() {
-    // if (BatchState.indexerFrame != null) {
-    // BatchState.indexerFrame.dispose();
-    // }
-    // BatchState.indexerFrame = new IndexerFrame("Record Indexer");
-  }
-
-  /**
    * Notifies all current Observers: cell was selected.
    *
    * @param positionX the position x
@@ -102,7 +89,8 @@ public enum BatchState {
    * @param field the field
    * @param shouldResetIsIncorrect TODO
    */
-  public static void notifyDataWasInput(String value, int record, Field field, boolean shouldResetIsIncorrect) {
+  public static void notifyDataWasInput(String value, int record, Field field,
+      boolean shouldResetIsIncorrect) {
     BatchState.currentField = field;
     BatchState.currentRecord = record;
     for (Observer o : currentObservers) {
@@ -190,7 +178,7 @@ public enum BatchState {
    * @param suggestions TODO
    */
   public static void notifySpellPopupWasOpened(String value, int record,
-      Field field, List<String> suggestions) {
+      Field field, Set<String> suggestions) {
     for (Observer o : currentObservers) {
       o.spellPopupWasOpened(value, record, field, null);
     }
@@ -245,15 +233,10 @@ public enum BatchState {
 
   public static void setCurrentField(Field f) {
     BatchState.currentField = f;
-    // BatchState.currentRecord
     for (Observer o : currentObservers) {
       o.fieldWasSelected(currentRecord, currentField);
     }
   }
-
-  // public static void setIndexerFrame(IndexerFrame indexerFrame) {
-  // BatchState.indexerFrame = indexerFrame;
-  // }
 
   public static void setCurrentObservers(List<Observer> currentObservers) {
     BatchState.currentObservers = currentObservers;
@@ -279,7 +262,7 @@ public enum BatchState {
 
   /**
    * The Interface Observer.
-   * 
+   *
    * Most GUI elements implement the Observer pattern to receive updates from the BatchState about
    * various events.
    */
@@ -301,7 +284,8 @@ public enum BatchState {
      * @param field the field
      * @param shouldResetIsIncorrect TODO
      */
-    public void dataWasInput(String value, int record, Field field, boolean shouldResetIsIncorrect);
+    public void dataWasInput(String value, int record, Field field,
+        boolean shouldResetIsIncorrect);
 
     /**
      * Did change origin.
@@ -363,7 +347,8 @@ public enum BatchState {
      * @param field the field
      * @param suggestions TODO
      */
-    public void spellPopupWasOpened(String value, int record, Field field, List<String> suggestions);
+    public void spellPopupWasOpened(String value, int record, Field field,
+        Set<String> suggestions);
 
     /**
      * Word was misspelled.

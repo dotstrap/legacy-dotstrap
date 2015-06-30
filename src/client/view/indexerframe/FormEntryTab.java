@@ -7,87 +7,47 @@ package client.view.indexerframe;
 
 import java.awt.Color;
 import java.awt.GridLayout;
-import java.awt.event.*;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
-import java.util.*;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 import java.util.logging.Level;
 
-import javax.swing.*;
+import javax.swing.AbstractListModel;
+import javax.swing.BoxLayout;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import client.model.BatchState;
 import client.model.Facade;
 import client.util.ClientLogManager;
-import shared.model.*;
 
-// TODO: Auto-generated Javadoc
+import shared.model.Batch;
+import shared.model.Field;
+import shared.model.Record;
+
 /**
  * The Class FormEntryTab.
  */
 @SuppressWarnings("serial")
 public class FormEntryTab extends JPanel implements BatchState.Observer {
-
-  /** The records. */
   private JList<Integer> records;;
-
-  /** The fields. */
   private Map<Field, JTextField> fields;
 
-  /** The list listener. */
-  private ListSelectionListener listListener = new ListSelectionListener() {
-    @SuppressWarnings("unchecked")
-    @Override
-    public void valueChanged(ListSelectionEvent e) {
-      if (!e.getValueIsAdjusting()) {
-        JList<Integer> source = (JList<Integer>) e.getSource();
-        int selection = source.getSelectedIndex();
-        if (selection >= 0) {
-          ClientLogManager.getLogger().log(Level.FINER,
-              "SELECTION: " + selection);
-          BatchState.setCurrentRecord(selection);
-        }
-      }
-    }
-  };
-
-  /** The focus listener. */
-  private FocusListener focusListener = new FocusListener() {
-    @Override
-    public void focusGained(FocusEvent e) {
-      Field field = textFieldToField((JTextField) e.getSource());
-      JTextField textField = (JTextField) e.getSource();
-      if (field != null) {
-        if (BatchState.getCurrentRecord() < 0) {
-          BatchState.setCurrentRecord(0);
-        }
-        ClientLogManager.getLogger().log(Level.FINER, field.toString());
-        BatchState.setCurrentField(field);
-      }
-      textField.setBackground(Color.RED);
-    }
-
-    @Override
-    public void focusLost(FocusEvent e) {
-      Field field = textFieldToField((JTextField) e.getSource());
-
-      if (field != null) {
-        String text = ((JTextField) e.getSource()).getText();
-        ClientLogManager.getLogger().log(Level.FINER,
-            field.toString() + "\ntext: " + text);
-        BatchState.notifyDataWasInput(text, BatchState.getCurrentRecord(),
-            field, false);
-      }
-    }
-  };
-
-  /** The mouse listener. */
-  private MouseAdapter mouseListener = new MouseAdapter() {
-    @Override
-    public void mouseReleased(MouseEvent e) {
-
-    }
-  };
+  FormListListener listListener;
+  MouseListener mouseListener;
+  FormFocusListener focusListener;
 
   /**
    * Instantiates a new form entry tab.
@@ -113,58 +73,22 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
   @Override
   public void dataWasInput(String cellValue, int row, Field field,
       boolean shouldResetIsIncorrect) {
+
     int column = field.getColNum();
-    StringBuilder consoleOutput = new StringBuilder();
-    // String text = "";
     if (Facade.getRecordValues()[row][column] == null) {
       Facade.getRecordValues()[row][column] =
           new Record(field.getFieldId(), Facade.getBatch().getBatchId(),
               Facade.getBatch().getFilePath(), cellValue, row, column);
-      consoleOutput.append("\n!!!!!!NULL!!!!!!");
     } else {
-      consoleOutput.append("\nsetData=" + cellValue);
       Facade.getRecordValues()[row][column].setData(cellValue);
-      // text = cellvalue;
     }
 
-    consoleOutput.append("\n" + field.toString());
-    consoleOutput.append("\n" + Facade.getRecordValues()[row].toString());
-    consoleOutput.append(
-        "Records per batch=" + Facade.getProject().getRecordsPerBatch());
-    consoleOutput.append("\n");
-    ClientLogManager.getLogger().log(Level.FINER, consoleOutput.toString());
     fields.get(field).setText(cellValue);
-    if (fields.get(field).getText() == ""
-        || fields.get(field).getText() == null)
+
+    if ((fields.get(field).getText() == "")
+        || (fields.get(field).getText() == null)) {
       fields.get(field).requestFocusInWindow();
-    // int row = record;
-    // if (Facade.getRecords()[index] == null) {
-    // Facade.getRecords()[index] = new Record();
-    // }
-
-    // ====================================================================
-    // make sure all the record data is accurate
-    // if (Facade.getRecords()[index].getFieldId() < 0) {
-    // Facade.getRecords()[index].setFieldId(field.getFieldId());
-    // }
-    // if (Facade.getRecords()[index].getBatchId() < 0) {
-    // Facade.getRecords()[index].setBatchId(Facade.getBatch().getBatchId());
-    // }
-    // if (Facade.getRecords()[index].getBatchURL() == "") {
-    // Facade.getRecords()[index].setBatchURL(Facade.getBatch().getFilePath());
-    // }
-    // if (Facade.getRecords()[index].getData() == "") {
-    // Facade.getRecords()[index].setData(value);
-    // }
-    // if (Facade.getRecords()[index].getRowNum() < 0) {
-    // Facade.getRecords()[index].setRowNum(index);
-    // }
-    // if (Facade.getRecords()[index].getColNum() < 0) {
-    // Facade.getRecords()[index].setColNum(field.getColNum());
-    // }
-
-    // new QualityCheckerPopupMenu(record, record);
-    // BatchState.updateSpeltWrong(record, field.getColNum(), value);
+    }
   }
 
   /*
@@ -200,7 +124,7 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
    */
   @Override
   public void didSubmit(Batch b) {
-    this.clear();
+    clear();
   }
 
   /*
@@ -234,20 +158,22 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
    */
   @Override
   public void fieldWasSelected(int r, Field field) {
-    if (records != null && r >= 0)
+    if ((records != null) && (r >= 0)) {
       records.setSelectedIndex(r);
+    }
 
-    if (fields.isEmpty() || fields == null || field == null)
+    if (fields.isEmpty() || (fields == null) || (field == null)) {
       return;
+    }
 
     String text = "";
     int column = field.getColNum();
     for (Field f : fields.keySet()) {
       int row = BatchState.getCurrentRecord();
       if (row >= 0) {
-        if (Facade.getRecordValues()[row] != null
-            && Facade.getRecordValues()[row][column] != null
-            && Facade.getRecordValues()[row][column].getData() != "") {
+        if ((Facade.getRecordValues()[row] != null)
+            && (Facade.getRecordValues()[row][column] != null)
+            && (Facade.getRecordValues()[row][column].getData() != "")) {
 
           text = Facade.getRecordValues()[row][column].getData();
 
@@ -260,6 +186,16 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
     }
   }
 
+  /*
+   * (non-Javadoc)
+   *
+   * @see client.model.BatchState.Observer#spellPopupWasOpened(java.lang.String, int,
+   * shared.model.Field)
+   */
+  @Override
+  public void spellPopupWasOpened(String value, int record, Field field,
+      Set<String> suggestions) {}
+
   /**
    * Word was misspelled.
    *
@@ -268,20 +204,16 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
    * @param field the field
    */
   @Override
-  public void wordWasMisspelled(String value, int record, Field field) {
-    // new SimilarWordSuggestor(tableEntryTable, row, column).show(tableEntryTable, e.getX(),
-    // e.getY());
-    // new QualityCheckerPopupMenu(null, record, record);
-  }
+  public void wordWasMisspelled(String value, int record, Field field) {}
 
   /**
    * Clear.
    */
   private void clear() {
-    this.records.clearSelection();;
-    this.fields.clear();;
-    this.removeAll();
-    this.revalidate();
+    records.clearSelection();;
+    fields.clear();;
+    removeAll();
+    revalidate();
     this.repaint();
   }
 
@@ -289,6 +221,10 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
    * Initialize.
    */
   private void initialize() {
+    listListener = new FormListListener();
+    mouseListener = new FormMouseListener();
+    focusListener = new FormFocusListener();
+
     removeAll();
 
     if (Facade.getBatch() != null) {
@@ -299,7 +235,7 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
       records = new JList<Integer>(new RecordsListModel());
       records.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
       records.addListSelectionListener(listListener);
-      records.addMouseListener(mouseListener);
+      // records.addMouseListener(mouseListener);
 
       setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
       add(new JScrollPane(records));
@@ -341,13 +277,102 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
   }
 
   /**
+   * The focus listener.
+   *
+   * @see FormFocusEvent
+   */
+  private class FormFocusListener implements FocusListener {
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.awt.event.FocusListener#focusGained(java.awt.event.FocusEvent)
+     */
+    @Override
+    public void focusGained(FocusEvent e) {
+      Field field = textFieldToField((JTextField) e.getSource());
+      JTextField textField = (JTextField) e.getSource();
+      if (field != null) {
+        if (BatchState.getCurrentRecord() < 0) {
+          BatchState.setCurrentRecord(0);
+        }
+        ClientLogManager.getLogger().log(Level.FINER, field.toString());
+        BatchState.setCurrentField(field);
+      }
+      textField.setBackground(Color.RED);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.awt.event.FocusListener#focusLost(java.awt.event.FocusEvent)
+     */
+    @Override
+    public void focusLost(FocusEvent e) {
+      Field field = textFieldToField((JTextField) e.getSource());
+
+      if (field != null) {
+        String text = ((JTextField) e.getSource()).getText();
+        ClientLogManager.getLogger().log(Level.FINER,
+            field.toString() + "\ntext: " + text);
+        BatchState.notifyDataWasInput(text, BatchState.getCurrentRecord(),
+            field, false);
+      }
+    }
+  }
+
+  /**
+   * The list listener.
+   *
+   * @see FormListEvent
+   */
+  private class FormListListener implements ListSelectionListener {
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * javax.swing.event.ListSelectionListener#valueChanged(javax.swing.event.ListSelectionEvent)
+     */
+    @SuppressWarnings("unchecked")
+    @Override
+    public void valueChanged(ListSelectionEvent e) {
+      if (!e.getValueIsAdjusting()) {
+        JList<Integer> source = (JList<Integer>) e.getSource();
+        int selection = source.getSelectedIndex();
+        if (selection >= 0) {
+          BatchState.setCurrentRecord(selection);
+        }
+      }
+    }
+  }
+
+  /**
+   * The mouse listener.
+   *
+   * @see FormMouseEvent
+   */
+  private class FormMouseListener extends MouseAdapter {
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.awt.event.MouseAdapter#mouseReleased(java.awt.event.MouseEvent)
+     */
+    @Override
+    public void mouseReleased(MouseEvent e) {
+      // TODO
+    }
+  }
+
+  /**
    * The Class RecordsListModel.
    */
   private class RecordsListModel extends AbstractListModel<Integer> {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see javax.swing.ListModel#getElementAt(int)
      */
     @Override
@@ -364,14 +389,4 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
       }
     }
   }
-
-  /*
-   * (non-Javadoc)
-   *
-   * @see client.model.BatchState.Observer#spellPopupWasOpened(java.lang.String, int,
-   * shared.model.Field)
-   */
-  @Override
-  public void spellPopupWasOpened(String value, int record, Field field,
-      List<String> suggestions) {}
 }

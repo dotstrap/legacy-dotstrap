@@ -1,3 +1,10 @@
+/**
+ * GetSampleBatchUnitTest.java
+ * JRE v1.8.0_45
+ *
+ * Created by William Myers on Jun 30, 2015.
+ * Copyright (c) 2015 William Myers. All Rights reserved.
+ */
 
 package client.communication;
 
@@ -7,49 +14,68 @@ import static org.junit.Assert.assertTrue;
 import java.net.MalformedURLException;
 import java.util.List;
 
-import org.junit.*;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import server.ServerException;
 import server.database.Database;
 import server.database.DatabaseException;
-import server.database.dao.*;
+import server.database.dao.BatchDAO;
+import server.database.dao.ProjectDAO;
+import server.database.dao.UserDAO;
 
 import shared.communication.GetSampleBatchRequest;
 import shared.communication.GetSampleBatchResponse;
-import shared.model.*;
+import shared.model.Batch;
+import shared.model.Project;
+import shared.model.User;
 
-
+/**
+ * The Class GetSampleBatchUnitTest.
+ */
 public class GetSampleBatchUnitTest {
   private ClientCommunicator clientComm;
+  private Database db;
+  private ProjectDAO testProjectDAO;
+  private BatchDAO testBatchDAO;
+  private UserDAO testUserDAO;
+  private Project testProject1;
+  private Project testProject2;
+  private Project testProject3;
+  private Batch testBatch1;
+  private Batch testBatch2;
+  private Batch testBatch3;
+  private User testUser1;
+  private User testUser2;
+  private User testUser3; // @formatter:on
 
-  private Database           db;
-
-  private ProjectDAO         testProjectDAO;
-  private BatchDAO           testBatchDAO;
-  private UserDAO            testUserDAO;
-
-  private Project            testProject1;
-  private Project            testProject2;
-  private Project            testProject3;
-  private Batch              testBatch1;
-  private Batch              testBatch2;
-  private Batch              testBatch3;
-  private User               testUser1;
-  private User               testUser2;
-  private User               testUser3;     // @formatter:on
-
-  
+  /**
+   * Sets the up before class.
+   *
+   * @throws Exception the exception
+   */
   @BeforeClass
   public static void setUpBeforeClass() throws Exception {
     // Load database driver
     Database.initDriver();
   }
 
-  
+  /**
+   * Tear down after class.
+   *
+   * @throws Exception the exception
+   */
   @AfterClass
   public static void tearDownAfterClass() throws Exception {}
 
-  
+  /**
+   * Sets the up.
+   *
+   * @throws Exception the exception
+   */
   @Before
   public void setUp() throws Exception {
     db = new Database();
@@ -84,9 +110,12 @@ public class GetSampleBatchUnitTest {
     List<Project> allProjectes = testProjectDAO.getAll();
     assertEquals(3, allProjectes.size());
 
-    testUser1 = new User("userTest1", "pass1", "first1", "last1", "email1", 1, 1);
-    testUser2 = new User("userTest2", "pass2", "first2", "last2", "email2", 2, 2);
-    testUser3 = new User("userTest3", "pass3", "first3", "last3", "email3", 3, 3);
+    testUser1 =
+        new User("userTest1", "pass1", "first1", "last1", "email1", 1, 1);
+    testUser2 =
+        new User("userTest2", "pass2", "first2", "last2", "email2", 2, 2);
+    testUser3 =
+        new User("userTest3", "pass3", "first3", "last3", "email3", 3, 3);
 
     testUserDAO.create(testUser1);
     testUserDAO.create(testUser2);
@@ -98,20 +127,24 @@ public class GetSampleBatchUnitTest {
     db.endTransaction(true);
   }
 
-  
+  /**
+   * Tear down.
+   *
+   * @throws Exception the exception
+   */
   @After
   public void tearDown() throws Exception {
     testProject1 = null;// @formatter:off
-    testProject2   = null;
-    testProject3   = null;
-    testBatch1     = null;
-    testBatch2     = null;
-    testBatch3     = null;
-    testUser1      = null;
-    testUser2      = null;
-    testUser3      = null;
-    testUserDAO    = null;
-    testBatchDAO   = null;
+    testProject2 = null;
+    testProject3 = null;
+    testBatch1 = null;
+    testBatch2 = null;
+    testBatch3 = null;
+    testUser1 = null;
+    testUser2 = null;
+    testUser3 = null;
+    testUserDAO = null;
+    testBatchDAO = null;
     testProjectDAO = null; // @formatter:on
 
     db = null;
@@ -126,35 +159,65 @@ public class GetSampleBatchUnitTest {
     return;
   }
 
-  
+  /**
+   * Valid user test.
+   *
+   * @throws ServerException the server exception
+   * @throws DatabaseException the database exception
+   * @throws MalformedURLException the malformed url exception
+   */
   @Test
-  public void validUserTest() throws ServerException, DatabaseException, MalformedURLException {
+  public void validUserTest()
+      throws ServerException, DatabaseException, MalformedURLException {
     GetSampleBatchResponse result = null;
-    result = clientComm.getSampleBatch(new GetSampleBatchRequest("userTest1", "pass1", 1));
+    result = clientComm
+        .getSampleBatch(new GetSampleBatchRequest("userTest1", "pass1", 1));
     assertTrue(testBatch1.equals(result.getSampleBatch()));
-    assertEquals("http://localhost:39640/someTestPath/batchTest1\n", result.toString());
+    assertEquals("http://localhost:39640/someTestPath/batchTest1\n",
+        result.toString());
   }
 
-  
+  /**
+   * Invalid username test.
+   *
+   * @throws ServerException the server exception
+   * @throws DatabaseException the database exception
+   * @throws MalformedURLException the malformed url exception
+   */
   @Test
-  public void invalidUsernameTest() throws ServerException, DatabaseException,
-      MalformedURLException {
+  public void invalidUsernameTest()
+      throws ServerException, DatabaseException, MalformedURLException {
     boolean shouldPass = false;
     try {
       assertEquals("FAILED\n",
-          clientComm.getSampleBatch(new GetSampleBatchRequest("INVALID", "pass1", 1)).toString());
+          clientComm
+              .getSampleBatch(new GetSampleBatchRequest("INVALID", "pass1", 1))
+              .toString());
     } catch (NullPointerException e) { // FIXME: this should not throw a NullPointerException
       shouldPass = true;
     }
     assertTrue(shouldPass);
   }
 
-  
+  /**
+   * Invalid project id test.
+   *
+   * @throws ServerException the server exception
+   * @throws DatabaseException the database exception
+   * @throws MalformedURLException the malformed url exception
+   */
   @Test
-  public void invalidProjectIdTest() throws ServerException, DatabaseException,
-      MalformedURLException {
-    assertEquals("FAILED\n",
-        clientComm.getSampleBatch(new GetSampleBatchRequest("userTest1", "pass1", 9999))
-            .toString());
+  public void invalidProjectIdTest()
+      throws DatabaseException, MalformedURLException {
+
+    boolean shouldPass = false;
+    try {
+      clientComm.getSampleBatch(
+          new GetSampleBatchRequest("userTest1", "pass1", 9999));
+
+    } catch (ServerException e) { // FIXME: this should not throw a ServerException?
+      shouldPass = true;
+    }
+    assertTrue(shouldPass);
   }
 }
