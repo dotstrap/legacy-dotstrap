@@ -5,9 +5,10 @@ test:
   pre:
     - curl -kL -o Records.zip https://students.cs.byu.edu/~cs240ta/summer2015/download/record-indexer-data.zip 
     - unzip -u Records.zip
-  override:
     - ant clean
     - ant import
+  background:
+    -ant server
+  override:
     - ant server-tests
-    - ant server
     - ant client-tests
