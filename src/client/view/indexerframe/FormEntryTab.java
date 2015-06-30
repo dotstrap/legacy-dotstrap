@@ -38,7 +38,7 @@ import shared.model.Record;
 @SuppressWarnings("serial")
 public class FormEntryTab extends JPanel implements BatchState.Observer {
 
-  private AbstractListModel<Integer> model = new AbstractListModel<Integer>() {
+  private class RecordsListModel extends AbstractListModel<Integer> {
     @Override
     public Integer getElementAt(int index) {
       return index + 1;
@@ -65,7 +65,7 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
         JList<Integer> source = (JList<Integer>) e.getSource();
         int selection = source.getSelectedIndex();
         if (selection >= 0) {
-          ClientLogManager.getLogger().log(Level.FINEST,
+          ClientLogManager.getLogger().log(Level.FINER,
               "SELECTION: " + selection);
           BatchState.setCurrentRecord(selection);
         }
@@ -81,7 +81,7 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
         if (BatchState.getCurrentRecord() < 0) {
           BatchState.setCurrentRecord(0);
         }
-        ClientLogManager.getLogger().log(Level.FINEST, field.toString());
+        ClientLogManager.getLogger().log(Level.FINER, field.toString());
         BatchState.setCurrentField(field);
       }
     }
@@ -92,7 +92,7 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
 
       if (field != null) {
         String text = ((JTextField) e.getSource()).getText();
-        ClientLogManager.getLogger().log(Level.FINEST,
+        ClientLogManager.getLogger().log(Level.FINER,
             field.toString() + "\ntext: " + text);
         BatchState.notifyDataWasInput(text, BatchState.getCurrentRecord(),
             field);
@@ -142,26 +142,12 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
     consoleOutput.append(
         "Records per batch=" + Facade.getProject().getRecordsPerBatch());
     consoleOutput.append("\n");
-    ClientLogManager.getLogger().log(Level.FINEST, consoleOutput.toString());
+    ClientLogManager.getLogger().log(Level.FINER, consoleOutput.toString());
 
     // int row = record;
     // if (Facade.getRecords()[index] == null) {
     // Facade.getRecords()[index] = new Record();
     // }
-
-    // ====================================================================
-    // StringBuilder consoleOutput = new StringBuilder();
-    //
-    // if (Facade.getRecordValues()[row] == null) {
-    // Facade.getRecordValues()[row] =
-    // new Record(field.getFieldId(), Facade.getBatch().getBatchId(),
-    // Facade.getBatch().getFilePath(), value, row, field.getColNum());
-    // ClientLogManager.getLogger().log(Level.FINEST,
-    // "======!!!!!!NULL!!!!!!======");
-    // } else if (Facade.getRecordValues()[row].getColNum() == field.getColNum()) {
-    // Facade.getRecordValues()[row].setData(value);
-    // }
-    //
 
     // ====================================================================
     // make sure all the record data is accurate
@@ -212,9 +198,9 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
   public void didZoom(double zoomDirection) {}
 
   @Override
-  public void fieldWasSelected(int row, Field field) {
-    if (records != null && row >= 0)
-      records.setSelectedIndex(row);
+  public void fieldWasSelected(int r, Field field) {
+    if (records != null && r >= 0)
+      records.setSelectedIndex(r);
 
     if (fields.isEmpty() || fields == null || field == null)
       return;
@@ -222,7 +208,7 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
     int column = field.getColNum();
     for (Field f : fields.keySet()) {
       String text = "";
-      // int row = BatchState.getCurrentRecord();
+      int row = BatchState.getCurrentRecord();
       if (row >= 0) {
         if (Facade.getRecordValues()[row] != null
             && Facade.getRecordValues()[row][column] != null
@@ -230,13 +216,12 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
 
           text = Facade.getRecordValues()[row][column].getData();
 
-          ClientLogManager.getLogger().log(Level.FINEST,
+          ClientLogManager.getLogger().log(Level.FINER,
               Facade.getRecordValues()[row].toString());
         }
       }
       fields.get(field).setText(text);
     }
-
     fields.get(field).requestFocusInWindow();
   }
 

@@ -140,9 +140,9 @@ public enum BatchState {
 
   public static void setCurrentRecord(int currentRecord) {
     BatchState.currentRecord = currentRecord;
-    // for (Observer o : currentObservers) {
-    // o.fieldWasSelected(currentRecord, currentField);
-    // }
+    for (Observer o : currentObservers) {
+      o.fieldWasSelected(currentRecord, currentField);
+    }
   }
 
   public static void updateAllObservers() {
