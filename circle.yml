@@ -1,13 +1,13 @@
 machine:
-    post:
-        - ant server
-        background:true
+  post:
+    - ant server:
+      background:true
 test:
-    pre:
-        - curl -kL -o Records.zip https://students.cs.byu.edu/~cs240ta/summer2015/download/record-indexer-data.zip 
-        - unzip -u Records.zip
-        - ant clean
-        - ant import
-    override:
-        - ant server-tests
-        - ant client-tests
+  pre:
+    - curl -kL -o Records.zip https://students.cs.byu.edu/~cs240ta/summer2015/download/record-indexer-data.zip 
+    - unzip -u Records.zip
+    - ant clean
+    - ant import
+  override:
+    - ant server-tests
+    - ant client-tests
