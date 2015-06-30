@@ -65,7 +65,7 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
         JList<Integer> source = (JList<Integer>) e.getSource();
         int selection = source.getSelectedIndex();
         if (selection >= 0) {
-          ClientLogManager.getLogger().log(Level.FINER,
+          ClientLogManager.getLogger().log(Level.FINEST,
               "SELECTION: " + selection);
           BatchState.setCurrentRecord(selection);
         }
@@ -81,7 +81,7 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
         if (BatchState.getCurrentRecord() < 0) {
           BatchState.setCurrentRecord(0);
         }
-        ClientLogManager.getLogger().log(Level.FINER, field.toString());
+        ClientLogManager.getLogger().log(Level.FINEST, field.toString());
         BatchState.setCurrentField(field);
       }
     }
@@ -92,7 +92,7 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
 
       if (field != null) {
         String text = ((JTextField) e.getSource()).getText();
-        ClientLogManager.getLogger().log(Level.FINER,
+        ClientLogManager.getLogger().log(Level.FINEST,
             field.toString() + "\ntext: " + text);
         BatchState.notifyDataWasInput(text, BatchState.getCurrentRecord(),
             field);
@@ -142,7 +142,7 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
     consoleOutput.append(
         "Records per batch=" + Facade.getProject().getRecordsPerBatch());
     consoleOutput.append("\n");
-    ClientLogManager.getLogger().log(Level.FINER, consoleOutput.toString());
+    ClientLogManager.getLogger().log(Level.FINEST, consoleOutput.toString());
 
     // int row = record;
     // if (Facade.getRecords()[index] == null) {
@@ -216,7 +216,7 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
 
           text = Facade.getRecordValues()[row][column].getData();
 
-          ClientLogManager.getLogger().log(Level.FINER,
+          ClientLogManager.getLogger().log(Level.FINEST,
               Facade.getRecordValues()[row].toString());
         }
       }

@@ -9,13 +9,24 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.util.Arrays;
 import java.util.List;
 
-import javax.swing.*;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JList;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
+import javax.swing.WindowConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import client.model.BatchState;
+
 import shared.model.Batch;
 import shared.model.Field;
 
@@ -25,13 +36,13 @@ public class QualityCheckerPopupMenu extends JPopupMenu
   JList<String> suggestionlist;
   JButton useButton;
 
-  public QualityCheckerPopupMenu(String word, final int row, final int column) {
+  public QualityCheckerPopupMenu(String word) {
     ActionListener seeSuggestionsListener = new ActionListener() {
       JDialog suggestionDialog;
 
       @Override
       public void actionPerformed(ActionEvent e) {
-        List<String> suggestions = null;
+        List<String> suggestions = Arrays.asList("EJB", "JPA", "GlassFish");;
         // BatchState.getCorrector(column - 1).suggestSimilarWord(
         // (String) table.getValueAt(row, column));
         suggestionDialog = new JDialog();
@@ -65,8 +76,7 @@ public class QualityCheckerPopupMenu extends JPopupMenu
           public void actionPerformed(ActionEvent e) {
             if (((JButton) e.getSource()).getText().equals("Cancel")) {
               suggestionDialog.dispose();
-            } else if (((JButton) e.getSource()).getText()
-                .equals("Use Suggestion")) {
+            } else if (((JButton) e.getSource()) == useButton) {
               int selected = suggestionlist.getSelectedIndex();
               if (selected != -1) {
                 // table.setValueAt(suggestionlist.getSelectedValue(), row, column);

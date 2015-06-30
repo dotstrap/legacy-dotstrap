@@ -15,6 +15,7 @@ import java.util.logging.Level;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.SwingUtilities;
 import javax.swing.table.AbstractTableModel;
 
 import client.model.BatchState;
@@ -96,7 +97,15 @@ public class TableEntryTab extends JPanel implements BatchState.Observer {
   private MouseAdapter mouseListener = new MouseAdapter() {
     @Override
     public void mouseClicked(MouseEvent e) {
-      BatchState.notifyFieldWasSelected(getCurrentRecord(), getCurrentField());
+
+      if (SwingUtilities.isLeftMouseButton(e)) {
+        BatchState.notifyFieldWasSelected(getCurrentRecord(),
+            getCurrentField());
+      } else if (SwingUtilities.isRightMouseButton(e)) {
+        QualityCheckerPopupMenu popup = new QualityCheckerPopupMenu("BOOBS");
+        popup.show(table, e.getX(), e.getY());
+      }
+
     }
   };
 
@@ -182,7 +191,7 @@ public class TableEntryTab extends JPanel implements BatchState.Observer {
     consoleOutput.append(
         "Records per batch=" + Facade.getProject().getRecordsPerBatch());
     consoleOutput.append("\n");
-    ClientLogManager.getLogger().log(Level.FINEST, consoleOutput.toString());
+    ClientLogManager.getLogger().log(Level.FINER, consoleOutput.toString());
   }
 
   @Override
@@ -229,6 +238,6 @@ public class TableEntryTab extends JPanel implements BatchState.Observer {
     consoleOutput.append("\n");
     consoleOutput.append(
         "Records per batch=" + Facade.getProject().getRecordsPerBatch());
-    ClientLogManager.getLogger().log(Level.FINEST, consoleOutput.toString());
+    ClientLogManager.getLogger().log(Level.FINER, consoleOutput.toString());
   }
 }
