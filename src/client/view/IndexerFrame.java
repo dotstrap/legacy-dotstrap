@@ -55,7 +55,7 @@ public class IndexerFrame extends JFrame implements BatchState.Observer {
   private JButton saveButton;
   private JButton submitButton;
 
-  private ActionListener toolBarListener = new ActionListener() {//@formatter:off
+  private ActionListener toolBarListener = new ActionListener() {
     @Override
     public void actionPerformed(ActionEvent e) {
       if (e.getSource() == zoomInButton) {
@@ -67,7 +67,7 @@ public class IndexerFrame extends JFrame implements BatchState.Observer {
       } else if (e.getSource() == toggleHighlightsButton) {
         BatchState.notifyToggleHighlight();
       } else if (e.getSource() == saveButton) {
-        //TODO
+        // TODO
       } else if (e.getSource() == submitButton) {
         processSubmit();
       }
@@ -91,9 +91,9 @@ public class IndexerFrame extends JFrame implements BatchState.Observer {
   private WindowAdapter windowAdapter = new WindowAdapter() {
     @Override
     public void windowClosing(WindowEvent e) {
-        processExit();
+      processExit();
     }
-  };//@formatter:on
+  };
 
   public IndexerFrame(String title) {
     this.intitialize();
@@ -139,6 +139,34 @@ public class IndexerFrame extends JFrame implements BatchState.Observer {
 
   @Override
   public void fieldWasSelected(int record, Field field) {}
+
+  public void intitialize() {
+    setSize(new Dimension(1000, 800));
+
+    setJMenuBar(initMenu());
+    this.add(initToolBar(), BorderLayout.NORTH);
+
+    JPanel rootPanel = new JPanel(new BorderLayout());
+    rootPanel.add(initSplitPane());
+
+    this.add(rootPanel);
+    this.setVisible(true);
+
+    this.addWindowListener(windowAdapter);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see client.model.BatchState.Observer#spellPopupWasOpened(java.lang.String, int,
+   * shared.model.Field)
+   */
+  @Override
+  public void spellPopupWasOpened(String value, int record, Field field,
+      List<String> suggestions) {
+    // TODO Auto-generated method stub
+
+  }
 
   @Override
   public void wordWasMisspelled(String value, int record, Field field) {}
@@ -246,21 +274,6 @@ public class IndexerFrame extends JFrame implements BatchState.Observer {
     return toolBar;
   }
 
-  public void intitialize() {
-    setSize(new Dimension(1000, 800));
-
-    setJMenuBar(initMenu());
-    this.add(initToolBar(), BorderLayout.NORTH);
-
-    JPanel rootPanel = new JPanel(new BorderLayout());
-    rootPanel.add(initSplitPane());
-
-    this.add(rootPanel);
-    this.setVisible(true);
-
-    this.addWindowListener(windowAdapter);
-  }
-
   private void processExit() {
     // TODO: save work
     System.exit(0);
@@ -270,18 +283,6 @@ public class IndexerFrame extends JFrame implements BatchState.Observer {
     Facade.submitBatch();
     BatchState.notifyDidSubmit(Facade.getBatch());
     Facade.setBatch(null);
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see client.model.BatchState.Observer#spellPopupWasOpened(java.lang.String, int,
-   * shared.model.Field)
-   */
-  @Override
-  public void spellPopupWasOpened(String value, int record, Field field, List<String> suggestions) {
-    // TODO Auto-generated method stub
-
   }
 
 }

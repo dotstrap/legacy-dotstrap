@@ -32,18 +32,22 @@ import shared.model.Field;
 @SuppressWarnings("serial")
 public class QualityCheckerPopupMenu extends JPopupMenu
     implements BatchState.Observer {
-  JList<String> suggestionlist;
-  JButton useButton;
 
-  public QualityCheckerPopupMenu(String word, final List<String> suggestions) {
+  private JList<String> suggestionlist;
+  private JButton useButton;
+  private JDialog suggestionDialog;
+  private int row;
+  private Field column;
+
+  public QualityCheckerPopupMenu(String word, final List<String> suggestions,
+      int record, Field field) {
+    this.row = record;
+    this.column = field;
+
     ActionListener seeSuggestionsListener = new ActionListener() {
-      JDialog suggestionDialog;
 
       @Override
       public void actionPerformed(ActionEvent e) {
-        // List<String> suggestions = Arrays.asList("EJB", "JPA", "GlassFish");;
-        // // BatchState.getCorrector(column - 1).suggestSimilarWord(
-        // // (String) table.getValueAt(row, column));
         suggestionDialog = new JDialog();
         suggestionDialog.setTitle("Suggestions");
         suggestionDialog.setModal(true);
@@ -52,11 +56,13 @@ public class QualityCheckerPopupMenu extends JPopupMenu
         suggestionDialog.setResizable(false);
         suggestionDialog
             .setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
+
         suggestionlist =
             new JList<String>(suggestions.toArray(new String[] {}));
-        // suggestionlist.setMinimumSize(new Dimension(200,0));
+
         Box space = Box.createHorizontalBox();
         space.add(Box.createVerticalStrut(5));
         Box box = Box.createHorizontalBox();
@@ -64,47 +70,24 @@ public class QualityCheckerPopupMenu extends JPopupMenu
         box.add(new JScrollPane(suggestionlist));
         box.add(Box.createHorizontalStrut(10));
         box.setMaximumSize(new Dimension(200, 200));
+
         panel.add(space);
         panel.add(box);
+
         Box buttons = Box.createHorizontalBox();
         buttons.setMaximumSize(new Dimension(250, 50));
         JButton cancelButton = new JButton("Cancel");
-        ActionListener listener = new ActionListener() {
-
-          @Override
-          public void actionPerformed(ActionEvent e) {
-            if (((JButton) e.getSource()).getText().equals("Cancel")) {
-              suggestionDialog.dispose();
-            } else if (((JButton) e.getSource()) == useButton) {
-              int selected = suggestionlist.getSelectedIndex();
-              if (selected != -1) {
-                // table.setValueAt(suggestionlist.getSelectedValue(), row, column);
-                suggestionDialog.dispose();
-              }
-            }
-
-          }
-        };
-        cancelButton.addActionListener(listener);
+        cancelButton.addActionListener(buttonListener);
         buttons.add(Box.createGlue());
         buttons.add(cancelButton);
         buttons.add(Box.createHorizontalStrut(5));
         useButton = new JButton("Use Suggestion");
         useButton.setEnabled(false);
-        useButton.addActionListener(listener);
-        suggestionlist.addListSelectionListener(new ListSelectionListener() {
-
-          @Override
-          public void valueChanged(ListSelectionEvent e) {
-            if (suggestionlist.getSelectedIndex() == -1) {
-              useButton.setEnabled(false);
-            } else {
-              useButton.setEnabled(true);
-            }
-          }
-        });
+        useButton.addActionListener(buttonListener);
+        suggestionlist.addListSelectionListener(listListener);
         buttons.add(useButton);
         buttons.add(Box.createGlue());
+
         Box space1 = Box.createHorizontalBox();
         space1.add(Box.createVerticalStrut(10));
         Box space2 = Box.createHorizontalBox();
@@ -112,13 +95,15 @@ public class QualityCheckerPopupMenu extends JPopupMenu
         panel.add(space1);
         panel.add(buttons);
         panel.add(space2);
+
         suggestionDialog.add(panel);
         suggestionDialog.setVisible(true);
       }
     };
-    JMenuItem anItem = new JMenuItem("See Suggestions");
-    anItem.addActionListener(seeSuggestionsListener);
-    add(anItem);
+
+    JMenuItem suggestionsMenu = new JMenuItem("See Suggestions");
+    suggestionsMenu.addActionListener(seeSuggestionsListener);
+    add(suggestionsMenu);
   }
 
   @Override
@@ -154,13 +139,91 @@ public class QualityCheckerPopupMenu extends JPopupMenu
   @Override
   public void fieldWasSelected(int record, Field field) {}
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see client.model.BatchState.Observer#spellPopupWasOpened(java.lang.String, int,
-   * shared.model.Field)
-   */
   @Override
-  public void spellPopupWasOpened(String value, int record, Field field, List<String> suggestions) {}
+  public void spellPopupWasOpened(String value, int record, Field field,
+      List<String> suggestions) {}
 
+  ActionListener buttonListener = new ActionListener() {
+    @Override
+    public void actionPerformed(ActionEvent e) {
+      if (((JButton) e.getSource()).getText().equals("Cancel")) {
+        suggestionDialog.dispose();
+      } else if (((JButton) e.getSource()) == useButton) {
+        int selected = suggestionlist.getSelectedIndex();
+        if (selected != -1) {
+          BatchState.notifyDataWasInput(suggestionlist.getSelectedValue(),
+              getRow(), getColumn());
+          suggestionDialog.dispose();
+        }
+      }
+
+    }
+  };
+
+  ListSelectionListener listListener = new ListSelectionListener() {
+    @Override
+    public void valueChanged(ListSelectionEvent e) {
+      if (suggestionlist.getSelectedIndex() == -1) {
+        useButton.setEnabled(false);
+      } else {
+        useButton.setEnabled(true);
+      }
+    }
+  };
+
+  public JList<String> getSuggestionlist() {
+    return this.suggestionlist;
+  }
+
+  public void setSuggestionlist(JList<String> suggestionlist) {
+    this.suggestionlist = suggestionlist;
+  }
+
+  public JButton getUseButton() {
+    return this.useButton;
+  }
+
+  public void setUseButton(JButton useButton) {
+    this.useButton = useButton;
+  }
+
+  public JDialog getSuggestionDialog() {
+    return this.suggestionDialog;
+  }
+
+  public void setSuggestionDialog(JDialog suggestionDialog) {
+    this.suggestionDialog = suggestionDialog;
+  }
+
+  public int getRow() {
+    return this.row;
+  }
+
+  public void setRow(int row) {
+    this.row = row;
+  }
+
+  public Field getColumn() {
+    return this.column;
+  }
+
+  public void setColumn(Field column) {
+    this.column = column;
+  }
+
+  public ActionListener getButtonListener() {
+    return this.buttonListener;
+  }
+
+  public void setButtonListener(ActionListener buttonListener) {
+    this.buttonListener = buttonListener;
+  }
+
+  public ListSelectionListener getListListener() {
+    return this.listListener;
+  }
+
+  public void setListListener(ListSelectionListener listListener) {
+    this.listListener = listListener;
+  }
 }

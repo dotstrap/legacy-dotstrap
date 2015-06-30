@@ -111,8 +111,8 @@ public class TableEntryTab extends JPanel implements BatchState.Observer {
               Facade.getUrlPrefix() + getCurrentField().getKnownData(),
               currentWord);
 
-          QualityCheckerPopupMenu popup =
-              new QualityCheckerPopupMenu(currentWord, suggestions);
+          QualityCheckerPopupMenu popup = new QualityCheckerPopupMenu(
+              currentWord, suggestions, getCurrentRecord(), getCurrentField());
           popup.show(table, e.getX(), e.getY());
 
           BatchState.notifySpellPopupWasOpened(currentWord, getCurrentRecord(),
