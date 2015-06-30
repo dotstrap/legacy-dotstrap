@@ -2,8 +2,6 @@ machine:
     post:
         - ant server
         background:true
-    java:
-        version: oraclejdk7
 test:
     pre:
         - curl -kL -o Records.zip https://students.cs.byu.edu/~cs240ta/summer2015/download/record-indexer-data.zip 
