@@ -5,7 +5,7 @@ test:
     - ant clean
     - ant import
     - ant server:
-      background: true
+        background: true
   override:
     - ant server-tests
     - ant client-tests
