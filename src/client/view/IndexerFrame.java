@@ -7,34 +7,16 @@ package client.view;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
-import javax.swing.JSplitPane;
-import javax.swing.JTabbedPane;
-import javax.swing.JToolBar;
+import javax.swing.*;
 
 import client.model.BatchState;
 import client.model.Facade;
-import client.view.indexerframe.BatchComponent;
-import client.view.indexerframe.DownloadBatchDialog;
-import client.view.indexerframe.FieldHelpTab;
-import client.view.indexerframe.FormEntryTab;
-import client.view.indexerframe.ImageNavigationTab;
-import client.view.indexerframe.TableEntryTab;
-
+import client.view.indexerframe.*;
 import shared.model.Batch;
 import shared.model.Field;
 
@@ -43,18 +25,28 @@ public class IndexerFrame extends JFrame implements BatchState.Observer {
   private BatchComponent batchViewer;
 
   private JMenuItem downloadBatchMenuItem;
-  private JMenuItem logoutMenuItem;
   private JMenuItem exitMenuItem;
-
-  private JToolBar toolBar;
-  private List<JButton> toolBarButtons;
-  private JButton zoomInButton;
-  private JButton zoomOutButton;
   private JButton invertImageButton;
-  private JButton toggleHighlightsButton;
+
+  private JMenuItem logoutMenuItem;
+  private ActionListener menuListener = new ActionListener() {
+    @Override
+    public void actionPerformed(ActionEvent e) {
+      if (e.getSource() == downloadBatchMenuItem) {
+        new DownloadBatchDialog(IndexerFrame.this, batchViewer);
+      } else if (e.getSource() == logoutMenuItem) {
+        dispose();
+        new LoginDialog();
+      } else if (e.getSource() == exitMenuItem) {
+        processExit();
+      }
+    }
+  };
   private JButton saveButton;
   private JButton submitButton;
-
+  private JButton toggleHighlightsButton;
+  private JToolBar toolBar;
+  private List<JButton> toolBarButtons;
   private ActionListener toolBarListener = new ActionListener() {
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -74,26 +66,16 @@ public class IndexerFrame extends JFrame implements BatchState.Observer {
     }
   };
 
-  private ActionListener menuListener = new ActionListener() {
-    @Override
-    public void actionPerformed(ActionEvent e) {
-      if (e.getSource() == downloadBatchMenuItem) {
-        new DownloadBatchDialog(IndexerFrame.this, batchViewer);
-      } else if (e.getSource() == logoutMenuItem) {
-        dispose();
-        new LoginDialog();
-      } else if (e.getSource() == exitMenuItem) {
-        processExit();
-      }
-    }
-  };
-
   private WindowAdapter windowAdapter = new WindowAdapter() {
     @Override
     public void windowClosing(WindowEvent e) {
       processExit();
     }
   };
+
+  private JButton zoomInButton;
+
+  private JButton zoomOutButton;
 
   public IndexerFrame(String title) {
     this.intitialize();
@@ -104,8 +86,27 @@ public class IndexerFrame extends JFrame implements BatchState.Observer {
   @Override
   public void cellWasSelected(int x, int y) {}
 
+  private void clear() {
+    // this.removeAll();
+    // this.revalidate();
+    // this.repaint();
+    // batchViewer = null;
+    // downloadBatchMenuItem = null;
+    // logoutMenuItem = null;
+    // exitMenuItem = null;
+    // toolBar = null;
+    // toolBarButtons = null;
+    // zoomInButton = null;
+    // zoomOutButton = null;
+    // invertImageButton = null;
+    // toggleHighlightsButton = null;
+    // saveButton = null;
+    // submitButton = null;
+  }
+
   @Override
-  public void dataWasInput(String value, int record, Field field, boolean shouldResetIsIncorrect) {}
+  public void dataWasInput(String value, int record, Field field,
+      boolean shouldResetIsIncorrect) {}
 
   @Override
   public void didChangeOrigin(int x, int y) {}
@@ -140,55 +141,6 @@ public class IndexerFrame extends JFrame implements BatchState.Observer {
   @Override
   public void fieldWasSelected(int record, Field field) {}
 
-  public void intitialize() {
-    setSize(new Dimension(1000, 800));
-
-    setJMenuBar(initMenu());
-    this.add(initToolBar(), BorderLayout.NORTH);
-
-    JPanel rootPanel = new JPanel(new BorderLayout());
-    rootPanel.add(initSplitPane());
-
-    this.add(rootPanel);
-    this.setVisible(true);
-
-    this.addWindowListener(windowAdapter);
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see client.model.BatchState.Observer#spellPopupWasOpened(java.lang.String, int,
-   * shared.model.Field)
-   */
-  @Override
-  public void spellPopupWasOpened(String value, int record, Field field,
-      List<String> suggestions) {
-    // TODO Auto-generated method stub
-
-  }
-
-  @Override
-  public void wordWasMisspelled(String value, int record, Field field) {}
-
-  private void clear() {
-    // this.removeAll();
-    // this.revalidate();
-    // this.repaint();
-    // batchViewer = null;
-    // downloadBatchMenuItem = null;
-    // logoutMenuItem = null;
-    // exitMenuItem = null;
-    // toolBar = null;
-    // toolBarButtons = null;
-    // zoomInButton = null;
-    // zoomOutButton = null;
-    // invertImageButton = null;
-    // toggleHighlightsButton = null;
-    // saveButton = null;
-    // submitButton = null;
-  }
-
   private JMenuBar initMenu() {
     JMenuBar menuBar = new JMenuBar();
 
@@ -212,20 +164,21 @@ public class IndexerFrame extends JFrame implements BatchState.Observer {
   }
 
   private JSplitPane initSplitPane() {
+    batchViewer = new BatchComponent();
+
     JTabbedPane entryTabs = new JTabbedPane();
     entryTabs.add("Table Entry", new TableEntryTab());
     entryTabs.add("Form Entry", new FormEntryTab());
 
     JTabbedPane navTabs = new JTabbedPane();
     navTabs.add("Field Help", new FieldHelpTab());
-    navTabs.add("Navigation", new ImageNavigationTab());
+    navTabs.add("Navigation", new ImageNavigationTab(this.batchViewer));
 
     JSplitPane hSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
     hSplit.setResizeWeight(0.5);
     hSplit.add(entryTabs);
     hSplit.add(navTabs);
 
-    batchViewer = new BatchComponent();
     JSplitPane vSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
     vSplit.setResizeWeight(0.5);
     vSplit.add(batchViewer);
@@ -266,12 +219,26 @@ public class IndexerFrame extends JFrame implements BatchState.Observer {
       button.setEnabled(false);
     }
 
-    // toolBar.addSeparator();
     toolBar.setFloatable(false);
     toolBar.setRollover(false);
     toolBar.setEnabled(false);
 
     return toolBar;
+  }
+
+  public void intitialize() {
+    setSize(new Dimension(1000, 800));
+
+    setJMenuBar(initMenu());
+    this.add(initToolBar(), BorderLayout.NORTH);
+
+    JPanel rootPanel = new JPanel(new BorderLayout());
+    rootPanel.add(initSplitPane());
+
+    this.add(rootPanel);
+    this.setVisible(true);
+
+    this.addWindowListener(windowAdapter);
   }
 
   private void processExit() {
@@ -284,5 +251,21 @@ public class IndexerFrame extends JFrame implements BatchState.Observer {
     BatchState.notifyDidSubmit(Facade.getBatch());
     Facade.setBatch(null);
   }
+
+  /*
+   * (non-Javadoc)
+   *
+   * @see client.model.BatchState.Observer#spellPopupWasOpened(java.lang.String, int,
+   * shared.model.Field)
+   */
+  @Override
+  public void spellPopupWasOpened(String value, int record, Field field,
+      List<String> suggestions) {
+    // TODO Auto-generated method stub
+
+  }
+
+  @Override
+  public void wordWasMisspelled(String value, int record, Field field) {}
 
 }

@@ -1,12 +1,11 @@
+/*
+ *
+ */
 package client.util.spell;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.logging.Level;
 
 import client.util.ClientLogManager;
@@ -40,7 +39,7 @@ public class SpellCorrector implements ISpellCorrector {
     scanner.useDelimiter(",");
     dictionary = new Dictionary();
     while (scanner.hasNext()) {
-      dictionary.add(scanner.next().toLowerCase());
+      dictionary.add(scanner.next());
     }
     scanner.close();
   }

@@ -1,23 +1,13 @@
 /**
- * BatchComponent.java
- * JRE v1.8.0_45
+ * BatchComponent.java JRE v1.8.0_45
  *
- * Created by William Myers on Jun 28, 2015.
- * Copyright (c) 2015 William Myers. All Rights reserved.
+ * Created by William Myers on Jun 28, 2015. Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package client.view.indexerframe;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseWheelEvent;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.NoninvertibleTransformException;
-import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.geom.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,10 +18,7 @@ import javax.swing.JComponent;
 import client.model.BatchState;
 import client.model.Facade;
 import client.util.ClientLogManager;
-
-import shared.model.Batch;
-import shared.model.Field;
-import shared.model.Project;
+import shared.model.*;
 
 @SuppressWarnings("serial")
 public class BatchComponent extends JComponent implements BatchState.Observer {
@@ -39,37 +26,23 @@ public class BatchComponent extends JComponent implements BatchState.Observer {
   private static final Color HIGHLIGHT_COLOR = new Color(0, 255, 245, 80);
   private static final Color INVERTED_HIGHLIGHT_COLOR =
       new Color(255, 0, 10, 80);
-  private static final double ZOOM_SCALE_FACTOR = 0.09;
   private static final double MAX_ZOOM_AMT = 95.0;
   private static final double MIN_ZOOM_AMT = 0.01;
+  private static final double ZOOM_SCALE_FACTOR = 0.09;
 
   private BufferedImage batch;
-  private Rectangle2D rectangle;
-  private ArrayList<DrawingShape> shapes;
+  private Rectangle2D[][] cells;
+  private int dCenterX;
 
+  private int dCenterY;
+  private int dOriginX;
+
+  private int dOriginY;
+
+  private Field[][] fieldLocations;
+  private boolean isDragging;
   private boolean isHighlighted;
   private boolean isInverted;
-
-  private double scale;
-
-  private int dOriginX;
-  private int dOriginY;
-  private int dCenterX;
-  private int dCenterY;
-
-  private int wOriginX;
-  private int wOriginY;
-  private int wCenterX;
-  private int wCenterY;
-  private boolean isDragging;
-  private int wDragStartX;
-  private int wDragStartY;
-  private int wDragStartOriginX;
-  private int wDragStartOriginY;
-
-  private Rectangle2D[][] cells;
-  private Field[][] fieldLocations;
-  private int[][] recordLocations;
 
   private MouseAdapter mouseAdapter = new MouseAdapter() {
     @Override
@@ -154,10 +127,26 @@ public class BatchComponent extends JComponent implements BatchState.Observer {
 
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
-      double scaleAmt = -e.getWheelRotation() * ZOOM_SCALE_FACTOR;
+      double scaleAmt =
+          -e.getWheelRotation() * BatchComponent.ZOOM_SCALE_FACTOR;
       BatchState.notifyDidZoom(scaleAmt);
     }
   };
+
+  private int[][] recordLocations;
+  private Rectangle2D rectangle;
+  private double scale;
+  private ArrayList<DrawingShape> shapes;
+  private int wCenterX;
+  private int wCenterY;
+  private int wDragStartOriginX;
+  private int wDragStartOriginY;
+
+  private int wDragStartX;
+  private int wDragStartY;
+  private int wOriginX;
+
+  private int wOriginY;
 
   public BatchComponent() {
     batch = null;
@@ -200,10 +189,8 @@ public class BatchComponent extends JComponent implements BatchState.Observer {
   }
 
   @Override
-  public void dataWasInput(String value, int record, Field field, boolean shouldResetIsIncorrect) {}
-
-  @Override
-  public void wordWasMisspelled(String value, int record, Field field) {}
+  public void dataWasInput(String value, int record, Field field,
+      boolean shouldResetIsIncorrect) {}
 
   @Override
   public void didChangeOrigin(int x, int y) {
@@ -249,12 +236,13 @@ public class BatchComponent extends JComponent implements BatchState.Observer {
     if (this.isInverted) {
       shapes.set(0, ((DrawingImage) shapes.get(0)).invert(this.batch));
       if (shapes.size() == 2)
-        shapes.set(1,
-            ((DrawingRect) shapes.get(1)).setColor(INVERTED_HIGHLIGHT_COLOR));
+        shapes.set(1, ((DrawingRect) shapes.get(1))
+            .setColor(BatchComponent.INVERTED_HIGHLIGHT_COLOR));
     } else {
       shapes.set(0, ((DrawingImage) shapes.get(0)).setImage(this.batch));
       if (shapes.size() == 2)
-        shapes.set(1, ((DrawingRect) shapes.get(1)).setColor(HIGHLIGHT_COLOR));
+        shapes.set(1, ((DrawingRect) shapes.get(1))
+            .setColor(BatchComponent.HIGHLIGHT_COLOR));
     }
 
     this.repaint();
@@ -262,19 +250,30 @@ public class BatchComponent extends JComponent implements BatchState.Observer {
 
   @Override
   public void didZoom(double zoomDirection) {
-    zoomDirection *= ZOOM_SCALE_FACTOR;
+    zoomDirection *= BatchComponent.ZOOM_SCALE_FACTOR;
     this.scale *= (1 + zoomDirection);
 
-    if (this.scale > MAX_ZOOM_AMT)
-      this.scale = MAX_ZOOM_AMT;
-    if (this.scale < MIN_ZOOM_AMT)
-      this.scale = MIN_ZOOM_AMT;
+    if (this.scale > BatchComponent.MAX_ZOOM_AMT)
+      this.scale = BatchComponent.MAX_ZOOM_AMT;
+    if (this.scale < BatchComponent.MIN_ZOOM_AMT)
+      this.scale = BatchComponent.MIN_ZOOM_AMT;
 
     this.setScale(scale);
   }
 
   public void displayBatch() {
     this.repaint();
+  }
+
+  private void drawBackground(Graphics2D g2) {
+    g2.setColor(getBackground());
+    g2.fillRect(0, 0, getWidth(), getHeight());
+  }
+
+  private void drawShapes(Graphics2D g2) {
+    for (DrawingShape shape : shapes) {
+      shape.draw(g2);
+    }
   }
 
   @Override
@@ -292,49 +291,6 @@ public class BatchComponent extends JComponent implements BatchState.Observer {
       }
     }
 
-  }
-
-  public BufferedImage getBatch() {
-    return this.batch;
-  }
-
-  public double getScale() {
-    return this.scale;
-  }
-
-  public void setOrigin(int x, int y) {
-    wOriginX = x;
-    wOriginY = y;
-    this.repaint();
-  }
-
-  public void setScale(double newScale) {
-    scale = newScale;
-    this.repaint();
-  }
-
-  @Override
-  protected void paintComponent(Graphics g) {
-    super.paintComponent(g);
-
-    Graphics2D g2 = (Graphics2D) g;
-    drawBackground(g2);
-    g2.translate(getWidth() / 2.0, getHeight() / 2.0);
-    g2.scale(scale, scale);
-    g2.translate(-wOriginX, -wOriginY);
-
-    drawShapes(g2);
-  }
-
-  private void drawBackground(Graphics2D g2) {
-    g2.setColor(getBackground());
-    g2.fillRect(0, 0, getWidth(), getHeight());
-  }
-
-  private void drawShapes(Graphics2D g2) {
-    for (DrawingShape shape : shapes) {
-      shape.draw(g2);
-    }
   }
 
   private void generateBatchCells() {
@@ -361,6 +317,14 @@ public class BatchComponent extends JComponent implements BatchState.Observer {
     }
   }
 
+  public BufferedImage getBatch() {
+    return this.batch;
+  }
+
+  public double getScale() {
+    return this.scale;
+  }
+
   private void highlightCell(int row, int column) {
     if (column == -1)
       column = 0;
@@ -368,7 +332,8 @@ public class BatchComponent extends JComponent implements BatchState.Observer {
       ((DrawingRect) shapes.get(1)).setRect(cells[row][column]);
     } else {
       isHighlighted = true;
-      shapes.add(new DrawingRect(cells[row][column], HIGHLIGHT_COLOR));
+      shapes.add(
+          new DrawingRect(cells[row][column], BatchComponent.HIGHLIGHT_COLOR));
     }
     this.repaint();
   }
@@ -397,12 +362,40 @@ public class BatchComponent extends JComponent implements BatchState.Observer {
     wDragStartOriginY = 0;
   }
 
+  @Override
+  protected void paintComponent(Graphics g) {
+    super.paintComponent(g);
+
+    Graphics2D g2 = (Graphics2D) g;
+    drawBackground(g2);
+    g2.translate(getWidth() / 2.0, getHeight() / 2.0);
+    g2.scale(scale, scale);
+    g2.translate(-wOriginX, -wOriginY);
+
+    drawShapes(g2);
+  }
+
+  public void setOrigin(int x, int y) {
+    wOriginX = x;
+    wOriginY = y;
+    this.repaint();
+  }
+
+  public void setScale(double newScale) {
+    scale = newScale;
+    this.repaint();
+  }
+
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see client.model.BatchState.Observer#spellPopupWasOpened(java.lang.String, int,
    * shared.model.Field)
    */
   @Override
-  public void spellPopupWasOpened(String value, int record, Field field, List<String> suggestions) {}
+  public void spellPopupWasOpened(String value, int record, Field field,
+      List<String> suggestions) {}
+
+  @Override
+  public void wordWasMisspelled(String value, int record, Field field) {}
 }
