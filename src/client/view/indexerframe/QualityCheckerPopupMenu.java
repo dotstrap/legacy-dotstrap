@@ -110,7 +110,8 @@ public class QualityCheckerPopupMenu extends JPopupMenu
   public void cellWasSelected(int x, int y) {}
 
   @Override
-  public void dataWasInput(String value, int record, Field field) {}
+  public void dataWasInput(String value, int record, Field field,
+      boolean shouldResetIsIncorrect) {}
 
   @Override
   public void wordWasMisspelled(String value, int record, Field field) {}
@@ -152,7 +153,7 @@ public class QualityCheckerPopupMenu extends JPopupMenu
         int selected = suggestionlist.getSelectedIndex();
         if (selected != -1) {
           BatchState.notifyDataWasInput(suggestionlist.getSelectedValue(),
-              getRow(), getColumn());
+              getRow(), getColumn(), true);
           suggestionDialog.dispose();
         }
       }

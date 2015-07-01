@@ -93,7 +93,7 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
         ClientLogManager.getLogger().log(Level.FINER,
             field.toString() + "\ntext: " + text);
         BatchState.notifyDataWasInput(text, BatchState.getCurrentRecord(),
-            field);
+            field, false);
       }
     }
   };
@@ -136,7 +136,7 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
    * @see client.model.BatchState.Observer#dataWasInput(java.lang.String, int, shared.model.Field)
    */
   @Override
-  public void dataWasInput(String cellValue, int row, Field field) {
+  public void dataWasInput(String cellValue, int row, Field field, boolean shouldResetIsIncorrect) {
     int column = field.getColNum();
     StringBuilder consoleOutput = new StringBuilder();
     // String text = "";

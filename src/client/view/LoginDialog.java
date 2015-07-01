@@ -84,7 +84,7 @@ public class LoginDialog extends JDialog implements BatchState.Observer {
   public void cellWasSelected(int x, int y) {}
 
   @Override
-  public void dataWasInput(String value, int record, Field field) {}
+  public void dataWasInput(String value, int record, Field field, boolean shouldResetIsIncorrect) {}
 
   @Override
   public void wordWasMisspelled(String value, int record, Field field) {}

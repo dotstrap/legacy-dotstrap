@@ -41,7 +41,7 @@ public class FieldHelpTab extends JPanel implements BatchState.Observer {
   public void cellWasSelected(int x, int y) {}
 
   @Override
-  public void dataWasInput(String value, int record, Field field) {}
+  public void dataWasInput(String value, int record, Field field, boolean shouldResetIsIncorrect) {}
 
   @Override
   public void didChangeOrigin(int x, int y) {}

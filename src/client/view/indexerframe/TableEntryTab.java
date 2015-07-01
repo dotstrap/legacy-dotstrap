@@ -5,6 +5,7 @@ package client.view.indexerframe;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -18,6 +19,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 
 import client.model.BatchState;
 import client.model.Facade;
@@ -34,7 +38,59 @@ public class TableEntryTab extends JPanel implements BatchState.Observer {
   private JTable table;
   private JScrollPane scrollPane;
   private boolean isWordIncorrect;
+  private boolean[][] incorrectWords;
   private String currentWord;
+  private TableColumnModel columnModel;
+
+  private DefaultTableCellRenderer statusColumnCellRenderer =
+      new DefaultTableCellRenderer() {
+        @Override
+        public Component getTableCellRendererComponent(JTable table,
+            Object value, boolean isSelected, boolean hasFocus, int row,
+            int column) {
+
+          if (!table.getColumnName(column).equals("Record #")
+              && (String) value != null) {
+            if (incorrectWords[row][column - 1] == true) {
+              setBackground(Color.RED);
+            } else {
+              setBackground(table.getBackground());
+            }
+          } else {
+            setBackground(table.getBackground());
+          }
+
+          setValue(value);
+
+          if (column != 0)
+            super.getTableCellRendererComponent(table, value, isSelected,
+                hasFocus, row, column - 1);
+
+          return this;
+        }
+
+        // @Override
+        // public Component getTableCellRendererComponent(JTable table,
+        // Object value, boolean isSelected, boolean hasFocus, int row,
+        // int col) {
+        //
+        // // Cells are by default rendered as a JLabel.
+        // JLabel l = (JLabel) super.getTableCellRendererComponent(table, value,
+        // isSelected, hasFocus, row, col + 1);
+        //
+        // // Get the status for the current row.
+        // // CustomTableModel tableModel = (CustomTableModel) table.getModel();
+        // if (isWordIncorrect) {
+        // l.setBackground(Color.RED);
+        // } else {
+        // l.setBackground(Color.GRAY);
+        // }
+        //
+        // // Return the JLabel which renders the cell.
+        // return l;
+        // }
+
+      };
 
   private AbstractTableModel recordsTableModel = new AbstractTableModel() {
     @Override
@@ -71,8 +127,10 @@ public class TableEntryTab extends JPanel implements BatchState.Observer {
       if (column > 0) {
         String cellValue = (String) newValue;
         Field field = Facade.getFields().get(column - 1);
+        currentWord = cellValue;
+        incorrectWords[row][column] = false;
         fireTableCellUpdated(row, column);
-        BatchState.notifyDataWasInput(cellValue, row, field);
+        BatchState.notifyDataWasInput(cellValue, row, field, false);
       }
     }
 
@@ -101,6 +159,8 @@ public class TableEntryTab extends JPanel implements BatchState.Observer {
   private MouseAdapter mouseListener = new MouseAdapter() {
     @Override
     public void mouseClicked(MouseEvent e) {
+      final int row = table.rowAtPoint(e.getPoint());
+      final int column = table.columnAtPoint(e.getPoint());
 
       if (SwingUtilities.isLeftMouseButton(e)) {
         BatchState.notifyFieldWasSelected(getCurrentRecord(),
@@ -111,12 +171,16 @@ public class TableEntryTab extends JPanel implements BatchState.Observer {
               Facade.getUrlPrefix() + getCurrentField().getKnownData(),
               currentWord);
 
-          QualityCheckerPopupMenu popup = new QualityCheckerPopupMenu(
-              currentWord, suggestions, getCurrentRecord(), getCurrentField());
-          popup.show(table, e.getX(), e.getY());
+          if (incorrectWords[row][column - 1] == true) {
+            QualityCheckerPopupMenu popup =
+                new QualityCheckerPopupMenu(currentWord, suggestions,
+                    getCurrentRecord(), getCurrentField());
+            popup.show(table, e.getX(), e.getY());
 
-          BatchState.notifySpellPopupWasOpened(currentWord, getCurrentRecord(),
-              getCurrentField(), suggestions);
+            BatchState.notifySpellPopupWasOpened(currentWord,
+                getCurrentRecord(), getCurrentField(), suggestions);
+          }
+
         } catch (NoSimilarWordFoundException ex) {
           StringBuilder msg =
               new StringBuilder("currentWord=").append(currentWord);
@@ -151,6 +215,15 @@ public class TableEntryTab extends JPanel implements BatchState.Observer {
     table.addKeyListener(keyListener);
 
     scrollPane = new JScrollPane(table);
+
+    table.setDefaultRenderer(String.class, statusColumnCellRenderer);
+    columnModel = table.getColumnModel();
+    for (int i = 1; i < table.getColumnCount(); ++i) {
+      TableColumn column = columnModel.getColumn(i);
+      column.setCellRenderer(statusColumnCellRenderer);
+    }
+
+    incorrectWords = new boolean[table.getRowCount()][table.getColumnCount()];
 
     add(scrollPane, BorderLayout.CENTER);
   }
@@ -190,8 +263,14 @@ public class TableEntryTab extends JPanel implements BatchState.Observer {
   public void cellWasSelected(int x, int y) {}
 
   @Override
-  public void dataWasInput(String cellValue, int row, Field field) {
+  public void dataWasInput(String cellValue, int row, Field field,
+      boolean shouldResetIsIncorrect) {
     int column = field.getColNum();
+
+    if (shouldResetIsIncorrect == true) {
+      incorrectWords[row][column] = false;
+    }
+
     StringBuilder consoleOutput = new StringBuilder();
     if (Facade.getRecordValues()[row][column] == null) {
       Facade.getRecordValues()[row][column] =
@@ -209,13 +288,14 @@ public class TableEntryTab extends JPanel implements BatchState.Observer {
         "Records per batch=" + Facade.getProject().getRecordsPerBatch());
     consoleOutput.append("\n");
     ClientLogManager.getLogger().log(Level.FINE, consoleOutput.toString());
+
   }
 
   @Override
   public void wordWasMisspelled(String value, int record, Field field) {
-    isWordIncorrect = true;
+    // isWordIncorrect = true;
+    incorrectWords[record][field.getColNum()] = true;
     currentWord = value;
-    table.setBackground(Color.RED);
   }
 
   @Override
@@ -268,17 +348,9 @@ public class TableEntryTab extends JPanel implements BatchState.Observer {
     ClientLogManager.getLogger().log(Level.FINE, consoleOutput.toString());
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see client.model.BatchState.Observer#spellPopupWasOpened(java.lang.String, int,
-   * shared.model.Field)
-   */
   @Override
   public void spellPopupWasOpened(String value, int record, Field field,
-      List<String> suggestions) {
-
-  }
+      List<String> suggestions) {}
 
   public boolean isWordIncorrect() {
     return isWordIncorrect;
@@ -295,4 +367,5 @@ public class TableEntryTab extends JPanel implements BatchState.Observer {
   public void setCurrentWord(String currentWord) {
     this.currentWord = currentWord;
   }
+
 }

@@ -100,12 +100,13 @@ public enum BatchState {
    * @param value the value
    * @param record the record
    * @param field the field
+   * @param shouldResetIsIncorrect TODO
    */
-  public static void notifyDataWasInput(String value, int record, Field field) {
+  public static void notifyDataWasInput(String value, int record, Field field, boolean shouldResetIsIncorrect) {
     BatchState.currentField = field;
     BatchState.currentRecord = record;
     for (Observer o : currentObservers) {
-      o.dataWasInput(value, record, field);
+      o.dataWasInput(value, record, field, false);
     }
 
   }
@@ -298,8 +299,9 @@ public enum BatchState {
      * @param value the value
      * @param record the record
      * @param field the field
+     * @param shouldResetIsIncorrect TODO
      */
-    public void dataWasInput(String value, int record, Field field);
+    public void dataWasInput(String value, int record, Field field, boolean shouldResetIsIncorrect);
 
     /**
      * Did change origin.

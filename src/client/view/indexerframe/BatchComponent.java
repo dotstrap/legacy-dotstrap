@@ -200,7 +200,7 @@ public class BatchComponent extends JComponent implements BatchState.Observer {
   }
 
   @Override
-  public void dataWasInput(String value, int record, Field field) {}
+  public void dataWasInput(String value, int record, Field field, boolean shouldResetIsIncorrect) {}
 
   @Override
   public void wordWasMisspelled(String value, int record, Field field) {}
