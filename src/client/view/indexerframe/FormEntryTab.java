@@ -1,42 +1,25 @@
 /**
- * FormEntryTab.java
- * JRE v1.8.0_45
- * 
- * Created by William Myers on Jun 30, 2015.
- * Copyright (c) 2015 William Myers. All Rights reserved.
+ * FormEntryTab.java JRE v1.8.0_45
+ *
+ * Created by William Myers on Jun 30, 2015. Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package client.view.indexerframe;
 
 import java.awt.Color;
 import java.awt.GridLayout;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.logging.Level;
 
-import javax.swing.AbstractListModel;
-import javax.swing.BoxLayout;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
+import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import client.model.BatchState;
 import client.model.Facade;
 import client.util.ClientLogManager;
-
-import shared.model.Batch;
-import shared.model.Field;
-import shared.model.Record;
+import shared.model.*;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -102,15 +85,7 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
   private MouseAdapter mouseListener = new MouseAdapter() {
     @Override
     public void mouseReleased(MouseEvent e) {
-      // super.mouseReleased(e);
-      // JTextField field = (JTextField) e.getSource();
-      // if (e.getButton() == MouseEvent.BUTTON3) {
-      // // if (field.getBackground() == Color.RED) {
-      // QualityCheckerPopupMenu popup = new QualityCheckerPopupMenu("test",
-      // records.getSelectedIndex(), Integer.parseInt(field.getName()) + 1);
-      // popup.show(field, e.getX(), e.getY());
-      // // }
-      // }
+
     }
   };
 
@@ -124,7 +99,7 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see client.model.BatchState.Observer#cellWasSelected(int, int)
    */
   @Override
@@ -132,11 +107,12 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see client.model.BatchState.Observer#dataWasInput(java.lang.String, int, shared.model.Field)
    */
   @Override
-  public void dataWasInput(String cellValue, int row, Field field, boolean shouldResetIsIncorrect) {
+  public void dataWasInput(String cellValue, int row, Field field,
+      boolean shouldResetIsIncorrect) {
     int column = field.getColNum();
     StringBuilder consoleOutput = new StringBuilder();
     // String text = "";
@@ -193,7 +169,7 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see client.model.BatchState.Observer#didChangeOrigin(int, int)
    */
   @Override
@@ -201,7 +177,7 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see client.model.BatchState.Observer#didDownload(java.awt.image.BufferedImage)
    */
   @Override
@@ -211,7 +187,7 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see client.model.BatchState.Observer#didHighlight()
    */
   @Override
@@ -219,7 +195,7 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see client.model.BatchState.Observer#didSubmit(shared.model.Batch)
    */
   @Override
@@ -229,7 +205,7 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see client.model.BatchState.Observer#didToggleHighlight()
    */
   @Override
@@ -237,7 +213,7 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see client.model.BatchState.Observer#didToggleInvert()
    */
   @Override
@@ -245,7 +221,7 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see client.model.BatchState.Observer#didZoom(double)
    */
   @Override
@@ -253,7 +229,7 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see client.model.BatchState.Observer#fieldWasSelected(int, shared.model.Field)
    */
   @Override
@@ -371,7 +347,7 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.swing.ListModel#getElementAt(int)
      */
     @Override
@@ -391,10 +367,11 @@ public class FormEntryTab extends JPanel implements BatchState.Observer {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see client.model.BatchState.Observer#spellPopupWasOpened(java.lang.String, int,
    * shared.model.Field)
    */
   @Override
-  public void spellPopupWasOpened(String value, int record, Field field, List<String> suggestions) {}
+  public void spellPopupWasOpened(String value, int record, Field field,
+      List<String> suggestions) {}
 }

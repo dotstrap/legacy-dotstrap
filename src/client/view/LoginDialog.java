@@ -177,11 +177,11 @@ public class LoginDialog extends JDialog implements BatchState.Observer {
   }
 
   private void processLogin() {
-    // String username = usernameField.getText();
-    // char[] password = passwordField.getPassword();
+     String username = usernameField.getText();
+     char[] password = passwordField.getPassword();
     // TODO: remember to not hardcode sheila!
-    String username = "sheila";
-    char[] password = {'p', 'a', 'r', 'k', 'e', 'r'};
+    //String username = "sheila";
+    //char[] password = {'p', 'a', 'r', 'k', 'e', 'r'};
     if (Facade.validateUser(username, password)) {
       // TODO: implement load data
       JOptionPane.showMessageDialog(this,
@@ -217,7 +217,7 @@ public class LoginDialog extends JDialog implements BatchState.Observer {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see client.model.BatchState.Observer#spellPopupWasOpened(java.lang.String, int,
    * shared.model.Field)
    */

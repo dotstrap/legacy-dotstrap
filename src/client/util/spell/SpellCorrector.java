@@ -58,7 +58,7 @@ public class SpellCorrector implements ISpellCorrector {
     String gword = inputWord.toLowerCase();
     ArrayList<Dictionary.Node> nodes = new ArrayList<Dictionary.Node>();
     ArrayList<Dictionary.Node> nodes2 = new ArrayList<Dictionary.Node>();
-    nodes.addAll(DeletionList(gword));
+    nodes.addAll(processDeletions(gword));
     nodes.addAll(TranspositionList(gword));
     nodes.addAll(AlterationList(gword));
     nodes.addAll(InsertionList(gword));
@@ -82,7 +82,7 @@ public class SpellCorrector implements ISpellCorrector {
     return new ArrayList<String>();
   }
 
-  private List<Dictionary.Node> DeletionList(String inputWord) {
+  private List<Dictionary.Node> processDeletions(String inputWord) {
     SortedSet<String> DeletionRawOneList = new TreeSet<String>();
     for (int i = 0; i < inputWord.toCharArray().length; i++) {
       StringBuilder x = new StringBuilder();
