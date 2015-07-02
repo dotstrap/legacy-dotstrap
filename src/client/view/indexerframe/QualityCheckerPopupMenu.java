@@ -1,9 +1,7 @@
 /**
- * QualityCheckerPopupMenu.java
- * JRE v1.8.0_45
+ * QualityCheckerPopupMenu.java JRE v1.8.0_45
  *
- * Created by William Myers on Jun 30, 2015.
- * Copyright (c) 2015 William Myers. All Rights reserved.
+ * Created by William Myers on Jun 30, 2015. Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package client.view.indexerframe;
 
@@ -13,21 +11,11 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.util.Set;
 
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JList;
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.JScrollPane;
-import javax.swing.WindowConstants;
+import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import client.model.BatchState;
-
 import shared.model.Batch;
 import shared.model.Field;
 
@@ -42,7 +30,7 @@ public class QualityCheckerPopupMenu extends JPopupMenu
 
   private JButton useButton;
 
-  private JDialog suggestionDialog;
+  private JDialog suggestDialog;
 
   private int row;
 
@@ -71,13 +59,13 @@ public class QualityCheckerPopupMenu extends JPopupMenu
 
       @Override
       public void actionPerformed(ActionEvent e) {
-        suggestionDialog = new JDialog();
-        suggestionDialog.setTitle("Suggestions");
-        suggestionDialog.setModal(true);
-        suggestionDialog.setLocationRelativeTo(null);
-        suggestionDialog.setSize(230, 230);
-        suggestionDialog.setResizable(false);
-        suggestionDialog
+        suggestDialog = new JDialog();
+        suggestDialog.setTitle("Suggestions");
+        suggestDialog.setModal(true);
+        suggestDialog.setLocationRelativeTo(null);
+        suggestDialog.setSize(230, 230);
+        suggestDialog.setResizable(false);
+        suggestDialog
             .setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
         JPanel panel = new JPanel();
@@ -122,8 +110,8 @@ public class QualityCheckerPopupMenu extends JPopupMenu
         panel.add(buttons);
         panel.add(hBox);
 
-        suggestionDialog.add(panel);
-        suggestionDialog.setVisible(true);
+        suggestDialog.add(panel);
+        suggestDialog.setVisible(true);
       }
     };
 
@@ -231,7 +219,7 @@ public class QualityCheckerPopupMenu extends JPopupMenu
   }
 
   public JDialog getSuggestionDialog() {
-    return suggestionDialog;
+    return suggestDialog;
   }
 
   public JList<String> getSuggestionlist() {
@@ -251,7 +239,7 @@ public class QualityCheckerPopupMenu extends JPopupMenu
   }
 
   public void setSuggestionDialog(JDialog suggestionDialog) {
-    this.suggestionDialog = suggestionDialog;
+    this.suggestDialog = suggestionDialog;
   }
 
   public void setSuggestionlist(JList<String> suggestionlist) {
@@ -290,20 +278,22 @@ public class QualityCheckerPopupMenu extends JPopupMenu
    * @see ButtonEvent
    */
   private class ButtonListener implements ActionListener {
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     @Override
     public void actionPerformed(ActionEvent e) {
       if (((JButton) e.getSource()).getText().equals("Cancel")) {
-        suggestionDialog.dispose();
+        suggestDialog.dispose();
       } else if (((JButton) e.getSource()) == useButton) {
         int selected = suggestionlist.getSelectedIndex();
         if (selected != -1) {
           BatchState.notifyDataWasInput(suggestionlist.getSelectedValue(),
               getRow(), getColumn(), true);
-          suggestionDialog.dispose();
+          suggestDialog.dispose();
         }
       }
 
@@ -319,9 +309,12 @@ public class QualityCheckerPopupMenu extends JPopupMenu
    * @see ListEvent
    */
   private class ListListener implements ListSelectionListener {
-    
-    /* (non-Javadoc)
-     * @see javax.swing.event.ListSelectionListener#valueChanged(javax.swing.event.ListSelectionEvent)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * javax.swing.event.ListSelectionListener#valueChanged(javax.swing.event.ListSelectionEvent)
      */
     @Override
     public void valueChanged(ListSelectionEvent e) {

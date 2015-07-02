@@ -259,12 +259,12 @@ public class ImageNavigationTab extends JComponent
       g2.translate(wOriginX, wOriginY);
 
       if (batchViewer != null) {
-        double boxHeight = batchViewer.getHeight();
-        double boxWidth = batchViewer.getWidth();
+        double boxH = batchViewer.getHeight();
+        double boxW = batchViewer.getWidth();
         double scale = batchViewer.getScale();
 
-        Rectangle2D rect = new Rectangle2D.Double(-boxWidth / 2, -boxHeight / 2,
-            boxWidth, boxHeight);
+        Rectangle2D rect = new Rectangle2D.Double(-boxW / 2, -boxH / 2,
+            boxW, boxH);
         DrawingRect dRect =
             new DrawingRect(rect, ImageNavigationTab.HIGHLIGHT_COLOR);
 
