@@ -1,22 +1,14 @@
 /**
- * ImageNavigationTab.java
- * JRE v1.8.0_45
- * 
- * Created by William Myers on Jun 30, 2015.
- * Copyright (c) 2015 William Myers. All Rights reserved.
+ * ImageNavigationTab.java JRE v1.8.0_45
+ *
+ * Created by William Myers on Jun 30, 2015. Copyright (c) 2015 William Myers. All Rights reserved.
  */
 package client.view.indexerframe;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.NoninvertibleTransformException;
-import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
+import java.awt.geom.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Set;
@@ -24,7 +16,6 @@ import java.util.Set;
 import javax.swing.JComponent;
 
 import client.model.BatchState;
-
 import shared.model.Batch;
 import shared.model.Field;
 
@@ -64,7 +55,7 @@ public class ImageNavigationTab extends JComponent
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see client.model.BatchState.Observer#cellWasSelected(int, int)
    */
   @Override
@@ -72,7 +63,7 @@ public class ImageNavigationTab extends JComponent
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see client.model.BatchState.Observer#dataWasInput(java.lang.String, int, shared.model.Field,
    * boolean)
    */
@@ -82,7 +73,7 @@ public class ImageNavigationTab extends JComponent
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see client.model.BatchState.Observer#didChangeOrigin(int, int)
    */
   @Override
@@ -92,7 +83,7 @@ public class ImageNavigationTab extends JComponent
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see client.model.BatchState.Observer#didDownload(java.awt.image.BufferedImage)
    */
   @Override
@@ -102,7 +93,7 @@ public class ImageNavigationTab extends JComponent
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see client.model.BatchState.Observer#didHighlight()
    */
   @Override
@@ -110,7 +101,7 @@ public class ImageNavigationTab extends JComponent
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see client.model.BatchState.Observer#didSubmit(shared.model.Batch)
    */
   @Override
@@ -118,7 +109,7 @@ public class ImageNavigationTab extends JComponent
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see client.model.BatchState.Observer#didToggleHighlight()
    */
   @Override
@@ -126,7 +117,7 @@ public class ImageNavigationTab extends JComponent
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see client.model.BatchState.Observer#didToggleInvert()
    */
   @Override
@@ -134,7 +125,7 @@ public class ImageNavigationTab extends JComponent
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see client.model.BatchState.Observer#didZoom(double)
    */
   @Override
@@ -154,7 +145,7 @@ public class ImageNavigationTab extends JComponent
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see client.model.BatchState.Observer#fieldWasSelected(int, shared.model.Field)
    */
   @Override
@@ -205,7 +196,7 @@ public class ImageNavigationTab extends JComponent
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see client.model.BatchState.Observer#wordWasMisspelled(java.lang.String, int,
    * shared.model.Field)
    */
@@ -214,7 +205,7 @@ public class ImageNavigationTab extends JComponent
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see javax.swing.JComponent#paintComponent(java.awt.Graphics)
    */
   @Override
@@ -263,8 +254,8 @@ public class ImageNavigationTab extends JComponent
         double boxW = batchViewer.getWidth();
         double scale = batchViewer.getScale();
 
-        Rectangle2D rect = new Rectangle2D.Double(-boxW / 2, -boxH / 2,
-            boxW, boxH);
+        Rectangle2D rect =
+            new Rectangle2D.Double(-boxW / 2, -boxH / 2, boxW, boxH);
         DrawingRect dRect =
             new DrawingRect(rect, ImageNavigationTab.HIGHLIGHT_COLOR);
 
@@ -283,6 +274,8 @@ public class ImageNavigationTab extends JComponent
     if (batch == null) {
       return;
     }
+
+    mouseAdapter = new ImgNavMouseAdapter();
 
     this.batch = batch;
 
@@ -317,7 +310,7 @@ public class ImageNavigationTab extends JComponent
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.awt.event.MouseAdapter#mouseDragged(java.awt.event.MouseEvent)
      */
     @Override
@@ -347,7 +340,9 @@ public class ImageNavigationTab extends JComponent
       BatchState.notifyOriginChanged(wOriginX, wOriginY);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see java.awt.event.MouseAdapter#mousePressed(java.awt.event.MouseEvent)
      */
     @Override
@@ -374,7 +369,9 @@ public class ImageNavigationTab extends JComponent
       wOriginX = wY;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see java.awt.event.MouseAdapter#mouseReleased(java.awt.event.MouseEvent)
      */
     @Override
