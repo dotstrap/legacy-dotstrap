@@ -41,8 +41,6 @@ DOCOPT
   def self.parse_cli
     version_msg = "#{@app} #{Reel::VERSION}"
     @args = Docopt.docopt(@doc, version: version_msg)
-    # TODO add options for parsing a file containing repos
-    # TODO implement downloading a regular URL
     puts @args
     if @args['bundle']
       prefix = reel_config_home
@@ -54,3 +52,7 @@ DOCOPT
     puts e.message
   end
 end
+
+# TODO add options for parsing a file containing repos
+# TODO implement downloading a regular URL
+# TODO add fish, zsh, and bash support (link and/or source files)
