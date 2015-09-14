@@ -6,7 +6,7 @@ require 'reel/bundle'
 module Reel
   @app = File.basename(__FILE__).chomp('.rb')
 
-  # TODO: why is .undent not working??
+  # TODO why is .undent not working??
   @doc = <<DOCOPT
 #{@app.blue}
 
@@ -41,8 +41,8 @@ DOCOPT
   def self.parse_cli
     version_msg = "#{@app} #{Reel::VERSION}"
     @args = Docopt.docopt(@doc, version: version_msg)
-    # TODO: add options for parsing a file containing repos
-    # TODO: implement downloading a regular URL
+    # TODO add options for parsing a file containing repos
+    # TODO implement downloading a regular URL
     puts @args
     if @args['bundle']
       prefix = reel_config_home
