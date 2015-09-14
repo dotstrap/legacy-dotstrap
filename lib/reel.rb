@@ -2,6 +2,7 @@ require 'docopt'
 require 'colorize'
 require 'reel/version'
 require 'reel/bundle'
+require 'pathname'
 
 module Reel
   @app = File.basename(__FILE__).chomp('.rb')
@@ -31,7 +32,10 @@ DOCOPT
 
   def self.reel_config_home
     config_dir = ENV.fetch('XDG_CONFIG_HOME', Dir.home)
-    if config_dir == Dir.home
+    env_config_dir = ENV.fetch('REEL_CONFIG_HOME')
+    if env_config_dir
+      env_config_dir
+    elsif config_dir == Dir.home
       File.join(config_dir, '.config', 'reel')
     else
       File.join(config_dir, 'reel')
