@@ -32,7 +32,7 @@ DOCOPT
   def self.reel_config_home
     config_dir = ENV.fetch('XDG_CONFIG_HOME', Dir.home)
     if config_dir == Dir.home
-      File.join(config_dir, '.reel')
+      File.join(config_dir, '.config', 'reel')
     else
       File.join(config_dir, 'reel')
     end
