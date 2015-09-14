@@ -2,3 +2,6 @@ _version=3.1.0
 repo=mkwmms/reel
 github.token=75219b4c98524751e7301ccfc95c91a947087157
 inject-issue=false
+label.FIXME=BUG
+label.TODO=TODO
+label-whitespace=false
