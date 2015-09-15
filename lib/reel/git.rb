@@ -1,6 +1,6 @@
 module Reel
   # TODO: split this into Git < Downloader class
-  class Reel::Downloader
+  class Reel::Git
     attr_accessor :url, :repo,
                   :dir_path, :dir_name,
                   :github_user, :github_project
@@ -12,7 +12,8 @@ module Reel
       @github_user = partition[0]
       @github_project = @dir_name = partition[2]
       # TODO: or should this be simply prefix + @dir_name?
-      @dir_path = File.join(prefix, @github_user, @dir_name)
+      # @dir_path = File.join(prefix, @github_user, @dir_name)
+      @dir_path = File.join(prefix, "#{@github_user}-#{@dir_name}")
     end
 
     def clone

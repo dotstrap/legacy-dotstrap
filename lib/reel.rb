@@ -3,6 +3,7 @@ require 'colorize'
 require 'reel/version'
 require 'reel/bundle'
 require 'pathname'
+require 'fileutils'
 
 module Reel
   @app = File.basename(__FILE__).chomp('.rb')
@@ -32,7 +33,7 @@ DOCOPT
 
   def self.reel_config_home
     config_dir = ENV.fetch('XDG_CONFIG_HOME', Dir.home)
-    env_config_dir = ENV.fetch('REEL_CONFIG_HOME')
+    env_config_dir = ENV['REEL_CONFIG_HOME']
     if env_config_dir
       env_config_dir
     elsif config_dir == Dir.home
@@ -45,12 +46,11 @@ DOCOPT
   def self.parse_cli
     version_msg = "#{@app} #{Reel::VERSION}"
     @args = Docopt.docopt(@doc, version: version_msg)
-    puts @args
     if @args['bundle']
-      prefix = reel_config_home
-      FileUtils.mkdir_p prefix
-      bundle = Reel::Bundle.new(prefix, @args['REPO'])
-      bundle.download
+      FileUtils.mkdir_p reel_config_home
+      bundle = Reel::Bundle.new(reel_config_home, @args['REPO'])
+      bundle.download(@args['REPO'])
+      bundle.load_configs(@args['REPO'])
     end
   rescue Docopt::Exit, RegexpError => e
     puts e.message
@@ -60,4 +60,4 @@ end
 # TODO: add options for parsing a file containing repos
 # TODO: implement downloading a regular URL
 # TODO: add fish, zsh, and bash support (link and/or source files)
-# TODO: TEST
+# FIXME: fish loading does not seem to be working
