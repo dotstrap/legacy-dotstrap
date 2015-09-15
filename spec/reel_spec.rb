@@ -1,7 +1,11 @@
 require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
-describe "Reel" do
-  it "fails" do
-    fail "hey buddy, you should probably rename this file and start specing for real"
+describe 'Reel' do
+  # before do
+    # @reel = Reel.new({:hello => 'world'})
+  # end
+
+  it 'gets reel_config_home' do
+    pass 'HELLO'
   end
 end

@@ -36,6 +36,7 @@ module Reel
 
     private
 
+    # TODO: rename shell_type to something else
     def shell_type
       shell_env_var = ENV['SHELL'].downcase
       if shell_env_var.include?('fish')
@@ -56,6 +57,7 @@ module Reel
     end
 
     def configure_fish(dir)
+      puts "HELLO"
       # FIXME: is there a way to glob {functions, completions} ?
       Dir.glob(dir + 'functions/*.fish') do |src|
         link_fish_config_file('functions', src)
