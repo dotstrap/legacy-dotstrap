@@ -12,7 +12,7 @@ module Reel
 
       @shell_name = shell_type
       @reel_config_file =
-        File.join(@reel_config_home, "reel_config.#{@shell_name}")
+        File.join(@reel_config_home, "config.#{@shell_name}")
     end
 
     def fish_config_home
