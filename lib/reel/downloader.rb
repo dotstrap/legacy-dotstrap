@@ -1,5 +1,5 @@
 module Reel
-  # TODO split this into Git < Downloader class
+  # TODO: split this into Git < Downloader class
   class Reel::Downloader
     attr_accessor :url, :repo,
                   :dir_path, :dir_name,
@@ -11,7 +11,7 @@ module Reel
       partition = @repo.partition("/")
       @github_user = partition[0]
       @github_project = @dir_name = partition[2]
-      # TODO or should this be simply prefix + @dir_name?
+      # TODO: or should this be simply prefix + @dir_name?
       @dir_path = File.join(prefix, @github_user, @dir_name)
     end
 
@@ -20,7 +20,7 @@ module Reel
       `git clone --depth 1 #{@url} #{@dir_path}`
     end
 
-    # TODO why doesnt s = -EOS.undent not work???
+    # TODO: why doesnt s = -EOS.undent not work???
     # http://monksealsoftware.com/multi-line-strings-in-ruby/
     def to_str
       %(

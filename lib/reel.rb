@@ -7,7 +7,7 @@ require 'pathname'
 module Reel
   @app = File.basename(__FILE__).chomp('.rb')
 
-  # TODO why is .undent not working??
+  # TODO: why is .undent not working??
   @doc = <<DOCOPT
 #{@app.blue}
 
@@ -57,6 +57,6 @@ DOCOPT
   end
 end
 
-# TODO add options for parsing a file containing repos
-# TODO implement downloading a regular URL
-# TODO add fish, zsh, and bash support (link and/or source files)
+# TODO: add options for parsing a file containing repos
+# TODO: implement downloading a regular URL
+# TODO: add fish, zsh, and bash support (link and/or source files)
