@@ -48,10 +48,14 @@ DOCOPT
     version_msg = "#{@app} #{Reel::VERSION}"
     @args = Docopt.docopt(@doc, version: version_msg)
     if @args['bundle']
-      FileUtils.mkdir_p reel_config_home
+      FileUtils.mkdir_p reel_config_home unless Dir.exist?(reel_config_home)
       bundle = Reel::Bundle.new(reel_config_home, @args['REPO'])
       bundle.download(@args['REPO'])
       bundle.load_configs(@args['REPO'])
+    elsif @args['update']
+      FileUtils.mkdir_p reel_config_home unless Dir.exist?(reel_config_home)
+      update = Reel::Update.new(reel_config_home, @args['REPO'])
+      update.update(@args['REPO'])
     end
   rescue Docopt::Exit, RegexpError => e
     puts e.message

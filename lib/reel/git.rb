@@ -16,9 +16,15 @@ module Reel
       @dir_path = File.join(prefix, "#{@github_user}-#{@dir_name}")
     end
 
-    def clone
-      return if Dir.exist?(@dir_path)
-      `git clone --depth 1 #{@url} #{@dir_path}`
+    def clone(dir = @dir_path)
+      return if Dir.exist?(dir)
+      `git clone --depth 1 #{@url} #{dir}`
+    end
+
+    def pull(dir = @dir_path)
+      return unless Dir.exist?(dir)
+      Dir.chdir dir
+      `git pull`
     end
 
     # TODO: why doesnt s = -EOS.undent not work???
