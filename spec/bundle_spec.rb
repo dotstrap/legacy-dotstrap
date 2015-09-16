@@ -3,6 +3,7 @@ require 'reel/bundle'
 
 describe Reel::Bundle do
   before :all do
+    # FIXME: decouple test repos and define in each test
     @repos = { 'mkwmms/fish-osx' => %w(ql.fish),
                'mkwmms/fish-basic' =>
                %w(clear.fish mkcd.fish port_kill.fish port_top.fish td.fish)

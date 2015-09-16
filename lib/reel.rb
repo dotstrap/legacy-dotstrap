@@ -32,7 +32,6 @@ DOCOPT
   end
 
   def self.reel_config_home
-    puts 'jhkasdjkhldfjkhlfdskjlhfds'
     config_dir = ENV.fetch('XDG_CONFIG_HOME', Dir.home)
     env_config_dir = ENV['REEL_CONFIG_HOME']
     if env_config_dir
@@ -51,7 +50,7 @@ DOCOPT
       FileUtils.mkdir_p reel_config_home
       bundle = Reel::Bundle.new(reel_config_home, @args['REPO'])
       bundle.download(@args['REPO'])
-      bundle.load_configs(@args['REPO'])
+      # bundle.load_configs(@args['REPO'])
     end
   rescue Docopt::Exit, RegexpError => e
     puts e.message
