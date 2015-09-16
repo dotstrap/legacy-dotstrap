@@ -27,9 +27,11 @@ module Reel
     end
 
     def pull(dir = @dir_path)
-      return unless Dir.exist?(dir)
+      puts dir
+      return unless File.directory?(dir)
+      puts dir
       Dir.chdir dir
-      `git pull`
+      `cd #{dir} && git pull`
     end
 
     # TODO: why doesnt s = -EOS.undent not work???

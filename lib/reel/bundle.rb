@@ -13,7 +13,7 @@ module Reel
     end
 
     def download(repos = @repos)
-      Parallel.map(repos, :in_threads=>16) do |r|
+      Parallel.map(repos, in_threads: 16) do |r|
         bundle = Reel::Git.new(@reel_config_home, r)
         bundle.clone
         load_configs repos

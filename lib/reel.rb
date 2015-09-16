@@ -1,9 +1,10 @@
 require 'docopt'
 require 'colorize'
-require 'reel/version'
-require 'reel/bundle'
 require 'pathname'
 require 'fileutils'
+require 'reel/version'
+require 'reel/bundle'
+require 'reel/update'
 
 module Reel
   @app = File.basename(__FILE__).chomp('.rb')
@@ -46,6 +47,7 @@ DOCOPT
   def self.parse_cli
     version_msg = "#{@app} #{Reel::VERSION}"
     @args = Docopt.docopt(@doc, version: version_msg)
+    puts @args
     if @args['bundle']
       FileUtils.mkdir_p reel_config_home unless Dir.exist?(reel_config_home)
       bundle = Reel::Bundle.new(reel_config_home, @args['REPO'])
@@ -53,8 +55,13 @@ DOCOPT
       bundle.load_configs(@args['REPO'])
     elsif @args['update']
       FileUtils.mkdir_p reel_config_home unless Dir.exist?(reel_config_home)
-      update = Reel::Update.new(reel_config_home, @args['REPO'])
-      update.update(@args['REPO'])
+      if @args['REPO'].empty?
+        update = Reel::Update.new(reel_config_home)
+        update.update
+      else
+        update = Reel::Update.new(reel_config_home, @args['REPO'])
+        update.update(@args['REPO'])
+      end
     end
   rescue Docopt::Exit, RegexpError => e
     puts e.message

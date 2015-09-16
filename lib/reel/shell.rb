@@ -43,7 +43,9 @@ module Reel
 
     def write_config_file(file_to_source, reel_config_file = @reel_config_file)
       source_str = "source \"#{file_to_source}\"\n"
-      return if File.readlines(reel_config_file).grep(source_str).any?
+      if File.exist?(reel_config_file)
+        return if File.readlines(reel_config_file).grep(source_str).any?
+      end
       # TODO: how to append to file in one line (without open statement)
       # File.write(reel_config_file, "source \"#{file_to_source}\"\n", 0)
       File.open(reel_config_file, 'a') do |f|
