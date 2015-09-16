@@ -26,6 +26,8 @@ describe Reel::Bundle do
     end
   end
 
+  # TODO: write test for load_configs
+
   after :all do
     FileUtils.rm_r @reel_config_home, force: true
   end
