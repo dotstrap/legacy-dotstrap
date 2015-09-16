@@ -1,2 +1,3 @@
 worry about the fact that I need to call flatten on arrays?
 use number of processes/threads = to procs
+or should this be simply reel_config_home + @repo_name?
