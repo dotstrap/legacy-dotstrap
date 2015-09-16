@@ -19,15 +19,15 @@ $LOAD_PATH.unshift(File.dirname(__FILE__))
 # Dir["#{File.dirname(__FILE__)}/../lib/**/*.rb"].each {|f| puts f; require f}
 
 require 'rspec'
-require 'factory_girl'
+# require 'factory_girl'
 
 # Requires supporting files with custom matchers and macros, etc,
 # in ./support/ and its subdirectories.
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each {|f| require f}
 
 RSpec.configure do |config|
-  config.include FactoryGirl::Syntax::Methods
-  config.before(:suite) do
-    FactoryGirl.lint
-  end
+  # config.include FactoryGirl::Syntax::Methods
+  # config.before(:suite) do
+    # FactoryGirl.lint
+  # end
 end

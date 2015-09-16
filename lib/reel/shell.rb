@@ -57,7 +57,6 @@ module Reel
     end
 
     def configure_fish(dir)
-      puts "HELLO"
       # FIXME: is there a way to glob {functions, completions} ?
       Dir.glob(dir + 'functions/*.fish') do |src|
         link_fish_config_file('functions', src)
