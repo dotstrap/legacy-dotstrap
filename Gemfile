@@ -5,7 +5,7 @@ gem 'docopt', '~> 0.5'
 gem 'colorize', '~> 0.7'
 
 group :development do
-  gem 'rspec', '~> 2.8'
+  gem 'rspec', '~> 3.3'
   gem 'yard', '~> 0.7'
   gem 'rdoc', '~> 3.12'
   gem 'bundler', '~> 1.0'

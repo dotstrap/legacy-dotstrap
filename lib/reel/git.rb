@@ -12,13 +12,18 @@ module Reel
       @github_user = partition[0]
       @github_project = @dir_name = partition[2]
       # TODO: or should this be simply prefix + @dir_name?
-      # @dir_path = File.join(prefix, @github_user, @dir_name)
-      @dir_path = File.join(prefix, "#{@github_user}-#{@dir_name}")
+      # @dir_path = File.join(prefix, "#{@github_user}-#{@dir_name}")
+      @dir_path = File.join(prefix, @github_user, @dir_name)
     end
 
-    def clone(dir = @dir_path)
-      return if Dir.exist?(dir)
-      `git clone --depth 1 #{@url} #{dir}`
+    # TODO: optionally silence output of git clone
+    def clone
+      # TODO: prompt user for what to do if dir exists before cloning?
+      # return if Dir.exist?(@dir_path)
+      # FIXME: do not rely on /dev/null redirection to silence git output
+      FileUtils.rm_rf @dir_path
+      `git clone --depth 1 #{@url} #{@dir_path} &> /dev/null`
+      # system 'git', 'clone', '--depth', '1', "#{@url}", "#{@dir_path}"
     end
 
     def pull(dir = @dir_path)

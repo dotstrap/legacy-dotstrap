@@ -32,7 +32,6 @@ DOCOPT
   end
 
   def self.reel_config_home
-    puts 'jhkasdjkhldfjkhlfdskjlhfds'
     config_dir = ENV.fetch('XDG_CONFIG_HOME', Dir.home)
     env_config_dir = ENV['REEL_CONFIG_HOME']
     if env_config_dir
