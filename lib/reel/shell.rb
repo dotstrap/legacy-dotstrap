@@ -1,17 +1,16 @@
 module Reel
   class Reel::Shell
     # TODO: make reel_config_home & reel_config_file a constant?
-    attr_accessor :reel_config_home, :repo_path, :repo_config_files,
+    attr_accessor :repo_path, :repo_config_files,
                   :shell_name, :reel_config_file
 
     # TODO: how to handle load order? ie. load path.fish first
-    def initialize(reel_config_home, repo_path)
-      @reel_config_home = reel_config_home
+    def initialize(repo_path)
       @repo_path = repo_path
       @repo_config_files = []
 
       @shell_name = shell_type
-      @reel_config_file = File.join(@reel_config_home, "config.#{@shell_name}")
+      @reel_config_file = File.join(Reel.reel_config_home, "config.#{@shell_name}")
     end
 
     def fish_config_home
@@ -19,8 +18,8 @@ module Reel
       File.join(config_home, 'fish')
     end
 
-    def configure(dir = @repo_path)
-      reel_config_dir = File.join(@reel_config_home, dir)
+    def configure(src = @repo_path)
+      reel_config_dir = File.join(@reel_config_home, src_file)
       if @shell_name == 'fish'
         fish_functions(reel_config_dir).each do |f|
           link_config_file(f, File.join(fish_config_home, 'functions'))

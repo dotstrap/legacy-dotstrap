@@ -1,7 +1,6 @@
 require 'rubygems'
 require 'commander/import'
 require 'pathname'
-require 'fileutils'
 require_relative 'reel/bundle'
 require_relative 'reel/update'
 
@@ -12,9 +11,9 @@ module Reel
   EMAIL       = 'mkwmms@no-reply.github.com'
   HOMEPAGE    = 'http://github.com/mkwmms/reel'
   SUMMARY     = %(Download & install shell config files from GitHub repos)
-  DESCRIPTION = %(Downloads repositories from GitHub in parallel and
-                  symbolically links and/or creates a static source page
-                  according to your shell \(fish, zsh, bash\))
+  DESCRIPTION = 'Downloads repositories from GitHub in parallel and ' \
+                'symbolically links and/or creates a static source file ' \
+                'according to your shell (fish, zsh, bash)'
 
   class << self
     def reel_config_home

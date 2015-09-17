@@ -1,4 +1,5 @@
 require 'parallel'
+require 'fileutils'
 require 'reel/git'
 require 'reel/shell'
 
@@ -12,10 +13,11 @@ module Reel
     end
 
     def download(dest_dir = Reel.reel_config_home, repos = @repos)
-      Dir.mkdir_p dest_dir
+      FileUtils.mkdir_p dest_dir
       Parallel.map(repos, in_threads: 16) do |r|
-        bundle = Reel::Git.new(dest_dir, r)
+        bundle = Reel::Git.new(r)
         bundle.clone
+        puts bundle.repo_path
         load_configs([bundle.repo_path])
       end
     end
@@ -24,6 +26,8 @@ module Reel
       shell = ''
       repo_path.each do |r|
         shell = Reel::Shell.new(dest_dir, r)
+        puts dest_dir
+        puts r
         shell.configure(repo_path)
         # TODO: cleanup CLI output
         puts "Make sure to `source \"#{shell.reel_config_file}\"` in your shell " \
