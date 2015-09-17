@@ -6,7 +6,7 @@ require_relative 'reel/update'
 
 module Reel
   NAME        = 'reel'
-  VERSION     = '0.1.0'
+  VERSION     = '0.1.1'
   AUTHOR      = 'William Myers'
   EMAIL       = 'mkwmms@no-reply.github.com'
   HOMEPAGE    = 'http://github.com/mkwmms/reel'
