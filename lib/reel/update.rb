@@ -1,5 +1,5 @@
 require 'parallel'
-require 'reel/git'
+require_relative 'git'
 
 module Reel
   class Reel::Update

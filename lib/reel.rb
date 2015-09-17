@@ -1,70 +1,33 @@
-require 'docopt'
-require 'colorize'
+require 'rubygems'
+require 'commander/import'
 require 'pathname'
 require 'fileutils'
-require 'reel/version'
-require 'reel/bundle'
-require 'reel/update'
+require_relative 'reel/bundle'
+require_relative 'reel/update'
 
 module Reel
-  @app = File.basename(__FILE__).chomp('.rb')
+  NAME        = 'reel'
+  VERSION     = '0.1.0'
+  AUTHOR      = 'William Myers'
+  EMAIL       = 'mkwmms@no-reply.github.com'
+  HOMEPAGE    = 'http://github.com/mkwmms/reel'
+  SUMMARY     = %(Download & install shell config files from GitHub repos)
+  DESCRIPTION = %(Downloads repositories from GitHub in parallel and
+                  symbolically links and/or creates a static source page
+                  according to your shell \(fish, zsh, bash\))
 
-  # TODO: why is .undent not working??
-  @doc = <<DOCOPT
-#{@app.blue}
-
-Copyright (C) 2015 William Myers https://github.com/mkwmms
-
-#{'Usage:'.blue}
-  #{@app} [options] bundle REPO ...
-  #{@app} [options] update [REPO ...]
-
-#{'Arguements:'.blue}
-  REPO  The GitHub repo (in the form mkwmms/reel or full URL) to download
-
-#{'Options:'.blue}
-  -h --help     show this help message and exit
-  -V --version  show version and exit
-  -q --quiet    suppress output from Git etc.
-DOCOPT
-
-  def self.verbose?
-    @args['--quiet'] == false || @args.nil? ? true : false
-  end
-
-  def self.reel_config_home
-    config_dir = ENV.fetch('XDG_CONFIG_HOME', Dir.home)
-    env_config_dir = ENV['REEL_CONFIG_HOME']
-    if env_config_dir
-      env_config_dir
-    elsif config_dir == Dir.home
-      File.join(config_dir, '.config', 'reel')
-    else
-      File.join(config_dir, 'reel')
-    end
-  end
-
-  def self.parse_cli
-    version_msg = "#{@app} #{Reel::VERSION}"
-    @args = Docopt.docopt(@doc, version: version_msg)
-    puts @args
-    if @args['bundle']
-      FileUtils.mkdir_p reel_config_home unless Dir.exist?(reel_config_home)
-      bundle = Reel::Bundle.new(reel_config_home, @args['REPO'])
-      bundle.download(@args['REPO'])
-      bundle.load_configs(@args['REPO'])
-    elsif @args['update']
-      FileUtils.mkdir_p reel_config_home unless Dir.exist?(reel_config_home)
-      if @args['REPO'].empty?
-        update = Reel::Update.new(reel_config_home)
-        update.update
+  class << self
+    def reel_config_home
+      config_dir = ENV.fetch('XDG_CONFIG_HOME', Dir.home)
+      env_config_dir = ENV['REEL_CONFIG_HOME']
+      if env_config_dir
+        env_config_dir
+      elsif config_dir == Dir.home
+        File.join(config_dir, '.config', 'reel')
       else
-        update = Reel::Update.new(reel_config_home, @args['REPO'])
-        update.update(@args['REPO'])
+        File.join(config_dir, 'reel')
       end
     end
-  rescue Docopt::Exit, RegexpError => e
-    puts e.message
   end
 end
 

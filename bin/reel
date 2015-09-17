@@ -1,5 +1,44 @@
 #!/usr/bin/env ruby
 
+# $LOAD_PATH.push File.expand_path('../lib', __FILE__)
+
 require 'reel'
 
-Reel.parse_cli
+program :version, Reel::VERSION
+program :description, Reel::DESCRIPTION
+
+program :help, 'Author', "#{Reel::AUTHOR} <#{Reel::EMAIL}>"
+program :help, 'Website', Reel::HOMEPAGE
+# program :help_formatter, :compact
+
+command :bundle do |c|
+  c.syntax = 'reel load [options]'
+  c.summary = ''
+  c.description = ''
+  c.example 'downloads (if necessary) and loads the files', 'command example'
+  # c.option '--some-switch', 'Some switch that does something'
+  c.action do |args, options|
+    # FileUtils.mkdir_p Reel.reel_config_home unless Dir.exist?(reel_config_home)
+    bundle = Reel::Bundle.new(Reel.reel_config_home, args)
+    bundle.download(args)
+    bundle.load_configs(args)
+  end
+end
+
+command :update do |c|
+  c.syntax = 'reel update [options]'
+  c.summary = ''
+  c.description = ''
+  c.example 'updates a repository (or repositories)', 'command example'
+  c.option '--all' 
+  c.action do |args, options|
+    if options.all
+      update = Reel::Update.new(Reel.reel_config_home)
+      update.update
+    else
+      fail 'blah' if args.nil?
+      update = Reel::Update.new(Reel.reel_config_home, args)
+      update.update(args)
+    end
+  end
+end

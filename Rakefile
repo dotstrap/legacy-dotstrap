@@ -1,7 +1,7 @@
 # encoding: utf-8
 require 'rubygems'
 require 'bundler'
-require_relative 'lib/reel/version'
+require_relative 'lib/reel'
 
 begin
   Bundler.setup(:default, :development)
@@ -14,16 +14,14 @@ require 'rake'
 
 require 'jeweler'
 Jeweler::Tasks.new do |gem|
-  gem.name = 'reel'
+  gem.name = Reel::NAME
   gem.version = Reel::VERSION
-  gem.homepage = 'http://github.com/mkwmms/reel'
+  gem.homepage = Reel::HOMEPAGE
   gem.license = 'MIT'
-  gem.summary = %(Download & install shell config files from GitHub repos)
-  gem.description = %(Downloads repositories from GitHub in parallel and 
-                      symbolically links and/or creates a static source page
-                      according to your shell \(fish, zsh, bash\))
-  gem.email = 'mkwmms@icloud.com'
-  gem.authors = ['William Myers']
+  gem.summary = Reel::SUMMARY
+  gem.description = Reel::DESCRIPTION
+  gem.email = Reel::EMAIL
+  gem.authors = Reel::AUTHOR
   gem.require_paths = ['lib']
   gem.executables = ['reel']
   # dependencies defined in Gemfile
