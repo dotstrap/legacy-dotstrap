@@ -1,8 +1,7 @@
 source 'http://rubygems.org'
 
 gem 'parallel', '~> 1.6'
-gem 'docopt', '~> 0.5'
-gem 'colorize', '~> 0.7'
+gem 'commander', '~> 4.3'
 
 group :development do
   gem 'rspec', '~> 3.3'
