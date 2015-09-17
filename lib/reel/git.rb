@@ -5,14 +5,14 @@ module Reel
                   :repo_path, :repo_name,
                   :github_user, :github_project
 
-    def initialize(repo)
+    def initialize(repo, src_dir = Reel.reel_config_home)
       @repo = repo
       @url = "https://github.com/#{@repo}"
       partition = @repo.partition("/")
       @github_user = partition[0]
       @github_project = @repo_name = partition[2]
       # TODO: or should this be simply reel_config_home + @repo_name?
-      @repo_path = File.join(Reel.reel_config_home, "#{@github_user}-#{@repo_name}")
+      @repo_path = File.join(src_dir, "#{@github_user}-#{@repo_name}")
       # @repo_path = File.join(reel_config_home, @github_user, @repo_name)
     end
 
@@ -27,9 +27,7 @@ module Reel
     end
 
     def pull(dir = @repo_path)
-      puts dir
       return unless File.directory?(dir)
-      puts dir
       Dir.chdir dir
       `cd #{dir} && git pull`
     end
