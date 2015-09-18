@@ -19,7 +19,6 @@ command :bundle do |c|
     "#{Reel.reel_config_home}/mkwmms-fish-osx", 'reel bundle mkwmms/fish-osx'
   # c.option '--some-switch', 'Some switch that does something'
   c.action do |args, options|
-    # FileUtils.mkdir_p Reel.reel_config_home unless Dir.exist?(reel_config_home)
     bundle = Reel::Bundle.new(args)
     bundle.download(args)
     bundle.load_configs(args)
@@ -29,17 +28,23 @@ end
 command :unbundle do |c|
   c.syntax = 'reel unbundle [options]'
   c.summary = 'Unbundle a specified GitHub repository'
-  c.description = 'Download/update & set up the configuration file(s) to be loaded by the shell environment'
-  # c.example "Downloads https://github.com/mkwmms/fish-osx to " \
-    # "#{Reel.reel_config_home}/mkwmms-fish-osx", 'reel bundle mkwmms/fish-osx'
-  # c.option '--some-switch', 'Some switch that does something'
+  c.description = 'Removes the shell configuration file(s) and lines from the source file from the given repository'
   c.action do |args, options|
-    # FileUtils.mkdir_p Reel.reel_config_home unless Dir.exist?(reel_config_home)
     bundle = Reel::Bundle.new(args)
     bundle.remove(args)
-    bundle.load_configs(args)
   end
 end
+
+command :list do |c|
+  c.syntax = 'reel list [options]'
+  c.summary = 'List file path and URL for currently bundled specified GitHub repository (or all if none specified)'
+  # c.description = 'Removes the shell configuration file(s) and lines from the source file from the given repository'
+  c.action do |args, options|
+    bundle = Reel::Bundle.new(args)
+    bundle.list(args)
+  end
+end
+
 # command :update do |c|
   # c.syntax = 'reel update [options]'
   # c.summary = 'updates a repository (or repositories)'
