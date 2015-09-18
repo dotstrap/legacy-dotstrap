@@ -12,7 +12,7 @@ module Reel
   HOMEPAGE    = 'http://github.com/mkwmms/reel'
   SUMMARY     = %(Download & install shell config files from GitHub repos)
   DESCRIPTION = 'Downloads repositories from GitHub in parallel and ' \
-                'symbolically links and/or creates a static source file ' \
+                'symbolically links and/or creates a file to be sourced ' \
                 'according to your shell (fish, zsh, bash)'
 
   class << self

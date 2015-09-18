@@ -12,12 +12,23 @@ module Reel
       @repos = repos
     end
 
+    # FIXME: which parameter takes presidence when both are optional and one is
+    # passed?
     def download(dest_dir = Reel.reel_config_home, repos = @repos)
       FileUtils.mkdir_p dest_dir
       Parallel.map(repos, in_threads: 16) do |r|
         bundle = Reel::Git.new(r)
         bundle.clone
         load_configs([bundle.repo_path])
+      end
+    end
+
+    def remove(repos = @repos)
+      repos.each do |repo|
+        bundle = Reel::Git.new(repo)
+        repo_path = bundle.repo_path
+        shell = Reel::Shell.new(repo_path)
+        shell.unconfigure(repo_path)
       end
     end
 
