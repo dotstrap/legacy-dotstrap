@@ -27,6 +27,10 @@ module Reel
         File.join(config_dir, 'reel')
       end
     end
+
+    def make_reel_config_home
+      FileUtils.mkdir_p reel_config_home
+    end
   end
 end
 

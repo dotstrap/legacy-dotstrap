@@ -7,13 +7,11 @@ module Reel
   class Reel::Bundle
     attr_accessor :repos
 
-    # TODO: add progress bar https://github.com/grosser/parallel#progress--eta
     def initialize(repos = nil)
       @repos = repos unless repos.nil?
+      Reel.make_reel_config_home
     end
 
-    # FIXME: which parameter takes presidence when both are optional and one is
-    # passed?
     def download(dest_dir = Reel.reel_config_home, repos = @repos)
       FileUtils.mkdir_p dest_dir
       Parallel.map(repos, in_threads: 16) do |r|
