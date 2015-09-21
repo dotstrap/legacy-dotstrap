@@ -90,6 +90,9 @@ module Reel
 
     def link_config_file(src, dest_dir)
       dst = File.join(dest_dir, File.basename(src))
+      # FIXME: fails if dest_dir for link is a broken symbolic link
+      # parent = Pathname.new(dest_dir).parent
+      # FileUtils.mkdir parent unless Dir.exist? parent
       FileUtils.mkdir_p dest_dir unless Dir.exist? dest_dir
       FileUtils.ln_s src, dst, force: true
     end

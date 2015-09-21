@@ -32,14 +32,15 @@ module Reel
 
     def list(repos = @repos)
       if repos.nil? || repos == 0 || repos.empty?
-        Dir.glob(File.join(Reel.reel_config_home, '**')).each do |repo_path|
+        reel_config_files = File.join(Reel.reel_config_home, '**')
+        Dir.glob(reel_config_files).each_with_index do |repo_path, index|
           next unless repo_path.include?('-') && File.directory?(repo_path)
           repo = File.basename(repo_path)
           repo[repo.index('-')] = '/'
+          puts "\n" unless index == 1
           puts repo
           puts Reel::Git.new(repo).url
           puts repo_path
-          puts "\n"
         end
       else
         repos.each do |repo|
