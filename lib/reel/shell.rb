@@ -114,7 +114,6 @@ module Reel
         elsif shell_env_var.include?('zsh')
           'zsh'
         elsif shell_env_var.include?('bash')
-          'bash' # TODO: should bash have an extension of .sh?
         else
           # TODO: cleanup error output
           fail ArgumentError, "#{shell_env_var} is an unsupported shell."
@@ -137,7 +136,6 @@ module Reel
       File.join(config_home, 'fish')
     end
 
-    # TODO: combine fish_*(dir) methods into 1?
     def fish_general_configs(dir)
       Dir.glob(File.join(dir, '*.fish'))
     end

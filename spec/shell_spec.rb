@@ -13,7 +13,6 @@ describe Reel::Shell do
     # @bundle = FactoryGirl.create :bundle(@reel_config_home, @repos)
     @shell = Reel::Shell.new(@reel_config_home, @config_files.keys)
 
-    # FIXME: decouple making test files from before :all, have each test call
     @config_files.each do |repo, files|
       dir = File.join(@reel_config_home, repo, 'functions')
       FileUtils.mkdir_p dir
