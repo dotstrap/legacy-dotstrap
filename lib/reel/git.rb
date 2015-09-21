@@ -11,9 +11,7 @@ module Reel
       partition = @repo.partition("/")
       @github_user = partition[0]
       @github_project = @repo_name = partition[2]
-      # TODO: or should this be simply reel_config_home + @repo_name?
       @repo_path = File.join(src_dir, "#{@github_user}-#{@repo_name}")
-      # @repo_path = File.join(reel_config_home, @github_user, @repo_name)
     end
 
     # TODO: optionally silence output of git clone
@@ -32,8 +30,6 @@ module Reel
       `cd #{dir} && git pull`
     end
 
-    # TODO: why doesnt s = -EOS.undent not work???
-    # http://monksealsoftware.com/multi-line-strings-in-ruby/
     def to_str
       %(
         repo: #{@repo}

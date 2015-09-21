@@ -37,4 +37,3 @@ end
 # TODO: add options for parsing a file containing repos
 # TODO: implement downloading a regular URL
 # TODO: add fish, zsh, and bash support (link and/or source files)
-# FIXME: fish loading does not seem to be working

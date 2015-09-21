@@ -62,7 +62,6 @@ module Reel
       repo_path.each do |r|
         shell = Reel::Shell.new(r)
         shell.configure(repo_path)
-        # TODO: cleanup CLI output; only output `make sure to source...` once
         puts "Make sure to `source \"#{shell.reel_config_file}\"` in your shell " \
           "startup file" unless shell.repo_config_files.empty?
       end
