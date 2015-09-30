@@ -1,5 +1,64 @@
 #!/usr/bin/env ruby
 
+# $bundle_PATH.push File.expand_path('../lib', __FILE__)
+
 require 'reel'
 
-Reel.parse_cli
+program :version, Reel::VERSION
+program :description, Reel::DESCRIPTION
+
+program :help, 'Author', "#{Reel::AUTHOR} <#{Reel::EMAIL}>"
+program :help, 'Website', Reel::HOMEPAGE
+program :help_formatter, :compact
+
+command :bundle do |c|
+  c.syntax = 'reel bundle [options]'
+  c.summary = 'Bundle a specified GitHub repository'
+  c.description = 'Download/update & set up the configuration file(s) to be loaded by the shell environment'
+  c.example "Downloads https://github.com/mkwmms/fish-osx to " \
+    "#{Reel.reel_config_home}/mkwmms-fish-osx", 'reel bundle mkwmms/fish-osx'
+  # c.option '--some-switch', 'Some switch that does something'
+  c.action do |args, options|
+    bundle = Reel::Bundle.new(args)
+    bundle.download(args)
+    bundle.load_configs(args)
+  end
+end
+
+command :unbundle do |c|
+  c.syntax = 'reel unbundle [options]'
+  c.summary = 'Unbundle a specified GitHub repository'
+  c.description = 'Removes the shell configuration file(s) and lines from the source file from the given repository'
+  c.action do |args, options|
+    bundle = Reel::Bundle.new(args)
+    bundle.remove(args)
+  end
+end
+
+command :list do |c|
+  c.syntax = 'reel list [options]'
+  c.summary = 'List file path and URL for currently bundled specified GitHub repository (or all if none specified)'
+  # c.description = 'Removes the shell configuration file(s) and lines from the source file from the given repository'
+  c.action do |args, options|
+    bundle = Reel::Bundle.new(args)
+    bundle.list(args)
+  end
+end
+
+# command :update do |c|
+  # c.syntax = 'reel update [options]'
+  # c.summary = 'updates a repository (or repositories)'
+  # c.description = 'Performs a git pull on repository (or repositories) and ensures all downbundleed repos'
+  # c.example 'updates a repository (or repositories)', 'command example'
+  # c.option '--all' 
+  # c.action do |args, options|
+    # if options.all
+      # update = Reel::Update.new(Reel.reel_config_home)
+      # update.update
+    # else
+      # fail 'blah' if args.nil?
+      # update = Reel::Update.new(Reel.reel_config_home, args)
+      # update.update(args)
+    # end
+  # end
+# end

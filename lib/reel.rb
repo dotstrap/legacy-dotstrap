@@ -1,62 +1,39 @@
-require 'docopt'
-require 'colorize'
-require 'reel/version'
-require 'reel/bundle'
+require 'rubygems'
+require 'commander/import'
 require 'pathname'
+require_relative 'reel/bundle'
+require_relative 'reel/update'
 
 module Reel
-  @app = File.basename(__FILE__).chomp('.rb')
+  NAME        = 'reel'
+  VERSION     = '0.1.1'
+  AUTHOR      = 'William Myers'
+  EMAIL       = 'mkwmms@no-reply.github.com'
+  HOMEPAGE    = 'http://github.com/mkwmms/reel'
+  SUMMARY     = %(Download & install shell config files from GitHub repos)
+  DESCRIPTION = 'Downloads repositories from GitHub in parallel and ' \
+                'symbolically links and/or creates a file to be sourced ' \
+                'according to your shell (fish, zsh, bash)'
 
-  # TODO why is .undent not working??
-  @doc = <<DOCOPT
-#{@app.blue}
-
-Copyright (C) 2015 William Myers https://github.com/mkwmms
-
-#{'Usage:'.blue}
-  #{@app} [options] bundle REPO ...
-  #{@app} [options] update [REPO ...]
-
-#{'Arguements:'.blue}
-  REPO  The GitHub repo (in the form mkwmms/reel or full URL) to download
-
-#{'Options:'.blue}
-  -h --help     show this help message and exit
-  -V --version  show version and exit
-  -q --quiet    suppress output from Git etc.
-DOCOPT
-
-  def self.verbose?
-    @args['--quiet'] == false || @args.nil? ? true : false
-  end
-
-  def self.reel_config_home
-    config_dir = ENV.fetch('XDG_CONFIG_HOME', Dir.home)
-    env_config_dir = ENV.fetch('REEL_CONFIG_HOME')
-    if env_config_dir
-      env_config_dir
-    elsif config_dir == Dir.home
-      File.join(config_dir, '.config', 'reel')
-    else
-      File.join(config_dir, 'reel')
+  class << self
+    def reel_config_home
+      config_dir = ENV.fetch('XDG_CONFIG_HOME', Dir.home)
+      env_config_dir = ENV['REEL_CONFIG_HOME']
+      if env_config_dir
+        env_config_dir
+      elsif config_dir == Dir.home
+        File.join(config_dir, '.config', 'reel')
+      else
+        File.join(config_dir, 'reel')
+      end
     end
-  end
 
-  def self.parse_cli
-    version_msg = "#{@app} #{Reel::VERSION}"
-    @args = Docopt.docopt(@doc, version: version_msg)
-    puts @args
-    if @args['bundle']
-      prefix = reel_config_home
-      FileUtils.mkdir_p prefix
-      bundle = Reel::Bundle.new(prefix, @args['REPO'])
-      bundle.download
+    def make_reel_config_home
+      FileUtils.mkdir_p reel_config_home
     end
-  rescue Docopt::Exit, RegexpError => e
-    puts e.message
   end
 end
 
-# TODO add options for parsing a file containing repos
-# TODO implement downloading a regular URL
-# TODO add fish, zsh, and bash support (link and/or source files)
+# TODO: add options for parsing a file containing repos
+# TODO: implement downloading a regular URL
+# TODO: add zsh and bash support (link and/or source files)
