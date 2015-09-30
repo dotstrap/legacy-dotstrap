@@ -32,6 +32,12 @@ Gem::Specification.new do |s|
     "bin/reel",
     "lib/reel.rb",
     "lib/reel/bundle.rb",
+    "lib/reel/git.rb",
+    "lib/reel/shell.rb",
+    "lib/reel/update.rb",
+    "reel.gemspec",
+    "spec/bundle_spec.rb",
+    "spec/shell_spec.rb",
     "spec/spec_helper.rb"
   ]
   s.homepage = "http://github.com/mkwmms/reel"
