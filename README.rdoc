@@ -4,7 +4,7 @@ Downloads repositories from GitHub in parallel and
 symbolically links and/or creates a static source page
 
 == usage
-run +reel --help+
+run +reel+ +-++-++help+
 
 == Copyright
 
