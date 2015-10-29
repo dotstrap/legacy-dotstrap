@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib"]
   s.authors = ["William Myers"]
-  s.date = "2015-09-30"
+  s.date = "2015-10-29"
   s.description = "Downloads repositories from GitHub in parallel and symbolically links and/or creates a file to be sourced according to your shell (fish, zsh, bash)"
   s.email = "mkwmms@no-reply.github.com"
   s.executables = ["reel"]
@@ -25,16 +25,14 @@ Gem::Specification.new do |s|
     ".rspec",
     "CONTRIBUTING.rdoc",
     "Gemfile",
-    "Gemfile.lock",
     "LICENSE.txt",
     "README.rdoc",
     "Rakefile",
     "bin/reel",
     "lib/reel.rb",
-    "lib/reel/bundle.rb",
+    "lib/reel/configuration.rb",
     "lib/reel/git.rb",
     "lib/reel/shell.rb",
-    "lib/reel/update.rb",
     "reel.gemspec",
     "spec/bundle_spec.rb",
     "spec/shell_spec.rb",
@@ -42,7 +40,7 @@ Gem::Specification.new do |s|
   ]
   s.homepage = "http://github.com/mkwmms/reel"
   s.licenses = ["MIT"]
-  s.rubygems_version = "2.4.8"
+  s.rubygems_version = "2.4.5.1"
   s.summary = "Download & install shell config files from GitHub repos"
 
   if s.respond_to? :specification_version then
@@ -56,8 +54,6 @@ Gem::Specification.new do |s|
       s.add_development_dependency(%q<rdoc>, ["~> 3.12"])
       s.add_development_dependency(%q<bundler>, ["~> 1.0"])
       s.add_development_dependency(%q<jeweler>, ["~> 2.0"])
-      s.add_development_dependency(%q<simplecov>, ["~> 0.10"])
-      s.add_development_dependency(%q<factory_girl>, ["~> 4.0"])
     else
       s.add_dependency(%q<parallel>, ["~> 1.6"])
       s.add_dependency(%q<commander>, ["~> 4.3"])
@@ -66,8 +62,6 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<rdoc>, ["~> 3.12"])
       s.add_dependency(%q<bundler>, ["~> 1.0"])
       s.add_dependency(%q<jeweler>, ["~> 2.0"])
-      s.add_dependency(%q<simplecov>, ["~> 0.10"])
-      s.add_dependency(%q<factory_girl>, ["~> 4.0"])
     end
   else
     s.add_dependency(%q<parallel>, ["~> 1.6"])
@@ -77,8 +71,6 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<rdoc>, ["~> 3.12"])
     s.add_dependency(%q<bundler>, ["~> 1.0"])
     s.add_dependency(%q<jeweler>, ["~> 2.0"])
-    s.add_dependency(%q<simplecov>, ["~> 0.10"])
-    s.add_dependency(%q<factory_girl>, ["~> 4.0"])
   end
 end
 
