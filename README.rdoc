@@ -2,9 +2,9 @@
 
 Downloads repositories from GitHub in parallel and 
 symbolically links and/or creates a static source page
-according to your shell (fish, zsh, bash)
 
-NOTE: zsh, bash have not been implemented yet...
+== usage
+run <tt>reel --help</tt>
 
 == Copyright
 
