@@ -1,7 +1,7 @@
 require 'parallel'
 require 'fileutils'
-require 'reel/git'
-require 'reel/shell'
+require_relative 'git'
+require_relative 'shell'
 
 module Reel
   class Reel::Bundle
