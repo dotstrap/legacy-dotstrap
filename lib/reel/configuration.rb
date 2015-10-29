@@ -3,8 +3,9 @@ require 'fileutils'
 require_relative 'git'
 require_relative 'shell'
 
+# TODO: combine Reel::Configuration with Reel module?
 module Reel
-  class Reel::Bundle
+  class Reel::Configuration
     attr_accessor :repos
 
     def initialize(repos = nil)
@@ -12,7 +13,7 @@ module Reel
       Reel.make_reel_config_home
     end
 
-    def download(dest_dir = Reel.reel_config_home, repos = @repos)
+    def configure(dest_dir = Reel.reel_config_home, repos = @repos)
       Parallel.map(repos, in_threads: 16) do |r|
         bundle = Reel::Git.new(r)
         bundle.clone

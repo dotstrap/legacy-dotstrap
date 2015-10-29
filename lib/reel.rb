@@ -1,8 +1,7 @@
 require 'rubygems'
 require 'commander/import'
 require 'pathname'
-require_relative 'reel/bundle'
-require_relative 'reel/update'
+require_relative 'reel/configuration'
 
 module Reel
   NAME        = 'reel'
@@ -34,6 +33,4 @@ module Reel
   end
 end
 
-# TODO: add options for parsing a file containing repos
 # TODO: implement downloading a regular URL
-# TODO: add zsh and bash support (link and/or source files)

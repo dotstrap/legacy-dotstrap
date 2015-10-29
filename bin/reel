@@ -1,7 +1,5 @@
 #!/usr/bin/env ruby
 
-# $bundle_PATH.push File.expand_path('../lib', __FILE__)
-
 require 'reel'
 
 program :version, Reel::VERSION
@@ -24,9 +22,7 @@ command :bundle do |c|
         args << line.strip unless line.start_with?('#')
       end
     end
-    bundle = Reel::Bundle.new(args)
-    bundle.download(args)
-    bundle.load_configs(args)
+    Reel::Configuration.new(args).configure
   end
 end
 
@@ -35,8 +31,7 @@ command :unbundle do |c|
   c.summary = 'Unbundle a specified GitHub repository'
   c.description = 'Removes the shell configuration file(s) and lines from the source file from the given repository'
   c.action do |args, options|
-    bundle = Reel::Bundle.new(args)
-    bundle.remove(args)
+    Reel::Configuration.new(args).remove
   end
 end
 
@@ -44,7 +39,6 @@ command :list do |c|
   c.syntax = 'reel list'
   c.summary = 'List file path and URL for currently bundled specified GitHub repository (or all if none specified)'
   c.action do |args, options|
-    bundle = Reel::Bundle.new(args)
-    bundle.list(args)
+    Reel::Configuration.new(args).list
   end
 end
