@@ -14,29 +14,18 @@ module Reel
       @repo_path = File.join(src_dir, "#{@github_user}-#{@repo_name}")
     end
 
-    # TODO: optionally silence output of git clone
-    def clone(url = @url, dir = @repo_path)
-      # TODO: prompt user for what to do if dir exists before cloning?
-      # return if Dir.exist?(@repo_path)
-      # FIXME: do not rely on /dev/null redirection to silence git output
-      FileUtils.rm_rf dir
-      `git clone --depth 1 #{url} #{dir} &> /dev/null`
-      # system 'git', 'clone', '--depth', '1', "#{@url}", "#{@repo_path}"
+    def clone(url = @url, dir = @repo_path, repo = @repo)
+      if Dir.exist?(dir)
+        pull(dir)
+        return
+      end
+      `git clone -q #{url} #{dir}`
+      puts "#{repo} [downloaded]"
     end
 
-    def pull(dir = @repo_path)
-      return unless File.directory?(dir)
-      Dir.chdir dir
-      `cd #{dir} && git pull`
-    end
-
-    def to_str
-      %(
-        repo: #{@repo}
-        github_user: #{@github_user}
-        repo_name: #{@repo_name} = github_project: #{@github_project}
-        url: #{@url}
-        repo_path: #{@repo_path})
+    def pull(dir = @repo_path, repo = @repo)
+      `git pull -q`
+       puts "#{repo} [updated]"
     end
   end
 end

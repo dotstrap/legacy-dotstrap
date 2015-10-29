@@ -18,7 +18,6 @@ module Reel
     end
 
     def configure(src_dir = @repo_path)
-      # puts src_dir
       repo_dir = src_dir
       # repo_dir = File.join(@reel_config_home, src_dir)
       if @shell_name == 'fish'

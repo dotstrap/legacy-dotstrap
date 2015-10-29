@@ -13,7 +13,6 @@ module Reel
     end
 
     def download(dest_dir = Reel.reel_config_home, repos = @repos)
-      FileUtils.mkdir_p dest_dir
       Parallel.map(repos, in_threads: 16) do |r|
         bundle = Reel::Git.new(r)
         bundle.clone
@@ -62,8 +61,8 @@ module Reel
       repo_path.each do |r|
         shell = Reel::Shell.new(r)
         shell.configure(repo_path)
-        puts "Make sure to `source \"#{shell.reel_config_file}\"` in your shell " \
-          "startup file" unless shell.repo_config_files.empty?
+        # puts "Make sure to `source \"#{shell.reel_config_file}\"` in your shell " \
+          # "startup file" unless shell.repo_config_files.empty?
       end
     end
   end
