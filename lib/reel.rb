@@ -5,11 +5,11 @@ require_relative 'reel/configuration'
 
 module Reel
   NAME        = 'reel'
-  VERSION     = '0.1.1'
+  VERSION     = '0.4.0'
   AUTHOR      = 'William Myers'
-  EMAIL       = 'mkwmms@no-reply.github.com'
+  EMAIL       = 'mkwmms@icloud.com'
   HOMEPAGE    = 'http://github.com/mkwmms/reel'
-  SUMMARY     = %(Download & install shell config files from GitHub repos)
+  SUMMARY     = %(Download & install shell config files from GitHub repos in parallel)
   DESCRIPTION = 'Downloads repositories from GitHub in parallel and ' \
                 'symbolically links and/or creates a file to be sourced ' \
                 'according to your shell (fish, zsh, bash)'
