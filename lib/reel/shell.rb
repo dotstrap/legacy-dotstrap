@@ -146,7 +146,7 @@ module Reel
     end
 
     def zsh_configs(dir)
-      Dir.glob(File.join(dir, '**', '*.zsh'))
+      Dir.glob(File.join(dir, '**', '*.{sh,zsh}'))
     end
   end
 end
