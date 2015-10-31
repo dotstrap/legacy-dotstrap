@@ -5,7 +5,7 @@ require_relative 'dotstrap/configuration'
 
 module Dotstrap
   NAME        = 'dotstrap'
-  VERSION     = '0.4.0'
+  VERSION     = '0.5.0'
   AUTHOR      = 'William Myers'
   EMAIL       = 'mkwmms@icloud.com'
   HOMEPAGE    = 'http://github.com/mkwmms/dotstrap'

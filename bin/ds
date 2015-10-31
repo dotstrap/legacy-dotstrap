@@ -9,7 +9,7 @@ program :help, 'Author', "#{Dotstrap::AUTHOR} <#{Dotstrap::EMAIL}>"
 program :help, 'Website', Dotstrap::HOMEPAGE
 program :help_formatter, :compact
 
-command :bundle do |c|
+command :install do |c|
   c.syntax = 'dotstrap bundle [options]'
   c.summary = 'Bundle a specified GitHub repository'
   c.description = 'Download/update & set up the configuration file(s) to be loaded by the shell environment'
@@ -26,7 +26,7 @@ command :bundle do |c|
   end
 end
 
-command :unbundle do |c|
+command :remove do |c|
   c.syntax = 'dotstrap unbundle [options]'
   c.summary = 'Unbundle a specified GitHub repository'
   c.description = 'Removes the shell configuration file(s) and lines from the source file from the given repository'
