@@ -5,12 +5,12 @@ require_relative 'dotstrap/configuration'
 
 module Dotstrap
   NAME        = 'dotstrap'
-  VERSION     = '0.5.1'
+  VERSION     = '0.5.1_1'
   AUTHOR      = 'William Myers'
   EMAIL       = 'mkwmms@icloud.com'
   HOMEPAGE    = 'http://github.com/mkwmms/dotstrap'
-  SUMMARY     = %(Bootstrap your shell dotfiles in parallel!)
-  DESCRIPTION = 'Downloads repositories from GitHub in parallel and ' \
+  SUMMARY     = %(bootstrap your shell dotfiles in parallel from GitHub repos)
+  DESCRIPTION = 'downloads repositories from GitHub in parallel and ' \
                 'symbolically links and/or creates a file to be sourced ' \
                 'according to your shell (fish, zsh, bash)'
 
