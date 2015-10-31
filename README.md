@@ -62,6 +62,9 @@ This is very much in alpha right now...
 - list config files when running `ds list <some repo>`
 - add a mechanism to define what config files to load and where to put them, possibly
 through a YAML (or similar) config file at root of repo or via shell environment variables
+- add a mechanism to specify loadorder of paths (the order in which the repo config
+files are added to dotstrap's config file) so that, for example, path.{sh,zsh,fish} 
+is loaded first so that it can set up your path before anything else
 
 ### Copyright
 
