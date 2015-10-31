@@ -1,11 +1,11 @@
-module Reel
+module Dotstrap
   # TODO: split this into Git < Downloader class
-  class Reel::Git
+  class Dotstrap::Git
     attr_accessor :url, :repo,
                   :repo_path, :repo_name,
                   :github_user, :github_project
 
-    def initialize(repo, src_dir = Reel.reel_config_home)
+    def initialize(repo, src_dir = Dotstrap.dotstrap_config_home)
       @repo = repo
       @url = "https://github.com/#{@repo}"
       partition = @repo.partition("/")

@@ -1,20 +1,20 @@
 #!/usr/bin/env ruby
 
-require 'reel'
+require 'dotstrap'
 
-program :version, Reel::VERSION
-program :description, Reel::DESCRIPTION
+program :version, Dotstrap::VERSION
+program :description, Dotstrap::DESCRIPTION
 
-program :help, 'Author', "#{Reel::AUTHOR} <#{Reel::EMAIL}>"
-program :help, 'Website', Reel::HOMEPAGE
+program :help, 'Author', "#{Dotstrap::AUTHOR} <#{Dotstrap::EMAIL}>"
+program :help, 'Website', Dotstrap::HOMEPAGE
 program :help_formatter, :compact
 
 command :bundle do |c|
-  c.syntax = 'reel bundle [options]'
+  c.syntax = 'dotstrap bundle [options]'
   c.summary = 'Bundle a specified GitHub repository'
   c.description = 'Download/update & set up the configuration file(s) to be loaded by the shell environment'
   c.example "Downloads https://github.com/mkwmms/fish-osx to " \
-    "#{Reel.reel_config_home}/mkwmms-fish-osx", 'reel bundle mkwmms/fish-osx'
+    "#{Dotstrap.dotstrap_config_home}/mkwmms-fish-osx", 'dotstrap bundle mkwmms/fish-osx'
   c.option '--file FILE', String, 'Read Github repo slugs from FILE'
   c.action do |args, options|
     if options.file
@@ -22,23 +22,23 @@ command :bundle do |c|
         args << line.strip unless line.start_with?('#')
       end
     end
-    Reel::Configuration.new(args).configure
+    Dotstrap::Configuration.new(args).configure
   end
 end
 
 command :unbundle do |c|
-  c.syntax = 'reel unbundle [options]'
+  c.syntax = 'dotstrap unbundle [options]'
   c.summary = 'Unbundle a specified GitHub repository'
   c.description = 'Removes the shell configuration file(s) and lines from the source file from the given repository'
   c.action do |args, options|
-    Reel::Configuration.new(args).remove
+    Dotstrap::Configuration.new(args).remove
   end
 end
 
 command :list do |c|
-  c.syntax = 'reel list'
+  c.syntax = 'dotstrap list'
   c.summary = 'List file path and URL for currently bundled specified GitHub repository (or all if none specified)'
   c.action do |args, options|
-    Reel::Configuration.new(args).list
+    Dotstrap::Configuration.new(args).list
   end
 end

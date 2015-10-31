@@ -1,7 +1,7 @@
 # encoding: utf-8
 require 'rubygems'
 require 'bundler'
-require_relative 'lib/reel'
+require_relative 'lib/dotstrap'
 
 begin
   Bundler.setup(:default, :development)
@@ -14,16 +14,16 @@ require 'rake'
 
 require 'jeweler'
 Jeweler::Tasks.new do |gem|
-  gem.name = Reel::NAME
-  gem.version = Reel::VERSION
-  gem.homepage = Reel::HOMEPAGE
+  gem.name = Dotstrap::NAME
+  gem.version = Dotstrap::VERSION
+  gem.homepage = Dotstrap::HOMEPAGE
   gem.license = 'MIT'
-  gem.summary = Reel::SUMMARY
-  gem.description = Reel::DESCRIPTION
-  gem.email = Reel::EMAIL
-  gem.authors = Reel::AUTHOR
+  gem.summary = Dotstrap::SUMMARY
+  gem.description = Dotstrap::DESCRIPTION
+  gem.email = Dotstrap::EMAIL
+  gem.authors = Dotstrap::AUTHOR
   gem.require_paths = ['lib']
-  gem.executables = ['reel']
+  gem.executables = ['ds']
   # dependencies defined in Gemfile
 end
 Jeweler::RubygemsDotOrgTasks.new

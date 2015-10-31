@@ -1,10 +1,10 @@
-= reel
+= dotstrap
 
 Downloads repositories from GitHub in parallel and 
 symbolically links and/or creates a static source page
 
 == usage
-run <tt>reel --help</tt>
+run <tt>dotstrap --help</tt>
 
 == Copyright
 

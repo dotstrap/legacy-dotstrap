@@ -1,20 +1,20 @@
 require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
-require 'reel/shell'
+require 'dotstrap/shell'
 
-describe Reel::Shell do
+describe Dotstrap::Shell do
   before :all do
     # FIXME: decouple test config_files and define in each test
     @config_files = { 'mkwmms/fish-osx' => %w(ql.fish),
                       # 'mkwmms/fish-basic/functions' =>
       # %w(clear.fish mkcd.fish port_kill.fish port_top.fish td.fish)
     }
-    @reel_config_home = Dir.mktmpdir('test_reel_config_home_')
-    @shell_config_home = Dir.mktmpdir('test_reel_shell_config_home_')
-    # @bundle = FactoryGirl.create :bundle(@reel_config_home, @repos)
-    @shell = Reel::Shell.new(@reel_config_home, @config_files.keys)
+    @dotstrap_config_home = Dir.mktmpdir('test_dotstrap_config_home_')
+    @shell_config_home = Dir.mktmpdir('test_dotstrap_shell_config_home_')
+    # @bundle = FactoryGirl.create :bundle(@dotstrap_config_home, @repos)
+    @shell = Dotstrap::Shell.new(@dotstrap_config_home, @config_files.keys)
 
     @config_files.each do |repo, files|
-      dir = File.join(@reel_config_home, repo, 'functions')
+      dir = File.join(@dotstrap_config_home, repo, 'functions')
       FileUtils.mkdir_p dir
       files.each do |f|
         File.write(File.join(dir, f), 'TEST CONFIG')
@@ -42,7 +42,7 @@ describe Reel::Shell do
       actual_files = []
       expected_files = []
       @config_files.each do |repo, files|
-        dir = File.join(@reel_config_home, repo)
+        dir = File.join(@dotstrap_config_home, repo)
         actual_files.push @shell.fish_functions(dir)
         files.each do |f|
           expected_files.push File.join(dir, 'functions', f)
@@ -64,7 +64,7 @@ describe Reel::Shell do
   # end
 
   after :all do
-    [@reel_config_home, @shell_config_home].each do |dir|
+    [@dotstrap_config_home, @shell_config_home].each do |dir|
       FileUtils.rm_r dir, force: true
     end
   end

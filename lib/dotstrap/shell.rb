@@ -1,5 +1,5 @@
-module Reel
-  class Reel::Shell
+module Dotstrap
+  class Dotstrap::Shell
     # TODO: cleanup shell class & split it into 3+ classes with inheritence
     attr_accessor :repo_path
 
@@ -69,24 +69,24 @@ module Reel
       FileUtils.rm_rf file
     end
 
-    def config_file(sh, dir = Reel.reel_config_home)
+    def config_file(sh, dir = Dotstrap.dotstrap_config_home)
       File.join(dir, "config.#{sh}")
     end
 
     private
 
-    def write_config_file(repo_config_files, reel_config_file)
+    def write_config_file(repo_config_files, dotstrap_config_file)
       unless repo_config_files.empty?
         repo_config_files.each do |file|
-          append_config_file(file, reel_config_file)
+          append_config_file(file, dotstrap_config_file)
         end
       end
     end
 
-    def unwrite_config_file(repo_config_files, reel_config_file)
+    def unwrite_config_file(repo_config_files, dotstrap_config_file)
       unless repo_config_files.empty?
         repo_config_files.each do |file|
-          unappend_config_file(file, reel_config_file)
+          unappend_config_file(file, dotstrap_config_file)
         end
       end
     end
