@@ -18,8 +18,8 @@ Jeweler::Tasks.new do |gem|
   gem.version = Dotstrap::VERSION
   gem.homepage = Dotstrap::HOMEPAGE
   gem.license = 'MIT'
-  # gem.summary = Dotstrap::SUMMARY
-  gem.description = Dotstrap::SUMMARY
+  gem.summary = Dotstrap::SUMMARY
+  gem.description = Dotstrap::DESCRIPTION
   gem.email = Dotstrap::EMAIL
   gem.authors = Dotstrap::AUTHOR
   gem.require_paths = ['lib']

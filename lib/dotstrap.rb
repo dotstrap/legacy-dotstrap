@@ -5,14 +5,15 @@ require_relative 'dotstrap/configuration'
 
 module Dotstrap
   NAME        = 'dotstrap'
-  VERSION     = '0.5.1'
+  VERSION     = '0.5.2'
   AUTHOR      = 'William Myers'
   EMAIL       = 'mkwmms@icloud.com'
   HOMEPAGE    = 'http://github.com/mkwmms/dotstrap'
   SUMMARY     = %(bootstrap your shell dotfiles in parallel from GitHub repos)
-  DESCRIPTION = 'downloads repositories from GitHub in parallel and ' \
-                'symbolically links and/or creates a file to be sourced ' \
-                'according to your shell (fish, zsh, bash)'
+  DESCRIPTION = %(bootstrap your shell dotfiles in parallel from GitHub repos)
+  # DESCRIPTION = 'downloads repositories from GitHub in parallel and ' \
+                # 'symbolically links and/or creates a file to be sourced ' \
+                # 'according to your shell (fish, zsh, bash)'
 
   class << self
     def dotstrap_config_home
