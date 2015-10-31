@@ -1,10 +1,10 @@
 require 'rubygems'
-require 'commander/import'
 require 'pathname'
 require_relative 'dotstrap/configuration'
 
 module Dotstrap
   NAME        = 'dotstrap'
+  NAME_EXE    = 'ds'
   VERSION     = '0.5.2'
   AUTHOR      = 'William Myers'
   EMAIL       = 'mkwmms@icloud.com'
