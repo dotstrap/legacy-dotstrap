@@ -9,7 +9,7 @@ module Reel
   AUTHOR      = 'William Myers'
   EMAIL       = 'mkwmms@icloud.com'
   HOMEPAGE    = 'http://github.com/mkwmms/reel'
-  SUMMARY     = %(Download & install shell config files from GitHub repos in parallel)
+  SUMMARY     = %(Bootstrap your shell dotfiles in parallel!)
   DESCRIPTION = 'Downloads repositories from GitHub in parallel and ' \
                 'symbolically links and/or creates a file to be sourced ' \
                 'according to your shell (fish, zsh, bash)'
