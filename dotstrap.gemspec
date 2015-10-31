@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   s.authors = ["William Myers"]
   s.date = "2015-10-31"
-  s.description = "Downloads repositories from GitHub in parallel and symbolically links and/or creates a file to be sourced according to your shell (fish, zsh, bash)"
+  s.description = "bootstrap your shell dotfiles in parallel from GitHub repos"
   s.email = "mkwmms@icloud.com"
   s.executables = ["ds"]
   s.extra_rdoc_files = [
@@ -40,7 +40,7 @@ Gem::Specification.new do |s|
   s.homepage = "http://github.com/mkwmms/dotstrap"
   s.licenses = ["MIT"]
   s.rubygems_version = "2.4.5.1"
-  s.summary = "Bootstrap your shell dotfiles in parallel!"
+  s.summary = nil
 
   if s.respond_to? :specification_version then
     s.specification_version = 4
