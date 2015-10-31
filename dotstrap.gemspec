@@ -11,10 +11,10 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib"]
   s.authors = ["William Myers"]
-  s.date = "2015-10-29"
+  s.date = "2015-10-31"
   s.description = "Downloads repositories from GitHub in parallel and symbolically links and/or creates a file to be sourced according to your shell (fish, zsh, bash)"
   s.email = "mkwmms@icloud.com"
-  s.executables = ["dotstrap"]
+  s.executables = ["ds"]
   s.extra_rdoc_files = [
     "LICENSE.txt",
     "README.rdoc"
@@ -28,12 +28,12 @@ Gem::Specification.new do |s|
     "LICENSE.txt",
     "README.rdoc",
     "Rakefile",
-    "bin/dotstrap",
+    "bin/ds",
+    "dotstrap.gemspec",
     "lib/dotstrap.rb",
     "lib/dotstrap/configuration.rb",
     "lib/dotstrap/git.rb",
     "lib/dotstrap/shell.rb",
-    "dotstrap.gemspec",
     "spec/bundle_spec.rb",
     "spec/shell_spec.rb",
     "spec/spec_helper.rb"
@@ -41,7 +41,7 @@ Gem::Specification.new do |s|
   s.homepage = "http://github.com/mkwmms/dotstrap"
   s.licenses = ["MIT"]
   s.rubygems_version = "2.4.5.1"
-  s.summary = "Download & install shell config files from GitHub repos in parallel"
+  s.summary = "Bootstrap your shell dotfiles in parallel!"
 
   if s.respond_to? :specification_version then
     s.specification_version = 4
