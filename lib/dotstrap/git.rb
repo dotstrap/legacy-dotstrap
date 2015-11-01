@@ -5,14 +5,15 @@ module Dotstrap
                   :repo_path, :repo_name,
                   :github_user, :github_project
 
-    def initialize(repo, src_dir = Dotstrap.dotstrap_config_home)
+    def initialize(repo, src_dir = Dotstrap.config_home)
       @repo = repo
       # TODO: allow an option to specify to download with SSH or HTTPs from Git
       @url = "https://github.com/#{@repo}"
       partition = @repo.partition("/")
       @github_user = partition[0]
       @github_project = @repo_name = partition[2]
-      @repo_path = File.join(src_dir, "#{@github_user}-#{@repo_name}")
+      # @repo_path = File.join(src_dir, "#{@github_user}-#{@repo_name}")
+      @repo_path = File.join(src_dir, @github_user, @repo_name)
     end
 
     # FIXME: if user is not logged in to Git the prompt for username/password

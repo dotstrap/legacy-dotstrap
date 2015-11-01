@@ -1,27 +1,39 @@
 #!/usr/bin/env ruby
 
-require "thor"
+require 'thor'
 require 'dotstrap'
+
+def repo_format_desc; <<-DESC
+      REPO is a GitHub repository slug in the form: `username/repository`
+
+      If REPO is a file: read a newline seperated list of repositories (in the form specified above)
+      \x5Lines starting with `#` are treated as comments and are ignored.
+  DESC
+end
 
 class Cli < Thor
   # class_option "verbose", :type => :boolean, :desc => "Enable verbose output mode", :aliases => "-V"
 
-  desc 'install REPO...', 'Download and configure specified GitHub repositories'
-  long_desc <<-LONGDESC 
-    Download/update & set up the configuration file(s) 
+  desc 'install REPO...', 'Download and configure REPO'
+  long_desc <<-LONGDESC
+    Download REPO(s) & set up the configuration file(s)
     to be loaded by the shell environment.
 
-    Remember to add `source $XDG_CONFIG_HOME/config.{bash, zsh, fish}` 
-    to your shell's startup file.
+    #{repo_format_desc}
 
-    Examples: 
+    Note:
+      Remember to add #{Dotstrap.name}'s config file to your shell's startup file.
+      For fish:
+      \x5  `source $XDG_CONFIG_HOME/config.}`
+
+    Examples:
       Downloads https://github.com/mkwmms/dotstrap-osx to
-      #{Dotstrap.dotstrap_config_home}/mkwmms-dotstrap-osx and sets up the
+      #{Dotstrap.config_home}/mkwmms-dotstrap-osx and sets up the
       relevant configure files
       \x5> #{Dotstrap::NAME_EXE} install mkwmms/dotstrap-osx
 
        Downloads all the repositories from the file ~/.config/repos.txt (with the
-      same repo format as above; each repo on a new line)  
+      same repo format as above; each repo on a new line)
       \x5> #{Dotstrap::NAME_EXE} install ~/.config/repos.txt
   LONGDESC
   def install(*args)
@@ -31,15 +43,20 @@ class Cli < Thor
         File.open(repo).each do |line|
           repos << line.strip unless line.start_with?('#')
         end
-      else 
+      else
         repos << repo
       end
     end
     Dotstrap::Configuration.new(repos).configure
-  end 
+  end
 
-  desc "uninstall REPO...", 'Remove specified GitHub repositories'
-  long_desc 'Removes the shell configuration file(s) and lines from the source file from the given repository'
+  desc "uninstall REPO...", 'Remove specified REPO'
+  long_desc <<-LONGDESC
+    Removes REPO's shell configuration file(s) and lines
+    from #{Dotstrap.name}'s config file.
+
+    #{repo_format_desc}
+  LONGDESC
   def uninstall(*args)
     repos = []
     args.each do |repo|
@@ -47,17 +64,44 @@ class Cli < Thor
         File.open(repo).each do |line|
           args << line.strip unless line.start_with?('#')
         end
-      else 
+      else
         repos << repo
       end
     end
     Dotstrap::Configuration.new(repos).remove
   end
 
-  desc "list [REPO...]", 'List file path and URL for currently installed specified GitHub repository (or all if none specified)'
+  desc "list [REPO...]", 'Print directory path & URL for currently installed REPO'
+  long_desc <<-LONGDESC
+    Print directory path & URL for currently installed REPO
+    or
+    print directory path & URL for all currently installed repositories
+    if REPO is not specified
+
+    #{repo_format_desc}
+  LONGDESC
   def list(*args)
-    Dotstrap::Configuration.new(args).list
-  end 
+    repos = []
+    if args.empty?
+      Dotstrap.repo_config_dirs.each_with_index do |repo_path, index|
+        # next unless repo_path.include?('-') && File.directory?(repo_path)
+        repos << File.basename(repo_path)
+      end
+      Dotstrap::Configuration.new(repos).list
+      return
+    end
+
+    args.each do |repo|
+      if File.exist?(repo)
+        File.open(repo).each do |line|
+          args << line.strip unless line.start_with?('#')
+        end
+      else
+        repos << repo
+      end
+    end
+    Dotstrap::Configuration.new(repos).list
+  end
 end
 
-Cli.start(ARGV)
+Dotstrap::Cli.start(ARGV)

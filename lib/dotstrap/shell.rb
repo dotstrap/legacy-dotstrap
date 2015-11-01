@@ -69,7 +69,7 @@ module Dotstrap
       FileUtils.rm_rf file
     end
 
-    def config_file(sh, dir = Dotstrap.dotstrap_config_home)
+    def config_file(sh, dir = Dotstrap.config_home)
       File.join(dir, "config.#{sh}")
     end
 
