@@ -11,8 +11,9 @@ module Dotstrap
   EXE_NAME    = 'ds'
   VERSION     = '0.5.3'
   AUTHOR      = 'William Myers'
-  EMAIL       = 'mkwmms@icloud.com'
   HOMEPAGE    = 'http://github.com/mkwmms/dotstrap'
+  SOURCE_URL  = 'http://github.com/mkwmms/dotstrap'
+  DOC_URL     = 'http://www.rubydoc.info/github/mkwmms/dotstrap/master/Dotstrap'
   SUMMARY     = %(bootstrap your shell dotfiles in parallel from GitHub repos)
   DESCRIPTION = %(bootstrap your shell dotfiles in parallel from GitHub repos)
   # DESCRIPTION = 'downloads repositories from GitHub in parallel and ' \

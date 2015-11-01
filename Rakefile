@@ -24,6 +24,9 @@ Jeweler::Tasks.new do |gem|
   gem.require_paths = ['lib']
   gem.executables = ['ds']
   gem.required_ruby_version = '>=1.9.2'
+  gem.metadata = { 'source_code' => Dotstrap::SOURCE_URL, 
+                   'documentation' => Dotstrap::DOC_URL
+  }
   # dependencies defined in Gemfile
 end
 Jeweler::RubygemsDotOrgTasks.new
