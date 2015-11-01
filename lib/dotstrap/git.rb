@@ -1,3 +1,5 @@
+require 'logger'
+
 module Dotstrap
   # TODO: split this into Git < Downloader class
   class Dotstrap::Git
@@ -24,12 +26,12 @@ module Dotstrap
         return
       end
       `git clone -q #{url} #{dir}`
-      "#{repo} [downloaded]"
+      $LOG.add(Logger::UNKNOWN) { "#{repo} [downloaded]" }
     end
 
     def pull(dir = @repo_path, repo = @repo)
       `git pull -q`
-       puts "#{repo} [updated]"
+      $LOG.add(Logger::UNKNOWN) { "#{repo} [updated]" }
     end
   end
 end

@@ -3,8 +3,8 @@ require 'fileutils'
 require 'parallel'
 require 'pathname'
 require_relative 'dotstrap/git'
-require_relative 'dotstrap/utils'
 require_relative 'dotstrap/shell'
+
 
 module Dotstrap
   NAME        = 'dotstrap'
@@ -20,6 +20,11 @@ module Dotstrap
                 # 'according to your shell (fish, zsh, bash)'
 
   class << self
+
+    # def verbose?
+    #   Dotstrap::Cli.options[:verbose]
+    # end
+
     def config_home
       return ENV['DOTSTRAP_CONFIG_HOME'] if ENV.has_key?('DOTSTRAP_CONFIG_HOME')
 
@@ -45,6 +50,24 @@ module Dotstrap
       end
     end
 
+    # return the shell profile file based on users' preference shell
+    def shell_profile(shell = shell_name)
+      case shell
+        when 'bash' then
+          %s[.bash_profile .profile].each do |file|
+            profile = File.join(Dir.home, file)
+            return profile.srtip if File.exist?(profile)
+          end
+        when 'zsh' then
+          profile = File.join(Dir.home, '.zshrc')
+          return profile.strip if File.exist?(profile)
+        when 'fish' then
+          profile = File.join(Dir.home, '.config', 'fish', 'config.fish')
+          return profile.strip if File.exist?(profile)
+        # File.exist?(file) ? file : fail ShellProfileError, "Fish shell config file not found
+      end
+    end
+
     def config_file(shell = shell_name)
       File.join(config_home, "config.#{shell}")
     end
@@ -61,24 +84,6 @@ module Dotstrap
         repos << repo.sub(/-/,'/')
       end
       repos
-    end
-
-    # return the shell profile file based on users' preference shell
-    def shell_profile(shell = shell_name)
-      case shell
-        when 'bash' then
-          %s[.bash_profile .profile].each do |file|
-            profile = File.join(Dir.home, file)
-            return profile if File.exist?(profile)
-          end
-        when 'zsh' then
-          profile = File.join(Dir.home, '.zshrc')
-          return profile if File.exist?(profile)
-        when 'fish' then
-          profile = File.join(Dir.home, '.config', 'fish', 'config.fish')
-          return profile if File.exist?(profile)
-        # File.exist?(file) ? file : fail ShellProfileError, "Fish shell config file not found
-      end
     end
   end
 
@@ -108,6 +113,7 @@ module Dotstrap
     end
 
     def list(repos = @repos)
+      puts Dotstrap.verbose?
       repos.each_with_index do |repo, index|
         bundle = Dotstrap::Git.new(repo)
         next unless Dir.exist?(bundle.repo_path)
@@ -115,6 +121,7 @@ module Dotstrap
         puts repo
         puts bundle.url
         puts bundle.repo_path
+
         # shell = Dotstrap::Shell.new(repo_path)
         # TODO: only output all associated files on --verbose
         # shell.list(repo_path)

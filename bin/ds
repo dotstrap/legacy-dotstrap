@@ -1,41 +1,57 @@
 #!/usr/bin/env ruby
 
+require 'logger'
 require 'thor'
 require 'dotstrap'
 
-def repo_format_desc; <<-DESC
-      REPO is a GitHub repository slug in the form: `username/repository`
+# Initialize logging
+$LOG = Logger.new(STDOUT)
+$LOG.formatter = proc do |severity, datetime, progname, msg|
+  require 'colorize'
+  case (severity)
+    when 'ANY'
+      "=> ".colorize(:blue) + "#{msg}\n"
+    when 'DEBUG'
+      "[DEBUG] ".colorize(:yellow) + "#{datetime}: #{msg}\n"
+    when 'INFO'
+      "[INFO] ".colorize(:blue) + "#{msg}\n"
+    else
+      "[#{severity}] ".colorize(:red) + "#{datetime}: #{msg}\n"
+  end
+end
 
-      If REPO is a file: read a newline seperated list of repositories (in the form specified above)
-      \x5Lines starting with `#` are treated as comments and are ignored.
+def repo_format_desc; <<-DESC
+    REPO is a GitHub repository slug in the form: `username/repository`
+
+    If REPO is a file: read a newline seperated list of repositories (in the form specified above)
+    \x5Lines starting with `#` are treated as comments and are ignored.
   DESC
 end
 
 module Dotstrap
   class Dotstrap::Cli < Thor
-    # class_option "verbose", :type => :boolean, :desc => "Enable verbose output mode", :aliases => "-V"
+    class_option "verbose", :type => :boolean, :aliases => "-v",
+                 :desc => "Enable verbose output mode"
 
     desc 'install REPO...', 'Download and configure REPO'
     long_desc <<-LONGDESC
-      Download REPO(s) & set up the configuration file(s)
-      to be loaded by the shell environment.
+      Download REPO(s) & set up the configuration file(s) so they can
+      be loaded by the shell environment
+      by creating a file to be sourced from within your shell startup file
+      and/or symbolically linking relevant files.
 
       #{repo_format_desc}
 
-      Note:
-        Remember to add #{Dotstrap::NAME}'s config file to your shell's startup file.
-        For fish:
-        \x5  `source $XDG_CONFIG_HOME/config.}`
+      Remember to source dotstrap's config file in your shell's startup file:
+      \x5  `echo "source #{Dotstrap.config_file}" >> #{Dotstrap.shell_profile}`
 
       Examples:
-        Downloads https://github.com/mkwmms/dotstrap-osx to
+      \x5  Download https://github.com/mkwmms/dotstrap-osx to #{Dotstrap.config_home}
+      and creates #{Dotstrap.config_file} with commands to source all relevant configure files
+      \x5    $ ds install mkwmms/dotstrap-osx
 
-        relevant configure files
-        \x5> #{Dotstrap::EXE_NAME} install mkwmms/dotstrap-osx
-
-         Downloads all the repositories from the file ~/.config/repos.txt (with the
-        same repo format as above; each repo on a new line)
-        \x5> #{Dotstrap::EXE_NAME} install ~/.config/repos.txt
+           Download all the repositories from the file ~/.config/repos.txt
+      \x5    $ ds install ~/.config/repos.txt
     LONGDESC
     def install(*args)
       repos = []
@@ -53,8 +69,7 @@ module Dotstrap
 
     desc "uninstall REPO...", 'Remove specified REPO'
     long_desc <<-LONGDESC
-      Removes REPO's shell configuration file(s) and lines
-      from #{Dotstrap::NAME}'s config file.
+      Removes REPO's shell configuration file(s) and lines from dotstraps's config file.
 
       #{repo_format_desc}
     LONGDESC
@@ -74,8 +89,7 @@ module Dotstrap
 
     desc "list [REPO...]", 'Print directory path & URL for currently installed REPO'
     long_desc <<-LONGDESC
-      Print directory path & URL for currently installed REPO
-      or
+      Print directory path & URL for currently installed REPO OR
       print directory path & URL for all currently installed repositories
       if REPO is not specified
 
@@ -101,4 +115,5 @@ module Dotstrap
     end
   end
 end
+
 Dotstrap::Cli.start(ARGV)

@@ -1,5 +1,6 @@
 source 'http://rubygems.org'
 
+gem 'colorize', '~> 0.7.7'
 gem 'parallel', '~> 1.6'
 gem 'thor', '~> 0.19.1'
 
