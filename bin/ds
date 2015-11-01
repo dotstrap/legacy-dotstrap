@@ -6,18 +6,36 @@ require 'dotstrap'
 
 # Initialize logging
 $LOG = Logger.new(STDOUT)
+$LOG.level = Logger::WARN
 $LOG.formatter = proc do |severity, datetime, progname, msg|
   require 'colorize'
   case (severity)
     when 'ANY'
-      "=> ".colorize(:blue) + "#{msg}\n"
+      # "=> ".colorize(:blue) + "#{msg}\n"
+     "#{msg}\n"
     when 'DEBUG'
-      "[DEBUG] ".colorize(:yellow) + "#{datetime}: #{msg}\n"
+      "DEBUG".colorize(:yellow).underline + ": #{progname} #{datetime}: #{msg}\n"
     when 'INFO'
-      "[INFO] ".colorize(:blue) + "#{msg}\n"
+      # "[INFO] ".colorize(:blue) + "#{msg}\n"
+      "#{msg}\n"
     else
-      "[#{severity}] ".colorize(:red) + "#{datetime}: #{msg}\n"
+      "#{severity}".colorize(:red).underline + ": #{progname} #{datetime} #{msg}\n"
   end
+end
+
+def set_log_level(level = nil)
+  # $LOG.close; return if options[:quiet]
+  unless level
+    level =
+        if options[:verbose]
+          Logger::INFO
+        elsif options[:debug]
+          Logger::DEBUG
+        else
+          $LOG.level = Logger::WARN
+        end
+  end
+  $LOG.level = level
 end
 
 def repo_format_desc; <<-DESC
@@ -31,7 +49,11 @@ end
 module Dotstrap
   class Dotstrap::Cli < Thor
     class_option "verbose", :type => :boolean, :aliases => "-v",
-                 :desc => "Enable verbose output mode"
+                 :desc => "Enable verbose output mode (output will be somewhat garbled due to threading)"
+    class_option "debug", :type => :boolean, :aliases => "-d",
+                 :desc => "Enable debug output mode (output will be somewhat garbled due to threading)"
+    # class_option "quiet", :type => :boolean, :aliases => "-q",
+    #              :desc => "Supress all output"
 
     desc 'install REPO...', 'Download and configure REPO'
     long_desc <<-LONGDESC
@@ -50,7 +72,7 @@ module Dotstrap
       and creates #{Dotstrap.config_file} with commands to source all relevant configure files
       \x5    $ ds install mkwmms/dotstrap-osx
 
-           Download all the repositories from the file ~/.config/repos.txt
+           Download all the repositories listed in the file ~/.config/repos.txt
       \x5    $ ds install ~/.config/repos.txt
     LONGDESC
     def install(*args)
@@ -64,6 +86,7 @@ module Dotstrap
           repos << repo
         end
       end
+      set_log_level
       Dotstrap::Configuration.new(repos).configure
     end
 
@@ -84,6 +107,7 @@ module Dotstrap
           repos << repo
         end
       end
+      set_log_level
       Dotstrap::Configuration.new(repos).remove
     end
 
@@ -111,6 +135,7 @@ module Dotstrap
           repos << repo
         end
       end
+      set_log_level
       Dotstrap::Configuration.new(repos).list
     end
   end

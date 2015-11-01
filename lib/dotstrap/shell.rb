@@ -1,3 +1,5 @@
+require 'logger'
+
 module Dotstrap
   class Dotstrap::Shell
     # TODO: cleanup shell class & split it into 3+ classes with inheritence
@@ -12,6 +14,7 @@ module Dotstrap
       configure_fish(repo_dir) if Dir.exist?(Dotstrap.shell_profile('fish'))
       configure_zsh(repo_dir)
       configure_bash(repo_dir)
+      $LOG.info { "configuration complete" }
     end
 
     def unconfigure(repo_dir = @repo_path)
@@ -19,6 +22,7 @@ module Dotstrap
       unconfigure_zsh(repo_dir)
       unconfigure_bash(repo_dir)
       FileUtils.rm_r(repo_dir, force: true, secure: true)
+      $LOG.info { "removed: #{repo_dir}\n" }
     end
 
     def configure_fish(repo_dir)
@@ -79,6 +83,7 @@ module Dotstrap
       unless repo_config_files.empty?
         repo_config_files.each do |file|
           append_config_file(file, dotstrap_config_file)
+          $LOG.info { "configured: #{file}" }
         end
       end
     end
@@ -87,6 +92,7 @@ module Dotstrap
       unless repo_config_files.empty?
         repo_config_files.each do |file|
           unappend_config_file(file, dotstrap_config_file)
+          $LOG.info { "removed: #{file}" }
         end
       end
     end
@@ -107,7 +113,7 @@ module Dotstrap
         source_str = "source \"#{file_to_unsource}\""
         tmp_config_file = File.join(tmp_dir, File.basename(config_file))
         File.open(tmp_config_file, 'w') do |tmp_file|
-          File.foreach(input_file) do |line|
+          File.foreach(file_to_unsource) do |line|
             tmp_file.write line unless line.chomp == source_str
           end
         end
@@ -122,6 +128,7 @@ module Dotstrap
       # FileUtils.mkdir parent unless Dir.exist? parent
       FileUtils.mkdir_p dest_dir unless Dir.exist? dest_dir
       FileUtils.ln_s src, dst, force: true
+      $LOG.info { "linked: #{src} to #{dst}" }
     end
 
     def fish_configs(dir)

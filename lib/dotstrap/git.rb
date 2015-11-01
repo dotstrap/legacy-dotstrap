@@ -1,3 +1,4 @@
+require 'colorize'
 require 'logger'
 
 module Dotstrap
@@ -25,13 +26,15 @@ module Dotstrap
         pull(dir)
         return
       end
-      `git clone -q #{url} #{dir}`
-      $LOG.add(Logger::UNKNOWN) { "#{repo} [downloaded]" }
+      `git clone #{$LOG.debug? ? '' : '-q'} #{url} #{dir}`
+      $LOG.debug { "CLONE #{repo} #{url} #{repo_path}" }
+      $LOG.unknown { "=> ".colorize(:blue) + "#{repo}\ndownloaded" }
     end
 
     def pull(dir = @repo_path, repo = @repo)
-      `git pull -q`
-      $LOG.add(Logger::UNKNOWN) { "#{repo} [updated]" }
+      `git pull #{$LOG.debug? ? '' : '-q'}`
+      $LOG.debug { "PULL #{repo} #{url} #{repo_path}" }
+      $LOG.unknown { "=> ".colorize(:blue) + "#{repo}\nupdated" }
     end
   end
 end
