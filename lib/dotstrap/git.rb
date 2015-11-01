@@ -12,8 +12,8 @@ module Dotstrap
       partition = @repo.partition("/")
       @github_user = partition[0]
       @github_project = @repo_name = partition[2]
-      # @repo_path = File.join(src_dir, "#{@github_user}-#{@repo_name}")
-      @repo_path = File.join(src_dir, @github_user, @repo_name)
+      @repo_path = File.join(src_dir, "#{@github_user}-#{@repo_name}")
+      # @repo_path = File.join(src_dir, @github_user, @repo_name)
     end
 
     # FIXME: if user is not logged in to Git the prompt for username/password
@@ -24,7 +24,7 @@ module Dotstrap
         return
       end
       `git clone -q #{url} #{dir}`
-      puts "#{repo} [downloaded]"
+      "#{repo} [downloaded]"
     end
 
     def pull(dir = @repo_path, repo = @repo)

@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'rubygems'
 require 'bundler'
 require_relative 'lib/dotstrap'
@@ -20,10 +19,11 @@ Jeweler::Tasks.new do |gem|
   gem.license = 'MIT'
   gem.summary = Dotstrap::SUMMARY
   gem.description = Dotstrap::DESCRIPTION
-  gem.email = Dotstrap::EMAIL
+  # gem.email = Dotstrap::EMAIL
   gem.authors = Dotstrap::AUTHOR
   gem.require_paths = ['lib']
   gem.executables = ['ds']
+  gem.required_ruby_version = '>=1.9.2'
   # dependencies defined in Gemfile
 end
 Jeweler::RubygemsDotOrgTasks.new

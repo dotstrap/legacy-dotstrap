@@ -9,13 +9,13 @@ module Dotstrap
     end
 
     def configure(repo_dir = @repo_path)
-      configure_fish(repo_dir) if Dir.exist?(fish_config_home)
+      configure_fish(repo_dir) if Dir.exist?(Dotstrap.shell_profile('fish'))
       configure_zsh(repo_dir)
       configure_bash(repo_dir)
     end
 
     def unconfigure(repo_dir = @repo_path)
-      unconfigure_fish(repo_dir) if Dir.exist?(fish_config_home)
+      unconfigure_fish(repo_dir) if Dir.exist?(Dotstrap.shell_profile('fish'))
       unconfigure_zsh(repo_dir)
       unconfigure_bash(repo_dir)
       FileUtils.rm_r(repo_dir, force: true, secure: true)
@@ -23,11 +23,11 @@ module Dotstrap
 
     def configure_fish(repo_dir)
       fish_functions(repo_dir).each do |f|
-        link_config_file(f, File.join(fish_config_home, 'functions'))
+        link_config_file(f, File.join(Dotstrap.shell_profile('fish'), 'functions'))
       end
 
       fish_completions(repo_dir).each do |f|
-        link_config_file(f, File.join(fish_config_home, 'completions'))
+        link_config_file(f, File.join(Dotstrap.shell_profile('fish'), 'completions'))
       end
 
       write_config_file(fish_configs(repo_dir), config_file('fish'))
@@ -35,12 +35,12 @@ module Dotstrap
 
     def unconfigure_fish(repo_dir)
       fish_functions(repo_dir).each do |f|
-        file = File.join(fish_config_home, 'functions', File.basename(f))
+        file = File.join(Dotstrap.shell_profile('fish'), 'functions', File.basename(f))
         rm_config_file(file)
       end
 
       fish_completions(repo_dir).each do |f|
-        file = File.join(fish_config_home, 'completions', File.basename(f))
+        file = File.join(Dotstrap.shell_profile('fish'), 'completions', File.basename(f))
         rm_config_file(file)
       end
 
@@ -122,11 +122,6 @@ module Dotstrap
       # FileUtils.mkdir parent unless Dir.exist? parent
       FileUtils.mkdir_p dest_dir unless Dir.exist? dest_dir
       FileUtils.ln_s src, dst, force: true
-    end
-
-    def fish_config_home
-      config_home = ENV.fetch('XDG_CONFIG_HOME', File.expand_path('~/.config'))
-      File.join(config_home, 'fish')
     end
 
     def fish_configs(dir)
