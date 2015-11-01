@@ -10,7 +10,7 @@ describe Dotstrap::Shell do
     }
     @dotstrap_config_home = Dir.mktmpdir('test_dotstrap_config_home_')
     @shell_config_home = Dir.mktmpdir('test_dotstrap_shell_config_home_')
-    # @bundle = FactoryGirl.create :bundle(@dotstrap_config_home, @repos)
+    # @bundle = FactoryGirl.create :bundle(@config_home, @repos)
     @shell = Dotstrap::Shell.new(@dotstrap_config_home, @config_files.keys)
 
     @config_files.each do |repo, files|

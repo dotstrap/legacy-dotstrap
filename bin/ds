@@ -1,44 +1,144 @@
 #!/usr/bin/env ruby
 
+require 'logger'
+require 'thor'
 require 'dotstrap'
 
-program :version, Dotstrap::VERSION
-program :description, Dotstrap::DESCRIPTION
+# Initialize logging
+$LOG = Logger.new(STDOUT)
+$LOG.level = Logger::WARN
+$LOG.formatter = proc do |severity, datetime, progname, msg|
+  require 'colorize'
+  case (severity)
+    when 'ANY'
+      # "=> ".colorize(:blue) + "#{msg}\n"
+     "#{msg}\n"
+    when 'DEBUG'
+      "DEBUG".colorize(:yellow).underline + ": #{progname} #{datetime}: #{msg}\n"
+    when 'INFO'
+      # "[INFO] ".colorize(:blue) + "#{msg}\n"
+      "#{msg}\n"
+    else
+      "#{severity}".colorize(:red).underline + ": #{progname} #{datetime} #{msg}\n"
+  end
+end
 
-program :help, 'Author', "#{Dotstrap::AUTHOR} <#{Dotstrap::EMAIL}>"
-program :help, 'Website', Dotstrap::HOMEPAGE
-program :help_formatter, :compact
+def set_log_level(level = nil)
+  # $LOG.close; return if options[:quiet]
+  unless level
+    level =
+        if options[:verbose]
+          Logger::INFO
+        elsif options[:debug]
+          Logger::DEBUG
+        else
+          $LOG.level = Logger::WARN
+        end
+  end
+  $LOG.level = level
+end
 
-command :install do |c|
-  c.syntax = 'dotstrap bundle [options]'
-  c.summary = 'Bundle a specified GitHub repository'
-  c.description = 'Download/update & set up the configuration file(s) to be loaded by the shell environment'
-  c.example "Downloads https://github.com/mkwmms/fish-osx to " \
-    "#{Dotstrap.dotstrap_config_home}/mkwmms-fish-osx", 'dotstrap bundle mkwmms/fish-osx'
-  c.option '--file FILE', String, 'Read Github repo slugs from FILE'
-  c.action do |args, options|
-    if options.file
-      File.open(options.file).each do |line|
-        args << line.strip unless line.start_with?('#')
+def repo_format_desc; <<-DESC
+    REPO is a GitHub repository slug in the form: `username/repository`
+
+    If REPO is a file: read a newline seperated list of repositories (in the form specified above)
+    \x5Lines starting with `#` are treated as comments and are ignored.
+  DESC
+end
+
+module Dotstrap
+  class Dotstrap::Cli < Thor
+    class_option "verbose", :type => :boolean, :aliases => "-v",
+                 :desc => "Enable verbose output mode (output will be somewhat garbled due to threading)"
+    class_option "debug", :type => :boolean, :aliases => "-d",
+                 :desc => "Enable debug output mode (output will be somewhat garbled due to threading)"
+    # class_option "quiet", :type => :boolean, :aliases => "-q",
+    #              :desc => "Supress all output"
+
+    desc 'install REPO...', 'Download and configure REPO'
+    long_desc <<-LONGDESC
+      Download REPO(s) & set up the configuration file(s) so they can
+      be loaded by the shell environment
+      by creating a file to be sourced from within your shell startup file
+      and/or symbolically linking relevant files.
+
+      #{repo_format_desc}
+
+      Remember to source dotstrap's config file in your shell's startup file:
+      \x5  `echo "source #{Dotstrap.config_file}" >> #{Dotstrap.shell_profile}`
+
+      Examples:
+      \x5  Download https://github.com/mkwmms/dotstrap-osx to #{Dotstrap.config_home}
+      and creates #{Dotstrap.config_file} with commands to source all relevant configure files
+      \x5    $ ds install mkwmms/dotstrap-osx
+
+           Download all the repositories listed in the file ~/.config/repos.txt
+      \x5    $ ds install ~/.config/repos.txt
+    LONGDESC
+    def install(*args)
+      repos = []
+      args.each do |repo|
+        if File.exist?(repo)
+          File.open(repo).each do |line|
+            repos << line.strip unless line.start_with?('#')
+          end
+        else
+          repos << repo
+        end
       end
+      set_log_level
+      Dotstrap::Configuration.new(repos).configure
     end
-    Dotstrap::Configuration.new(args).configure
+
+    desc "uninstall REPO...", 'Remove specified REPO'
+    long_desc <<-LONGDESC
+      Removes REPO's shell configuration file(s) and lines from dotstraps's config file.
+
+      #{repo_format_desc}
+    LONGDESC
+    def uninstall(*args)
+      repos = []
+      args.each do |repo|
+        if File.exist?(repo)
+          File.open(repo).each do |line|
+            args << line.strip unless line.start_with?('#')
+          end
+        else
+          repos << repo
+        end
+      end
+      set_log_level
+      Dotstrap::Configuration.new(repos).remove
+    end
+
+    desc "list [REPO...]", 'Print directory path & URL for currently installed REPO'
+    long_desc <<-LONGDESC
+      Print directory path & URL for currently installed REPO OR
+      print directory path & URL for all currently installed repositories
+      if REPO is not specified
+
+      #{repo_format_desc}
+    LONGDESC
+    def list(*args)
+      repos = []
+      if args.empty?
+        Dotstrap::Configuration.new(Dotstrap::installed_repos).list
+        return
+      end
+
+      args.each do |repo|
+        if File.exist?(repo)
+          File.open(repo).each do |line|
+            args << line.strip unless line.start_with?('#')
+          end
+        else
+          repos << repo
+        end
+      end
+      set_log_level
+      Dotstrap::Configuration.new(repos).list
+    end
   end
 end
 
-command :remove do |c|
-  c.syntax = 'dotstrap unbundle [options]'
-  c.summary = 'Unbundle a specified GitHub repository'
-  c.description = 'Removes the shell configuration file(s) and lines from the source file from the given repository'
-  c.action do |args, options|
-    Dotstrap::Configuration.new(args).remove
-  end
-end
-
-command :list do |c|
-  c.syntax = 'dotstrap list'
-  c.summary = 'List file path and URL for currently bundled specified GitHub repository (or all if none specified)'
-  c.action do |args, options|
-    Dotstrap::Configuration.new(args).list
-  end
-end
+Dotstrap::Cli.start(ARGV)

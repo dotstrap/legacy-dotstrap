@@ -1,7 +1,8 @@
 source 'http://rubygems.org'
 
+gem 'colorize', '~> 0.7.7'
 gem 'parallel', '~> 1.6'
-gem 'commander', '~> 4.3'
+gem 'thor', '~> 0.19.1'
 
 group :development do
   gem 'rspec', '~> 3.3'

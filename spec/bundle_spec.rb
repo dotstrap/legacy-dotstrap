@@ -8,7 +8,7 @@ describe Dotstrap::Bundle do
                %w(clear.fish mkcd.fish port_kill.fish port_top.fish td.fish)
     }
     @dotstrap_config_home = Dir.mktmpdir('test_dotstrap_config_home_')
-    # @bundle = FactoryGirl.create :bundle(@dotstrap_config_home, @repos)
+    # @bundle = FactoryGirl.create :bundle(@config_home, @repos)
     @bundle = Dotstrap::Bundle.new(@dotstrap_config_home, @repos.keys)
   end
 
