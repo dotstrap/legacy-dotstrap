@@ -5,7 +5,6 @@ require 'pathname'
 require_relative 'dotstrap/git'
 require_relative 'dotstrap/shell'
 
-
 module Dotstrap
   NAME        = 'dotstrap'
   EXE_NAME    = 'ds'
@@ -14,17 +13,13 @@ module Dotstrap
   HOMEPAGE    = 'http://github.com/mkwmms/dotstrap'
   SOURCE_URL  = 'http://github.com/mkwmms/dotstrap'
   DOC_URL     = 'http://www.rubydoc.info/github/mkwmms/dotstrap/master/Dotstrap'
-  SUMMARY     = %(bootstrap your shell dotfiles in parallel from GitHub repos)
-  DESCRIPTION = %(bootstrap your shell dotfiles in parallel from GitHub repos)
+  SUMMARY     = 'bootstrap your shell dotfiles in parallel from GitHub repos'
+  DESCRIPTION = 'bootstrap your shell dotfiles in parallel from GitHub repos'
   # DESCRIPTION = 'downloads repositories from GitHub in parallel and ' \
                 # 'symbolically links and/or creates a file to be sourced ' \
                 # 'according to your shell (fish, zsh, bash)'
 
   class << self
-
-    # def verbose?
-    #   Dotstrap::Cli.options[:verbose]
-    # end
 
     def config_home
       return ENV['DOTSTRAP_CONFIG_HOME'] if ENV.has_key?('DOTSTRAP_CONFIG_HOME')
