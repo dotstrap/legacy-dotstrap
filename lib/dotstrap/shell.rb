@@ -14,15 +14,16 @@ module Dotstrap
       configure_fish(repo_dir) if Dir.exist?(Dotstrap.shell_profile('fish'))
       configure_zsh(repo_dir)
       configure_bash(repo_dir)
-      $LOG.info { "configuration complete" }
+      $LOG.unknown { "configuration complete" }
     end
 
     def unconfigure(repo_dir = @repo_path)
+      return unless Dir.exist?(repo_dir)
       unconfigure_fish(repo_dir) if Dir.exist?(Dotstrap.shell_profile('fish'))
       unconfigure_zsh(repo_dir)
       unconfigure_bash(repo_dir)
       FileUtils.rm_r(repo_dir, force: true, secure: true)
-      $LOG.info { "removed: #{repo_dir}\n" }
+      $LOG.unknown { "removed: #{repo_dir}\n" }
     end
 
     def configure_fish(repo_dir)

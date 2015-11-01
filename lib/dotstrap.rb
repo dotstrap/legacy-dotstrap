@@ -113,19 +113,17 @@ module Dotstrap
     end
 
     def list(repos = @repos)
-      puts Dotstrap.verbose?
-      repos.each_with_index do |repo, index|
+      repos.each do |repo|
         bundle = Dotstrap::Git.new(repo)
         next unless Dir.exist?(bundle.repo_path)
-        puts "" unless index == 0
+        # puts "" unless index == 0
         puts repo
         puts bundle.url
         puts bundle.repo_path
-
-        # shell = Dotstrap::Shell.new(repo_path)
         # TODO: only output all associated files on --verbose
+        # shell = Dotstrap::Shell.new(repo_path)
         # shell.list(repo_path)
-        # puts "\n"
+        puts "\n"
       end
     end
 
