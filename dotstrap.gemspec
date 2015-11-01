@@ -11,9 +11,8 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib"]
   s.authors = ["William Myers"]
-  s.date = "2015-10-31"
+  s.date = "2015-11-01"
   s.description = "bootstrap your shell dotfiles in parallel from GitHub repos"
-  s.email = "mkwmms@icloud.com"
   s.executables = ["ds"]
   s.extra_rdoc_files = [
     "LICENSE.txt",
@@ -30,7 +29,6 @@ Gem::Specification.new do |s|
     "bin/ds",
     "dotstrap.gemspec",
     "lib/dotstrap.rb",
-    "lib/dotstrap/configuration.rb",
     "lib/dotstrap/git.rb",
     "lib/dotstrap/shell.rb",
     "spec/bundle_spec.rb",
@@ -39,6 +37,7 @@ Gem::Specification.new do |s|
   ]
   s.homepage = "http://github.com/mkwmms/dotstrap"
   s.licenses = ["MIT"]
+  s.required_ruby_version = Gem::Requirement.new(">= 1.9.2")
   s.rubygems_version = "2.4.5.1"
   s.summary = "bootstrap your shell dotfiles in parallel from GitHub repos"
 
@@ -46,8 +45,9 @@ Gem::Specification.new do |s|
     s.specification_version = 4
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
+      s.add_runtime_dependency(%q<colorize>, ["~> 0.7.7"])
       s.add_runtime_dependency(%q<parallel>, ["~> 1.6"])
-      s.add_runtime_dependency(%q<commander>, ["~> 4.3"])
+      s.add_runtime_dependency(%q<thor>, ["~> 0.19.1"])
       s.add_development_dependency(%q<rspec>, ["~> 3.3"])
       s.add_development_dependency(%q<yard>, ["~> 0.7"])
       s.add_development_dependency(%q<rdoc>, ["~> 3.12"])
@@ -56,8 +56,9 @@ Gem::Specification.new do |s|
       s.add_development_dependency(%q<simplecov>, ["~> 0.10"])
       s.add_development_dependency(%q<factory_girl>, ["~> 4.0"])
     else
+      s.add_dependency(%q<colorize>, ["~> 0.7.7"])
       s.add_dependency(%q<parallel>, ["~> 1.6"])
-      s.add_dependency(%q<commander>, ["~> 4.3"])
+      s.add_dependency(%q<thor>, ["~> 0.19.1"])
       s.add_dependency(%q<rspec>, ["~> 3.3"])
       s.add_dependency(%q<yard>, ["~> 0.7"])
       s.add_dependency(%q<rdoc>, ["~> 3.12"])
@@ -67,8 +68,9 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<factory_girl>, ["~> 4.0"])
     end
   else
+    s.add_dependency(%q<colorize>, ["~> 0.7.7"])
     s.add_dependency(%q<parallel>, ["~> 1.6"])
-    s.add_dependency(%q<commander>, ["~> 4.3"])
+    s.add_dependency(%q<thor>, ["~> 0.19.1"])
     s.add_dependency(%q<rspec>, ["~> 3.3"])
     s.add_dependency(%q<yard>, ["~> 0.7"])
     s.add_dependency(%q<rdoc>, ["~> 3.12"])
