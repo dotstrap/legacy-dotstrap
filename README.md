@@ -6,43 +6,25 @@
 [![Dependency Status](https://gemnasium.com/mkwmms/dotstrap.svg)](https://gemnasium.com/mkwmms/dotstrap)
 
 Downloads repositories from GitHub in parallel and symbolically links and/or 
-creates a file to be sourced in your 
-`~/.zshrc`, `~/.bash_profile`, or `~/.config/fish/config.fish`
-
-## how it works
-
-#### fish
-
-add `source $XDG_CONFIG_HOME/dotstrap/config.fish` to your `~/.config/fish/config.fish`
-
-  - `./functions/*.fish` are symbolically linked under `~/.config/fish/functions/`
-  - `./completions/*.fish` are symbolically linked under `~/.config/fish/completions/`
-  - all other `*.fish` files' paths are written to: `$XDG_CONFIG_HOME/dotstrap/config.fish` 
-
-
-#### zsh 
-
-add `source $XDG_CONFIG_HOME/dotstrap/dotstrap.zsh` to your `~/.zshrc`
-
-  - `*.zsh` files' paths are written to: `$XDG_CONFIG_HOME/dotstrap/config.zsh` 
-  - `*.sh` files' paths are written to: `$XDG_CONFIG_HOME/dotstrap/config.zsh` 
-
-#### bash
-
-add `source $XDG_CONFIG_HOME/dotstrap/config.bash` to your `~/.bash_profile` or similar
-
-  - `*.bash` files' paths are written to: `$XDG_CONFIG_HOME/dotstrap/config.bash` 
-  - `*.sh` files' paths are written to: `$XDG_CONFIG_HOME/dotstrap/config.bash` 
+creates a file to be sourced in your `~/.zshrc`, `~/.bash_profile`, or `~/.config/fish/config.fish`
   
-## install 
+## get it 
 
-`gem install dotstrap` 
+```bash
+gem install dotstrap
+``` 
 
 __or stay on the bleeding edge:__
 
-`git clone https://github.com/mkwmms/dotstrap.git` and then `rake install`
+```bash
+git clone https://github.com/mkwmms/dotstrap.git
+```
 
-## quick start
+```bash
+rake install
+```
+
+## use it
 
 download (or update) and configure `REPOS`:
 ```bash 
@@ -54,22 +36,52 @@ completely remove any symbolic links, `source` statements from dotstrap's config
 ds uninstall REPO
 ```
 
-`REPO` is a GitHub repository slug like `mkwmms/dotstrap-osx`
-
-`FILE` is a newline separated list of `REPOS`
-
 list the URL and install path for all currently installed repositories:
 ```bash
 ds list [REPO]
 ```
 
+`REPO` is a GitHub repository slug like `mkwmms/dotstrap-osx`
+
+`FILE` is a newline separated list of `REPOS`
+
+get help & see more commands:
 ```bash
 ds --help
 ```
 
-## TODO
+## how it works
 
-This is very much in alpha right now; here are some of my thoughts...
+#### fish
+
+add `source "$XDG_CONFIG_HOME/dotstrap/config.fish"` to your `~/.config/fish/config.fish`
+
+  - `./functions/*.fish` are symbolically linked under `~/.config/fish/functions/`
+  - `./completions/*.fish` are symbolically linked under `~/.config/fish/completions/`
+  - all other `*.fish` files' paths are written to: `$XDG_CONFIG_HOME/dotstrap/config.fish` 
+
+
+#### zsh 
+
+add `source "$XDG_CONFIG_HOME/dotstrap/dotstrap.zsh"` to your `~/.zshrc`
+
+  - `*.zsh` files' paths are written to: `$XDG_CONFIG_HOME/dotstrap/config.zsh` 
+  - `*.sh` files' paths are written to: `$XDG_CONFIG_HOME/dotstrap/config.zsh` 
+
+#### bash
+
+add `source "$XDG_CONFIG_HOME/dotstrap/config.bash"` to your `~/.bash_profile` or similar
+
+  - `*.bash` files' paths are written to: `$XDG_CONFIG_HOME/dotstrap/config.bash` 
+  - `*.sh` files' paths are written to: `$XDG_CONFIG_HOME/dotstrap/config.bash` 
+  
+_Note_: if `$XDG_CONFIG_HOME` is not set, it defaults to `~/.config`. Read about the [XDG] base directory spec. 
+
+## roadmap
+
+This is very much in alpha right now. 
+
+Here are some of my thoughts...
 
 - [ ] install config files from arbiturary URLs
 - [ ] add a mechanism to specify the load order of paths (the order in which the repo config
@@ -82,3 +94,4 @@ through a YAML (or similar) config file at root of repo or via shell environment
 - [ ] use YAML (or similar) to allow downloading/loading on conditions (OS, if a program is installed etc.)
 - [ ] add a mechanism to determine if a file is simply a fish function (if it is outside of `./functions` and symlink it to `~/.config/fish/functions` instead of `source`ing to take advantage of fish lazy loading functions
 
+[XDG]: http://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html
