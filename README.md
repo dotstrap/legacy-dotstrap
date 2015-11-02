@@ -45,11 +45,6 @@ ds list [REPO]
 
 `FILE` is a newline separated list of `REPOS`
 
-get help & see more commands:
-```bash
-ds --help
-```
-
 ## how it works
 
 #### fish
