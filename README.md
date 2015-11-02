@@ -28,7 +28,7 @@ rake install
 
 ## use it
 
-download (or update) and configure `REPOS`:
+download (or update) and configure `REPOs`:
 ```bash 
 ds install REPO|FILE
 ```
@@ -72,23 +72,6 @@ add `source "$XDG_CONFIG_HOME/dotstrap/config.bash"` to your `~/.bash_profile` o
   - `*.sh` files' paths are written to: `$XDG_CONFIG_HOME/dotstrap/config.bash` 
   
 _Note_: if `$XDG_CONFIG_HOME` is not set, it defaults to `~/.config`. Read about the [XDG] base directory spec. 
-
-## roadmap
-
-This is very much in alpha right now. 
-
-Here are some of my thoughts...
-
-- [ ] install config files from arbiturary URLs
-- [ ] add a mechanism to specify the load order of paths (the order in which the repo config
-files are added to dotstrap's config file) so that, for example, `path.{sh,zsh,fish}` 
-is loaded first so that it can set up your `$PATH` before anything else
-- [ ] list config files of `REPO` when running `ds list REPO`
-- [ ] add a mechanism to define what config files to load and where to put them, possibly
-through a YAML (or similar) config file at root of repo or via shell environment variables
-- [ ] prompt user to let dotstrap automatically add the correct `source $XDG_CONFIG_HOME/dotstrap/dotstrap.X` statement to the proper shell innitialization file 
-- [ ] use YAML (or similar) to allow downloading/loading on conditions (OS, if a program is installed etc.)
-- [ ] add a mechanism to determine if a file is simply a fish function (if it is outside of `./functions` and symlink it to `~/.config/fish/functions` instead of `source`ing to take advantage of fish lazy loading functions
 
 [bundler]: https://github.com/bundler/bundler/
 [XDG]: http://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html
