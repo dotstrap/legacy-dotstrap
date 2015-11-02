@@ -68,7 +68,9 @@ module Dotstrap
     end
 
     def shell_config_home(shell = shell_name)
-      Pathname.new(shell_profile(shell)).parent
+      h = Pathname.new(shell_profile(shell)).parent
+      $LOG.debug { "SHELL_CONFIG_HOME:#{h}" }
+      h
     end
 
     def config_file(shell = shell_name)
