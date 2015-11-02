@@ -16,6 +16,8 @@ gem install dotstrap
 
 __or stay on the bleeding edge:__
 
+requires [bundler]
+
 ```bash
 git clone https://github.com/mkwmms/dotstrap.git
 ```
@@ -55,7 +57,6 @@ add `source "$XDG_CONFIG_HOME/dotstrap/config.fish"` to your `~/.config/fish/con
   - `./completions/*.fish` are symbolically linked under `~/.config/fish/completions/`
   - all other `*.fish` files' paths are written to: `$XDG_CONFIG_HOME/dotstrap/config.fish` 
 
-
 #### zsh 
 
 add `source "$XDG_CONFIG_HOME/dotstrap/dotstrap.zsh"` to your `~/.zshrc`
@@ -89,4 +90,5 @@ through a YAML (or similar) config file at root of repo or via shell environment
 - [ ] use YAML (or similar) to allow downloading/loading on conditions (OS, if a program is installed etc.)
 - [ ] add a mechanism to determine if a file is simply a fish function (if it is outside of `./functions` and symlink it to `~/.config/fish/functions` instead of `source`ing to take advantage of fish lazy loading functions
 
+[bundler]: https://github.com/bundler/bundler/
 [XDG]: http://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html
