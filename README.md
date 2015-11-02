@@ -58,20 +58,18 @@ by a new line. (lines starting with `#` are ignored)
 
 run `ds --help` for a full list of commands
 
-## roadmap
+## TODO
 
 This is very much in alpha right now...
 
-- install config files from arbiturary URLs
-- list config files when running `ds list <some repo>`
-- add a mechanism to define what config files to load and where to put them, possibly
+- [ ] install config files from arbiturary URLs
+- [ ] list config files of `REPO` when running `ds list REPO`
+- [ ] add a mechanism to define what config files to load and where to put them, possibly
 through a YAML (or similar) config file at root of repo or via shell environment variables
-- add a mechanism to specify the load order of paths (the order in which the repo config
+- [ ] add a mechanism to specify the load order of paths (the order in which the repo config
 files are added to dotstrap's config file) so that, for example, `path.{sh,zsh,fish}` 
 is loaded first so that it can set up your `$PATH` before anything else
-- prompt user to let dotstrap automatically add the correct `source $XDG_CONFIG_HOME/dotstrap/dotstrap.X` statement to the proper shell innitialization file 
-
-### Copyright
-
-Copyright (c) 2015 William Myers. See LICENSE.txt for further details.
+- [ ] prompt user to let dotstrap automatically add the correct `source $XDG_CONFIG_HOME/dotstrap/dotstrap.X` statement to the proper shell innitialization file 
+- [ ] use YAML (or similar) to allow downloading/loading on conditions (OS, if a program is installed etc.)
+- [ ] add a mechanism to determine if a file is simply a fish function (if it is outside of `./functions` and symlink it to `~/.config/fish/functions` instead of `source`ing to take advantage of fish lazy loading functions
 
