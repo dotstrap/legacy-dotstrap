@@ -49,13 +49,12 @@ ds list [REPO]
 
 ## how it works
 
-#### fish
+#### bash
 
-add `source "$XDG_CONFIG_HOME/dotstrap/config.fish"` to your `~/.config/fish/config.fish`
+add `source "$XDG_CONFIG_HOME/dotstrap/config.bash"` to your `~/.bash_profile` or similar
 
-  - `./functions/*.fish` are symbolically linked under `~/.config/fish/functions/`
-  - `./completions/*.fish` are symbolically linked under `~/.config/fish/completions/`
-  - all other `*.fish` files' paths are written to: `$XDG_CONFIG_HOME/dotstrap/config.fish` 
+  - `*.bash` files' paths are written to: `$XDG_CONFIG_HOME/dotstrap/config.bash` 
+  - `*.sh` files' paths are written to: `$XDG_CONFIG_HOME/dotstrap/config.bash` 
 
 #### zsh 
 
@@ -64,14 +63,23 @@ add `source "$XDG_CONFIG_HOME/dotstrap/dotstrap.zsh"` to your `~/.zshrc`
   - `*.zsh` files' paths are written to: `$XDG_CONFIG_HOME/dotstrap/config.zsh` 
   - `*.sh` files' paths are written to: `$XDG_CONFIG_HOME/dotstrap/config.zsh` 
 
-#### bash
+#### fish
 
-add `source "$XDG_CONFIG_HOME/dotstrap/config.bash"` to your `~/.bash_profile` or similar
+add `source "$XDG_CONFIG_HOME/dotstrap/config.fish"` to your `~/.config/fish/config.fish`
 
-  - `*.bash` files' paths are written to: `$XDG_CONFIG_HOME/dotstrap/config.bash` 
-  - `*.sh` files' paths are written to: `$XDG_CONFIG_HOME/dotstrap/config.bash` 
+  - `./functions/*.fish` are symbolically linked under `~/.config/fish/functions/`
+  - `./completions/*.fish` are symbolically linked under `~/.config/fish/completions/`
+  - all other `*.fish` files' paths are written to: `$XDG_CONFIG_HOME/dotstrap/config.fish` 
   
 _Note_: if `$XDG_CONFIG_HOME` is not set, it defaults to `~/.config`. Read about the [XDG] base directory spec. 
 
+## in the wild
+- I primarily wrote this to be able to use my [dotfiles] on bash, zsh and fish (yes I use all three on a daily basis)
+
+## similar projects
+- [antibody]: super fast, great app written in go. It only does ZSH and it is dynamic (it doesn't create a static file that can be sourced from your shell's init file), but man those microseconds are precious when it comes to loading my shell prompt. I still use it sometimes though because it is pretty dang cool.
+
 [bundler]: https://github.com/bundler/bundler/
 [XDG]: http://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html
+[antibody]: https://github.com/caarlos0/antibody
+[dotfiles]: https://github.com/mkwmms/dotfiles
