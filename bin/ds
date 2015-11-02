@@ -3,24 +3,29 @@
 require 'logger'
 require 'thor'
 require 'dotstrap'
+require 'colorize'
 
 # Initialize logging
 $LOG = Logger.new(STDOUT)
 $LOG.level = Logger::WARN
 $LOG.formatter = proc do |severity, datetime, progname, msg|
-  require 'colorize'
   case (severity)
-    when 'ANY'
-      # "=> ".colorize(:blue) + "#{msg}\n"
-     "#{msg}\n"
-    when 'DEBUG'
-      "DEBUG".colorize(:yellow).underline + ": #{progname} #{datetime}: #{msg}\n"
-    when 'INFO'
-      # "[INFO] ".colorize(:blue) + "#{msg}\n"
-      "#{msg}\n"
-    else
-      "#{severity}".colorize(:red).underline + ": #{progname} #{datetime} #{msg}\n"
+  when 'ANY'
+    "#{msg}\n"
+  when 'DEBUG'
+    "#{'Debug'.underline}: #{datetime}: #{msg}\n"
+  when 'INFO'
+    "#{msg}\n"
+  when 'WARN'
+    "#{'Warning'.colorize(:yellow).underline}: #{msg}\n"
+  else
+    "#{severity.colorize(:red).underline}: #{datetime} #{msg}\n"
   end
+end
+
+def garbled_output_warning_string
+  'Output might be slightly out of order because' \
+  ' thread synchronization is expensive just for pretty output.'
 end
 
 def set_log_level(level = nil)
@@ -36,22 +41,24 @@ def set_log_level(level = nil)
         end
   end
   $LOG.level = level
+  $LOG.warn { garbled_output_warning_string } if $LOG.debug?
 end
 
 def repo_format_desc; <<-DESC
     REPO is a GitHub repository slug in the form: `username/repository`
 
-    If REPO is a file: read a newline seperated list of repositories (in the form specified above)
+    If REPO is a file: read a newline seperated list of repositories
+    (in the form specified above)
     \x5Lines starting with `#` are treated as comments and are ignored.
   DESC
 end
 
 module Dotstrap
   class Dotstrap::Cli < Thor
-    class_option "verbose", :type => :boolean, :aliases => "-v",
-                 :desc => "Enable verbose output mode (output will be somewhat garbled due to threading)"
-    class_option "debug", :type => :boolean, :aliases => "-d",
-                 :desc => "Enable debug output mode (output will be somewhat garbled due to threading)"
+    class_option 'verbose', type: :boolean, aliases: '-v',
+                            desc: 'Enable verbose output mode'
+    class_option 'debug', type: :boolean, aliases: '-d',
+                          desc: 'Enable debug output mode'
     # class_option "quiet", :type => :boolean, :aliases => "-q",
     #              :desc => "Supress all output"
 
@@ -68,8 +75,10 @@ module Dotstrap
       \x5  `echo "source #{Dotstrap.config_file}" >> #{Dotstrap.shell_profile}`
 
       Examples:
-      \x5  Download https://github.com/mkwmms/dotstrap-osx to #{Dotstrap.config_home}
-      and creates #{Dotstrap.config_file} with commands to source all relevant configure files
+      \x5  Download https://github.com/mkwmms/dotstrap-osx to
+      #{Dotstrap.config_home}
+      and creates #{Dotstrap.config_file} with commands to
+      source all relevant configure files
       \x5    $ ds install mkwmms/dotstrap-osx
 
            Download all the repositories listed in the file ~/.config/repos.txt
@@ -80,19 +89,24 @@ module Dotstrap
       args.each do |repo|
         if File.exist?(repo)
           File.open(repo).each do |line|
+            # FIXME: strip everything afer '#' until newline (repo # comment)
             repos << line.strip unless line.start_with?('#')
           end
         else
           repos << repo
         end
       end
+      repos = repos.reject(&:empty?)
+
       set_log_level
+      $LOG.debug { "REPO ARGS:#{repos}" }
       Dotstrap::Configuration.new(repos).configure
     end
 
-    desc "uninstall REPO...", 'Remove specified REPO'
+    desc 'uninstall REPO...', 'Remove specified REPO'
     long_desc <<-LONGDESC
-      Removes REPO's shell configuration file(s) and lines from dotstraps's config file.
+      Removes REPO's shell configuration file(s) and 
+      lines from dotstraps's config file.
 
       #{repo_format_desc}
     LONGDESC
@@ -107,11 +121,15 @@ module Dotstrap
           repos << repo
         end
       end
+      repos = repos.reject(&:empty?)
+
       set_log_level
+      $LOG.debug { "REPO ARGS:#{repos}" }
       Dotstrap::Configuration.new(repos).remove
     end
 
-    desc "list [REPO...]", 'Print directory path & URL for currently installed REPO'
+    desc 'list [REPO...]',
+         'Print directory path & URL for currently installed REPO'
     long_desc <<-LONGDESC
       Print directory path & URL for currently installed REPO OR
       print directory path & URL for all currently installed repositories
@@ -122,7 +140,7 @@ module Dotstrap
     def list(*args)
       repos = []
       if args.empty?
-        Dotstrap::Configuration.new(Dotstrap::installed_repos).list
+        Dotstrap::Configuration.new(Dotstrap.installed_repos).list
         return
       end
 
@@ -135,7 +153,10 @@ module Dotstrap
           repos << repo
         end
       end
+      repos = repos.reject(&:empty?)
+
       set_log_level
+      $LOG.debug { "REPO ARGS:#{repos}" }
       Dotstrap::Configuration.new(repos).list
     end
   end

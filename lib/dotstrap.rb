@@ -20,6 +20,7 @@ module Dotstrap
                 # 'according to your shell (fish, zsh, bash)'
 
   class << self
+    require 'pathname'
 
     def config_home
       return ENV['DOTSTRAP_CONFIG_HOME'] if ENV.has_key?('DOTSTRAP_CONFIG_HOME')
@@ -48,20 +49,26 @@ module Dotstrap
 
     # return the shell profile file based on users' preference shell
     def shell_profile(shell = shell_name)
-      case shell
+      profile =
+        case shell
         when 'bash' then
           %s[.bash_profile .profile].each do |file|
-            profile = File.join(Dir.home, file)
-            return profile.srtip if File.exist?(profile)
+            bash_profile = File.join(Dir.home, file)
+            break if File.exist?(bash_profile)
           end
+          bash_profile
         when 'zsh' then
-          profile = File.join(Dir.home, '.zshrc')
-          return profile.strip if File.exist?(profile)
+          File.join(Dir.home, '.zshrc')
         when 'fish' then
-          profile = File.join(Dir.home, '.config', 'fish', 'config.fish')
-          return profile.strip if File.exist?(profile)
-        # File.exist?(file) ? file : fail ShellProfileError, "Fish shell config file not found
-      end
+          File.join(Dir.home, '.config', 'fish', 'config.fish')
+          # File.exist?(file) ? file : fail ShellProfileError, "Fish shell config file not found
+        end
+      $LOG.debug { "SHELL_PROFILE:#{profile}" }
+      profile.strip
+    end
+
+    def shell_config_home(shell = shell_name)
+      Pathname.new(shell_profile(shell)).parent
     end
 
     def config_file(shell = shell_name)
@@ -84,6 +91,8 @@ module Dotstrap
   end
 
   class Dotstrap::Configuration
+    require 'fileutils'
+
     attr_accessor :repos
 
     def initialize(repos = nil)
@@ -92,8 +101,14 @@ module Dotstrap
     end
 
     def configure(dest_dir = Dotstrap.config_home, repos = @repos)
+      fish_config_home = Dotstrap.shell_config_home('fish')
+      if Dir.exist?(fish_config_home)
+        FileUtils.mkdir_p(File.join(fish_config_home, 'functions'))
+        FileUtils.mkdir_p(File.join(fish_config_home, 'completions'))
+      end
+
       Parallel.map(repos, in_threads: 16) do |r|
-        bundle = Dotstrap::Git.new(r)
+        bundle = Dotstrap::Git.new(r, dest_dir)
         bundle.clone
         load_configs([bundle.repo_path])
       end
@@ -108,6 +123,7 @@ module Dotstrap
       end
     end
 
+    # TODO: return a data-structure from `list`, do not print out
     def list(repos = @repos)
       repos.each do |repo|
         bundle = Dotstrap::Git.new(repo)
