@@ -84,7 +84,8 @@ module Dotstrap
            Download all the repositories listed in the file ~/.config/repos.txt
       \x5    $ ds install ~/.config/repos.txt
     LONGDESC
-    def install(*args)
+    def install(repo, *args)
+      args << repo # so thor will complain when you call `install` with no args
       repos = []
       args.each do |repo|
         if File.exist?(repo)
@@ -110,7 +111,8 @@ module Dotstrap
 
       #{repo_format_desc}
     LONGDESC
-    def uninstall(*args)
+    def uninstall(repo, *args)
+      args << repo # so thor will complain when you call `uninstall` with no args
       repos = []
       args.each do |repo|
         if File.exist?(repo)

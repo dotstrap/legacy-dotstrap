@@ -52,7 +52,8 @@ module Dotstrap
       profile =
         case shell
         when 'bash' then
-          %s[.bash_profile .profile].each do |file|
+          bash_profile = ''
+          ['.bash_profile' '.profile'].each do |file|
             bash_profile = File.join(Dir.home, file)
             break if File.exist?(bash_profile)
           end
@@ -64,7 +65,7 @@ module Dotstrap
           # File.exist?(file) ? file : fail ShellProfileError, "Fish shell config file not found
         end
       $LOG.debug { "SHELL_PROFILE:#{profile}" }
-      profile.strip
+      profile.strip unless profile.nil?
     end
 
     def shell_config_home(shell = shell_name)
