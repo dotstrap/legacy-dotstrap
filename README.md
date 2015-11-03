@@ -6,70 +6,92 @@
 [![Dependency Status](https://gemnasium.com/mkwmms/dotstrap.svg)](https://gemnasium.com/mkwmms/dotstrap)
 
 Downloads repositories from GitHub in parallel and symbolically links and/or 
-creates a file to be sourced in your 
-`~/.zshrc`, `~/.bash_profile`, `~/.config/fish/config.fish` or similar 
+creates a file to be sourced in your `~/.zshrc`, `~/.bash_profile`, or `~/.config/fish/config.fish`
+  
+## get it 
+
+```bash
+gem install dotstrap
+``` 
+
+__or stay on the bleeding edge:__
+
+requires [bundler]
+
+```bash
+git clone https://github.com/mkwmms/dotstrap.git
+```
+
+```bash
+rake install
+```
+
+## use it
+
+download (or update) and configure `REPOs`:
+```bash 
+ds install REPO|FILE
+```
+
+completely remove any symbolic links, `source` statements from dotstrap's config file, & the repository itself:
+```bash
+ds uninstall REPO
+```
+
+list the URL and install path for all currently installed repositories:
+```bash
+ds list [REPO]
+```
+
+`REPO` is a GitHub repository slug like `mkwmms/dotstrap-osx`
+
+`FILE` is a newline separated list of `REPOS`
 
 ## how it works
 
-#### fish
+#### bash
 
- just add `source $XDG_CONFIG_HOME/dotstrap/config.fish` to your `~/.config/fish/config.fish`
+add `source "$XDG_CONFIG_HOME/dotstrap/config.bash"` to your `~/.bash_profile` or similar
 
-  - `./functions/*.fish` are symbolically linked under `~/.config/fish/functions/`
-  - `./completions/*.fish` are symbolically linked under `~/.config/fish/completions/`
-  - all other `*.fish` files' paths are written to: `$XDG_CONFIG_HOME/dotstrap/config.fish` 
-
+  - `*.bash` files' paths are written to: `$XDG_CONFIG_HOME/dotstrap/config.bash` 
+  - `*.sh` files' paths are written to: `$XDG_CONFIG_HOME/dotstrap/config.bash` 
 
 #### zsh 
 
-just add `source $XDG_CONFIG_HOME/dotstrap/dotstrap.zsh` to your `~/.zshrc`
+add `source "$XDG_CONFIG_HOME/dotstrap/dotstrap.zsh"` to your `~/.zshrc`
 
   - `*.zsh` files' paths are written to: `$XDG_CONFIG_HOME/dotstrap/config.zsh` 
   - `*.sh` files' paths are written to: `$XDG_CONFIG_HOME/dotstrap/config.zsh` 
 
-#### bash
+#### fish
 
-just add `source $XDG_CONFIG_HOME/dotstrap/config.bash` to your `~/.bash_profile` or similar
+add `source "$XDG_CONFIG_HOME/dotstrap/config.fish"` to your `~/.config/fish/config.fish`
 
-  - `*.bash` files' paths are written to: `$XDG_CONFIG_HOME/dotstrap/config.bash` 
-  - `*.sh` files' paths are written to: `$XDG_CONFIG_HOME/dotstrap/config.bash` 
+  - `./functions/*.fish` are symbolically linked under `~/.config/fish/functions/`
+  - `./completions/*.fish` are symbolically linked under `~/.config/fish/completions/`
+  - all other `*.fish` files' paths are written to: `$XDG_CONFIG_HOME/dotstrap/config.fish` 
   
-## install 
+_Note_: if `$XDG_CONFIG_HOME` is not set, it defaults to `~/.config`. Read about the [XDG] base directory spec. 
 
-`gem install dotstrap` __or__
-`git clone https://github.com/mkwmms/dotstrap.git` and then `rake install`
+## in the wild
+The entire purpose of `dotstrap` is to help you make your dotfiles modular while still keeping your prompt speedy. I also wanted to be able to use my [dotfiles] on bash, [zsh] and [fish] (yes I use all three on a daily basis).
 
-## usage
+There are many repositories out there that will work out of the box with `dotstrap` and many more that would only require minimal tweaking to get them to work. 
 
-`ds install <github repo>`
+Check out the [wiki] for a good list of repos to get you started.
 
-`ds remove <github repo>`
+## similar projects
+- [antibody]: super fast, great app written in go. It only does ZSH and it is dynamic (it doesn't create a static file that can be sourced from your shell's init file), but man those microseconds are precious when it comes to loading my shell prompt. I still use it sometimes though because it is pretty dang cool.
 
-where `<github repo>` is repository slug like 'mkwmms/dotstrap-osx'
 
-you can also install repos from a file like:
+[dotfiles]: https://github.com/mkwmms/dotfiles
+[wiki]: https://github.com/mkwmms/dotstrap/wiki
 
-`ds install -f FILE`
+[XDG]: http://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html
 
-where `FILE` is a list with the same syntax as `<github repo>`, each seperated
-by a new line. (lines starting with `#` are ignored)
-
-`ds list`
-
-run `ds --help` for a full list of commands
-
-## TODO
-
-This is very much in alpha right now...
-
-- [ ] install config files from arbiturary URLs
-- [ ] list config files of `REPO` when running `ds list REPO`
-- [ ] add a mechanism to define what config files to load and where to put them, possibly
-through a YAML (or similar) config file at root of repo or via shell environment variables
-- [ ] add a mechanism to specify the load order of paths (the order in which the repo config
-files are added to dotstrap's config file) so that, for example, `path.{sh,zsh,fish}` 
-is loaded first so that it can set up your `$PATH` before anything else
-- [ ] prompt user to let dotstrap automatically add the correct `source $XDG_CONFIG_HOME/dotstrap/dotstrap.X` statement to the proper shell innitialization file 
-- [ ] use YAML (or similar) to allow downloading/loading on conditions (OS, if a program is installed etc.)
-- [ ] add a mechanism to determine if a file is simply a fish function (if it is outside of `./functions` and symlink it to `~/.config/fish/functions` instead of `source`ing to take advantage of fish lazy loading functions
-
+[homebrew]: https://github.com/Homebrew/homebrew
+[bundler]: https://github.com/bundler/bundler/
+[antibody]: https://github.com/caarlos0/antibody
+[zsh]: http://zsh.sourceforge.net
+[fish]: http://fishshell.com/
+[fasd]: https://github.com/clvv/fasd
