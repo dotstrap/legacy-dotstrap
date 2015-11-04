@@ -35,16 +35,19 @@ module Dotstrap
 
     def shell_name
       # FIXME: bad to rely on SHELL environment variable to determine shell?
-      case ENV['SHELL']
+      shell =
+        case ENV['SHELL']
         when %r{/(ba)?sh} then
           'bash'
         when %r{/zsh} then
           'zsh'
         when %r{/fish} then
           'fish'
-        # else
-        # raise UnsupportedShellError(ENV['SHELL'])
-      end
+        else
+          raise RuntimeError, ENV['SHELL']
+        end
+      $LOG.debug { "SHELL_NAME:#{shell}" }
+      shell
     end
 
     # return the shell profile file based on users' preference shell
