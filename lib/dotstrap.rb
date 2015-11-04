@@ -50,7 +50,6 @@ module Dotstrap
       shell
     end
 
-    # return the shell profile file based on users' preference shell
     def shell_profile(shell = shell_name)
       profile =
         case shell
@@ -107,16 +106,16 @@ module Dotstrap
     end
 
     def configure(dest_dir = Dotstrap.config_home, repos = @repos)
-      fish_config_home = Dotstrap.shell_config_home('fish')
-      if Dir.exist?(fish_config_home)
+      if Dotstrap.shell_name == 'fish'
         FileUtils.mkdir_p(File.join(fish_config_home, 'functions'))
         FileUtils.mkdir_p(File.join(fish_config_home, 'completions'))
       end
 
       Parallel.map(repos, in_threads: 16) do |r|
         bundle = Dotstrap::Git.new(r, dest_dir)
-        bundle.clone
-        load_configs([bundle.repo_path])
+        path = bundle.clone
+        puts path
+        load_configs([path]) if path
       end
     end
 
@@ -134,13 +133,10 @@ module Dotstrap
       repos.each do |repo|
         bundle = Dotstrap::Git.new(repo)
         next unless Dir.exist?(bundle.repo_path)
-        # puts "" unless index == 0
-        puts repo
+        puts "#{'=>'.colorize(:blue)} #{repo}"
         puts bundle.url
         puts bundle.repo_path
         # TODO: only output all associated files on --verbose
-        # shell = Dotstrap::Shell.new(repo_path)
-        # shell.list(repo_path)
         puts "\n"
       end
     end
@@ -149,11 +145,7 @@ module Dotstrap
       repo_path.each do |r|
         shell = Dotstrap::Shell.new(r)
         shell.configure(repo_path)
-        # puts "Make sure to `source \"#{shell.dotstrap_config_file}\"` in your shell " \
-        # "startup file" unless shell.repo_config_files.empty?
       end
     end
   end
 end
-
-# TODO: implement downloading a regular URL

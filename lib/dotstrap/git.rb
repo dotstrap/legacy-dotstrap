@@ -23,19 +23,30 @@ module Dotstrap
     # is mangled because the threads are not synchronized
     def clone(url = @url, repo_path = @repo_path, repo = @repo)
       if Dir.exist?(repo_path)
-        pull(repo_path)
-        return
+        return pull(repo_path)
       end
-      `git clone #{$LOG.debug? ? '' : '-q'} #{url} #{repo_path}`
+      return false unless system('git', 'clone', *git_verbosity, url, repo_path)
       $LOG.debug { "CLONE #{repo} #{url} #{repo_path}" }
       $LOG.unknown { "#{'=> '.colorize(:blue)}#{repo}\nupdated" }
+      repo_path
     end
 
     def pull(repo_path = @repo_path, repo = @repo)
       Dir.chdir(repo_path)
-      `git pull #{$LOG.debug? ? '' : '-q'}`
+      return false unless system('git', 'pull', *git_verbosity, repo_path)
       $LOG.debug { "PULL #{repo} #{url} #{repo_path}" }
       $LOG.unknown { "#{'=> '.colorize(:blue)}#{repo}\nupdated" }
+      repo_path
+    end
+
+    private
+
+    def git_verbosity
+      if $LOG.debug?
+        '--verbose'
+      else
+        return '--quiet'
+      end
     end
   end
 end

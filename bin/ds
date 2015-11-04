@@ -23,34 +23,13 @@ $LOG.formatter = proc do |severity, datetime, progname, msg|
   end
 end
 
-def garbled_output_warning_string
-  'Output might be slightly out of order because' \
-  ' thread synchronization is expensive just for pretty output.'
-end
+def __repo_format_desc; <<-DESC
+  REPO is a GitHub repository slug in the form: `username/repository`
 
-def set_log_level(level = nil)
-  # $LOG.close; return if options[:quiet]
-  unless level
-    level =
-        if options[:verbose]
-          Logger::INFO
-        elsif options[:debug]
-          Logger::DEBUG
-        else
-          $LOG.level = Logger::WARN
-        end
-  end
-  $LOG.level = level
-  $LOG.warn { garbled_output_warning_string } if $LOG.debug?
-end
-
-def repo_format_desc; <<-DESC
-    REPO is a GitHub repository slug in the form: `username/repository`
-
-    If REPO is a file: read a newline seperated list of repositories
-    (in the form specified above)
-    \x5Lines starting with `#` are treated as comments and are ignored.
-  DESC
+  If REPO is a file: read a newline seperated list of repositories
+  (in the form specified above)
+  \x5Lines starting with `#` are treated as comments and are ignored.
+    DESC
 end
 
 module Dotstrap
@@ -61,6 +40,13 @@ module Dotstrap
                           desc: 'Enable debug output mode'
     # class_option "quiet", :type => :boolean, :aliases => "-q",
     #              :desc => "Supress all output"
+    map %w[--version -V] => :__print_version
+
+    desc "--version, -V", "Print the version and exit"
+    def __print_version
+      puts "#{Dotstrap::NAME.colorize(:blue)} #{Dotstrap::VERSION}"
+      exit
+    end
 
     desc 'install REPO...', 'Download and configure REPO'
     long_desc <<-LONGDESC
@@ -69,7 +55,7 @@ module Dotstrap
       by creating a file to be sourced from within your shell startup file
       and/or symbolically linking relevant files.
 
-      #{repo_format_desc}
+      #{__repo_format_desc}
 
       Remember to source dotstrap's config file in your shell's startup file:
       \x5  `echo "source #{Dotstrap.config_file}" >> #{Dotstrap.shell_profile}`
@@ -99,7 +85,7 @@ module Dotstrap
       end
       repos = repos.reject(&:empty?)
 
-      set_log_level
+      __set_log_level
       $LOG.debug { "REPO ARGS:#{repos}" }
       Dotstrap::Configuration.new(repos).configure
     end
@@ -109,7 +95,7 @@ module Dotstrap
       Removes REPO's shell configuration file(s) and 
       lines from dotstraps's config file.
 
-      #{repo_format_desc}
+      #{__repo_format_desc}
     LONGDESC
     def uninstall(repo, *args)
       args << repo # so thor will complain when you call `uninstall` with no args
@@ -125,7 +111,7 @@ module Dotstrap
       end
       repos = repos.reject(&:empty?)
 
-      set_log_level
+      __set_log_level
       $LOG.debug { "REPO ARGS:#{repos}" }
       Dotstrap::Configuration.new(repos).remove
     end
@@ -137,7 +123,7 @@ module Dotstrap
       print directory path & URL for all currently installed repositories
       if REPO is not specified
 
-      #{repo_format_desc}
+      #{__repo_format_desc}
     LONGDESC
     def list(*args)
       repos = []
@@ -157,9 +143,32 @@ module Dotstrap
       end
       repos = repos.reject(&:empty?)
 
-      set_log_level
+      __set_log_level
       $LOG.debug { "REPO ARGS:#{repos}" }
       Dotstrap::Configuration.new(repos).list
+    end
+
+    private
+
+    def __set_log_level(level = nil)
+      # $LOG.close; return if options[:quiet]
+      unless level
+        level =
+          if options[:verbose]
+            Logger::INFO
+          elsif options[:debug]
+            Logger::DEBUG
+          else
+            Logger::WARN
+          end
+      end
+      $LOG.level = level
+      # $LOG.warn { __garbled_output_warning_string } if $LOG.info?
+    end
+
+    def __garbled_output_warning_string
+      'Output might be slightly out of order because' \
+        ' thread synchronization is expensive just for pretty output.'
     end
   end
 end

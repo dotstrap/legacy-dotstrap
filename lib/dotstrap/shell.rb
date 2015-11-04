@@ -11,7 +11,7 @@ module Dotstrap
     end
 
     def configure(repo_dir = @repo_path)
-      configure_fish(repo_dir) if Dir.exist?(Dotstrap.shell_config_home('fish'))
+      configure_fish(repo_dir) if should_configure_fish?
       configure_zsh(repo_dir)
       configure_bash(repo_dir)
       $LOG.unknown { "configuration complete" }
@@ -19,7 +19,7 @@ module Dotstrap
 
     def unconfigure(repo_dir = @repo_path)
       return unless Dir.exist?(repo_dir)
-      unconfigure_fish(repo_dir) if Dir.exist?(Dotstrap.shell_config_home('fish'))
+      unconfigure_fish(repo_dir) if should_configure_fish?
       unconfigure_zsh(repo_dir)
       unconfigure_bash(repo_dir)
       FileUtils.rm_r(repo_dir, force: true, secure: true)
@@ -168,6 +168,10 @@ module Dotstrap
       c = Dir.glob(File.join(dir, '**', '*.{sh,zsh}'))
       $LOG.debug { "ZSH_CONFIGS:#{c}" }
       c
+    end
+
+    def should_configure_fish?
+       Dir.exist?(Dotstrap.shell_config_home('fish'))
     end
   end
 end
