@@ -8,7 +8,7 @@ require_relative 'dotstrap/shell'
 module Dotstrap
   NAME        = 'dotstrap'
   EXE_NAME    = 'ds'
-  VERSION     = '0.5.4'
+  VERSION     = '0.5.5'
   AUTHOR      = 'William Myers'
   HOMEPAGE    = 'http://github.com/mkwmms/dotstrap'
   SOURCE_URL  = 'http://github.com/mkwmms/dotstrap'
@@ -55,7 +55,8 @@ module Dotstrap
       profile =
         case shell
         when 'bash' then
-          %s[.bash_profile .profile].each do |file|
+          bash_profile = ''
+          ['.bash_profile' '.profile'].each do |file|
             bash_profile = File.join(Dir.home, file)
             break if File.exist?(bash_profile)
           end
@@ -67,7 +68,7 @@ module Dotstrap
           # File.exist?(file) ? file : fail ShellProfileError, "Fish shell config file not found
         end
       $LOG.debug { "SHELL_PROFILE:#{profile}" }
-      profile.strip
+      profile.strip unless profile.nil?
     end
 
     def shell_config_home(shell = shell_name)
