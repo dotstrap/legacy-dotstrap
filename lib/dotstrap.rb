@@ -107,6 +107,7 @@ module Dotstrap
 
     def configure(dest_dir = Dotstrap.config_home, repos = @repos)
       if Dotstrap.shell_name == 'fish'
+        fish_config_home = Dotstrap.shell_config_home('fish')
         FileUtils.mkdir_p(File.join(fish_config_home, 'functions'))
         FileUtils.mkdir_p(File.join(fish_config_home, 'completions'))
       end
