@@ -39,7 +39,7 @@ Gem::Specification.new do |s|
   s.homepage = "http://github.com/mkwmms/dotstrap"
   s.licenses = ["MIT"]
   s.required_ruby_version = Gem::Requirement.new(">= 1.9.2")
-  s.rubygems_version = "2.2.2"
+  s.rubygems_version = "2.4.8"
   s.summary = "bootstrap your shell dotfiles in parallel from GitHub repos"
 
   if s.respond_to? :specification_version then
