@@ -72,14 +72,14 @@ module Dotstrap
            Download all the repositories listed in the file ~/.config/repos.txt
       \x5    $ ds install ~/.config/repos.txt
     LONGDESC
-    option :no_fetch, :type => :boolean
+    option :fetch, :type => :boolean, :default => :fetch
     def install(repo, *args)
       args << repo # so thor will not complain when you call `install` with no args
       repos = __determine_repos(args)
       __set_log_level
       $LOG.debug { "REPO ARGS:#{repos}" }
       ds = Dotstrap::Configuration.new(repos)
-      options[:no_fetch] ? ds.configure : ds.install
+      options[:fetch] ? ds.install : ds.configure
     end
 
     desc 'uninstall REPO...', 'Remove specified REPO'
