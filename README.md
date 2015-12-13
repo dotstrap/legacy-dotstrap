@@ -43,7 +43,7 @@ list the URL and install path for all currently installed repositories:
 dotstrap list [REPO]
 ```
 
-`REPO` is a GitHub repository slug like `mkwmms/dotstrap-osx`
+`REPO` is a GitHub clone URL or repository slug like `mkwmms/dotstrap-osx`
 
 `FILE` is a newline separated list of `REPOS`
 
