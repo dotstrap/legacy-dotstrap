@@ -30,17 +30,17 @@ rake install
 
 download (or update) and configure `REPOs`:
 ```bash 
-ds install REPO|FILE
+dotstrap install REPO|FILE
 ```
 
 completely remove any symbolic links, `source` statements from dotstrap's config file, & the repository itself:
 ```bash
-ds uninstall REPO
+dotstrap uninstall REPO
 ```
 
 list the URL and install path for all currently installed repositories:
 ```bash
-ds list [REPO]
+dotstrap list [REPO]
 ```
 
 `REPO` is a GitHub repository slug like `mkwmms/dotstrap-osx`
