@@ -7,8 +7,8 @@ require_relative 'dotstrap/shell'
 
 module Dotstrap
   NAME        = 'dotstrap'
-  EXE_NAME    = 'ds'
-  VERSION     = '0.1.2'
+  EXE_NAME    = 'dotstrap'
+  VERSION     = '0.2.0'
   AUTHOR      = 'William Myers'
   HOMEPAGE    = 'http://github.com/mkwmms/dotstrap'
   SOURCE_URL  = 'http://github.com/mkwmms/dotstrap'
