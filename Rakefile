@@ -22,7 +22,7 @@ Jeweler::Tasks.new do |gem|
   # gem.email = Dotstrap::EMAIL
   gem.authors = Dotstrap::AUTHOR
   gem.require_paths = ['lib']
-  gem.executables = ['ds']
+  gem.executables = ['dotstrap']
   gem.required_ruby_version = '>=1.9.2'
   gem.metadata = { 'source_code' => Dotstrap::SOURCE_URL, 
                    'documentation' => Dotstrap::DOC_URL
