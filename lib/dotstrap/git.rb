@@ -4,18 +4,14 @@ require 'logger'
 module Dotstrap
   # TODO: split this into Git < Downloader class
   class Dotstrap::Git
-    attr_accessor :url, :repo,
-                  :repo_path, :repo_name,
-                  :github_user, :github_project
+    attr_accessor :url, :repo, :repo_path, :repo_owner, :repo_name
 
     def initialize(repo, dest_dir = Dotstrap.config_home)
-      @repo = repo
+      @repo = determine_repo_slug(repo)
       # TODO: allow an option to specify to download with SSH or HTTPs from Git
-      @url = "https://github.com/#{@repo}"
-      partition = @repo.partition("/")
-      @github_user = partition[0]
-      @github_project = @repo_name = partition[2]
-      @repo_path = File.join(dest_dir, "#{@github_user}-#{@repo_name}")
+      @url = determine_url(@repo)
+      @repo_owner, @repo_name = split_repo_slug(@repo)
+      @repo_path = File.join(dest_dir, "#{@repo_owner}-#{@repo_name}")
       # @repo_path = File.join(dest_dir, @github_user, @repo_name)
     end
 
@@ -40,6 +36,22 @@ module Dotstrap
     end
 
     private
+
+    def determine_repo_slug(repo)
+      return repo unless repo.start_with?("http", "git@")
+      repo = repo.gsub(/(https?:\/\/github.com\/)|(git@github.com:)/,"")
+      repo = repo.gsub(/.git/,"")
+    end
+
+    def determine_url(repo)
+      return repo if repo.start_with?("http", "git@")
+      "https://github.com/#{repo}"
+    end
+
+    def split_repo_slug(repo, sep = "/")
+      partition = repo.partition(sep)
+      return partition[0], partition[2]
+    end
 
     def git_verbosity
       if $LOG.debug?

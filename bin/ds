@@ -24,7 +24,9 @@ $LOG.formatter = proc do |severity, datetime, progname, msg|
 end
 
 def __repo_format_desc; <<-DESC
-  REPO is a GitHub repository slug in the form: `username/repository`
+  REPO is either:
+  \x5    - a GitHub repository clone URL
+  \x5    - a GitHub repository slug in the form: `username/repository`
 
   If REPO is a file: read a newline seperated list of repositories
   (in the form specified above)
@@ -71,7 +73,7 @@ module Dotstrap
       \x5    $ ds install ~/.config/repos.txt
     LONGDESC
     def install(repo, *args)
-      args << repo # so thor will complain when you call `install` with no args
+      args << repo # so thor will not complain when you call `install` with no args
       repos = []
       args.each do |repo|
         if File.exist?(repo)
