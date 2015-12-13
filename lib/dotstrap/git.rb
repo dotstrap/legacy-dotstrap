@@ -11,6 +11,7 @@ module Dotstrap
       # TODO: allow an option to specify to download with SSH or HTTPs from Git
       @url = determine_url(@repo)
       @repo_owner, @repo_name = split_repo_slug(@repo)
+      # @repo_path = File.join(dest_dir, "#{@repo_owner}.#{@repo_name}")
       @repo_path = File.join(dest_dir, "#{@repo_owner}-#{@repo_name}")
       # @repo_path = File.join(dest_dir, @github_user, @repo_name)
     end
@@ -48,7 +49,9 @@ module Dotstrap
 
     def split_repo_slug(repo, sep = "/")
       partition = repo.partition(sep)
-      return partition[0], partition[2]
+      # TODO: make dotstrap ansible role compatible
+      # return partition[0], partition[2].gsub("ansible-", "")
+      return partition[0], partition[2].gsub("ansible-", "")
     end
 
     def git_verbosity
