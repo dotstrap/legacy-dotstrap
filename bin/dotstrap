@@ -72,24 +72,14 @@ module Dotstrap
            Download all the repositories listed in the file ~/.config/repos.txt
       \x5    $ ds install ~/.config/repos.txt
     LONGDESC
+    option :no_fetch, :type => :boolean
     def install(repo, *args)
       args << repo # so thor will not complain when you call `install` with no args
-      repos = []
-      args.each do |repo|
-        if File.exist?(repo)
-          File.open(repo).each do |line|
-            # FIXME: strip everything afer '#' until newline (repo # comment)
-            repos << line.strip unless line.start_with?('#')
-          end
-        else
-          repos << repo
-        end
-      end
-      repos = repos.reject(&:empty?)
-
+      repos = __determine_repos(args)
       __set_log_level
       $LOG.debug { "REPO ARGS:#{repos}" }
-      Dotstrap::Configuration.new(repos).configure
+      ds = Dotstrap::Configuration.new(repos)
+      options[:no_fetch] ? ds.configure : ds.install
     end
 
     desc 'uninstall REPO...', 'Remove specified REPO'
@@ -101,18 +91,7 @@ module Dotstrap
     LONGDESC
     def uninstall(repo, *args)
       args << repo # so thor will complain when you call `uninstall` with no args
-      repos = []
-      args.each do |repo|
-        if File.exist?(repo)
-          File.open(repo).each do |line|
-            args << line.strip unless line.start_with?('#')
-          end
-        else
-          repos << repo
-        end
-      end
-      repos = repos.reject(&:empty?)
-
+      repos = __determine_repos(args)
       __set_log_level
       $LOG.debug { "REPO ARGS:#{repos}" }
       Dotstrap::Configuration.new(repos).remove
@@ -128,29 +107,32 @@ module Dotstrap
       #{__repo_format_desc}
     LONGDESC
     def list(*args)
-      repos = []
       if args.empty?
         Dotstrap::Configuration.new(Dotstrap.installed_repos).list
         return
       end
-
-      args.each do |repo|
-        if File.exist?(repo)
-          File.open(repo).each do |line|
-            args << line.strip unless line.start_with?('#')
-          end
-        else
-          repos << repo
-        end
-      end
-      repos = repos.reject(&:empty?)
-
+      repos = __determine_repos(args)
       __set_log_level
       $LOG.debug { "REPO ARGS:#{repos}" }
       Dotstrap::Configuration.new(repos).list
     end
 
     private
+
+    def __determine_repos(cli_args)
+      repos = []
+      cli_args.each do |repo|
+        if File.exist?(repo)
+          File.open(repo).each do |line|
+            # FIXME: strip everything afer '#' until newline (repo # comment)
+            repos << line.strip unless line.start_with?('#')
+          end
+        else
+          repos << repo
+        end
+      end
+      repos = repos.reject(&:empty?)
+    end
 
     def __set_log_level(level = nil)
       # $LOG.close; return if options[:quiet]

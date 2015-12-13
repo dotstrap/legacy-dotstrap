@@ -105,16 +105,20 @@ module Dotstrap
       FileUtils.mkdir_p(Dotstrap.config_home)
     end
 
-    def configure(dest_dir = Dotstrap.config_home, repos = @repos)
-      if Dotstrap.shell_name == 'fish'
-        fish_config_home = Dotstrap.shell_config_home('fish')
-        FileUtils.mkdir_p(File.join(fish_config_home, 'functions'))
-        FileUtils.mkdir_p(File.join(fish_config_home, 'completions'))
-      end
-
+    def install(dest_dir = Dotstrap.config_home, repos = @repos)
+      initialize_fish_dirs if Dotstrap.shell_name == 'fish'
       Parallel.map(repos, in_threads: 16) do |r|
         bundle = Dotstrap::Git.new(r, dest_dir)
         path = bundle.clone
+        puts path
+        load_configs([path]) if path
+      end
+    end
+
+    def configure(dest_dir = Dotstrap.config_home, repos = @repos)
+      initialize_fish_dirs if Dotstrap.shell_name == 'fish'
+      Parallel.map(repos, in_threads: 16) do |r|
+        path = Dotstrap::Git.new(r, dest_dir).repo_path
         puts path
         load_configs([path]) if path
       end
@@ -144,9 +148,16 @@ module Dotstrap
 
     def load_configs(repo_path)
       repo_path.each do |r|
-        shell = Dotstrap::Shell.new(r)
-        shell.configure(repo_path)
+        Dotstrap::Shell.new(r).configure(repo_path)
       end
+    end
+
+    private
+
+    def initialize_fish_dirs
+      fish_config_home = Dotstrap.shell_config_home('fish')
+      FileUtils.mkdir_p(File.join(fish_config_home, 'functions'))
+      FileUtils.mkdir_p(File.join(fish_config_home, 'completions'))
     end
   end
 end
