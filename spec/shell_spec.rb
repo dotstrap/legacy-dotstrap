@@ -8,13 +8,13 @@ describe Dotstrap::Shell do
                       # 'mkwmms/fish-basic/functions' =>
       # %w(clear.fish mkcd.fish port_kill.fish port_top.fish td.fish)
     }
-    @dotstrap_config_home = Dir.mktmpdir('test_dotstrap_config_home_')
+    @dotstrap_config_dir = Dir.mktmpdir('test_dotstrap_config_dir_')
     @shell_config_home = Dir.mktmpdir('test_dotstrap_shell_config_home_')
     # @bundle = FactoryGirl.create :bundle(@config_home, @repos)
-    @shell = Dotstrap::Shell.new(@dotstrap_config_home, @config_files.keys)
+    @shell = Dotstrap::Shell.new(@dotstrap_config_dir, @config_files.keys)
 
     @config_files.each do |repo, files|
-      dir = File.join(@dotstrap_config_home, repo, 'functions')
+      dir = File.join(@dotstrap_config_dir, repo, 'functions')
       FileUtils.mkdir_p dir
       files.each do |f|
         File.write(File.join(dir, f), 'TEST CONFIG')
@@ -42,7 +42,7 @@ describe Dotstrap::Shell do
       actual_files = []
       expected_files = []
       @config_files.each do |repo, files|
-        dir = File.join(@dotstrap_config_home, repo)
+        dir = File.join(@dotstrap_config_dir, repo)
         actual_files.push @shell.fish_functions(dir)
         files.each do |f|
           expected_files.push File.join(dir, 'functions', f)
@@ -64,7 +64,7 @@ describe Dotstrap::Shell do
   # end
 
   after :all do
-    [@dotstrap_config_home, @shell_config_home].each do |dir|
+    [@dotstrap_config_dir, @shell_config_home].each do |dir|
       FileUtils.rm_r dir, force: true
     end
   end

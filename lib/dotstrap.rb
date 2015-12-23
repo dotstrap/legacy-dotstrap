@@ -23,7 +23,7 @@ module Dotstrap
     require 'pathname'
 
     def config_home
-      return ENV['DOTSTRAP_CONFIG_HOME'] if ENV.has_key?('DOTSTRAP_CONFIG_HOME')
+      return ENV['DOTSTRAP_CONFIG_DIR'] if ENV.has_key?('DOTSTRAP_CONFIG_DIR')
 
       config_dir = ENV.fetch('XDG_CONFIG_HOME', Dir.home)
       if config_dir == Dir.home
