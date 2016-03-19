@@ -4,8 +4,8 @@ require 'dotstrap/shell'
 describe Dotstrap::Shell do
   before :all do
     # FIXME: decouple test config_files and define in each test
-    @config_files = { 'mkwmms/fish-osx' => %w(ql.fish),
-                      # 'mkwmms/fish-basic/functions' =>
+    @config_files = { 'mwilliammyers/fish-osx' => %w(ql.fish),
+                      # 'mwilliammyers/fish-basic/functions' =>
       # %w(clear.fish mkcd.fish port_kill.fish port_top.fish td.fish)
     }
     @dotstrap_config_dir = Dir.mktmpdir('test_dotstrap_config_dir_')

@@ -3,8 +3,8 @@ require 'dotstrap/bundle'
 
 describe Dotstrap::Bundle do
   before :all do
-    @repos = { 'mkwmms/fish-osx' => %w(ql.fish),
-               'mkwmms/fish-basic' =>
+    @repos = { 'mwilliammyers/fish-osx' => %w(ql.fish),
+               'mwilliammyers/fish-basic' =>
                %w(clear.fish mkcd.fish port_kill.fish port_top.fish td.fish)
     }
     @dotstrap_config_dir = Dir.mktmpdir('test_dotstrap_config_dir_')

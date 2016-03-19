@@ -1,9 +1,9 @@
 # dotstrap
 [![Gem Version](https://badge.fury.io/rb/dotstrap.svg)](https://badge.fury.io/rb/dotstrap)
-[![Build Status](https://travis-ci.org/mkwmms/dotstrap.svg)](https://travis-ci.org/mkwmms/dotstrap)
-[![Code Climate](https://codeclimate.com/github/mkwmms/dotstrap/badges/gpa.svg)](https://codeclimate.com/github/mkwmms/dotstrap)
-[![Inline docs](http://inch-ci.org/github/mkwmms/dotstrap.svg?branch=master)](http://inch-ci.org/github/mkwmms/dotstrap)
-[![Dependency Status](https://gemnasium.com/mkwmms/dotstrap.svg)](https://gemnasium.com/mkwmms/dotstrap)
+[![Build Status](https://travis-ci.org/mwilliammyers/dotstrap.svg)](https://travis-ci.org/mwilliammyers/dotstrap)
+[![Code Climate](https://codeclimate.com/github/mwilliammyers/dotstrap/badges/gpa.svg)](https://codeclimate.com/github/mwilliammyers/dotstrap)
+[![Inline docs](http://inch-ci.org/github/mwilliammyers/dotstrap.svg?branch=master)](http://inch-ci.org/github/mwilliammyers/dotstrap)
+[![Dependency Status](https://gemnasium.com/mwilliammyers/dotstrap.svg)](https://gemnasium.com/mwilliammyers/dotstrap)
 
 Downloads repositories from GitHub in parallel and symbolically links and/or 
 creates a file to be sourced in your `~/.zshrc`, `~/.bash_profile`, or `~/.config/fish/config.fish`
@@ -19,7 +19,7 @@ __or stay on the bleeding edge:__
 requires [bundler]
 
 ```bash
-git clone https://github.com/mkwmms/dotstrap.git
+git clone https://github.com/mwilliammyers/dotstrap.git
 ```
 
 ```bash
@@ -43,7 +43,7 @@ list the URL and install path for all currently installed repositories:
 dotstrap list [REPO]
 ```
 
-`REPO` is a GitHub clone URL or repository slug like `mkwmms/dotstrap-osx`
+`REPO` is a GitHub clone URL or repository slug like `mwilliammyers/dotstrap-osx`
 
 `FILE` is a newline separated list of `REPOS`
 
@@ -84,8 +84,8 @@ Check out the [wiki] for a good list of repos to get you started.
 - [antibody]: super fast, great app written in go. It only does ZSH and it is dynamic (it doesn't create a static file that can be sourced from your shell's init file), but man those microseconds are precious when it comes to loading my shell prompt. I still use it sometimes though because it is pretty dang cool.
 
 
-[dotfiles]: https://github.com/mkwmms/dotfiles
-[wiki]: https://github.com/mkwmms/dotstrap/wiki
+[dotfiles]: https://github.com/mwilliammyers/dotfiles
+[wiki]: https://github.com/mwilliammyers/dotstrap/wiki
 
 [XDG]: http://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html
 

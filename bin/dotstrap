@@ -63,11 +63,11 @@ module Dotstrap
       \x5  `echo "source #{Dotstrap.config_file}" >> #{Dotstrap.shell_profile}`
 
       Examples:
-      \x5  Download https://github.com/mkwmms/dotstrap-osx to
+      \x5  Download https://github.com/mwilliammyers/dotstrap-osx to
       #{Dotstrap.config_home}
       and creates #{Dotstrap.config_file} with commands to
       source all relevant configure files
-      \x5    $ ds install mkwmms/dotstrap-osx
+      \x5    $ ds install mwilliammyers/dotstrap-osx
 
            Download all the repositories listed in the file ~/.config/repos.txt
       \x5    $ ds install ~/.config/repos.txt

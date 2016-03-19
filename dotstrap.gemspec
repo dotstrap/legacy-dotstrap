@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.version = "0.4.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-  s.metadata = { "documentation" => "http://www.rubydoc.info/github/mkwmms/dotstrap/master/Dotstrap", "source_code" => "http://github.com/mkwmms/dotstrap" } if s.respond_to? :metadata=
+  s.metadata = { "documentation" => "http://www.rubydoc.info/github/mwilliammyers/dotstrap/master/Dotstrap", "source_code" => "http://github.com/mwilliammyers/dotstrap" } if s.respond_to? :metadata=
   s.require_paths = ["lib"]
   s.authors = ["William Myers"]
   s.date = "2015-12-23"
@@ -36,7 +36,7 @@ Gem::Specification.new do |s|
     "spec/shell_spec.rb",
     "spec/spec_helper.rb"
   ]
-  s.homepage = "http://github.com/mkwmms/dotstrap"
+  s.homepage = "http://github.com/mwilliammyers/dotstrap"
   s.licenses = ["MIT"]
   s.required_ruby_version = Gem::Requirement.new(">= 1.9.2")
   s.rubygems_version = "2.4.5.1"
