@@ -1,9 +1,12 @@
-# dotstrap
+# dotstrap (legacy)
+
 [![Gem Version](https://badge.fury.io/rb/dotstrap.svg)](https://badge.fury.io/rb/dotstrap)
 [![Build Status](https://travis-ci.org/mwilliammyers/dotstrap.svg)](https://travis-ci.org/mwilliammyers/dotstrap)
 [![Code Climate](https://codeclimate.com/github/mwilliammyers/dotstrap/badges/gpa.svg)](https://codeclimate.com/github/mwilliammyers/dotstrap)
 [![Inline docs](http://inch-ci.org/github/mwilliammyers/dotstrap.svg?branch=master)](http://inch-ci.org/github/mwilliammyers/dotstrap)
 [![Dependency Status](https://gemnasium.com/mwilliammyers/dotstrap.svg)](https://gemnasium.com/mwilliammyers/dotstrap)
+
+**This repository has been deprecated.** See: [dotstrap/dotstrap](https://github.com/dotstrap/legacy-dotstrap) for the newer version.
 
 Downloads repositories from GitHub in parallel and symbolically links and/or 
 creates a file to be sourced in your `~/.zshrc`, `~/.bash_profile`, or `~/.config/fish/config.fish`
